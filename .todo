@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<todo version="0.1.20">
+    <note priority="medium" time="1391105418">
+        smart pointer that is guaranteed not to be nullptr
+    </note>
+    <note priority="medium" time="1391105431">
+        raw pointer wrapper that is guaranteed not to be nullptr
+    </note>
+    <note priority="medium" time="1391105465">
+        facilities for easy creation of derived exceptions for a given scope
+    </note>
+</todo>
