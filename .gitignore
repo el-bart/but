@@ -1,13 +1,22 @@
-# Compiled Object files
+# compiled object files
 *.slo
 *.lo
 *.o
+*.oxx
 
-# Compiled Dynamic libraries
+# misc compiler files
+*.d
+*.dxx
+*.map
+
+# compiled dynamic libraries
 *.so
 *.dylib
 
-# Compiled Static libraries
+# compiled static libraries
 *.lai
 *.la
 *.a
+
+# build-generated elements
+gen
