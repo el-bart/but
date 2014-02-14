@@ -9,4 +9,7 @@
     <note priority="medium" time="1391105465">
         facilities for easy creation of derived exceptions for a given scope
     </note>
+    <note priority="low" time="1392392163">
+        exception throwing funciton, that ensures some reasonable error on memeory allocation
+    </note>
 </todo>

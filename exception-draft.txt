@@ -1,0 +1,12 @@
+void throwError<CoolError>(...args)
+{
+  try
+  {
+    throw CoolError(args...);
+  }
+  catch(std::bad_alloc const&)
+  {
+    // NOTE: no memory alocation here
+    throw FixedException("oops - unable to allocate main error");
+  }
+}
