@@ -7,6 +7,9 @@ namespace But
 namespace Threading
 {
 
+/** @brief automatic joiner of the underlying thread type (T).
+ *  @note use with care, as join() withou proper interrupt can hang forever.
+ */
 template<typename T>
 class JoiningThread
 {
