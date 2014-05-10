@@ -6,7 +6,7 @@ namespace But
 
 class Exception: public std::runtime_error
 {
-public:
+protected:
   Exception(char const* file, unsigned line, char const* function, std::string msg);
 };
 
