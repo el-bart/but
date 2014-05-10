@@ -20,3 +20,7 @@
 
 # build-generated elements
 gen
+build
+
+# environemnt and tools
+CMakeLists.txt.user
