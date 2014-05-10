@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+
+for tc in gcc clang
+do
+  for mode in debug release
+  do
+    D="build/$tc/$mode"
+    mkdir -p "$D"
+    (
+      cd "$D"
+      time cmake "-DTOOLCHAIN=$tc" "-DMODE=$mode" -G Ninja ../../../
+      time cmake . # temporary workaround for clang... :/
+      time ninja
+      time ./uts
+      time ./mts
+    )
+  done
+done
