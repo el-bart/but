@@ -1,5 +1,8 @@
-add_library(gtest ${SOURCES_GTEST})
-add_library(gmock ${SOURCES_GMOCK})
+add_subdirectory(gmock)
 
 add_executable(uts ${SOURCES_UT})
 add_executable(mts ${SOURCES_MT})
+
+foreach(app mts uts)
+  target_link_libraries(${app} gmock_main gmock gtest)
+endforeach()

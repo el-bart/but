@@ -1,6 +1,3 @@
-file(GLOB SOURCES_GTEST gtest/src/gtest-all.cc)
-file(GLOB SOURCES_GMOCK gmock/src/gmock-all.cc)
-
 file(GLOB SOURCES_ALL But/*.cpp)
 file(GLOB SOURCES_MT  But/*.mt.cpp)
 file(GLOB SOURCES_UT  But/*.ut.cpp)
