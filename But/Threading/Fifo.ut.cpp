@@ -16,7 +16,9 @@ using Q = Fifo<std::string>;
 
 struct ThreadingFifo: public testing::Test
 {
-  Q q_;
+  Q                                     q_;
+  std::chrono::seconds                  timeout_{5};
+  std::chrono::steady_clock::time_point deadline_{std::chrono::steady_clock::now() + timeout_};
 };
 
 
@@ -118,6 +120,68 @@ TEST_F(ThreadingFifo, TopWaitForElementToPop)
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
   q_.pop(lock);
+}
+
+
+TEST_F(ThreadingFifo, TopWithTimeoutWhenElementIsPresent)
+{
+  Q::lock_type lock{q_};
+  q_.push("test");
+  ASSERT_EQ(q_.size(), 1u);
+  EXPECT_EQ( q_.top(lock, timeout_), "test");
+  EXPECT_EQ( q_.top(lock, deadline_), "test");
+  EXPECT_EQ( static_cast<Q const&>(q_).top(lock, timeout_), "test");
+  EXPECT_EQ( static_cast<Q const&>(q_).top(lock, deadline_), "test");
+}
+
+
+TEST_F(ThreadingFifo, TopTimeout)
+{
+  Q::lock_type lock{q_};
+  timeout_  = std::chrono::seconds{0};
+  deadline_ = std::chrono::steady_clock::now();
+  EXPECT_THROW( q_.top(lock, timeout_),  Q::Timeout );
+  EXPECT_THROW( q_.top(lock, deadline_), Q::Timeout );
+  EXPECT_THROW( static_cast<Q const&>(q_).top(lock, timeout_),  Q::Timeout );
+  EXPECT_THROW( static_cast<Q const&>(q_).top(lock, deadline_), Q::Timeout );
+}
+
+
+TEST_F(ThreadingFifo, PopWithTimeoutWhenElementIsPresent)
+{
+  Q::lock_type lock{q_};
+  q_.push("test");
+  q_.push("test");
+  ASSERT_EQ(q_.size(), 2u);
+  q_.pop(lock, timeout_);
+  ASSERT_EQ(q_.size(), 1u);
+  q_.pop(lock, deadline_);
+  ASSERT_EQ(q_.size(), 0u);
+}
+
+
+TEST_F(ThreadingFifo, PopTimeout)
+{
+  Q::lock_type lock{q_};
+  timeout_  = std::chrono::seconds{0};
+  deadline_ = std::chrono::steady_clock::now();
+  EXPECT_THROW( q_.pop(lock, timeout_),  Q::Timeout );
+  EXPECT_THROW( q_.pop(lock, deadline_), Q::Timeout );
+}
+
+
+TEST_F(ThreadingFifo, ProducerConsumer)
+{
+  const auto count = 1000;
+  Thread th{ [&]{ for(int i=0; i<count; ++i) { Q::lock_type lock{q_}; q_.push("foo/bar"); std::this_thread::yield(); } } };
+  const auto deadline = std::chrono::steady_clock::now() + 2*timeout_;
+  for(int i=0; i<count; ++i)
+  {
+    Q::lock_type lock{q_};
+    EXPECT_EQ( q_.top(lock, deadline), "foo/bar" );
+    q_.pop();
+    std::this_thread::yield();
+  }
 }
 
 }
