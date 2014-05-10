@@ -7,6 +7,7 @@ include(cmake/sources.cmake)
 
 project(But)
 
+include_directories(BEFORE SYSTEM ${CMAKE_SOURCE_DIR})
 add_library(but ${SOURCES_LIB})
 
 include(cmake/tests.cmake)
