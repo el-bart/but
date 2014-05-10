@@ -139,7 +139,7 @@ private:
   void wait(lock_type& lock, const std::chrono::duration<R,P>& timeout) const
   {
     if( not nonEmpty_.wait_for(lock, timeout, [&]{ return not empty(); }) )
-      BUT_THROW(Timeout, "TODO...");
+      BUT_THROW(Timeout, std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
   }
 
   template<typename C, typename D>
