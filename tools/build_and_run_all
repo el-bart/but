@@ -3,7 +3,7 @@ set -e
 
 for tc in gcc clang
 do
-  for mode in debug release
+  for mode in debug release profile
   do
     D="build/$tc/$mode"
     mkdir -p "$D"
