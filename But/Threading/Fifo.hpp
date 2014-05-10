@@ -145,8 +145,9 @@ private:
   template<typename C, typename D>
   void wait(lock_type& lock, const std::chrono::time_point<C,D>& deadline) const
   {
+    const auto timeout = deadline - C::now();
     if( not nonEmpty_.wait_until(lock, deadline, [&]{ return not empty(); }) )
-      BUT_THROW(Timeout, "TODO...");
+      BUT_THROW(Timeout,  std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
   }
 
   Queue                               q_;
