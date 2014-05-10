@@ -24,3 +24,4 @@ build
 
 # environemnt and tools
 CMakeLists.txt.user
+.*.swp
