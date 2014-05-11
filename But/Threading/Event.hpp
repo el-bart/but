@@ -4,16 +4,20 @@
 #include <condition_variable>
 
 #include "But/Exception.hpp"
+#include "WaitWrapper.hpp"
 
 namespace But
 {
 namespace Threading
 {
 
+/** @brief simple synchronization mechanism - one thread signals others that are waiting for an event to happen.
+ */
 class Event
 {
 public:
-  BUT_DEFINE_EXCEPTION(Timeout, "timeout while waiting for event")
+  BUT_DEFINE_EXCEPTION(Timeout, Exception, "timeout while waiting for event");
+
   Event():
     blocked_{true}
   { }
@@ -33,37 +37,23 @@ public:
     blocked_ = true;
   }
 
+  /** @brief wait for an event. can take 0 or 1 arguments. zero means wait forever. one can be either
+   * timeout (ex. std::chrono::seconds) or deadline (ex. std::chrono::steady_clock::timepoint).
+   */
   template<typename ...Args>
-  void wait(Args&&... args) const
+  void wait(Args&& ...args) const
   {
+    Lock lock{m_};
+    WaitHelper::wait(unblocked_, lock, [&]{ return not blocked_; }, std::forward<Args>(args)...);
   }
 
 private:
   using Lock = std::unique_lock<std::mutex>;
+  using WaitHelper = WaitWrapper<Timeout, std::condition_variable, Lock>;
 
-  void wait(Lock& lock) const
-  {
-    unblocked_.wait(lock, [&]{ return not empty(); });
-  }
-
-  template<typename R, typename P>
-  void wait(Lock& lock, const std::chrono::duration<R,P>& timeout) const
-  {
-    if( not nonEmpty_.wait_for(lock, timeout, [&]{ return not empty(); }) )
-      BUT_THROW(Timeout, std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
-  }
-
-  template<typename C, typename D>
-  void wait(lock_type& lock, const std::chrono::time_point<C,D>& deadline) const
-  {
-    const auto timeout = deadline - C::now();
-    if( not nonEmpty_.wait_until(lock, deadline, [&]{ return not empty(); }) )
-      BUT_THROW(Timeout,  std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
-  }
-
-  bool                    blocked_;
-  std::mutex              m_;
-  std::condition_variable unblocked_;
+  bool                            blocked_;
+  mutable std::mutex              m_;
+  mutable std::condition_variable unblocked_;
 };
 
 }

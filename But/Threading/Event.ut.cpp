@@ -69,4 +69,11 @@ TEST_F(ButThreadingEvent, UnblockedCanBeBlockedAgain)
   EXPECT_EQ(v, "ok");
 }
 
+
+TEST_F(ButThreadingEvent, TimeoutOnBlocking)
+{
+  EXPECT_THROW( e_.wait(std::chrono::steady_clock::now() + std::chrono::seconds{0}), Event::Timeout );
+  EXPECT_THROW( e_.wait(std::chrono::seconds{0}), Event::Timeout );
+}
+
 }

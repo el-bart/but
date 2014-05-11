@@ -10,27 +10,27 @@ namespace But
 namespace Threading
 {
 
-template<typename TimeoutException, typename CondidionVariable, typename Lock>
+template<typename TimeoutException, typename ConditionVariable, typename Lock>
 struct WaitWrapper
 {
   template<typename Pred>
-  static void wait(ConditionVariable& cv, Lock& lock, Pred p) const
+  static void wait(ConditionVariable& cv, Lock& lock, Pred p)
   {
     cv.wait(lock, std::move(p));
   }
 
   template<typename R, typename P, typename Pred>
-  static void wait(Lock& lock, const std::chrono::duration<R,P>& timeout, Pred p) const
+  static void wait(ConditionVariable& cv, Lock& lock, Pred p, const std::chrono::duration<R,P>& timeout)
   {
-    if( not nonEmpty_.wait_for(lock, timeout, std::move(p)) )
+    if( not cv.wait_for(lock, timeout, std::move(p)) )
       BUT_THROW(TimeoutException, std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
   }
 
   template<typename C, typename D, typename Pred>
-  static void wait(lock_type& lock, const std::chrono::time_point<C,D>& deadline, Pred p) const
+  static void wait(ConditionVariable& cv, Lock& lock, Pred p, const std::chrono::time_point<C,D>& deadline)
   {
     const auto timeout = deadline - C::now();
-    if( not nonEmpty_.wait_until(lock, deadline, std::move(p)) )
+    if( not cv.wait_until(lock, deadline, std::move(p)) )
       BUT_THROW(TimeoutException,  std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
   }
 };

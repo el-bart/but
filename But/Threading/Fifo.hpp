@@ -7,6 +7,7 @@
 #include <cassert>
 
 #include "But/Exception.hpp"
+#include "WaitWrapper.hpp"
 
 namespace But
 {
@@ -130,24 +131,11 @@ public:
   }
 
 private:
-  void wait(lock_type& lock) const
+  template<typename ...Args>
+  void wait(lock_type& lock, Args&& ...args) const
   {
-    nonEmpty_.wait(lock, [&]{ return not empty(); });
-  }
-
-  template<typename R, typename P>
-  void wait(lock_type& lock, const std::chrono::duration<R,P>& timeout) const
-  {
-    if( not nonEmpty_.wait_for(lock, timeout, [&]{ return not empty(); }) )
-      BUT_THROW(Timeout, std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
-  }
-
-  template<typename C, typename D>
-  void wait(lock_type& lock, const std::chrono::time_point<C,D>& deadline) const
-  {
-    const auto timeout = deadline - C::now();
-    if( not nonEmpty_.wait_until(lock, deadline, [&]{ return not empty(); }) )
-      BUT_THROW(Timeout,  std::chrono::duration_cast<std::chrono::milliseconds>(timeout).count() << "[ms] passed");
+    using WaitHelper = WaitWrapper<Timeout, std::condition_variable_any, lock_type>;
+    WaitHelper::wait(nonEmpty_, lock, [&]{ return not empty(); }, std::forward<Args>(args)...);
   }
 
   Queue                               q_;
