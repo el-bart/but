@@ -16,5 +16,7 @@ enum class Priority
 
 char const* toString(const Priority pri) noexcept;
 
+char const* toStringConstLen(const Priority pri) noexcept;
+
 }
 }

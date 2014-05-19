@@ -14,8 +14,9 @@ void logProxy(const Priority p, char const* file, unsigned line, char const* fun
 {
   assert(file);
   assert(function);
+  // TODO: timestamp
   // TODO: appenders should be used here, to allow reasonable control over log sink + customizations from user side
-  std::cout << toString(p) << " " << file << ":" << line << " [" << function << "]: " << msg << std::endl;
+  std::cout << toStringConstLen(p) << " " << file << ":" << line << " [" << function << "]: " << msg << std::endl;
 }
 
 }
