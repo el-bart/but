@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <cassert>
 
 #include "Priority.hpp"
@@ -18,6 +19,7 @@ char const* toString(const Priority pri) noexcept
     case Priority::fatal:   return "FATAL";
   }
   assert(!"unknown priority");
+  abort();
 }
 
 
@@ -32,6 +34,7 @@ char const* toStringConstLen(const Priority pri) noexcept
     case Priority::fatal:   return "FATAL  ";
   }
   assert(!"unknown priority");
+  abort();
 }
 
 }
