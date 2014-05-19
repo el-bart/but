@@ -1,22 +1,20 @@
-# TODO: make macro for expanding all of these variables using directory list
-file(GLOB SOURCES_ALL
-        But/*.cpp
-        But/Log/*.cpp
-        But/Log/detail/*.cpp
-        But/Threading/*.cpp
-    )
-file(GLOB SOURCES_MT
-        But/*.mt.cpp
-        But/Log/*.mt.cpp
-        But/Log/detail/*.mt.cpp
-        But/Threading/*.mt.cpp
-    )
-file(GLOB SOURCES_UT
-        But/*.ut.cpp
-        But/Log/*.ut.cpp
-        But/Log/detail/*.ut.cpp
-        But/Threading/*.ut.cpp
-    )
+macro(expand_names variable ending)
+  foreach(d ${ARGN})
+    file(GLOB tmp_srcs ${d}/*.${ending})
+    list(APPEND ${variable} ${tmp_srcs})
+  endforeach()
+endmacro()
+
+set(SRC_DIRS
+        But
+        But/Log
+        But/Log/detail
+        But/Threading
+   )
+
+expand_names(SOURCES_ALL "cpp"    ${SRC_DIRS})
+expand_names(SOURCES_UT  "ut.cpp" ${SRC_DIRS})
+expand_names(SOURCES_MT  "mt.cpp" ${SRC_DIRS})
 
 set(SOURCES_LIB ${SOURCES_ALL})
 list(REMOVE_ITEM SOURCES_LIB ${SOURCES_UT} ${SOURCES_MT})
