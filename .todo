@@ -12,6 +12,9 @@
     <note priority="medium" time="1399737323">
         something is wrong when doing clang with libc++ (link error - no flag). when running 'ccmake .' and exiting it links fine
     </note>
+    <note priority="medium" time="1400512964">
+        tests for logging facilities
+    </note>
     <note priority="low" time="1392392163">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
     </note>
