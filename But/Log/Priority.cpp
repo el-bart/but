@@ -11,11 +11,11 @@ char const* toString(const Priority pri) noexcept
 {
   switch(pri)
   {
-    case Priority::DEBUG:   return "debug";
-    case Priority::INFO:    return "info";
-    case Priority::WARNING: return "warning";
-    case Priority::ERROR:   return "ERROR";
-    case Priority::FATAL:   return "FATAL";
+    case Priority::debug:   return "debug";
+    case Priority::info:    return "info";
+    case Priority::warning: return "warning";
+    case Priority::error:   return "ERROR";
+    case Priority::fatal:   return "FATAL";
   }
   assert(!"unknown priority");
 }

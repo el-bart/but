@@ -7,11 +7,11 @@ namespace Log
 
 enum class Priority
 {
-  DEBUG,
-  INFO,
-  WARNING,
-  ERROR,
-  FATAL
+  debug,
+  info,
+  warning,
+  error,
+  fatal
 };
 
 char const* toString(const Priority pri) noexcept;
