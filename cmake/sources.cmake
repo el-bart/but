@@ -12,10 +12,11 @@ set(SRC_DIRS
         But/Threading
    )
 
-expand_names(SOURCES_ALL "cpp"    ${SRC_DIRS})
-expand_names(SOURCES_UT  "ut.cpp" ${SRC_DIRS})
-expand_names(SOURCES_MT  "mt.cpp" ${SRC_DIRS})
-expand_names(SOURCES_IT  "it.cpp" ${SRC_DIRS})
+expand_names(SOURCES_ALL    "cpp"        ${SRC_DIRS})
+expand_names(SOURCES_UT     "ut.cpp"     ${SRC_DIRS})
+expand_names(SOURCES_MT     "mt.cpp"     ${SRC_DIRS})
+expand_names(SOURCES_IT     "it.cpp"     ${SRC_DIRS})
+expand_names(SOURCES_MANUAL "manual.cpp" ${SRC_DIRS})
 
 set(SOURCES_LIB ${SOURCES_ALL})
-list(REMOVE_ITEM SOURCES_LIB ${SOURCES_UT} ${SOURCES_MT} ${SOURCES_IT})
+list(REMOVE_ITEM SOURCES_LIB ${SOURCES_UT} ${SOURCES_MT} ${SOURCES_IT} ${SOURCES_MANUAL})
