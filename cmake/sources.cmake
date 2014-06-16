@@ -9,6 +9,7 @@ set(SRC_DIRS
         But
         But/Log
         But/Log/detail
+        But/System
         But/Threading
    )
 
