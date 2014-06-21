@@ -15,6 +15,9 @@
     <note priority="medium" time="1400512964">
         tests for logging facilities
     </note>
+    <note priority="medium" time="1403381658">
+        add dispatcher automatically passing messages to their destinations (customizable message type ID getting)
+    </note>
     <note priority="low" time="1392392163">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
     </note>
