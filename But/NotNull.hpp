@@ -54,5 +54,7 @@ private:
 };
 
 // TODO: typedefs
+// TODO: copy assignment
+// TODO: move assignment
 
 }
