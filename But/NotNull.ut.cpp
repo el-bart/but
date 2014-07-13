@@ -1,6 +1,7 @@
 #include <memory>
 #include <string>
 #include <type_traits>
+#include <boost/shared_ptr.hpp>
 
 #include "gtest/gtest.h"
 #include "NotNull.hpp"
@@ -382,6 +383,34 @@ TEST_F(ButNotNull, DerivedComparisonOperators)
   EXPECT_FALSE( u_ <= p  );
   EXPECT_TRUE ( u_ == u_ );
   EXPECT_FALSE( u_ != u_ );
+}
+
+
+TEST_F(ButNotNull, Typedefs)
+{
+  EXPECT_TRUE( (std::is_same<Data, RawNN::element_type>::value) );
+  EXPECT_TRUE( (std::is_same<Data, UniqueNN::element_type>::value) );
+  EXPECT_TRUE( (std::is_same<Data, SharedNN::element_type>::value) );
+}
+
+
+TEST_F(ButNotNull, TypedefsForConstTypes)
+{
+  EXPECT_TRUE( (std::is_same<Data const, NotNull<Data const*>::element_type>::value) );
+  EXPECT_TRUE( (std::is_same<Data const, NotNull<std::unique_ptr<Data const>>::element_type>::value) );
+  EXPECT_TRUE( (std::is_same<Data const, NotNull<std::shared_ptr<Data const>>::element_type>::value) );
+}
+
+
+TEST_F(ButNotNull, BasicBoostCompatibility)
+{
+  using Ptr      = NotNull<boost::shared_ptr<Data>>;
+  using PtrConst = NotNull<boost::shared_ptr<Data const>>;
+  EXPECT_TRUE( (std::is_same<Data const, PtrConst::element_type>::value) );
+  Ptr p{new Data};
+  p->s_ = "foo";
+  PtrConst pc{p};
+  EXPECT_EQ("foo", pc->s_);
 }
 
 }

@@ -5,6 +5,7 @@
 #include <boost/operators.hpp>
 #include "Exception.hpp"
 #include "detail/getPointerValue.hpp"
+#include "detail/TypesResolver.hpp"
 
 namespace But
 {
@@ -15,6 +16,8 @@ class NotNull: public boost::equivalent<NotNull<P>>,
 {
 public:
   BUT_DEFINE_EXCEPTION(NullPointer, Exception, "unexpected nullptr received");
+
+  using element_type = typename detail::TypesResolver<P>::element_type;
 
   template<typename U>
   explicit NotNull(U u):
@@ -79,7 +82,5 @@ private:
 
   P p_;
 };
-
-// TODO: typedefs
 
 }
