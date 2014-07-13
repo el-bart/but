@@ -16,26 +16,53 @@ class NotNull: public boost::equivalent<NotNull<P>>,
 public:
   BUT_DEFINE_EXCEPTION(NullPointer, Exception, "unexpected nullptr received");
 
-  explicit NotNull(P p):
-    p_{ std::move(p) }
+  template<typename U>
+  explicit NotNull(U u):
+    p_{ std::move(u) }
   {
     if(not p_)
       BUT_THROW(NullPointer, "constructor's' argument");
   }
 
   template<typename U>
-  explicit NotNull(NotNull<U> u):
-    p_{ std::move(u.p_) }
+  explicit NotNull(NotNull<U> const& u):
+    p_{u.p_}
   {
     assert(p_);
   }
 
   template<typename U>
-  explicit NotNull(U u):
-    p_{ std::move(u) }
+  explicit NotNull(NotNull<U>&& u):
+    p_{ std::move(u.p_) }
   {
-    if(not p_)
-      BUT_THROW(NullPointer, "converting constructor's' argument");
+    assert(p_);
+  }
+
+  NotNull<P>& operator=(P p)
+  {
+    // NOTE: this is not a template on purpose - constructions such as
+    //       NotNull<shared_ptr<X>> x{...}; x = new X;
+    //       should never compile, exactly the same way they do not for smart pointers.
+    if(not p)
+      BUT_THROW(NullPointer, "assignment operator");
+    p_ = std::move(p);
+    return *this;
+  }
+
+  template<typename U>
+  NotNull<P>& operator=(NotNull<U> const& other)
+  {
+    p_ = other.p_;
+    assert(p_);
+    return *this;
+  }
+
+  template<typename U>
+  NotNull<P>& operator=(NotNull<U>&& other)
+  {
+    p_ = std::move(other.p_);
+    assert(p_);
+    return *this;
   }
 
   auto get() const { assert(p_); return detail::getPointerValue(p_); }
@@ -54,7 +81,5 @@ private:
 };
 
 // TODO: typedefs
-// TODO: copy assignment
-// TODO: move assignment
 
 }

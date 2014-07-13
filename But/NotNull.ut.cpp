@@ -1,4 +1,5 @@
 #include <memory>
+#include <string>
 #include <type_traits>
 
 #include "gtest/gtest.h"
@@ -12,11 +13,15 @@ struct Data
 
 struct Base
 {
+  Base(std::string s="base"): s_{std::move(s)} { }
   virtual ~Base() = default;
+
+  std::string s_;
 };
 
 struct Derived: public Base
 {
+  Derived(): Base("derived") { }
 };
 
 
@@ -25,6 +30,14 @@ using But::NotNull;
 using RawNN    = NotNull<Data*>;
 using UniqueNN = NotNull<std::unique_ptr<Data>>;
 using SharedNN = NotNull<std::shared_ptr<Data>>;
+
+using RawBaseNN    = NotNull<Base*>;
+using UniqueBaseNN = NotNull<std::unique_ptr<Base>>;
+using SharedBaseNN = NotNull<std::shared_ptr<Base>>;
+
+using RawDerivedNN    = NotNull<Derived*>;
+using UniqueDerivedNN = NotNull<std::unique_ptr<Derived>>;
+using SharedDerivedNN = NotNull<std::shared_ptr<Derived>>;
 
 namespace
 {
@@ -35,6 +48,16 @@ struct ButNotNull: public testing::Test
   RawNN    r_{&data_};
   UniqueNN u_{ std::make_unique<Data>("unique") };
   SharedNN s_{ std::make_shared<Data>("shared") };
+
+  Derived         derived_;
+  RawDerivedNN    rd_{&derived_};
+  UniqueDerivedNN ud_{ std::make_unique<Derived>() };
+  SharedDerivedNN sd_{ std::make_shared<Derived>() };
+
+  Base         base_;
+  RawBaseNN    rb_{&base_};
+  UniqueBaseNN ub_{ std::make_unique<Base>() };
+  SharedBaseNN sb_{ std::make_shared<Base>() };
 };
 
 
@@ -52,6 +75,22 @@ TEST_F(ButNotNull, ExplicitConstructionFromNull)
   EXPECT_THROW( UniqueNN{nullptr}, UniqueNN::NullPointer );
   EXPECT_THROW( SharedNN{nullptr}, SharedNN::NullPointer );
   EXPECT_THROW( SharedNN{std::unique_ptr<Data>{}}, SharedNN::NullPointer );
+}
+
+
+TEST_F(ButNotNull, AssignemtFromNullPointer)
+{
+  Data*                 data = nullptr;
+  std::unique_ptr<Data> unique;
+  std::shared_ptr<Data> shared;
+  EXPECT_THROW( r_ = data,              RawNN::NullPointer    );
+  EXPECT_THROW( u_ = std::move(unique), UniqueNN::NullPointer );
+  EXPECT_THROW( s_ = shared,            SharedNN::NullPointer );
+  EXPECT_THROW( s_ = std::move(unique), SharedNN::NullPointer );
+
+  EXPECT_EQ( "raw",    r_->s_ );
+  EXPECT_EQ( "unique", u_->s_ );
+  EXPECT_EQ( "shared", s_->s_ );
 }
 
 
@@ -135,14 +174,9 @@ TEST_F(ButNotNull, BuildingSharedPtrFromUniquePtr)
 
 TEST_F(ButNotNull, ConvertingFromDerivedToBase)
 {
-  Derived                           derived;
-  NotNull<Derived*>                 rd{&derived};
-  NotNull<std::unique_ptr<Derived>> ud{ std::make_unique<Derived>() };
-  NotNull<std::shared_ptr<Derived>> sd{ std::make_shared<Derived>() };
-
-  NotNull<Base*>                 rb{rd};
-  NotNull<std::unique_ptr<Base>> ub{ std::move(ud) };
-  NotNull<std::shared_ptr<Base>> sb{sd};
+  NotNull<Base*>                 rb{rd_};
+  NotNull<std::unique_ptr<Base>> ub{ std::move(ud_) };
+  NotNull<std::shared_ptr<Base>> sb{sd_};
 }
 
 
@@ -164,6 +198,116 @@ TEST_F(ButNotNull, Moving)
   EXPECT_EQ( "raw",    r->s_ );
   EXPECT_EQ( "unique", u->s_ );
   EXPECT_EQ( "shared", s->s_ );
+}
+
+
+TEST_F(ButNotNull, CopyingFromDerived)
+{
+  RawBaseNN    r{rd_};
+  EXPECT_FALSE( std::is_copy_constructible<UniqueBaseNN>::value );
+  SharedBaseNN s{sd_};
+  EXPECT_EQ( "derived", r->s_ );
+  EXPECT_EQ( "derived", s->s_ );
+}
+
+
+TEST_F(ButNotNull, MovingFromDerived)
+{
+  RawBaseNN    r{ std::move(rd_) };
+  UniqueBaseNN u{ std::move(ud_) };
+  SharedBaseNN s{ std::move(sd_) };
+  EXPECT_EQ( "derived", r->s_ );
+  EXPECT_EQ( "derived", u->s_ );
+  EXPECT_EQ( "derived", s->s_ );
+}
+
+
+TEST_F(ButNotNull, CopyingAssignemntFromDerived)
+{
+  rb_ = rd_;
+  EXPECT_FALSE( std::is_copy_assignable<UniqueBaseNN>::value );
+  sb_ = sd_;
+  EXPECT_EQ( "derived", rb_->s_ );
+  EXPECT_EQ( "derived", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, MovingAssignmentFromDerived)
+{
+  rb_ = std::move(rd_);
+  ub_ = std::move(ud_);
+  sb_ = std::move(sd_);
+  EXPECT_EQ( "derived", rb_->s_ );
+  EXPECT_EQ( "derived", ub_->s_ );
+  EXPECT_EQ( "derived", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, CopyingAssignemntFromPointerType)
+{
+  rb_ = &base_;
+  EXPECT_FALSE( std::is_copy_assignable<UniqueBaseNN>::value );
+  const auto tmp = std::make_shared<Base>();
+  sb_ = tmp;
+  EXPECT_EQ( "base", rb_->s_ );
+  EXPECT_EQ( "base", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, MovingAssignmentFromPointerType)
+{
+  rb_ = &base_;
+  ub_ = std::make_unique<Base>();
+  sb_ = std::make_shared<Base>();
+  EXPECT_EQ( "base", rb_->s_ );
+  EXPECT_EQ( "base", ub_->s_ );
+  EXPECT_EQ( "base", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, CopyingAssignemntFromDerivedPointerType)
+{
+  rb_ = &derived_;
+  EXPECT_FALSE( std::is_copy_assignable<UniqueBaseNN>::value );
+  const auto tmp = std::make_shared<Derived>();
+  sb_ = tmp;
+  EXPECT_EQ( "derived", rb_->s_ );
+  EXPECT_EQ( "derived", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, MovingAssignmentFromDerivedPointerType)
+{
+  rb_ = &derived_;
+  ub_ = std::make_unique<Derived>();
+  sb_ = std::make_shared<Derived>();
+  EXPECT_EQ( "derived", rb_->s_ );
+  EXPECT_EQ( "derived", ub_->s_ );
+  EXPECT_EQ( "derived", sb_->s_ );
+
+  sb_ = std::make_unique<Derived>();
+  EXPECT_EQ( "derived", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, CopyingAssignmentFromSelf)
+{
+  rb_ = rb_;
+  EXPECT_FALSE( std::is_copy_assignable<UniqueBaseNN>::value );
+  sb_ = sb_;
+  EXPECT_EQ( "base", rb_->s_ );
+  EXPECT_EQ( "base", sb_->s_ );
+}
+
+
+TEST_F(ButNotNull, MovingAssignmentFromSelf)
+{
+  rb_ = std::move(rb_);
+  ub_ = std::move(ub_);
+  sb_ = std::move(sb_);
+  EXPECT_EQ( "base", rb_->s_ );
+  EXPECT_EQ( "base", ub_->s_ );
+  EXPECT_EQ( "base", sb_->s_ );
 }
 
 
