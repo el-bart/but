@@ -24,16 +24,16 @@
             already implemented for some time... ;)
         </comment>
     </note>
-    <note priority="low" time="1392392163" done="1405245837">
-        exception throwing funciton, that ensures some reasonable error on memeory allocation
-        <comment>
-            bad_alloc is just fine - otherwise a lot of extra code will be generated, just to serve almost non-appearing condition
-        </comment>
-    </note>
     <note priority="medium" time="1399737323" done="1405248754">
         something is wrong when doing clang with libc++ (link error - no flag). when running 'ccmake .' and exiting it links fine
         <comment>
             fixed - the problem was variable has been set BEFORE project() was called - looks like in this case order is important as well..."
+        </comment>
+    </note>
+    <note priority="low" time="1392392163" done="1405245837">
+        exception throwing funciton, that ensures some reasonable error on memeory allocation
+        <comment>
+            bad_alloc is just fine - otherwise a lot of extra code will be generated, just to serve almost non-appearing condition
         </comment>
     </note>
     <note priority="medium" time="1400512964">
@@ -41,5 +41,8 @@
     </note>
     <note priority="medium" time="1403381658">
         add dispatcher automatically passing messages to their destinations (customizable message type ID getting)
+    </note>
+    <note priority="medium" time="1405798308">
+        CacheLineStorage - template to keep data aligned to cache size and padded, so that nothing more squeezes in
     </note>
 </todo>
