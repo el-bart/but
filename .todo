@@ -42,7 +42,10 @@
     <note priority="medium" time="1403381658">
         add dispatcher automatically passing messages to their destinations (customizable message type ID getting)
     </note>
-    <note priority="medium" time="1405798308">
+    <note priority="medium" time="1405798308" done="1405871536">
         CacheLineStorage - template to keep data aligned to cache size and padded, so that nothing more squeezes in
+        <comment>
+            CacheLine implemented
+        </comment>
     </note>
 </todo>
