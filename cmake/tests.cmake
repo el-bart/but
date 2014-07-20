@@ -8,8 +8,6 @@ foreach(app but_uts but_mts but_its)
   target_link_libraries(${app} but)
   target_link_libraries(${app} gmock_main gmock gtest)
   target_link_libraries(${app} boost_filesystem boost_system)
-  set_target_properties(${app} PROPERTIES COMPILE_FLAGS --coverage)
-  set_target_properties(${app} PROPERTIES LINK_FLAGS    --coverage)
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 
