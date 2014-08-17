@@ -5,94 +5,13 @@
 #include <boost/archive/text_iarchive.hpp>
 #include "gmock/gmock.h"
 #include "Dispatcher.hpp"
+#include "DispatcherTestStructure.ut.hpp"
 
 using But::Pattern::Dispatcher;
 using But::Pattern::AutoDispatcher;
 
 namespace
 {
-
-struct BinaryData
-{
-  unsigned    id_;
-  std::string data_;
-};
-
-
-struct MsgOne
-{
-  static constexpr unsigned type() { return 666; }
-  int a_;
-  int b_;
-
-  template<class Archive>
-  void serialize(Archive & ar, unsigned int version)
-  {
-    ar & version;
-    ar & a_;
-    ar & b_;
-  }
-};
-
-bool operator==(MsgOne const& lhs, MsgOne const& rhs)
-{
-  return lhs.a_ == rhs.a_ && lhs.b_ == rhs.b_;
-}
-
-
-struct MsgTwo
-{
-  static constexpr unsigned type() { return 42; }
-  std::string key_;
-  std::string value_;
-
-  template<class Archive>
-  void serialize(Archive & ar, unsigned int version)
-  {
-    ar & version;
-    ar & key_;
-    ar & value_;
-  }
-};
-
-bool operator==(MsgTwo const& lhs, MsgTwo const&rhs)
-{
-  return lhs.key_ == rhs.key_ && lhs.value_ == rhs.value_;
-}
-
-
-struct TestPolicy
-{
-  using IdType       = unsigned;
-  using BinaryFormat = BinaryData;
-
-  template<typename M>
-  static constexpr IdType getId() { return M::type(); }
-  static IdType getId(BinaryFormat const& bin) { return bin.id_; }
-
-  template<typename M>
-  static M deserialize(BinaryFormat const& bin)
-  {
-    assert( bin.id_ == M::type() && "invalid deserializer called" );
-    std::stringstream             os(bin.data_);
-    boost::archive::text_iarchive ia(os);
-    M m;
-    ia >> m;
-    return m;
-  }
-};
-
-
-template<typename M>
-static TestPolicy::BinaryFormat serialize(M const& m)
-{
-  std::stringstream             os;
-  boost::archive::text_oarchive oa(os);
-  oa << m;
-  return { M::type(), os.str() };
-}
-
-using TestDispatherBase = Dispatcher<TestPolicy::BinaryFormat>;
 
 struct TestDispatcher final: public AutoDispatcher<TestDispatcher, TestPolicy,
                                                    MsgOne,
