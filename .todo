@@ -30,6 +30,18 @@
             fixed - the problem was variable has been set BEFORE project() was called - looks like in this case order is important as well..."
         </comment>
     </note>
+    <note priority="medium" time="1403381658" done="1408282267">
+        add dispatcher automatically passing messages to their destinations (customizable message type ID getting)
+        <comment>
+            implemented
+        </comment>
+    </note>
+    <note priority="medium" time="1405798308" done="1405871536">
+        CacheLineStorage - template to keep data aligned to cache size and padded, so that nothing more squeezes in
+        <comment>
+            CacheLine implemented
+        </comment>
+    </note>
     <note priority="low" time="1392392163" done="1405245837">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
         <comment>
@@ -39,13 +51,10 @@
     <note priority="medium" time="1400512964">
         tests for logging facilities
     </note>
-    <note priority="medium" time="1403381658">
-        add dispatcher automatically passing messages to their destinations (customizable message type ID getting)
+    <note priority="low" time="1408282338">
+        add support for different dispatching mechanisms (hash_table vs. generated search code)
     </note>
-    <note priority="medium" time="1405798308" done="1405871536">
-        CacheLineStorage - template to keep data aligned to cache size and padded, so that nothing more squeezes in
-        <comment>
-            CacheLine implemented
-        </comment>
+    <note priority="low" time="1408282352">
+        add support for runtime IDs, via policies
     </note>
 </todo>
