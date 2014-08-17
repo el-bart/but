@@ -3,6 +3,7 @@
 #include <cassert>
 #include <boost/cast.hpp>
 #include "But/Exception.hpp"
+#include "But/Mpl/NamedVariadicTemplate.hpp"
 #include "detail/Registrator.hpp"
 
 namespace But
@@ -93,9 +94,11 @@ struct AutoDispatcher: public Dispatcher<typename Policy::BinaryFormat>,
                        public Policy
 {
 public:
+  using PolicyType   = Policy;
   using IdType       = typename Policy::IdType;
   using BinaryFormat = typename Policy::BinaryFormat;
   using Base         = Dispatcher<BinaryFormat>;
+  using Messages     = Mpl::NamedVariadicTemplate<Msgs...>;
 
   AutoDispatcher()
   {
