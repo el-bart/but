@@ -13,6 +13,32 @@ namespace But
 namespace Pattern
 {
 
+/** @brief compact in syntax implementation of abstract factory pattern.
+ *
+ *  @par
+ *  class is a template of a user's base class type and list of arguments each builder takes.
+ *  since it is using functors internally, lambdas can be used for creating builders as well.
+ *  this gives a very compact syntax for addition and operation.
+ *
+ *  @par
+ *  for example assume having class 'Base' and one implementation called 'Derived'. builders take
+ *  'double' and 'int' as parameters, to pass to a proper c-tor. usage can look like this:
+ *  <code>
+ *    struct Base;
+ *    struct Derived
+ *    {
+ *      Derived(double, int);
+ *    };
+ *
+ *    using MyFactory = AbstractFactory<Base, double, int>;
+ *    MyFactory f;
+ *    f.add( MyFactory::Builder{"derived"}, [](double d, int i) { return std::make_unique<Derived>(d,i); } );
+ *    auto e = f.build(MyFactory::Builder{"derived"}); // 'e' is of a type 'Derived'
+ *  </code>
+ *
+ *  @note
+ *  factory methods must return std::unique_ptr<BaseType>.
+ */
 template<typename BaseType, typename ...Args>
 class AbstractFactory final
 {
@@ -23,7 +49,6 @@ public:
 
   BUT_DEFINE_EXCEPTION(NoSuchBuilder, Exception, "no such builder");
   BUT_DEFINE_EXCEPTION(DuplicatedEntry, Exception, "trying to insert duplicated entry");
-  BUT_DEFINE_EXCEPTION(NullPointer, Exception, "builder returned null pointer");
   BUT_DEFINE_EXCEPTION(InvalidBuilder, Exception, "invalid builder");
 
   /** @brief named-string for builder. */
@@ -38,6 +63,9 @@ public:
     builders_[name.name_] = std::move(builder);
   }
 
+  /** @brief builds given element type, with given arguments.
+   *  @returns non-nullptr pointer to the constructed element.
+   */
   BasePtr build(Builder const& name, Args&&... args)
   {
     const auto it = builders_.find(name.name_);
@@ -45,8 +73,7 @@ public:
       BUT_THROW(NoSuchBuilder, name.name_);
     assert(it->second);
     auto e = it->second( std::forward<Args>(args)... );
-    if(not e)
-      BUT_THROW(NullPointer, "builder '" << name.name_ << "' returned nullptr");
+    assert( e.get() && "builders must return non-null pointers" );
     return e;
   }
 

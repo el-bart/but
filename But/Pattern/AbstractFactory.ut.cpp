@@ -35,16 +35,6 @@ struct ButPatternAbstractFactory: public testing::Test
 };
 
 
-auto buildNull() { return std::unique_ptr<ImplTwo>{}; }
-
-TEST_F(ButPatternAbstractFactory, BuildingNullElement)
-{
-  const Factory::Builder name{"null"};
-  af_.add(name, buildNull);
-  EXPECT_THROW( af_.build(name), Factory::NullPointer );
-}
-
-
 TEST_F(ButPatternAbstractFactory, AddingDuplicateEntry)
 {
   const Factory::Builder name{"one"};
