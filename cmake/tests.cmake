@@ -7,7 +7,7 @@ add_executable(but_its EXCLUDE_FROM_ALL ${SOURCES_IT})
 foreach(app but_uts but_mts but_its)
   target_link_libraries(${app} but)
   target_link_libraries(${app} gmock_main gmock gtest)
-  target_link_libraries(${app} boost_filesystem boost_system)
+  target_link_libraries(${app} boost_serialization boost_filesystem boost_system)
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 
