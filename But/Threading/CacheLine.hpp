@@ -13,7 +13,7 @@ namespace Threading
  *  from degrading performance. for details see:
  *  http://www.drdobbs.com/parallel/eliminate-false-sharing/217500206
  */
-template<typename T, unsigned Align=64>
+template<typename T, std::size_t Align=64>
 struct alignas(Align) CacheLine
 {
   static_assert( std::is_pod<T>::value, "cannot guarantee expected memory layout for non-PODs" );
