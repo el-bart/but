@@ -106,4 +106,15 @@ TEST_F(ButThreadingCacheLine, CacheLineSizeInfo)
   EXPECT_EQ( 32, alignof(CacheLine<int, 32>) );
 }
 
+
+struct NonTrivialCtor
+{
+  int answer_ = 42;
+};
+
+TEST_F(ButThreadingCacheLine, NonTrivialConstructor)
+{
+  CacheLine<NonTrivialCtor> ntc;
+}
+
 }
