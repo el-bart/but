@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 #include <unordered_map>
 #include <cassert>
 #include <boost/cast.hpp>
@@ -108,7 +109,7 @@ public:
 
   virtual void dispatch(typename Policy::BinaryFormat const& bin) override final
   {
-    assert( typeid(*this) == typeid(FinalType) && "FinalType is not the last one in a derive chain - mark this type 'final'" );
+    static_assert( std::is_final<FinalType>::value, "FinalType is not the last one in a derive chain - mark FinalType type as 'final'" );
     const auto id = Policy::getId(bin);
     const auto it = handlers_.find(id);
     if(it == end(handlers_))
