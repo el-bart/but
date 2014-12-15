@@ -30,7 +30,7 @@ namespace Mpl
  *  </code>
  */
 template<typename ...Args>
-struct NamedVariadicTemplate
+struct NamedVariadicTemplate final
 { };
 
 }

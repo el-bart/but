@@ -11,8 +11,8 @@ namespace But
 {
 
 template<typename P>
-class NotNull: public boost::equivalent<NotNull<P>>,
-               public boost::totally_ordered<NotNull<P>>
+class NotNull final: public boost::equivalent<NotNull<P>>,
+                     public boost::totally_ordered<NotNull<P>>
 {
 public:
   BUT_DEFINE_EXCEPTION(NullPointer, Exception, "unexpected nullptr received");

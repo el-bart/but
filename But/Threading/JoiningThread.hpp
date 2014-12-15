@@ -11,7 +11,7 @@ namespace Threading
  *  @note use with care, as join() withou proper interrupt can hang forever.
  */
 template<typename T>
-class JoiningThread
+class JoiningThread final
 {
 public:
   using id = typename T::id;

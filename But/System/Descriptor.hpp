@@ -8,7 +8,7 @@ namespace But
 namespace System
 {
 
-class Descriptor
+class Descriptor final
 {
 public:
   using value_type = int;

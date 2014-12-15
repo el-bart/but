@@ -11,7 +11,7 @@ namespace Threading
 {
 
 template<typename TimeoutException, typename ConditionVariable, typename Lock>
-struct WaitWrapper
+struct WaitWrapper final
 {
   template<typename Pred>
   static void wait(ConditionVariable& cv, Lock& lock, Pred p)

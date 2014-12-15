@@ -30,7 +30,7 @@ namespace But
  *  each insertion or removal invalidates all iterators.
  */
 template<typename T, typename Allocator = std::allocator<T>>
-class UnorderedArray
+class UnorderedArray final
 {
   using ImplContainer = std::vector<T, Allocator>;
 public:

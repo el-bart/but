@@ -35,7 +35,7 @@ namespace Threading
  * thrown.
  */
 template<typename T>
-class Fifo
+class Fifo final
 {
   using Queue = std::deque<T>;
 

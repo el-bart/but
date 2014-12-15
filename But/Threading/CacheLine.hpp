@@ -20,7 +20,7 @@ namespace Threading
  *        users. check if this is a cache line of your CPU, before usage!
  */
 template<typename T, std::size_t Align=64>
-struct alignas(Align) CacheLine
+struct alignas(Align) CacheLine final
 {
   static_assert( std::is_standard_layout<T>::value, "cannot guarantee expected memory layout for non-standard-layout objects" );
 

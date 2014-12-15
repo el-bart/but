@@ -11,7 +11,7 @@ namespace But
 namespace Threading
 {
 
-class ActiveObject
+class ActiveObject final
 {
 public:
   ActiveObject();

@@ -13,7 +13,7 @@ namespace Threading
 
 /** @brief simple synchronization mechanism - one thread signals others that are waiting for an event to happen.
  */
-class Event
+class Event final
 {
 public:
   BUT_DEFINE_EXCEPTION(Timeout, Exception, "timeout while waiting for event");
