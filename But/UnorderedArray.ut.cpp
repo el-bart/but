@@ -1,3 +1,4 @@
+#include <memory>
 #include <random>
 #include <string>
 #include <algorithm>
@@ -13,6 +14,7 @@ namespace
 
 struct Data
 {
+  Data() = default;
   Data(std::string s, const int n): str_(std::move(s)), number_(n) { }
 
   Data(Data const&) = default;
@@ -234,6 +236,7 @@ TEST_F(ButUnorderedArray, DoNotDecreaseCapacityForSmallContainers)
 TEST_F(ButUnorderedArray, NeededTypedefs)
 {
   EXPECT_TRUE( (std::is_same<DataArray::value_type, Data>()) );
+  EXPECT_TRUE( (std::is_same<DataArray::allocator_type, std::allocator<Data>>()) );
   EXPECT_TRUE( std::is_unsigned<DataArray::size_type>() );
   DataArray::iterator it;
   DataArray::const_iterator itc;
@@ -310,9 +313,60 @@ TEST_F(ButUnorderedArray, Movable)
 }
 
 
+TEST_F(ButUnorderedArray, SwapMemberFunction)
+{
+  data_.emplace("xxx", 2);
+  DataArray other{ {"abc", 1} };
+  data_.swap(other);
+
+  EXPECT_EQ(1, data_[0].number_);
+  EXPECT_EQ(2, other[0].number_);
+}
+
+
+TEST_F(ButUnorderedArray, FreeSwapFunction)
+{
+  data_.emplace("xxx", 2);
+  DataArray other{ {"abc", 1} };
+  swap(data_, other);
+
+  EXPECT_EQ(1, data_[0].number_);
+  EXPECT_EQ(2, other[0].number_);
+}
+
+
+std::vector<std::unique_ptr<char[]>> g_dataBlocks;
+
+template<typename T>
+struct TestAllocator
+{
+  using value_type = T;
+  using pointer = T*;
+  using size_type = std::size_t;
+
+  void deallocate(const pointer p, const size_type /*n*/)
+  {
+    const auto tmp = reinterpret_cast<void*>(p);
+    const auto it = std::find_if( std::begin(g_dataBlocks), std::end(g_dataBlocks), [tmp](auto const& e){ return tmp==e.get(); } );
+    assert( it != std::end(g_dataBlocks) );
+    g_dataBlocks.erase(it);
+  }
+
+  pointer allocate(const size_type n, const std::allocator<void>::const_pointer /*hint*/ = nullptr)
+  {
+    g_dataBlocks.emplace_back(new char[n*sizeof(Data)]);
+    return reinterpret_cast<Data*>( g_dataBlocks.back().get() );
+  }
+};
+
 TEST_F(ButUnorderedArray, AllocatorAware)
 {
-  // TODO: ac
+  EXPECT_TRUE( g_dataBlocks.empty() );
+  UnorderedArray<Data, TestAllocator<Data>> data;
+  data.emplace("lucky", 13);
+  EXPECT_EQ( 1u, g_dataBlocks.size() );
+  data.clear();
+  EXPECT_EQ( 0u, g_dataBlocks.size() );
 }
 
 }

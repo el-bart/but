@@ -29,12 +29,13 @@ namespace But
  *  @par
  *  each insertion or removal invalidates all iterators.
  */
-template<typename T>
+template<typename T, typename Allocator = std::allocator<T>>
 class UnorderedArray
 {
-  using ImplContainer = std::vector<T>;
+  using ImplContainer = std::vector<T, Allocator>;
 public:
   using value_type     = T;
+  using allocator_type = typename ImplContainer::allocator_type;
   using size_type      = typename ImplContainer::size_type;
   using iterator       = typename ImplContainer::iterator;
   using const_iterator = typename ImplContainer::const_iterator;
@@ -100,6 +101,8 @@ public:
     c_.swap(tmp);
   }
 
+  void swap(UnorderedArray<T>& other) { c_.swap(other.c_); }
+
 private:
   void decreaseCapacityIfPlausable()
   {
@@ -113,5 +116,12 @@ private:
 
   ImplContainer c_;
 };
+
+
+template<typename T>
+void swap(UnorderedArray<T>& lhs, UnorderedArray<T>& rhs)
+{
+  lhs.swap(rhs);
+}
 
 }
