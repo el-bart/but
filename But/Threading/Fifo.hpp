@@ -53,13 +53,17 @@ public:
     m_.lock();
     assert(not locked_);
     locked_ = true;
+    hasNewElements_ = false;
   }
 
   void unlock()
   {
     assert(locked_);
     locked_ = false;
+    const auto needToNotify = hasNewElements_;
     m_.unlock();
+    if(needToNotify)
+      nonEmpty_.notify_all();
   }
 
   template<typename U>
@@ -67,7 +71,7 @@ public:
   {
     assert(locked_);
     q_.push_back(std::forward<U>(u));
-    nonEmpty_.notify_all();
+    hasNewElements_ = true;
   }
 
   bool empty() const
@@ -142,6 +146,7 @@ private:
   std::mutex                          m_;
   bool                                locked_{false};
   mutable std::condition_variable_any nonEmpty_;
+  bool                                hasNewElements_{false};
 };
 
 }
