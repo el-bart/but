@@ -60,10 +60,11 @@ public:
   {
     assert(locked_);
     locked_ = false;
-    const auto needToNotify = hasNewElements_;
-    m_.unlock();
-    if(needToNotify)
+    // yes, notification should be done under a lock - aaccoring to POSIX this is "the way". on linux it is aboud 15% faster
+    // than first unlocking an then notifying and it's 2x that fast on windows.
+    if(hasNewElements_)
       nonEmpty_.notify_all();
+    m_.unlock();
   }
 
   template<typename U>
