@@ -60,8 +60,9 @@ public:
   {
     assert(locked_);
     locked_ = false;
-    // yes, notification should be done under a lock - aaccoring to POSIX this is "the way". on linux it is aboud 15% faster
-    // than first unlocking an then notifying and it's 2x that fast on windows.
+    // yes, notification should be done under a lock - aaccoring to POSIX this is "the way":
+    // http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
+    // on linux it is aboud 15% faster than first unlocking an then notifying and it's 2x that fast on windows.
     if(hasNewElements_)
       nonEmpty_.notify_all();
     m_.unlock();
