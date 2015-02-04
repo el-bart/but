@@ -24,10 +24,8 @@ public:
 
   void set()
   {
-    {
-      Lock lock{m_};
-      blocked_ = false;
-    }
+    Lock lock{m_};
+    blocked_ = false;
     unblocked_.notify_all();
   }
 
