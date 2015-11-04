@@ -1,5 +1,4 @@
 #pragma once
-
 #include <utility>
 #include <cassert>
 #include <boost/operators.hpp>
@@ -72,6 +71,7 @@ public:
   auto operator->() const { return get(); }
   P pointer() const  { assert(p_); return p_; }
   P pointerMove() && { assert(p_); return std::move(p_); }
+  auto operator*() const { return *get(); }
 
   explicit operator bool() const { assert(p_); return true; }
 

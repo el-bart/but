@@ -413,4 +413,12 @@ TEST_F(ButNotNull, BasicBoostCompatibility)
   EXPECT_EQ("foo", pc->s_);
 }
 
+
+TEST_F(ButNotNull, DereferencingOperator)
+{
+  EXPECT_EQ("raw",    (*r_).s_);
+  EXPECT_EQ("unique", (*u_).s_);
+  EXPECT_EQ("shared", (*s_).s_);
+}
+
 }
