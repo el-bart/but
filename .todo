@@ -57,4 +57,7 @@
     <note priority="low" time="1408282352">
         add support for runtime IDs, via policies
     </note>
+    <note priority="low" time="1446643861">
+        implement But::makeSharedNN&lt;&gt;() and But::makeUniqueNN&lt;&gt;() helpers
+    </note>
 </todo>
