@@ -421,4 +421,12 @@ TEST_F(ButNotNull, DereferencingOperator)
   EXPECT_EQ("shared", (*s_).s_);
 }
 
+
+TEST_F(ButNotNull, InplicitConversionToConst)
+{
+  using Ptr      = NotNull<boost::shared_ptr<Data>>;
+  using PtrConst = NotNull<boost::shared_ptr<Data const>>;
+  PtrConst pc{ Ptr{new Data} };
+}
+
 }

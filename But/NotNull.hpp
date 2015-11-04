@@ -27,14 +27,14 @@ public:
   }
 
   template<typename U>
-  explicit NotNull(NotNull<U> const& u):
+  NotNull(NotNull<U> const& u):
     p_{u.p_}
   {
     assert(p_);
   }
 
   template<typename U>
-  explicit NotNull(NotNull<U>&& u):
+  NotNull(NotNull<U>&& u):
     p_{ std::move(u.p_) }
   {
     assert(p_);
