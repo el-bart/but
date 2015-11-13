@@ -46,7 +46,7 @@ TEST_F(ButThreadingException, DefiningAndThrowing)
   try
   {
     BUT_THROW(Problem, "what the hell is that? " << 52 << "? should be " << 2*21 << "!");
-    FAIL() << "no exception ha sbeen thrown";
+    FAIL() << "no exception has been thrown";
   }
   catch(Exception const& ex)
   {
@@ -67,7 +67,7 @@ TEST_F(ButThreadingException, MultipleDeriving)
   try
   {
     BUT_THROW(NewProblem, "whatever " << 10);
-    FAIL() << "no exception ha sbeen thrown";
+    FAIL() << "no exception has been thrown";
   }
   catch(NewProblem const& ex)
   {
@@ -76,6 +76,34 @@ TEST_F(ButThreadingException, MultipleDeriving)
     EXPECT_TRUE( m.find(__FILE__) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find(BOOST_CURRENT_FUNCTION) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find("derived: whatever 10") != std::string::npos ) << "actuall got: " << m;
+  }
+}
+
+
+TEST_F(ButThreadingException, DefiningAndThrowingWithEmptyMessage)
+{
+  BUT_DEFINE_EXCEPTION(Sth, Exception, "holy shit");
+  try
+  {
+    BUT_THROW(Sth, "");
+    FAIL() << "no exception has been thrown";
+  }
+  catch(Sth const&)
+  {
+  }
+}
+
+
+TEST_F(ButThreadingException, DefiningWithEmptyMessage)
+{
+  BUT_DEFINE_EXCEPTION(Sth, Exception, "");
+  try
+  {
+    BUT_THROW(Sth, "");
+    FAIL() << "no exception has been thrown";
+  }
+  catch(Sth const&)
+  {
   }
 }
 

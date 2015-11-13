@@ -15,7 +15,7 @@ namespace
 unsigned add(std::string &msg, const unsigned pos, char const* str)
 {
   assert(str);
-  assert(pos<msg.size());
+  assert( pos <= msg.size() );
   const auto sizePre = msg.size();
   msg.insert(pos, str);
   const auto sizePost = msg.size();
