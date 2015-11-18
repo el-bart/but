@@ -51,6 +51,9 @@
     <note priority="medium" time="1400512964">
         tests for logging facilities
     </note>
+    <note priority="medium" time="1447835445">
+        add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
+    </note>
     <note priority="low" time="1408282338">
         add support for different dispatching mechanisms (hash_table vs. generated search code)
     </note>
