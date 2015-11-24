@@ -69,4 +69,7 @@
     <note priority="low" time="1446643861">
         implement But::makeSharedNN&lt;&gt;() and But::makeUniqueNN&lt;&gt;() helpers
     </note>
+    <note priority="low" time="1448391305">
+        PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
+    </note>
 </todo>
