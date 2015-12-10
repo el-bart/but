@@ -72,4 +72,7 @@
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
     </note>
+    <note priority="low" time="1449762961">
+        But::Mpl::LastType&lt;&gt; in O(1)
+    </note>
 </todo>
