@@ -81,4 +81,7 @@
     <note priority="low" time="1453546619">
         but::optional, that is movable
     </note>
+    <note priority="low" time="1455729383">
+        C++ streams formating via overloads? sth. like out &lt;&lt; hex(42) maybe?
+    </note>
 </todo>
