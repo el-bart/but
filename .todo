@@ -66,6 +66,9 @@
     <note priority="medium" time="1456730821">
         iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
     </note>
+    <note priority="medium" time="1461493793">
+        sharedString&lt;&gt; - read-only data strucutre, that shares underlying data poitner between instances
+    </note>
     <note priority="low" time="1408282338">
         add support for different dispatching mechanisms (hash_table vs. generated search code)
     </note>
@@ -86,5 +89,8 @@
     </note>
     <note priority="low" time="1455729383">
         C++ streams formating via overloads? sth. like out &lt;&lt; hex(42) maybe?
+    </note>
+    <note priority="low" time="1461493855">
+        logger feature for buffering debug logs for some time, so that they are logged only if warning/error occures, but dropping if nothing 'special' happens for some time
     </note>
 </todo>
