@@ -69,6 +69,9 @@
     <note priority="medium" time="1461493793">
         sharedString&lt;&gt; - read-only data strucutre, that shares underlying data poitner between instances
     </note>
+    <note priority="medium" time="1466352707">
+        add convenience function: apply(function, tuple)
+    </note>
     <note priority="low" time="1408282338">
         add support for different dispatching mechanisms (hash_table vs. generated search code)
     </note>
