@@ -72,6 +72,9 @@
     <note priority="medium" time="1466352707">
         add convenience function: apply(function, tuple)
     </note>
+    <note priority="medium" time="1469898747">
+        add Guard class and makeGuardhelper functor
+    </note>
     <note priority="low" time="1408282338">
         add support for different dispatching mechanisms (hash_table vs. generated search code)
     </note>
