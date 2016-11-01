@@ -8,7 +8,7 @@ foreach(app but_uts but_mts but_its)
   target_link_libraries(${app} but)
   target_link_libraries(${app} gmock_main gmock gtest)
   target_link_libraries(${app} boost_serialization boost_filesystem boost_system)
-  add_test(NAME run-${app} COMMAND ${CMAKE_BINARY_DIR}/${app})
+  add_test(NAME run_${app} COMMAND ${CMAKE_BINARY_DIR}/${app})
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 
@@ -22,13 +22,8 @@ foreach(src ${SOURCES_MANUAL})
   list(APPEND TEST_TARGETS        ${app})
 endforeach()
 
-add_custom_target(but_manual    DEPENDS ${TEST_TARGETS_MANUAL})
-add_custom_target(but_tests_all DEPENDS ${TEST_TARGETS})
+add_custom_target(but_tests_manual DEPENDS ${TEST_TARGETS_MANUAL})
+add_custom_target(but_tests_auto   DEPENDS ${TEST_TARGETS})
 
 # enables ctest (otherwise tests would be discarded)
 enable_testing()
-
-add_custom_target(run-but_tests
-  COMMAND ctest
-  DEPENDS ${TEST_TARGETS}
-)
