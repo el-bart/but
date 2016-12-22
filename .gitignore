@@ -1,28 +1,4 @@
-# compiled object files
-*.slo
-*.lo
-*.o
-*.oxx
-
-# misc compiler files
-*.d
-*.dxx
-*.map
-
-# compiled dynamic libraries
-*.so
-*.dylib
-
-# compiled static libraries
-*.lai
-*.la
-*.a
-
-# build-generated elements
-gen
-build
-
-# environemnt and tools
 CMakeLists.txt.user
 .*.swp
+.*.swo
 *.pyc
