@@ -6,14 +6,14 @@ macro(expand_names variable ending)
 endmacro()
 
 set(SRC_DIRS
-        But
-        But/Log
-        But/Log/detail
-        But/System
-        But/Pattern
-        But/Pattern/detail
-        But/Threading
-   )
+    But
+    But/Log
+    But/Log/detail
+    But/System
+    But/Pattern
+    But/Pattern/detail
+    But/Threading
+)
 
 expand_names(SOURCES_ALL    "cpp"        ${SRC_DIRS})
 expand_names(SOURCES_UT     "ut.cpp"     ${SRC_DIRS})

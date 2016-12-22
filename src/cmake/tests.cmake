@@ -1,5 +1,3 @@
-add_subdirectory(gmock)
-
 add_executable(but_uts EXCLUDE_FROM_ALL ${SOURCES_UT})
 add_executable(but_mts EXCLUDE_FROM_ALL ${SOURCES_MT})
 add_executable(but_its EXCLUDE_FROM_ALL ${SOURCES_IT})
