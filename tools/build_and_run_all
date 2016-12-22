@@ -1,22 +1,28 @@
 #!/bin/bash
 set -e
 
-for tc in gcc clang
+for tc in gcc clang default
 do
-  for mode in debug release profile
+  for build in Debug Release Profile Relwithdebinfo
   do
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    echo "$0: building $build with $tc toolchain"
+    echo ""
     # list of exceptions - these does not work at the moment
-    [ "$mode" = "profile" ] && [ "$tc" = "clang" ] && continue || true
+    #[ "$mode" = "profile" ] && [ "$tc" = "clang" ] && continue || true
     # go!
-    D="build/$tc/$mode"
-    mkdir -p "$D"
     (
-      cd "$D"
-      time cmake "-DTOOLCHAIN=$tc" "-DMODE=$mode" -G Ninja ../../../
-      time cmake . # temporary workaround for clang... :/
-      time ninja
-      time ./uts
-      time ./mts
+      mkdir -p "build/script/$tc/$build"
+      cd "$_"
+      if [ "$tc" = "default" ]
+      then
+        TC="-DCMAKE_TOOLCHAIN_FILE=../../../../src/cmake/toolchains/$tc.cmake"
+      else
+        TC=""
+      fi
+      time cmake $TC "-DCMAKE_BUILD_TYPE=$build" -G Ninja ../../../../
+      time ninja all but_tests_manual but_tests_auto
+      time ctest
     )
   done
 done
