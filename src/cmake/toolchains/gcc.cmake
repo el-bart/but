@@ -1,5 +1,2 @@
 set(CMAKE_C_COMPILER   gcc)
 set(CMAKE_CXX_COMPILER g++)
-add_compile_options(-Wall -Werror)
-add_compile_options(-std=c++14)
-add_compile_options(-fstack-protector-all)
