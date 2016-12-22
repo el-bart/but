@@ -103,7 +103,7 @@ TEST_F(ButThreadingCacheLine, ValueType)
 
 TEST_F(ButThreadingCacheLine, CacheLineSizeInfo)
 {
-  EXPECT_EQ( 32, alignof(CacheLine<int, 32>) );
+  EXPECT_EQ( 32u, alignof(CacheLine<int, 32>) );
 }
 
 

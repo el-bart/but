@@ -1,5 +1,0 @@
-add_compile_options(-g1 -ggdb)
-add_compile_options(-O3)
-add_compile_options(-pg)
-add_definitions(-DNDEBUG)
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
