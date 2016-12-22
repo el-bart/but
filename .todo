@@ -48,8 +48,11 @@
             bad_alloc is just fine - otherwise a lot of extra code will be generated, just to serve almost non-appearing condition
         </comment>
     </note>
-    <note priority="high" time="1449916669">
+    <note priority="high" time="1449916669" done="1482444336">
         split build into full-fatures and includable one, so that users do not need to relay on toolchain/build-modes settings (these are probably solved already by their own setup)
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="high" time="1482428187">
         implement BitStoredVector, for values encoded in (any) N-bit values, with serialization and deserialization (sth. like std::vector&lt;bool&gt;, but for any type)
