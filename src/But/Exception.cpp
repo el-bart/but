@@ -64,7 +64,7 @@ std::string constructErrorMessage(char const* file, unsigned line, char const* f
   msg.append(")");
 
   assert( msg.size() <= totalLen && "something's wrong with max length computation" );
-  return std::move(msg);
+  return msg;
 }
 }
 
