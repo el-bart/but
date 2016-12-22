@@ -8,19 +8,16 @@ do
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "$0: building $build with $tc toolchain"
     echo ""
-    # list of exceptions - these does not work at the moment
-    #[ "$mode" = "profile" ] && [ "$tc" = "clang" ] && continue || true
-    # go!
     (
       mkdir -p "build/script/$tc/$build"
       cd "$_"
       if [ "$tc" = "default" ]
       then
-        TC="-DCMAKE_TOOLCHAIN_FILE=../../../../src/cmake/toolchains/$tc.cmake"
+        TCC=""
       else
-        TC=""
+        TCC="-DCMAKE_TOOLCHAIN_FILE=../../../../src/cmake/toolchains/$tc.cmake"
       fi
-      time cmake $TC "-DCMAKE_BUILD_TYPE=$build" -G Ninja ../../../../
+      time cmake $TCC "-DCMAKE_BUILD_TYPE=$build" -G Ninja ../../../../
       time ninja all but_tests_manual but_tests_auto
       time ctest
     )
