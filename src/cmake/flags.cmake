@@ -12,11 +12,14 @@ set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBIN
 set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_PROFILE} -O3 -g1 -DNDEBUG -pg -flto")
 set(CMAKE_EXE_LINKER_FLAGS_PROFILE "${CMAKE_EXE_LINKER_FLAGS_PROFILE} -pg -flto")
 
-# unfortunately 'archive' flags do not have per-build-type variants...
-if(DEFINED CMAKE_BUILD_TYPE AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    set(LTO_PLUGIN "--plugin=$$(gcc --print-file-name=liblto_plugin.so)")
-    set(CMAKE_CXX_ARCHIVE_CREATE "${CMAKE_CXX_ARCHIVE_CREATE} ${LTO_PLUGIN}")
-    set(CMAKE_CXX_ARCHIVE_FINISH "${CMAKE_CXX_ARCHIVE_FINISH} ${LTO_PLUGIN}")
+# LTO plugin flags for AR and RANLIB are needed for GCC only
+if(${CMAKE_COMPILER_IS_GNUCXX})
+    # unfortunately 'archive' flags do not have per-build-type variants...
+    if(DEFINED CMAKE_BUILD_TYPE AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+        set(LTO_PLUGIN "--plugin=$$(gcc --print-file-name=liblto_plugin.so)")
+        set(CMAKE_CXX_ARCHIVE_CREATE "${CMAKE_CXX_ARCHIVE_CREATE} ${LTO_PLUGIN}")
+        set(CMAKE_CXX_ARCHIVE_FINISH "${CMAKE_CXX_ARCHIVE_FINISH} ${LTO_PLUGIN}")
+    endif()
 endif()
 
 
@@ -24,11 +27,11 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function")
 
 # fix for GCC's performance bug, on inlining heuristics
-if("${CMAKE_CXX_COMPILER}" STREQUAL "g++")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -finline-limit=150")
+if(${CMAKE_COMPILER_IS_GNUCXX})
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -finline-limit=150")
 endif()
 
 # strip binaries for GCC
 if(${CMAKE_COMPILER_IS_GNUCXX})
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 endif()
