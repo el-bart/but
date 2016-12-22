@@ -6,7 +6,7 @@ foreach(app but_uts but_mts but_its)
   target_link_libraries(${app} but)
   target_link_libraries(${app} gmock_main gmock gtest)
   target_link_libraries(${app} boost_serialization boost_filesystem boost_system)
-  add_test(NAME run_${app} COMMAND ${CMAKE_BINARY_DIR}/${app})
+  add_test(NAME run_${app} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${app})
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 

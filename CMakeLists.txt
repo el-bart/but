@@ -6,5 +6,6 @@ project(But_dev)
 
 add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
+enable_testing()
 
 add_subdirectory(src)
