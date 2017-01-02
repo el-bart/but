@@ -42,7 +42,16 @@ public:
 
   void push_back(const value_type v)
   {
-    // TODO
+    const auto bits = Packer::encode(v);
+    // TODO...
+    c_.push_back(bits);
+  }
+
+  value_type operator[](const size_type pos) const
+  {
+    // TODO...
+    const auto e = Packer::decode( c_[pos] );
+    return e;
   }
 
 private:

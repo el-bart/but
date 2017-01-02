@@ -14,6 +14,18 @@ enum class Elem
   Z = 2
 };
 
+std::ostream& operator<<(std::ostream& os, const Elem e)
+{
+  switch(e)
+  {
+    case Elem::X: return os << "Elem::X";
+    case Elem::Y: return os << "Elem::Y";
+    case Elem::Z: return os << "Elem::Z";
+  }
+  assert(!"unknown value");
+  return os << "Elem::?";
+}
+
 
 struct Packer
 {
@@ -21,9 +33,7 @@ struct Packer
 
   static auto encode(const Elem e)
   {
-    const auto tmp = static_cast<uint8_t>(e);
-    assert( tmp < (1<<(bits_count-1)) );
-    return tmp;
+    return static_cast<uint8_t>(e);
   }
 
   static auto decode(uint8_t v)
@@ -65,7 +75,9 @@ TEST_F(ButContainerBitPackedSequence, AddingElementsToContainer)
   d_.push_back(Elem::Y);
   d_.push_back(Elem::X);
   EXPECT_EQ( cd_.size(), 3u );
-  // TODO
+  EXPECT_EQ( cd_[0], Elem::Z );
+  EXPECT_EQ( cd_[1], Elem::Y );
+  EXPECT_EQ( cd_[2], Elem::X );
 }
 
 
@@ -161,9 +173,7 @@ struct MaxPacker
 
   static auto encode(const MaxElem e)
   {
-    const auto tmp = static_cast<uint8_t>(e);
-    assert( tmp < (1<<(bits_count-1)) );
-    return tmp;
+    return static_cast<uint8_t>(e);
   }
 
   static auto decode(uint8_t v)
