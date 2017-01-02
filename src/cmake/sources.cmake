@@ -7,6 +7,7 @@ endmacro()
 
 set(SRC_DIRS
     But
+    But/Container
     But/Log
     But/Log/detail
     But/System
