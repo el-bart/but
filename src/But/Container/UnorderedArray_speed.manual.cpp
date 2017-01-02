@@ -22,7 +22,7 @@ using DataField = int;
 
 struct UnorderedArrayAdapter
 {
-  using Container = But::UnorderedArray<DataField>;
+  using Container = But::Container::UnorderedArray<DataField>;
   void add(DataField i) { c_.add(i); }
   Container::const_iterator find(const DataField q) { return std::find( begin(c_), end(c_), q ); }
   void reserve(const Container::size_type n) { c_.reserve(n); }

@@ -6,6 +6,8 @@
 
 namespace But
 {
+namespace Container
+{
 
 /** @brief
  *  cache-friendly data structure, meant to have fast insertion (O(1)), removal (O(1)) and iteration.
@@ -124,4 +126,5 @@ void swap(UnorderedArray<T>& lhs, UnorderedArray<T>& rhs)
   lhs.swap(rhs);
 }
 
+}
 }

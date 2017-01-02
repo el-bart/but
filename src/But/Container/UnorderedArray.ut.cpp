@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "UnorderedArray.hpp"
 
-using But::UnorderedArray;
+using But::Container::UnorderedArray;
 
 namespace
 {
