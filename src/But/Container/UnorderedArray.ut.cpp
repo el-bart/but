@@ -27,14 +27,14 @@ struct Data
   int         number_;
 };
 
-struct ButUnorderedArray: public testing::Test
+struct ButContainerUnorderedArray: public testing::Test
 {
   using DataArray = UnorderedArray<Data>;
   DataArray data_;
 };
 
 
-TEST_F(ButUnorderedArray, AddingNewElementByConstRef)
+TEST_F(ButContainerUnorderedArray, AddingNewElementByConstRef)
 {
   EXPECT_TRUE( data_.empty() );
   EXPECT_EQ( data_.size(), 0u );
@@ -45,7 +45,7 @@ TEST_F(ButUnorderedArray, AddingNewElementByConstRef)
 }
 
 
-TEST_F(ButUnorderedArray, AddingNewElementByRvalue)
+TEST_F(ButContainerUnorderedArray, AddingNewElementByRvalue)
 {
   EXPECT_TRUE( data_.empty() );
   EXPECT_EQ( data_.size(), 0u );
@@ -55,7 +55,7 @@ TEST_F(ButUnorderedArray, AddingNewElementByRvalue)
 }
 
 
-TEST_F(ButUnorderedArray, EmplacingNewElement)
+TEST_F(ButContainerUnorderedArray, EmplacingNewElement)
 {
   EXPECT_TRUE( data_.empty() );
   EXPECT_EQ( data_.size(), 0u );
@@ -65,7 +65,7 @@ TEST_F(ButUnorderedArray, EmplacingNewElement)
 }
 
 
-TEST_F(ButUnorderedArray, ModifyingElementWithIterator)
+TEST_F(ButContainerUnorderedArray, ModifyingElementWithIterator)
 {
   data_.emplace("abc", 123);
   std::begin(data_)->str_ = "foo";
@@ -73,7 +73,7 @@ TEST_F(ButUnorderedArray, ModifyingElementWithIterator)
 }
 
 
-TEST_F(ButUnorderedArray, ReferencingElementWithConstIterator)
+TEST_F(ButContainerUnorderedArray, ReferencingElementWithConstIterator)
 {
   data_.emplace("devil", 666);
   auto const& cdata = data_;
@@ -81,7 +81,7 @@ TEST_F(ButUnorderedArray, ReferencingElementWithConstIterator)
 }
 
 
-TEST_F(ButUnorderedArray, ModifyingElementWithIndex)
+TEST_F(ButContainerUnorderedArray, ModifyingElementWithIndex)
 {
   data_.emplace("abc", 123);
   data_[0].number_ = 69;
@@ -89,7 +89,7 @@ TEST_F(ButUnorderedArray, ModifyingElementWithIndex)
 }
 
 
-TEST_F(ButUnorderedArray, ReferencingElementWithIndex)
+TEST_F(ButContainerUnorderedArray, ReferencingElementWithIndex)
 {
   data_.emplace("abc", 123);
   auto const& cdata = data_;
@@ -97,7 +97,7 @@ TEST_F(ButUnorderedArray, ReferencingElementWithIndex)
 }
 
 
-TEST_F(ButUnorderedArray, RemovingLastElement)
+TEST_F(ButContainerUnorderedArray, RemovingLastElement)
 {
   data_.emplace("a", 1);
   data_.emplace("b", 2);
@@ -112,7 +112,7 @@ TEST_F(ButUnorderedArray, RemovingLastElement)
 }
 
 
-TEST_F(ButUnorderedArray, RemovingFirstElement)
+TEST_F(ButContainerUnorderedArray, RemovingFirstElement)
 {
   data_.emplace("a", 1);
   data_.emplace("b", 2);
@@ -127,7 +127,7 @@ TEST_F(ButUnorderedArray, RemovingFirstElement)
 }
 
 
-TEST_F(ButUnorderedArray, RemovingMiddleElement)
+TEST_F(ButContainerUnorderedArray, RemovingMiddleElement)
 {
   data_.emplace("a", 1);
   data_.emplace("b", 2);
@@ -147,7 +147,7 @@ TEST_F(ButUnorderedArray, RemovingMiddleElement)
 }
 
 
-TEST_F(ButUnorderedArray, RemovingTheOnlyElementInCollection)
+TEST_F(ButContainerUnorderedArray, RemovingTheOnlyElementInCollection)
 {
   data_.emplace("a", 1);
   data_.erase( std::begin(data_) );
@@ -155,7 +155,7 @@ TEST_F(ButUnorderedArray, RemovingTheOnlyElementInCollection)
 }
 
 
-TEST_F(ButUnorderedArray, IteratorIncrement)
+TEST_F(ButContainerUnorderedArray, IteratorIncrement)
 {
   data_.emplace("a", 1);
   auto it = std::begin(data_);
@@ -164,7 +164,7 @@ TEST_F(ButUnorderedArray, IteratorIncrement)
 }
 
 
-TEST_F(ButUnorderedArray, RandomAccessIterator)
+TEST_F(ButContainerUnorderedArray, RandomAccessIterator)
 {
   data_.emplace("a", 1);
   const auto it = std::begin(data_);
@@ -172,7 +172,7 @@ TEST_F(ButUnorderedArray, RandomAccessIterator)
 }
 
 
-TEST_F(ButUnorderedArray, IteratorDecrement)
+TEST_F(ButContainerUnorderedArray, IteratorDecrement)
 {
   data_.emplace("a", 1);
   auto it = std::begin(data_);
@@ -182,7 +182,7 @@ TEST_F(ButUnorderedArray, IteratorDecrement)
 }
 
 
-TEST_F(ButUnorderedArray, ConstIterating)
+TEST_F(ButContainerUnorderedArray, ConstIterating)
 {
   data_.emplace("a", 1);
   const auto& c = data_;
@@ -194,7 +194,7 @@ TEST_F(ButUnorderedArray, ConstIterating)
 }
 
 
-TEST_F(ButUnorderedArray, ConstIteratingWithC)
+TEST_F(ButContainerUnorderedArray, ConstIteratingWithC)
 {
   data_.emplace("a", 1);
   const auto b = data_.cbegin();
@@ -205,7 +205,7 @@ TEST_F(ButUnorderedArray, ConstIteratingWithC)
 }
 
 
-TEST_F(ButUnorderedArray, DecreasingAllocationWhenRemoving)
+TEST_F(ButContainerUnorderedArray, DecreasingAllocationWhenRemoving)
 {
   for(auto i=0; i<100; ++i)
     data_.emplace("a", i);
@@ -219,7 +219,7 @@ TEST_F(ButUnorderedArray, DecreasingAllocationWhenRemoving)
 }
 
 
-TEST_F(ButUnorderedArray, DoNotDecreaseCapacityForSmallContainers)
+TEST_F(ButContainerUnorderedArray, DoNotDecreaseCapacityForSmallContainers)
 {
   for(auto i=0; i<5; ++i)
     data_.emplace("a", i);
@@ -233,7 +233,7 @@ TEST_F(ButUnorderedArray, DoNotDecreaseCapacityForSmallContainers)
 }
 
 
-TEST_F(ButUnorderedArray, NeededTypedefs)
+TEST_F(ButContainerUnorderedArray, NeededTypedefs)
 {
   EXPECT_TRUE( (std::is_same<DataArray::value_type, Data>()) );
   EXPECT_TRUE( (std::is_same<DataArray::allocator_type, std::allocator<Data>>()) );
@@ -243,7 +243,7 @@ TEST_F(ButUnorderedArray, NeededTypedefs)
 }
 
 
-TEST_F(ButUnorderedArray, RemovingAllElementsAtOnce)
+TEST_F(ButContainerUnorderedArray, RemovingAllElementsAtOnce)
 {
   for(auto i=0; i<100; ++i)
     data_.emplace("a", i);
@@ -253,14 +253,14 @@ TEST_F(ButUnorderedArray, RemovingAllElementsAtOnce)
 }
 
 
-TEST_F(ButUnorderedArray, ReservingSpaceForElements)
+TEST_F(ButContainerUnorderedArray, ReservingSpaceForElements)
 {
   data_.reserve(1000);
   EXPECT_GE( data_.capacity(), 1000u );
 }
 
 
-TEST_F(ButUnorderedArray, ReservingSpaceForElementsOnNonEmptyContainer)
+TEST_F(ButContainerUnorderedArray, ReservingSpaceForElementsOnNonEmptyContainer)
 {
   data_.emplace("a", 911);
   data_.emplace("a", 911);
@@ -270,7 +270,7 @@ TEST_F(ButUnorderedArray, ReservingSpaceForElementsOnNonEmptyContainer)
 }
 
 
-TEST_F(ButUnorderedArray, SortingContainerWorksFine)
+TEST_F(ButContainerUnorderedArray, SortingContainerWorksFine)
 {
   // prepare random input data
   {
@@ -288,7 +288,7 @@ TEST_F(ButUnorderedArray, SortingContainerWorksFine)
 }
 
 
-TEST_F(ButUnorderedArray, ConstructingWithInitializerList)
+TEST_F(ButContainerUnorderedArray, ConstructingWithInitializerList)
 {
   const DataArray data{ {"abc", 1}, {"def", 2} };
   ASSERT_EQ( 2u, data.size() );
@@ -299,21 +299,21 @@ TEST_F(ButUnorderedArray, ConstructingWithInitializerList)
 }
 
 
-TEST_F(ButUnorderedArray, Copyable)
+TEST_F(ButContainerUnorderedArray, Copyable)
 {
   EXPECT_TRUE( std::is_copy_constructible<DataArray>() );
   EXPECT_TRUE( std::is_copy_assignable<DataArray>() );
 }
 
 
-TEST_F(ButUnorderedArray, Movable)
+TEST_F(ButContainerUnorderedArray, Movable)
 {
   EXPECT_TRUE( std::is_move_constructible<DataArray>() );
   EXPECT_TRUE( std::is_move_assignable<DataArray>() );
 }
 
 
-TEST_F(ButUnorderedArray, SwapMemberFunction)
+TEST_F(ButContainerUnorderedArray, SwapMemberFunction)
 {
   data_.emplace("xxx", 2);
   DataArray other{ {"abc", 1} };
@@ -324,7 +324,7 @@ TEST_F(ButUnorderedArray, SwapMemberFunction)
 }
 
 
-TEST_F(ButUnorderedArray, FreeSwapFunction)
+TEST_F(ButContainerUnorderedArray, FreeSwapFunction)
 {
   data_.emplace("xxx", 2);
   DataArray other{ {"abc", 1} };
@@ -359,7 +359,7 @@ struct TestAllocator
   }
 };
 
-TEST_F(ButUnorderedArray, AllocatorAware)
+TEST_F(ButContainerUnorderedArray, AllocatorAware)
 {
   EXPECT_TRUE( g_dataBlocks.empty() );
   UnorderedArray<Data, TestAllocator<Data>> data;
