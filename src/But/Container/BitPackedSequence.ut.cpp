@@ -81,6 +81,46 @@ TEST_F(ButContainerBitPackedSequence, AddingElementsToContainer)
 }
 
 
+// just a happy abuse of static polymorphism... ;)
+struct CountingVector: std::vector<uint8_t>
+{
+  CountingVector() { count_ = 0; }
+
+  void push_back(value_type const& v)
+  {
+    ++count_;
+    std::vector<uint8_t>::push_back(v);
+  }
+
+  static unsigned count_;
+};
+unsigned CountingVector::count_;
+
+
+TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
+{
+  using Data = BitPackedSequence<Elem, Packer, CountingVector>;
+  Data d;
+  EXPECT_EQ( CountingVector::count_, 0u );
+
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( CountingVector::count_, 1u );
+
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( CountingVector::count_, 1u );
+
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( CountingVector::count_, 2u );
+
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( CountingVector::count_, 2u );
+}
+
+
 TEST_F(ButContainerBitPackedSequence, RemovingElements)
 {
   // TODO

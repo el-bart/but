@@ -43,6 +43,7 @@ public:
   void push_back(const value_type v)
   {
     const auto bits = Packer::encode(v);
+    resizeIfNeeded();
     // TODO...
     c_.push_back(bits);
   }
@@ -55,6 +56,13 @@ public:
   }
 
 private:
+  void resizeIfNeeded()
+  {
+    if( c_.size() * Packer::bits_count <= s_ )
+      return;
+  }
+
+  size_type s_{0};
   Container c_;
 };
 
