@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "MaxSizedSequence.hpp"
+#include "ArrayWithSize.hpp"
 
 using But::Container::MaxSizedSequence;
 
@@ -93,14 +94,11 @@ TEST_F(ButContainerMaxSizedSequence, RemovingElementFromTheEnd)
 
 TEST_F(ButContainerMaxSizedSequence, ArrayWorksWithAdapter)
 {
-  FAIL();
-  /*
-  MaxSizedSequence<std::string, 3, std::array<std::string,3>> s;
+  MaxSizedSequence<std::string, 3, But::Container::ArrayWithSize<std::string,3>> s;
   EXPECT_TRUE( s.push_back("one") );
   EXPECT_TRUE( s.push_back("two") );
   s.pop_back();
   EXPECT_EQ( s.size(), 1u );
-  */
 
   // TODO: check content
 }
