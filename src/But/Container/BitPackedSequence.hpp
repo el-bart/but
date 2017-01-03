@@ -72,10 +72,22 @@ private:
   void insertValueAtPosition(const value_type v, const size_type pos)
   {
     const auto bits = Packer::encode(v);
+
     const auto startByte = (pos * Packer::bits_count) / array_element_bits;
     const auto startOffset = (pos - startByte * Packer::bits_count) / Packer::bits_count;
     const auto bitsLeftInStartByte = array_element_bits - startOffset;
     assert( bitsLeftInStartByte > 0u && "wtf?!" );
+    const auto shiftForStart = array_element_bits - bitsLeftInStartByte;
+    //const auto maskForStart = array_element_mask << shiftForStart;
+    //c_[startByte] &= maskForStart;    // TODO...
+    c_[startByte] |= bits << shiftForStart;
+
+    if( bitsLeftInStartByte < Packer::bits_count )
+    {
+      const auto endByte = startByte + 1u;
+      //c_[endByte] &= ~array_element_bits;    // TODO...
+      c_[endByte] |= bits >> bitsLeftInStartByte;
+    }
     //
   }
 
