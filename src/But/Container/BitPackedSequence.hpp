@@ -26,6 +26,7 @@ class BitPackedSequence final
   static_assert( std::is_pod<typename Container::value_type>::value, "array element must be POD" );
 
 public:
+
   using size_type  = typename Container::size_type;
   using value_type = T;
   using iterator       = void*; // TODO
@@ -59,9 +60,18 @@ public:
 
 private:
   using array_element_type = typename Container::value_type;
+
+  static constexpr array_element_type maskForFirstBits(const uint8_t count)
+  {
+    if(count==0u)
+      return 0;
+    return (1<<(count-1)) | maskForFirstBits(count-1);
+  }
+
   static constexpr uint8_t bits_per_byte      = 8u;
   static constexpr uint8_t array_element_bits = sizeof(array_element_type) * bits_per_byte;
   static constexpr auto    array_element_mask = std::numeric_limits<array_element_type>::max();
+  static constexpr auto    element_bits_mask  = maskForFirstBits(Packer::bits_count);
 
   void resizeToFitAdditional(const size_type additional)
   {
@@ -92,16 +102,16 @@ private:
 
   value_type readValueAtPosition(const size_type pos) const
   {
-    /*
-    assert( pos < size_ && "index out of bound" );
-    auto startByte   = (pos * Packer::bits_count) / array_element_bits;
-    auto startOffset = (pos - startByte * Packer::bits_count) / Packer::bits_count;
-    auto lowByte     = c_[startByte];
-    
-    // TODO
-    return Packer::decode( c_[pos] );
-    */
-    return Packer::decode(0u);
+    const auto startByte = (pos * Packer::bits_count) / array_element_bits;
+    const auto startOffset = pos * Packer::bits_count - startByte * array_element_bits;
+    const auto bitsLeftInStartByte = array_element_bits - startOffset;
+    assert( bitsLeftInStartByte > 0u && "wtf?!" );
+    const auto shiftForStart = array_element_bits - bitsLeftInStartByte;
+    const auto maskForStart = element_bits_mask << shiftForStart;
+    const auto firstByte = c_[startByte] & maskForStart;
+    const auto firstPart = firstByte >> startOffset;
+    // TODO...
+    return Packer::decode(firstPart);
   }
 
   size_type size_{0};
