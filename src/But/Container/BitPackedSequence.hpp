@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <limits>
+#include <type_traits>
 
 namespace But
 {
@@ -23,10 +24,6 @@ class BitPackedSequence final
   static_assert( (1<<(Packer::bits_count-1u)) <= std::numeric_limits<typename Container::value_type>::max(),
                  "packer produces elements that are bigger than container's single element capacity" );
   static_assert( std::is_pod<typename Container::value_type>::value, "array element must be POD" );
-
-  using array_element_type = typename Container::value_type;
-  static constexpr uint8_t bits_per_byte      = 8u;
-  static constexpr uint8_t array_element_bits = sizeof(array_element_type) * bits_per_byte;
 
 public:
   using size_type  = typename Container::size_type;
@@ -61,6 +58,11 @@ public:
   }
 
 private:
+  using array_element_type = typename Container::value_type;
+  static constexpr uint8_t bits_per_byte      = 8u;
+  static constexpr uint8_t array_element_bits = sizeof(array_element_type) * bits_per_byte;
+  static constexpr auto    array_element_mask = std::numeric_limits<array_element_type>::max();
+
   void resizeToFitAdditional(const size_type additional)
   {
     while( capacity() < size() + additional )
@@ -70,7 +72,10 @@ private:
   void insertValueAtPosition(const value_type v, const size_type pos)
   {
     const auto bits = Packer::encode(v);
-    (void)bits;
+    const auto startByte = (pos * Packer::bits_count) / array_element_bits;
+    const auto startOffset = (pos - startByte * Packer::bits_count) / Packer::bits_count;
+    const auto bitsLeftInStartByte = array_element_bits - startOffset;
+    assert( bitsLeftInStartByte > 0u && "wtf?!" );
     //
   }
 
