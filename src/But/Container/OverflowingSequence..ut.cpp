@@ -1,22 +1,22 @@
 #include "gtest/gtest.h"
-#include "MaxSizedSequence.hpp"
+#include "OverflowingSequence.hpp"
 #include "ArrayWithSize.hpp"
 
-using But::Container::MaxSizedSequence;
+using But::Container::OverflowingSequence;
 
 namespace
 {
 
-struct ButContainerMaxSizedSequence: public testing::Test
+struct ButContainerOverflowingSequence: public testing::Test
 {
-  using Sequence = MaxSizedSequence<std::string, 3>;
+  using Sequence = OverflowingSequence<std::string, 3>;
 
   Sequence        s_;
   Sequence const& cs_ = s_;
 };
 
 
-TEST_F(ButContainerMaxSizedSequence, NewlyCreatedCollectionIsEmpty)
+TEST_F(ButContainerOverflowingSequence, NewlyCreatedCollectionIsEmpty)
 {
   EXPECT_TRUE( cs_.empty() );
   EXPECT_EQ( cs_.size(), 0u );
@@ -24,7 +24,7 @@ TEST_F(ButContainerMaxSizedSequence, NewlyCreatedCollectionIsEmpty)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, AddingElementsThatFit)
+TEST_F(ButContainerOverflowingSequence, AddingElementsThatFit)
 {
   EXPECT_EQ( cs_.max_size(), 3u );
 
@@ -43,7 +43,7 @@ TEST_F(ButContainerMaxSizedSequence, AddingElementsThatFit)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, OverflowingDoesNotAddNewElements)
+TEST_F(ButContainerOverflowingSequence, OverflowingDoesNotAddNewElements)
 {
   EXPECT_TRUE( s_.push_back("one") );
   EXPECT_TRUE( s_.push_back("two") );
@@ -54,7 +54,7 @@ TEST_F(ButContainerMaxSizedSequence, OverflowingDoesNotAddNewElements)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, ConstIterating)
+TEST_F(ButContainerOverflowingSequence, ConstIterating)
 {
   EXPECT_TRUE( s_.push_back("one") );
   EXPECT_TRUE( s_.push_back("two") );
@@ -63,7 +63,7 @@ TEST_F(ButContainerMaxSizedSequence, ConstIterating)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, Iterating)
+TEST_F(ButContainerOverflowingSequence, Iterating)
 {
   EXPECT_TRUE( s_.push_back("one") );
   EXPECT_TRUE( s_.push_back("two") );
@@ -72,7 +72,7 @@ TEST_F(ButContainerMaxSizedSequence, Iterating)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, OverwritingExistingElement)
+TEST_F(ButContainerOverflowingSequence, OverwritingExistingElement)
 {
   EXPECT_TRUE( s_.push_back("one") );
   EXPECT_TRUE( s_.push_back("two") );
@@ -81,7 +81,7 @@ TEST_F(ButContainerMaxSizedSequence, OverwritingExistingElement)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, RemovingElementFromTheEnd)
+TEST_F(ButContainerOverflowingSequence, RemovingElementFromTheEnd)
 {
   EXPECT_TRUE( s_.push_back("one") );
   EXPECT_TRUE( s_.push_back("two") );
@@ -92,9 +92,9 @@ TEST_F(ButContainerMaxSizedSequence, RemovingElementFromTheEnd)
 }
 
 
-TEST_F(ButContainerMaxSizedSequence, ArrayWorksWithAdapter)
+TEST_F(ButContainerOverflowingSequence, ArrayWorksWithAdapter)
 {
-  MaxSizedSequence<std::string, 3, But::Container::ArrayWithSize<std::string,3>> s;
+  OverflowingSequence<std::string, 3, But::Container::ArrayWithSize<std::string,3>> s;
   EXPECT_TRUE( s.push_back("one") );
   EXPECT_TRUE( s.push_back("two") );
   s.pop_back();

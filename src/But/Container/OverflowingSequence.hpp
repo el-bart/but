@@ -9,7 +9,7 @@ namespace Container
 {
 
 template<typename T, size_t N, typename Container = std::vector<T>>
-class MaxSizedSequence final
+class OverflowingSequence final
 {
 public:
   using size_type = typename Container::size_type;
