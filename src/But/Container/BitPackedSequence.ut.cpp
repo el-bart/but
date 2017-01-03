@@ -83,7 +83,6 @@ TEST_F(ButContainerBitPackedSequence, AddingElementsToContainersFirstByte)
 
 TEST_F(ButContainerBitPackedSequence, AddingElementsToContainersNextBytes)
 {
-  return;                                           
   d_.push_back(Elem::Z);
   d_.push_back(Elem::Y);
   d_.push_back(Elem::X);
@@ -121,6 +120,9 @@ unsigned CountingVector::count_;
 TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
 {
   // TODO: this test does not work correctly...
+  FAIL() << "fix me plz...";
+  return;
+/*
   using Data = BitPackedSequence<Elem, Packer, CountingVector>;
   Data d;
   EXPECT_EQ( CountingVector::count_, 0u );
@@ -140,6 +142,7 @@ TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
   d_.push_back(Elem::Z);
   d_.push_back(Elem::Z);
   EXPECT_EQ( CountingVector::count_, 2u );
+  */
 }
 
 
@@ -187,38 +190,76 @@ TEST_F(ButContainerBitPackedSequence, ConstReverseIterating)
 
 enum class OddElem
 {
-  X = 0,
-  Y = 1,
-  Z = 2,
-  W = 3,
-  Q = 4
+  X =  1 | 1,
+  Y =  2 | 1,
+  Z =  4 | 1,
+  W =  8 | 1,
+  Q = 16 | 1
 };
 
 
 struct OddPacker
 {
-  static constexpr unsigned bits_count = 3;
+  static constexpr unsigned bits_count = 5;
 
   static auto encode(const OddElem e)
   {
     const auto tmp = static_cast<uint8_t>(e);
-    assert( tmp < (1<<(bits_count-1)) );
+    assert( tmp < (1<<bits_count) );
     return tmp;
   }
 
   static auto decode(uint8_t v)
   {
-    assert( v <= 3u && "element is over OddElem::Q" );
+    assert( v <= (16u|1u) && "element is over OddElem::Q" );
     return static_cast<OddElem>(v);
   }
 };
+
+
+TEST_F(ButContainerBitPackedSequence, OddPackerSanityTests)
+{
+  EXPECT_EQ( OddPacker::decode( OddPacker::encode(OddElem::X) ), OddElem::X );
+  EXPECT_EQ( OddPacker::decode( OddPacker::encode(OddElem::Y) ), OddElem::Y );
+  EXPECT_EQ( OddPacker::decode( OddPacker::encode(OddElem::Z) ), OddElem::Z );
+  EXPECT_EQ( OddPacker::decode( OddPacker::encode(OddElem::W) ), OddElem::W );
+  EXPECT_EQ( OddPacker::decode( OddPacker::encode(OddElem::Q) ), OddElem::Q );
+}
 
 
 TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCount)
 {
   using Data = BitPackedSequence<OddElem, OddPacker>;
   Data d;
-  // TODO
+  d.push_back(OddElem::X);
+  d.push_back(OddElem::Z);
+  ASSERT_EQ( d.size(), 2u );
+  EXPECT_EQ( d[0], OddElem::X );
+  EXPECT_EQ( d[1], OddElem::Z );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningTwoElementsWorks)
+{
+  using Data = BitPackedSequence<OddElem, OddPacker>;
+  Data d;
+  d.push_back(OddElem::X);
+  d.push_back(OddElem::Y);
+  d.push_back(OddElem::Z);
+  d.push_back(OddElem::W);
+  d.push_back(OddElem::Q);
+  d.push_back(OddElem::Y);
+  d.push_back(OddElem::Z);
+  d.push_back(OddElem::W);
+  ASSERT_EQ( d.size(), 8u );
+  EXPECT_EQ( d[0], OddElem::X );
+  EXPECT_EQ( d[1], OddElem::Y );
+  EXPECT_EQ( d[2], OddElem::Z );
+  EXPECT_EQ( d[3], OddElem::W );
+  EXPECT_EQ( d[4], OddElem::Q );
+  EXPECT_EQ( d[5], OddElem::Y );
+  EXPECT_EQ( d[6], OddElem::Z );
+  EXPECT_EQ( d[7], OddElem::W );
 }
 
 
@@ -248,37 +289,6 @@ struct MaxPacker
 TEST_F(ButContainerBitPackedSequence, WorksWithUpTo8Bits)
 {
   using Data = BitPackedSequence<MaxElem, MaxPacker>;
-  Data d;
-  // TODO
-}
-
-
-enum class Elem7
-{
-  X = 0u,
-  Y = 0x7Fu,
-};
-
-
-struct Packer7
-{
-  static constexpr unsigned bits_count = 7;
-
-  static auto encode(const MaxElem e)
-  {
-    return static_cast<uint8_t>(e);
-  }
-
-  static auto decode(uint8_t v)
-  {
-    return static_cast<MaxElem>(v);
-  }
-};
-
-
-TEST_F(ButContainerBitPackedSequence, InterleavingElementsThroughBytesWorksFine)
-{
-  using Data = BitPackedSequence<Elem7, Packer7>;
   Data d;
   // TODO
 }
