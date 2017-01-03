@@ -120,6 +120,7 @@ unsigned CountingVector::count_;
 
 TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
 {
+  // TODO: this test does not work correctly...
   using Data = BitPackedSequence<Elem, Packer, CountingVector>;
   Data d;
   EXPECT_EQ( CountingVector::count_, 0u );
