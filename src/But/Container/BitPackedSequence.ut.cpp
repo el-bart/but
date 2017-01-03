@@ -69,15 +69,36 @@ TEST_F(ButContainerBitPackedSequence, EmptyContainerIsFine)
 }
 
 
-TEST_F(ButContainerBitPackedSequence, AddingElementsToContainer)
+TEST_F(ButContainerBitPackedSequence, AddingElementsToContainersFirstByte)
 {
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( cd_.size(), 3u );
+  EXPECT_EQ( cd_[0], Elem::X );
+  EXPECT_EQ( cd_[1], Elem::Y );
+  EXPECT_EQ( cd_[2], Elem::Z );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, AddingElementsToContainersNextBytes)
+{
+  return;                                           
   d_.push_back(Elem::Z);
   d_.push_back(Elem::Y);
   d_.push_back(Elem::X);
-  EXPECT_EQ( cd_.size(), 3u );
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( cd_.size(), 7u );
   EXPECT_EQ( cd_[0], Elem::Z );
   EXPECT_EQ( cd_[1], Elem::Y );
   EXPECT_EQ( cd_[2], Elem::X );
+  EXPECT_EQ( cd_[3], Elem::Z );
+  EXPECT_EQ( cd_[4], Elem::X );
+  EXPECT_EQ( cd_[5], Elem::Y );
+  EXPECT_EQ( cd_[6], Elem::Z );
 }
 
 
@@ -203,7 +224,7 @@ TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCount)
 enum class MaxElem
 {
   X = 0u,
-  Y = 255u,
+  Y = 0xFFu,
 };
 
 
@@ -226,6 +247,37 @@ struct MaxPacker
 TEST_F(ButContainerBitPackedSequence, WorksWithUpTo8Bits)
 {
   using Data = BitPackedSequence<MaxElem, MaxPacker>;
+  Data d;
+  // TODO
+}
+
+
+enum class Elem7
+{
+  X = 0u,
+  Y = 0x7Fu,
+};
+
+
+struct Packer7
+{
+  static constexpr unsigned bits_count = 7;
+
+  static auto encode(const MaxElem e)
+  {
+    return static_cast<uint8_t>(e);
+  }
+
+  static auto decode(uint8_t v)
+  {
+    return static_cast<MaxElem>(v);
+  }
+};
+
+
+TEST_F(ButContainerBitPackedSequence, InterleavingElementsThroughBytesWorksFine)
+{
+  using Data = BitPackedSequence<Elem7, Packer7>;
   Data d;
   // TODO
 }

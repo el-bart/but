@@ -74,7 +74,7 @@ private:
     const auto bits = Packer::encode(v);
 
     const auto startByte = (pos * Packer::bits_count) / array_element_bits;
-    const auto startOffset = (pos - startByte * Packer::bits_count) / Packer::bits_count;
+    const auto startOffset = pos * Packer::bits_count - startByte * array_element_bits;
     const auto bitsLeftInStartByte = array_element_bits - startOffset;
     assert( bitsLeftInStartByte > 0u && "wtf?!" );
     const auto shiftForStart = array_element_bits - bitsLeftInStartByte;
@@ -88,7 +88,6 @@ private:
       //c_[endByte] &= ~array_element_bits;    // TODO...
       c_[endByte] |= bits >> bitsLeftInStartByte;
     }
-    //
   }
 
   value_type readValueAtPosition(const size_type pos) const
