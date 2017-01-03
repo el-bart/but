@@ -19,8 +19,6 @@ public:
   using iterator = typename Container::iterator;
   using const_iterator = typename Container::const_iterator;
 
-  ArrayWithSize() = default;
-
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
   constexpr size_t max_size() const { return N; }
