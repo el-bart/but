@@ -1,4 +1,5 @@
 #include <random>
+#include <type_traits>
 #include <cassert>
 #include "gtest/gtest.h"
 #include "BitPackedSequence.hpp"
@@ -281,7 +282,7 @@ auto generateLongSequence(unsigned count)
   out.reserve(count);
   const OddElem input[] = { OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
   std::mt19937 gen{count};
-  std::uniform_int_distribution<unsigned> dist{0, sizeof(input)-1};
+  std::uniform_int_distribution<unsigned> dist{ 0, std::extent<decltype(input)>::value-1 };
   for(auto i=0u; i<count; ++i)
     out.push_back( input[ dist(gen) ] );
   return out;
@@ -289,7 +290,7 @@ auto generateLongSequence(unsigned count)
 
 TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
 {
-  const auto ref = generateLongSequence(1666);
+  const auto ref = generateLongSequence(2666);
   using Data = BitPackedSequence<OddElem, OddPacker>;
   Data d;
   for(auto e: ref)
