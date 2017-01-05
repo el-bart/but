@@ -48,6 +48,33 @@ struct Packer
 
 struct ButContainerBitPackedSequence: public testing::Test
 {
+  template<typename T>
+  auto generateLongSequence(const unsigned count, std::vector<T> const& input)
+  {
+    std::vector<T> out;
+    out.reserve(count);
+    std::mt19937 gen{count};
+    std::uniform_int_distribution<typename std::vector<T>::size_type> dist{ 0, input.size()-1 };
+    for(auto i=0u; i<count; ++i)
+      out.push_back( input[ dist(gen) ] );
+    return out;
+  }
+
+  template<typename TPacker, typename T>
+  void smokeTestPackingLongSequence(std::vector<T> const& input)
+  {
+    const auto ref = generateLongSequence(2666, input);
+
+    using Data = BitPackedSequence<T, TPacker>;
+    Data d;
+    for(auto e: ref)
+      d.push_back(e);
+
+    ASSERT_EQ( d.size(), ref.size() );
+    for(auto i=0u; i<d.size(); ++i)
+      EXPECT_EQ( d[i], ref[i] ) << "at position " << i;
+  }
+
   using Data = BitPackedSequence<Elem, Packer>;
   Data        d_;
   Data const& cd_ = d_;
@@ -276,28 +303,10 @@ TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningMultipleElementsWorks)
 }
 
 
-auto generateLongSequence(unsigned count)
-{
-  std::vector<OddElem> out;
-  out.reserve(count);
-  const OddElem input[] = { OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
-  std::mt19937 gen{count};
-  std::uniform_int_distribution<unsigned> dist{ 0, std::extent<decltype(input)>::value-1 };
-  for(auto i=0u; i<count; ++i)
-    out.push_back( input[ dist(gen) ] );
-  return out;
-}
-
 TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
 {
-  const auto ref = generateLongSequence(2666);
-  using Data = BitPackedSequence<OddElem, OddPacker>;
-  Data d;
-  for(auto e: ref)
-    d.push_back(e);
-  ASSERT_EQ( d.size(), ref.size() );
-  for(auto i=0u; i<d.size(); ++i)
-    EXPECT_EQ( d[i], ref[i] ) << "at position " << i;
+  const std::vector<OddElem> input{ OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
+  smokeTestPackingLongSequence<OddPacker>(input);
 }
 
 
