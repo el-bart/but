@@ -190,7 +190,13 @@ TEST_F(ButContainerBitPackedSequence, ReplacingElements)
 
 TEST_F(ButContainerBitPackedSequence, RandomAccess)
 {
-  // TODO
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  EXPECT_EQ( cd_.size(), 3u );
+  EXPECT_EQ( cd_[0], Elem::X );
+  EXPECT_EQ( cd_[1], Elem::Y );
+  EXPECT_EQ( cd_[2], Elem::Z );
 }
 
 
@@ -215,6 +221,13 @@ TEST_F(ButContainerBitPackedSequence, ReverseIterating)
 TEST_F(ButContainerBitPackedSequence, ConstReverseIterating)
 {
   // TODO
+}
+
+
+TEST_F(ButContainerBitPackedSequence, SmallBitsCountSmokeTestOnHugeSequence)
+{
+  const std::vector<Elem> input{ Elem::X, Elem::Y, Elem::Z };
+  smokeTestPackingLongSequence<Packer>(input);
 }
 
 
@@ -337,7 +350,22 @@ TEST_F(ButContainerBitPackedSequence, WorksWithUpTo8Bits)
 {
   using Data = BitPackedSequence<MaxElem, MaxPacker>;
   Data d;
-  // TODO
+  d.push_back(MaxElem::X);
+  d.push_back(MaxElem::Y);
+  d.push_back(MaxElem::X);
+  d.push_back(MaxElem::Y);
+  ASSERT_EQ( d.size(), 4u );
+  EXPECT_EQ( d[0], MaxElem::X );
+  EXPECT_EQ( d[1], MaxElem::Y );
+  EXPECT_EQ( d[2], MaxElem::X );
+  EXPECT_EQ( d[3], MaxElem::Y );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, UpTo8BitsSmokeTestOnHugeSequence)
+{
+  const std::vector<MaxElem> input{ MaxElem::X, MaxElem::Y };
+  smokeTestPackingLongSequence<MaxPacker>(input);
 }
 
 
