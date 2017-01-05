@@ -1,3 +1,4 @@
+#include <random>
 #include <cassert>
 #include "gtest/gtest.h"
 #include "BitPackedSequence.hpp"
@@ -120,9 +121,10 @@ unsigned CountingVector::count_;
 TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
 {
   // TODO: this test does not work correctly...
+#if 1
   FAIL() << "fix me plz...";
   return;
-/*
+#else
   using Data = BitPackedSequence<Elem, Packer, CountingVector>;
   Data d;
   EXPECT_EQ( CountingVector::count_, 0u );
@@ -142,7 +144,7 @@ TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
   d_.push_back(Elem::Z);
   d_.push_back(Elem::Z);
   EXPECT_EQ( CountingVector::count_, 2u );
-  */
+#endif
 }
 
 
@@ -232,6 +234,16 @@ TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCount)
   using Data = BitPackedSequence<OddElem, OddPacker>;
   Data d;
   d.push_back(OddElem::X);
+  ASSERT_EQ( d.size(), 1u );
+  EXPECT_EQ( d[0], OddElem::X );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCountOnTwoBytes)
+{
+  using Data = BitPackedSequence<OddElem, OddPacker>;
+  Data d;
+  d.push_back(OddElem::X);
   d.push_back(OddElem::Z);
   ASSERT_EQ( d.size(), 2u );
   EXPECT_EQ( d[0], OddElem::X );
@@ -239,7 +251,7 @@ TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCount)
 }
 
 
-TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningTwoElementsWorks)
+TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningMultipleElementsWorks)
 {
   using Data = BitPackedSequence<OddElem, OddPacker>;
   Data d;
@@ -260,6 +272,31 @@ TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningTwoElementsWorks)
   EXPECT_EQ( d[5], OddElem::Y );
   EXPECT_EQ( d[6], OddElem::Z );
   EXPECT_EQ( d[7], OddElem::W );
+}
+
+
+auto generateLongSequence(unsigned count)
+{
+  std::vector<OddElem> out;
+  out.reserve(count);
+  const OddElem input[] = { OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
+  std::mt19937 gen{count};
+  std::uniform_int_distribution<unsigned> dist{0, sizeof(input)-1};
+  for(auto i=0u; i<count; ++i)
+    out.push_back( input[ dist(gen) ] );
+  return out;
+}
+
+TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
+{
+  const auto ref = generateLongSequence(1666);
+  using Data = BitPackedSequence<OddElem, OddPacker>;
+  Data d;
+  for(auto e: ref)
+    d.push_back(e);
+  ASSERT_EQ( d.size(), ref.size() );
+  for(auto i=0u; i<d.size(); ++i)
+    EXPECT_EQ( d[i], ref[i] ) << "at position " << i;
 }
 
 
