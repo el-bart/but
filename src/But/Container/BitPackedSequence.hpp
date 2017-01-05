@@ -110,7 +110,17 @@ private:
     const auto maskForStart = element_bits_mask << shiftForStart;
     const auto firstByte = c_[startByte] & maskForStart;
     const auto firstPart = firstByte >> startOffset;
-    // TODO...
+    if( bits_per_byte < shiftForStart + Packer::bits_count )
+    {
+      const auto endByte = startByte+1;
+      assert( endByte < size() );
+      const auto lastByte = c_[endByte];
+      const auto bitsLeft = ( shiftForStart + Packer::bits_count ) - bits_per_byte;
+      const auto maskForEnd = element_bits_mask >> ( Packer::bits_count - bitsLeft );
+      const auto lastPart = lastByte & maskForEnd;
+      const auto data = firstPart | ( lastPart << bitsLeftInStartByte );
+      return Packer::decode(data);
+    }
     return Packer::decode(firstPart);
   }
 
