@@ -70,9 +70,13 @@ struct ButContainerBitPackedSequence: public testing::Test
     for(auto e: ref)
       d.push_back(e);
 
+    auto const& cd = d;
     ASSERT_EQ( d.size(), ref.size() );
+    auto errors = 0u;
     for(auto i=0u; i<d.size(); ++i)
-      EXPECT_EQ( d[i], ref[i] ) << "at position " << i;
+      if( cd[i] != ref[i] )
+        ++errors;
+    EXPECT_EQ(errors, 0u);
   }
 
   using Data = BitPackedSequence<Elem, Packer>;
@@ -178,7 +182,27 @@ TEST_F(ButContainerBitPackedSequence, RemovingElements)
 
 TEST_F(ButContainerBitPackedSequence, ReplacingElements)
 {
-  // TODO
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+
+  d_[1] = Elem::Z;
+  EXPECT_EQ( cd_.size(), 3u );
+  EXPECT_EQ( cd_[0], Elem::X );
+  EXPECT_EQ( cd_[1], Elem::Z );
+  EXPECT_EQ( cd_[2], Elem::Z );
+
+  d_[0] = Elem::Y;
+  EXPECT_EQ( cd_.size(), 3u );
+  EXPECT_EQ( cd_[0], Elem::Y );
+  EXPECT_EQ( cd_[1], Elem::Z );
+  EXPECT_EQ( cd_[2], Elem::Z );
+
+  d_[2] = Elem::X;
+  EXPECT_EQ( cd_.size(), 3u );
+  EXPECT_EQ( cd_[0], Elem::Y );
+  EXPECT_EQ( cd_[1], Elem::Z );
+  EXPECT_EQ( cd_[2], Elem::X );
 }
 
 
@@ -269,8 +293,9 @@ TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCount)
   using Data = BitPackedSequence<OddElem, OddPacker>;
   Data d;
   d.push_back(OddElem::X);
-  ASSERT_EQ( d.size(), 1u );
-  EXPECT_EQ( d[0], OddElem::X );
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 1u );
+  EXPECT_EQ( cd[0], OddElem::X );
 }
 
 
@@ -280,9 +305,10 @@ TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCountOnTwoBytes)
   Data d;
   d.push_back(OddElem::X);
   d.push_back(OddElem::Z);
-  ASSERT_EQ( d.size(), 2u );
-  EXPECT_EQ( d[0], OddElem::X );
-  EXPECT_EQ( d[1], OddElem::Z );
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 2u );
+  EXPECT_EQ( cd[0], OddElem::X );
+  EXPECT_EQ( cd[1], OddElem::Z );
 }
 
 
@@ -298,15 +324,16 @@ TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningMultipleElementsWorks)
   d.push_back(OddElem::Y);
   d.push_back(OddElem::Z);
   d.push_back(OddElem::W);
-  ASSERT_EQ( d.size(), 8u );
-  EXPECT_EQ( d[0], OddElem::X );
-  EXPECT_EQ( d[1], OddElem::Y );
-  EXPECT_EQ( d[2], OddElem::Z );
-  EXPECT_EQ( d[3], OddElem::W );
-  EXPECT_EQ( d[4], OddElem::Q );
-  EXPECT_EQ( d[5], OddElem::Y );
-  EXPECT_EQ( d[6], OddElem::Z );
-  EXPECT_EQ( d[7], OddElem::W );
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 8u );
+  EXPECT_EQ( cd[0], OddElem::X );
+  EXPECT_EQ( cd[1], OddElem::Y );
+  EXPECT_EQ( cd[2], OddElem::Z );
+  EXPECT_EQ( cd[3], OddElem::W );
+  EXPECT_EQ( cd[4], OddElem::Q );
+  EXPECT_EQ( cd[5], OddElem::Y );
+  EXPECT_EQ( cd[6], OddElem::Z );
+  EXPECT_EQ( cd[7], OddElem::W );
 }
 
 
@@ -348,11 +375,12 @@ TEST_F(ButContainerBitPackedSequence, WorksWithUpTo8Bits)
   d.push_back(MaxElem::Y);
   d.push_back(MaxElem::X);
   d.push_back(MaxElem::Y);
-  ASSERT_EQ( d.size(), 4u );
-  EXPECT_EQ( d[0], MaxElem::X );
-  EXPECT_EQ( d[1], MaxElem::Y );
-  EXPECT_EQ( d[2], MaxElem::X );
-  EXPECT_EQ( d[3], MaxElem::Y );
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 4u );
+  EXPECT_EQ( cd[0], MaxElem::X );
+  EXPECT_EQ( cd[1], MaxElem::Y );
+  EXPECT_EQ( cd[2], MaxElem::X );
+  EXPECT_EQ( cd[3], MaxElem::Y );
 }
 
 
