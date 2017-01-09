@@ -121,7 +121,7 @@ private:
     if( bitsLeftInStartByte < Packer::bits_count )
     {
       const auto endByte = startByte + 1u;
-      //c_[endByte] &= ~array_element_bits;    // TODO...
+      c_[endByte] &= ~ ( element_bits_mask >> bitsLeftInStartByte );
       c_[endByte] |= bits >> bitsLeftInStartByte;
     }
   }

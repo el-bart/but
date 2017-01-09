@@ -351,6 +351,41 @@ TEST_F(ButContainerBitPackedSequence, OddBitsCountSpanningMultipleElementsWorks)
 }
 
 
+TEST_F(ButContainerBitPackedSequence, OverwritingValuesFromInsideContainerInOddBitedPackedValue)
+{
+  using Data = BitPackedSequence<OddElem, OddPacker>;
+  Data d;
+  d.push_back(OddElem::X);
+  d.push_back(OddElem::Y);
+  d.push_back(OddElem::Z);
+  d.push_back(OddElem::W);
+  d.push_back(OddElem::Q);
+  d.push_back(OddElem::Y);
+  d.push_back(OddElem::Z);
+  d.push_back(OddElem::W);
+
+  d[0] = OddElem::Y;
+  d[1] = OddElem::Q;
+  d[2] = OddElem::X;
+  d[3] = OddElem::W;
+  d[4] = OddElem::Z;
+  d[5] = OddElem::W;
+  d[6] = OddElem::Z;
+  d[7] = OddElem::Y;
+
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 8u );
+  EXPECT_EQ( cd[0], OddElem::Y );
+  EXPECT_EQ( cd[1], OddElem::Q );
+  EXPECT_EQ( cd[2], OddElem::X );
+  EXPECT_EQ( cd[3], OddElem::W );
+  EXPECT_EQ( cd[4], OddElem::Z );
+  EXPECT_EQ( cd[5], OddElem::W );
+  EXPECT_EQ( cd[6], OddElem::Z );
+  EXPECT_EQ( cd[7], OddElem::Y );
+}
+
+
 TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
 {
   const std::vector<OddElem> input{ OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
