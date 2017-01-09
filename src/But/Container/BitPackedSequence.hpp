@@ -53,10 +53,7 @@ public:
     ++size_;
   }
 
-  value_type operator[](const size_type pos) const
-  {
-    return readValueAtPosition(pos);
-  }
+  const value_type operator[](const size_type pos) const { return readValueAtPosition(pos); }
 
 private:
   using array_element_type = typename Container::value_type;
