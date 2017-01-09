@@ -206,6 +206,22 @@ TEST_F(ButContainerBitPackedSequence, ReplacingElements)
 }
 
 
+TEST_F(ButContainerBitPackedSequence, ReadingFromNonConstDataStructureWithBracketOperator)
+{
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+
+  EXPECT_EQ( d_.size(), 3u );
+  EXPECT_EQ( d_[0], Elem::X );
+  EXPECT_EQ( d_[1], Elem::Y );
+  EXPECT_EQ( d_[2], Elem::Z );
+
+  const Elem tmp = d_[1];   // note: implicit convertion is done here!
+  EXPECT_EQ( tmp, Elem::Y );
+}
+
+
 TEST_F(ButContainerBitPackedSequence, RandomAccess)
 {
   d_.push_back(Elem::X);
@@ -246,6 +262,7 @@ TEST_F(ButContainerBitPackedSequence, SmallBitsCountSmokeTestOnHugeSequence)
 {
   const std::vector<Elem> input{ Elem::X, Elem::Y, Elem::Z };
   smokeTestPackingLongSequence<Packer>(input);
+  // TODO: add test for changing random values from inside the container
 }
 
 
@@ -341,6 +358,7 @@ TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
 {
   const std::vector<OddElem> input{ OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
   smokeTestPackingLongSequence<OddPacker>(input);
+  // TODO: add test for changing random values from inside the container
 }
 
 
@@ -388,6 +406,7 @@ TEST_F(ButContainerBitPackedSequence, UpTo8BitsSmokeTestOnHugeSequence)
 {
   const std::vector<MaxElem> input{ MaxElem::X, MaxElem::Y };
   smokeTestPackingLongSequence<MaxPacker>(input);
+  // TODO: add test for changing random values from inside the container
 }
 
 

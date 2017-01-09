@@ -25,12 +25,40 @@ class BitPackedSequence final
                  "packer produces elements that are bigger than container's single element capacity" );
   static_assert( std::is_pod<typename Container::value_type>::value, "array element must be POD" );
 
-public:
+  using this_type = BitPackedSequence<T, Packer, Container>;
 
+public:
   using size_type  = typename Container::size_type;
   using value_type = T;
   using iterator       = void*; // TODO
   using const_iterator = void*; // TODO
+
+  class BitProxy final
+  {
+  public:
+    value_type operator=(value_type const& other)
+    {
+      assert(c_);
+      c_->insertValueAtPosition(other, pos_);
+      return other;
+    }
+    operator value_type() const
+    {
+      assert(c_);
+      return c_->readValueAtPosition(pos_);
+    }
+
+  private:
+    BitProxy(this_type& c, const size_type pos):
+      c_{&c},
+      pos_{pos}
+    { }
+
+    friend this_type;
+
+    this_type* c_;
+    size_type pos_;
+  };
 
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
@@ -53,7 +81,8 @@ public:
     ++size_;
   }
 
-  const value_type operator[](const size_type pos) const { return readValueAtPosition(pos); }
+  BitProxy operator[](const size_type pos) { return BitProxy{*this, pos}; }
+  value_type operator[](const size_type pos) const { return readValueAtPosition(pos); }
 
 private:
   using array_element_type = typename Container::value_type;
@@ -120,6 +149,9 @@ private:
     }
     return Packer::decode(firstPart);
   }
+
+
+  friend class BitProxy;
 
   size_type size_{0};
   Container c_;
