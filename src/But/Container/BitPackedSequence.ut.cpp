@@ -32,12 +32,7 @@ std::ostream& operator<<(std::ostream& os, const Elem e)
 struct Packer
 {
   static constexpr unsigned bits_count = 2;
-
-  static auto encode(const Elem e)
-  {
-    return static_cast<uint8_t>(e);
-  }
-
+  static auto encode(const Elem e) { return static_cast<uint8_t>(e); }
   static auto decode(uint8_t v)
   {
     assert( v <= 2u && "element is over Elem::Z" );
@@ -322,10 +317,12 @@ TEST_F(ButContainerBitPackedSequence, WorksWithOddBitCountOnTwoBytes)
   Data d;
   d.push_back(OddElem::X);
   d.push_back(OddElem::Z);
+  d.push_back(OddElem::Q);
   auto const& cd = d;
-  ASSERT_EQ( cd.size(), 2u );
+  ASSERT_EQ( cd.size(), 3u );
   EXPECT_EQ( cd[0], OddElem::X );
   EXPECT_EQ( cd[1], OddElem::Z );
+  EXPECT_EQ( cd[2], OddElem::Q );
 }
 
 
@@ -372,16 +369,8 @@ enum class MaxElem
 struct MaxPacker
 {
   static constexpr unsigned bits_count = 8;
-
-  static auto encode(const MaxElem e)
-  {
-    return static_cast<uint8_t>(e);
-  }
-
-  static auto decode(uint8_t v)
-  {
-    return static_cast<MaxElem>(v);
-  }
+  static auto encode(const MaxElem e) { return static_cast<uint8_t>(e); }
+  static auto decode(uint8_t v) { return static_cast<MaxElem>(v); }
 };
 
 
@@ -419,6 +408,41 @@ TEST_F(ButContainerBitPackedSequence, WorksWithDequeAsUnderlyingContainer)
 TEST_F(ButContainerBitPackedSequence, WorksWithArrayAsUnderlyingContainer)
 {
   // TODO
+}
+
+
+enum class Elem7
+{
+  X = 0u,
+  Y = 0x7Fu,
+};
+
+
+struct Packer7
+{
+  static constexpr unsigned bits_count = 7;
+  static auto encode(const Elem7 e) { return static_cast<uint8_t>(e); }
+  static auto decode(uint8_t v) { return static_cast<Elem7>(v); }
+};
+
+
+TEST_F(ButContainerBitPackedSequence, Packer7SanityTests)
+{
+  EXPECT_EQ( Packer7::decode( Packer7::encode(Elem7::X) ), Elem7::X );
+  EXPECT_EQ( Packer7::decode( Packer7::encode(Elem7::Y) ), Elem7::Y );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, WorksWith7BitOnMultipleBytes)
+{
+  using Data = BitPackedSequence<Elem7, Packer7>;
+  Data d;
+  d.push_back(Elem7::X);
+  d.push_back(Elem7::Y);
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 2u );
+  EXPECT_EQ( cd[0], Elem7::X );
+  EXPECT_EQ( cd[1], Elem7::Y );
 }
 
 }
