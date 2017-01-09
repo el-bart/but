@@ -44,11 +44,11 @@ struct Packer
 struct ButContainerBitPackedSequence: public testing::Test
 {
   template<typename T>
-  auto generateLongSequence(const unsigned count, std::vector<T> const& input)
+  auto generateLongSequence(const unsigned count, std::vector<T> const& input, const unsigned seed = 2666)
   {
     std::vector<T> out;
     out.reserve(count);
-    std::mt19937 gen{count};
+    std::mt19937 gen{seed};
     std::uniform_int_distribution<typename std::vector<T>::size_type> dist{ 0, input.size()-1 };
     for(auto i=0u; i<count; ++i)
       out.push_back( input[ dist(gen) ] );
@@ -70,6 +70,31 @@ struct ButContainerBitPackedSequence: public testing::Test
     auto errors = 0u;
     for(auto i=0u; i<d.size(); ++i)
       if( cd[i] != ref[i] )
+        ++errors;
+    EXPECT_EQ(errors, 0u);
+  }
+
+  template<typename TPacker, typename T>
+  void smokeTestOverwritingValuesInLongSequence(std::vector<T> const& input)
+  {
+    const auto refIn = generateLongSequence(2666, input);
+
+    using Data = BitPackedSequence<T, TPacker>;
+    Data d;
+    for(auto e: refIn)
+      d.push_back(e);
+    ASSERT_EQ( d.size(), refIn.size() );
+
+    const auto refNew = generateLongSequence(2666, input, 997);
+    assert( refNew.size() == refIn.size() );
+    for(auto i=0u; i<refNew.size(); ++i)
+      d[i] = refNew[i];
+
+    auto const& cd = d;
+    ASSERT_EQ( d.size(), refNew.size() );
+    auto errors = 0u;
+    for(auto i=0u; i<d.size(); ++i)
+      if( cd[i] != refNew[i] )
         ++errors;
     EXPECT_EQ(errors, 0u);
   }
@@ -257,7 +282,7 @@ TEST_F(ButContainerBitPackedSequence, SmallBitsCountSmokeTestOnHugeSequence)
 {
   const std::vector<Elem> input{ Elem::X, Elem::Y, Elem::Z };
   smokeTestPackingLongSequence<Packer>(input);
-  // TODO: add test for changing random values from inside the container
+  smokeTestOverwritingValuesInLongSequence<Packer>(input);
 }
 
 
@@ -390,7 +415,7 @@ TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
 {
   const std::vector<OddElem> input{ OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
   smokeTestPackingLongSequence<OddPacker>(input);
-  // TODO: add test for changing random values from inside the container
+  smokeTestOverwritingValuesInLongSequence<OddPacker>(input);
 }
 
 
@@ -430,7 +455,7 @@ TEST_F(ButContainerBitPackedSequence, UpTo8BitsSmokeTestOnHugeSequence)
 {
   const std::vector<MaxElem> input{ MaxElem::X, MaxElem::Y };
   smokeTestPackingLongSequence<MaxPacker>(input);
-  // TODO: add test for changing random values from inside the container
+  smokeTestOverwritingValuesInLongSequence<MaxPacker>(input);
 }
 
 
