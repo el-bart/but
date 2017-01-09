@@ -148,31 +148,25 @@ unsigned CountingVector::count_;
 
 TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
 {
-  // TODO: this test does not work correctly...
-#if 1
-  FAIL() << "fix me plz...";
-  return;
-#else
   using Data = BitPackedSequence<Elem, Packer, CountingVector>;
   Data d;
   EXPECT_EQ( CountingVector::count_, 0u );
 
-  d_.push_back(Elem::Z);
+  d.push_back(Elem::Z);
   EXPECT_EQ( CountingVector::count_, 1u );
 
-  d_.push_back(Elem::Z);
-  d_.push_back(Elem::Z);
-  d_.push_back(Elem::Z);
+  d.push_back(Elem::Z);
+  d.push_back(Elem::Z);
+  d.push_back(Elem::Z);
   EXPECT_EQ( CountingVector::count_, 1u );
 
-  d_.push_back(Elem::Z);
+  d.push_back(Elem::Z);
   EXPECT_EQ( CountingVector::count_, 2u );
 
-  d_.push_back(Elem::Z);
-  d_.push_back(Elem::Z);
-  d_.push_back(Elem::Z);
+  d.push_back(Elem::Z);
+  d.push_back(Elem::Z);
+  d.push_back(Elem::Z);
   EXPECT_EQ( CountingVector::count_, 2u );
-#endif
 }
 
 
