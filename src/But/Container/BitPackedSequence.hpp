@@ -114,8 +114,8 @@ private:
     const auto bitsLeftInStartByte = array_element_bits - startOffset;
     assert( bitsLeftInStartByte > 0u && "wtf?!" );
     const auto shiftForStart = array_element_bits - bitsLeftInStartByte;
-    //const auto maskForStart = array_element_mask << shiftForStart;
-    //c_[startByte] &= maskForStart;    // TODO...
+    const auto maskForStart = ~ ( element_bits_mask << shiftForStart );
+    c_[startByte] &= maskForStart;
     c_[startByte] |= bits << shiftForStart;
 
     if( bitsLeftInStartByte < Packer::bits_count )
