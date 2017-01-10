@@ -1,8 +1,10 @@
+#include <deque>
 #include <random>
 #include <type_traits>
 #include <cassert>
 #include "gtest/gtest.h"
 #include "BitPackedSequence.hpp"
+#include "ArrayWithSize.hpp"
 
 using But::Container::BitPackedSequence;
 
@@ -97,6 +99,36 @@ struct ButContainerBitPackedSequence: public testing::Test
       if( cd[i] != refNew[i] )
         ++errors;
     EXPECT_EQ(errors, 0u);
+  }
+
+  template<typename Container>
+  void basicContainerCheck()
+  {
+    using DequeData = BitPackedSequence<Elem, Packer, Container>;
+    DequeData d;
+
+    EXPECT_TRUE( d.empty() );
+
+    d.push_back(Elem::X);
+    d.push_back(Elem::Y);
+    d.push_back(Elem::Z);
+    d.push_back(Elem::Y);
+    d.push_back(Elem::Y);
+
+    auto const& cd = d;
+    ASSERT_EQ( cd.size(), 5u );
+    EXPECT_EQ( cd[0], Elem::X );
+    EXPECT_EQ( cd[1], Elem::Y );
+    EXPECT_EQ( cd[2], Elem::Z );
+    EXPECT_EQ( cd[3], Elem::Y );
+    EXPECT_EQ( cd[4], Elem::Y );
+
+    d[4] = Elem::Z;
+    EXPECT_EQ( cd[4], Elem::Z );
+
+    // TODO: iterating
+
+    // TODO: erasing
   }
 
   using Data = BitPackedSequence<Elem, Packer>;
@@ -459,15 +491,21 @@ TEST_F(ButContainerBitPackedSequence, UpTo8BitsSmokeTestOnHugeSequence)
 }
 
 
-TEST_F(ButContainerBitPackedSequence, WorksWithDequeAsUnderlyingContainer)
+TEST_F(ButContainerBitPackedSequence, WorksWithVectortAsUnderlyingContainer)
 {
-  // TODO
+  basicContainerCheck<std::vector<uint8_t>>();
 }
 
 
-TEST_F(ButContainerBitPackedSequence, WorksWithArrayAsUnderlyingContainer)
+TEST_F(ButContainerBitPackedSequence, WorksWithDequeAsUnderlyingContainer)
 {
-  // TODO
+  basicContainerCheck<std::deque<uint8_t>>();
+}
+
+
+TEST_F(ButContainerBitPackedSequence, WorksWithArrayWithSizeAsUnderlyingContainer)
+{
+  basicContainerCheck<But::Container::ArrayWithSize<uint8_t,5>>();
 }
 
 
