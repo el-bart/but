@@ -295,6 +295,20 @@ TEST_F(ButContainerBitPackedSequence, Iterating)
 TEST_F(ButContainerBitPackedSequence, ConstIterating)
 {
   // TODO
+#if 0
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+
+  std::vector<Elem> out;
+  for(auto& e: cd_)
+    out.push_back(e);
+
+  ASSERT_EQ( out.size(), 3u );
+  EXPECT_EQ( out[0], Elem::X );
+  EXPECT_EQ( out[1], Elem::Y );
+  EXPECT_EQ( out[2], Elem::Z );
+#endif
 }
 
 
