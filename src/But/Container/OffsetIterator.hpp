@@ -43,12 +43,6 @@ private:
   template<typename>
   friend class OffsetIterator;
 
-  /*
-  // this blocks copying from const to non-const iterators
-  template<class OtherValue>
-  OffsetIterator(OffsetIterator<const OtherValue> const&)
-  */
-
   template<typename OtherCollection>
   bool equal(OffsetIterator<OtherCollection> const& other) const
   {
