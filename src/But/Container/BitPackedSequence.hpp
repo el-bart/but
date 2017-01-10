@@ -28,8 +28,10 @@ class BitPackedSequence final
   using this_type = BitPackedSequence<T, Packer, Container>;
 
 public:
-  using size_type  = typename Container::size_type;
+  using size_type = typename Container::size_type;
   using value_type = T;
+  using packer_type = Packer;
+  using container_type = Container;
   using iterator       = void*; // TODO
   using const_iterator = void*; // TODO
 
