@@ -14,6 +14,7 @@ class ArrayWithSize final
   using Container = std::array<T,N>;
 
 public:
+  using difference_type = int64_t;
   using size_type = typename Mpl::SizeTypeFor<N>::type;
   using value_type = typename Container::value_type;
   using iterator = typename Container::iterator;
