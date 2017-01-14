@@ -11,20 +11,22 @@ namespace Container
 /** @brief wrapper making random access, (const) iterator for a collection.
  *         collection elements are access by the collection pointer and index.
  */
-template<typename Collection>
+template<typename Collection, typename Reference = typename detail::ConstPreservingValueType<Collection>::type&>
 class OffsetIterator final: public boost::iterator_facade< OffsetIterator<Collection>,
                                                            typename detail::ConstPreservingValueType<Collection>::type,
-                                                           boost::bidirectional_traversal_tag
+                                                           boost::random_access_traversal_tag,
+                                                           Reference
                                                          >
 {
 public:
   using value_type = typename detail::ConstPreservingValueType<Collection>::type;
   using size_type = typename Collection::size_type;
+  using difference_type = typename Collection::difference_type;
 
   /** @brief converting c-tor for iterator->const_iterator and copying.
    */
-  template<typename OtherCollection>
-  OffsetIterator(OffsetIterator<OtherCollection> const& other):
+  template<typename OtherCollection, typename OtherReference>
+  OffsetIterator(OffsetIterator<OtherCollection, OtherReference> const& other):
     c_{other.c_},
     pos_{other.pos_}
   { }
@@ -40,11 +42,11 @@ private:
   // this friend declaration is required for boost::iterators to work.
   friend class boost::iterator_core_access;
 
-  template<typename>
+  template<typename, typename>
   friend class OffsetIterator;
 
-  template<typename OtherCollection>
-  bool equal(OffsetIterator<OtherCollection> const& other) const
+  template<typename OtherCollection, typename OtherReference>
+  bool equal(OffsetIterator<OtherCollection, OtherReference> const& other) const
   {
     assert( c_ == other.c_ && "comparing iterators from different collections");
     return pos_ == other.pos_;
@@ -62,13 +64,13 @@ private:
     --pos_;
   }
 
-  auto& dereference()
+  void advance(const difference_type diff)
   {
-    assert( pos_ <= c_->size() );
-    return (*c_)[pos_];
+    pos_ += diff;
+    assert( pos_ < c_->size() && "index out of range" );
   }
 
-  auto& dereference() const
+  Reference dereference() const
   {
     assert( pos_ <= c_->size() );
     return (*c_)[pos_];

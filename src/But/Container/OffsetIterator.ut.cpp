@@ -44,8 +44,8 @@ TEST_F(ButContainerOffsetIterator, ModifyingIteration)
 
 TEST_F(ButContainerOffsetIterator, ConstIteration)
 {
-  const ConstIter begin{c_, 0};
-  const ConstIter end{c_, c_.size()};
+  const ConstIter begin{cc_, 0};
+  const ConstIter end{cc_, c_.size()};
 
   for(ConstIter it=begin; it!=end; ++it)
     ss_ << *it;
@@ -55,17 +55,26 @@ TEST_F(ButContainerOffsetIterator, ConstIteration)
 
 TEST_F(ButContainerOffsetIterator, MovingBackwards)
 {
-  ConstIter it{c_, 1};
+  ConstIter it{cc_, 1};
   EXPECT_EQ( *it, "has" );
   --it;
   EXPECT_EQ( *it, "alice" );
 }
 
 
+TEST_F(ButContainerOffsetIterator, RandomAccess)
+{
+  ConstIter it{cc_, 1};
+  EXPECT_EQ( *(it+2), "cat" );
+  ++it;
+  EXPECT_EQ( *(it-2), "alice" );
+}
+
+
 TEST_F(ButContainerOffsetIterator, IteratorAndConstIteratorInteroperability)
 {
   const Iter       it{c_, 1};
-  const ConstIter cit{c_, 1};
+  const ConstIter cit{cc_, 1};
 
   ConstIter tmp{it};
   EXPECT_TRUE( tmp == it );
@@ -79,17 +88,38 @@ TEST_F(ButContainerOffsetIterator, RequiredTypedefsAreThere)
   EXPECT_TRUE( ( std::is_same<Iter::value_type, std::string>::value ) );
   EXPECT_TRUE( ( std::is_same<ConstIter::value_type, const std::string>::value ) );
 
-  EXPECT_TRUE( ( std::is_same<Iter::iterator_category, std::bidirectional_iterator_tag>::value ) );
+  EXPECT_TRUE( ( std::is_same<Iter::iterator_category, std::random_access_iterator_tag>::value ) );
 }
 
 
 TEST_F(ButContainerOffsetIterator, ComparisonOperators)
 {
   const Iter       it{c_, 2};
-  const ConstIter cit{c_, 1};
+  const ConstIter cit{cc_, 1};
 
   EXPECT_TRUE( it  != cit );
   EXPECT_TRUE( cit != it );
+}
+
+
+TEST_F(ButContainerOffsetIterator, UsingNonStandardReferenceType)
+{
+  using BoolCollection = std::vector<bool>;
+  using Reference      = BoolCollection::reference;
+  using BoolIter       = OffsetIterator<BoolCollection, Reference>;
+  using BoolConstIter  = OffsetIterator<const BoolCollection, Reference>;
+
+  BoolCollection c{true, true, false, false};
+  auto const&    cc = c;
+  BoolIter       it{c,  2};
+  BoolConstIter cit{cc, 1};
+
+  //bool x = *it;
+
+  //EXPECT_EQ( *it, false );
+
+  //EXPECT_TRUE( it  != cit );
+  //EXPECT_TRUE( cit != it );
 }
 
 }
