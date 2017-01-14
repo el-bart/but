@@ -107,19 +107,21 @@ TEST_F(ButContainerOffsetIterator, UsingNonStandardReferenceType)
   using BoolCollection = std::vector<bool>;
   using Reference      = BoolCollection::reference;
   using BoolIter       = OffsetIterator<BoolCollection, Reference>;
-  using BoolConstIter  = OffsetIterator<const BoolCollection, Reference>;
+  using BoolConstIter  = OffsetIterator<const BoolCollection, bool>;
 
   BoolCollection c{true, true, false, false};
   auto const&    cc = c;
   BoolIter       it{c,  2};
   BoolConstIter cit{cc, 1};
 
-  //bool x = *it;
+  EXPECT_EQ( *it,  false );
+  EXPECT_EQ( *cit, true );
 
-  //EXPECT_EQ( *it, false );
+  EXPECT_EQ( *(it-2),  true );
+  EXPECT_EQ( *(cit+2), false );
 
-  //EXPECT_TRUE( it  != cit );
-  //EXPECT_TRUE( cit != it );
+  EXPECT_TRUE( it  != cit );
+  EXPECT_TRUE( cit != it );
 }
 
 }

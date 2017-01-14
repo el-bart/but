@@ -12,7 +12,7 @@ namespace Container
  *         collection elements are access by the collection pointer and index.
  */
 template<typename Collection, typename Reference = typename detail::ConstPreservingValueType<Collection>::type&>
-class OffsetIterator final: public boost::iterator_facade< OffsetIterator<Collection>,
+class OffsetIterator final: public boost::iterator_facade< OffsetIterator<Collection, Reference>,
                                                            typename detail::ConstPreservingValueType<Collection>::type,
                                                            boost::random_access_traversal_tag,
                                                            Reference
