@@ -236,7 +236,80 @@ TEST_F(ButContainerBitPackedSequence, ElementsAreBitPacked)
 
 TEST_F(ButContainerBitPackedSequence, RemovingElements)
 {
-  // TODO
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+
+  d_.erase( d_.begin() );
+  ASSERT_EQ( d_.size(), 2u );
+  EXPECT_EQ( d_[0], Elem::X );
+  EXPECT_EQ( d_[1], Elem::Y );
+
+  d_.erase( d_.begin()+1 );
+  ASSERT_EQ( d_.size(), 1u );
+  EXPECT_EQ( d_[0], Elem::X );
+
+  d_.erase( d_.begin() );
+  ASSERT_EQ( d_.size(), 0u );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, RemovingElementsWithConstIterators)
+{
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+
+  d_.erase( d_.cbegin() );
+  ASSERT_EQ( d_.size(), 2u );
+  EXPECT_EQ( d_[0], Elem::X );
+  EXPECT_EQ( d_[1], Elem::Y );
+
+  d_.erase( d_.cbegin()+1 );
+  ASSERT_EQ( d_.size(), 1u );
+  EXPECT_EQ( d_[0], Elem::X );
+
+  d_.erase( d_.cbegin() );
+  ASSERT_EQ( d_.size(), 0u );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, ErasingAndAddingWorks)
+{
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+
+  d_.erase( d_.cbegin() );
+  d_.erase( d_.cbegin() );
+  d_.erase( d_.cbegin() );
+
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+
+  ASSERT_EQ( d_.size(), 6u );
+  EXPECT_EQ( d_[0], Elem::Z );
+  EXPECT_EQ( d_[1], Elem::X );
+  EXPECT_EQ( d_[2], Elem::Y );
+  EXPECT_EQ( d_[3], Elem::Z );
+  EXPECT_EQ( d_[4], Elem::X );
+  EXPECT_EQ( d_[5], Elem::Y );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, ErasingEndDoesNotChangeContainer)
+{
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+
+  EXPECT_EQ( d_.size(), 3u );
+  d_.erase( d_.end() );
+  EXPECT_EQ( d_.size(), 3u );
 }
 
 
