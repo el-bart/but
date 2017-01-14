@@ -44,7 +44,13 @@ public:
       c_->insertValueAtPosition(other, pos_);
       return other;
     }
-    operator value_type() const
+
+    value_type operator=(BitProxy const& other)
+    {
+      return *this = static_cast<value_type>(other);
+    }
+
+    operator const value_type() const
     {
       assert(c_);
       return c_->readValueAtPosition(pos_);
@@ -86,10 +92,27 @@ public:
     ++size_;
   }
 
+  void erase(const const_iterator pos)
+  {
+    if( pos == end() )
+      return;
+    auto start = toNonConst(pos);
+    for(auto it=start; it+1!=end(); ++it)
+      *it = *(it+1);
+    --size_;
+    resizeToReducedSize();
+  }
+
   BitProxy operator[](const size_type pos) { return BitProxy{*this, pos}; }
   value_type operator[](const size_type pos) const { return readValueAtPosition(pos); }
 
 private:
+  iterator toNonConst(const_iterator it)
+  {
+    auto n = std::distance( cbegin(), it );
+    return begin() + n;
+  }
+
   using array_element_type = typename Container::value_type;
 
   static constexpr array_element_type maskForFirstBits(const uint8_t count)
@@ -108,6 +131,14 @@ private:
   {
     while( capacity() < size() + additional )
       c_.push_back({});
+  }
+  void resizeToReducedSize()
+  {
+    const auto bitsAvailable = c_.size() * bits_per_byte;
+    const auto bitsRequired = size_ * Packer::bits_count;
+    assert( bitsRequired <= bitsAvailable );
+    if( bitsAvailable - bitsRequired >= bits_per_byte )
+      c_.pop_back();
   }
 
   void insertValueAtPosition(const value_type v, const size_type pos)
