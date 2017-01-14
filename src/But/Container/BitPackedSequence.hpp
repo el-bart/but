@@ -2,6 +2,7 @@
 #include <vector>
 #include <limits>
 #include <type_traits>
+#include "OffsetIterator.hpp"
 
 namespace But
 {
@@ -32,8 +33,7 @@ public:
   using value_type = T;
   using packer_type = Packer;
   using container_type = Container;
-  using iterator       = void*; // TODO
-  using const_iterator = void*; // TODO
+  using difference_type = typename container_type::difference_type;
 
   class BitProxy final
   {
@@ -62,18 +62,21 @@ public:
     size_type pos_;
   };
 
+  using iterator       = OffsetIterator<this_type, BitProxy>;
+  using const_iterator = OffsetIterator<const this_type, value_type>;
+
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
   size_type capacity() const { return ( c_.size() * array_element_bits ) / Packer::bits_count; }
 
 
-  iterator begin() { return nullptr; } // TODO
-  iterator end()   { return nullptr; } // TODO
+  auto begin() { return iterator{*this, 0}; }
+  auto end()   { return iterator{*this, size()}; }
 
-  const_iterator begin() const { return nullptr; } // TODO
-  const_iterator end()   const { return nullptr; } // TODO
-  const_iterator cbegin() const { return begin(); }
-  const_iterator cend()   const { return end(); }
+  auto begin() const { return const_iterator{*this, 0}; }
+  auto end()   const { return const_iterator{*this, size()}; }
+  auto cbegin() const { return begin(); }
+  auto cend()   const { return end(); }
 
   void push_back(const value_type v)
   {

@@ -288,27 +288,40 @@ TEST_F(ButContainerBitPackedSequence, RandomAccess)
 
 TEST_F(ButContainerBitPackedSequence, Iterating)
 {
-  // TODO
-}
-
-
-TEST_F(ButContainerBitPackedSequence, ConstIterating)
-{
-  // TODO
-#if 0
   d_.push_back(Elem::X);
   d_.push_back(Elem::Y);
   d_.push_back(Elem::Z);
 
   std::vector<Elem> out;
-  for(auto& e: cd_)
+  for(auto e: d_)
     out.push_back(e);
 
   ASSERT_EQ( out.size(), 3u );
   EXPECT_EQ( out[0], Elem::X );
   EXPECT_EQ( out[1], Elem::Y );
   EXPECT_EQ( out[2], Elem::Z );
-#endif
+
+  auto it = d_.begin() + 1;
+  EXPECT_EQ( cd_[1], Elem::Y );
+  *it = Elem::Z;
+  EXPECT_EQ( cd_[1], Elem::Z );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, ConstIterating)
+{
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+
+  std::vector<Elem> out;
+  for(auto e: cd_)
+    out.push_back(e);
+
+  ASSERT_EQ( out.size(), 3u );
+  EXPECT_EQ( out[0], Elem::X );
+  EXPECT_EQ( out[1], Elem::Y );
+  EXPECT_EQ( out[2], Elem::Z );
 }
 
 
