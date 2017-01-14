@@ -71,6 +71,14 @@ TEST_F(ButContainerOffsetIterator, RandomAccess)
 }
 
 
+TEST_F(ButContainerOffsetIterator, AdvancingIteratorToTheEndWorks)
+{
+  ConstIter it{cc_, 0};
+  ConstIter end{cc_, 4};
+  EXPECT_TRUE( it+4 == end );
+}
+
+
 TEST_F(ButContainerOffsetIterator, IteratorAndConstIteratorInteroperability)
 {
   const Iter       it{c_, 1};

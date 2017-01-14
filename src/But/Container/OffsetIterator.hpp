@@ -67,7 +67,7 @@ private:
   void advance(const difference_type diff)
   {
     pos_ += diff;
-    assert( pos_ < c_->size() && "index out of range" );
+    assert( pos_ <= c_->size() && "index out of range" );
   }
 
   Reference dereference() const
