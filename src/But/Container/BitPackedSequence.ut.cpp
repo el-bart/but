@@ -551,6 +551,29 @@ TEST_F(ButContainerBitPackedSequence, OverwritingValuesFromInsideContainerInOddB
 }
 
 
+TEST_F(ButContainerBitPackedSequence, OverwritingViaIterator)
+{
+  using Data = BitPackedSequence<OddElem, OddPacker>;
+  Data d;
+  d.push_back(OddElem::X);
+  d.push_back(OddElem::Y);
+  d.push_back(OddElem::Z);
+  d.push_back(OddElem::W);
+  d.push_back(OddElem::Q);
+
+  *( d.begin() + 2 ) = OddElem::Q;
+  *( d.begin() + 0 ) = *( d.begin() + 1 );
+
+  auto const& cd = d;
+  ASSERT_EQ( cd.size(), 5u );
+  EXPECT_EQ( cd[0], OddElem::Y );
+  EXPECT_EQ( cd[1], OddElem::Y );
+  EXPECT_EQ( cd[2], OddElem::Q );
+  EXPECT_EQ( cd[3], OddElem::W );
+  EXPECT_EQ( cd[4], OddElem::Q );
+}
+
+
 TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
 {
   const std::vector<OddElem> input{ OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
