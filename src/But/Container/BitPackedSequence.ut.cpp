@@ -123,10 +123,18 @@ struct ButContainerBitPackedSequence: public testing::Test
     EXPECT_EQ( cd[3], Elem::Y );
     EXPECT_EQ( cd[4], Elem::Y );
 
+    {
+      const std::vector<Elem> cmp{ Elem::X, Elem::Y, Elem::Z, Elem::Y, Elem::Y };
+      ASSERT_EQ( d.size(), cmp.size() );
+      std::vector<Elem> out;
+      for(auto e: d)
+        out.push_back(e);
+      EXPECT_EQ(out, cmp);
+    }
+
+
     d[4] = Elem::Z;
     EXPECT_EQ( cd[4], Elem::Z );
-
-    // TODO: iterating
 
     // TODO: erasing
   }
