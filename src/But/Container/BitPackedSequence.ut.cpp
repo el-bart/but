@@ -122,10 +122,10 @@ struct ButContainerBitPackedSequence: public testing::Test
       d.push_back(e);
 
     unsigned pos = 0;
-    while( d.size() > 10 )
+    while( d.size() > 17 )
     {
       ASSERT_EQ( d.size(), ref.size() );
-      pos = d.size() - 9;
+      pos = d.size() - 1 - ( pos % 17 );
       assert( pos < d.size() );
       d.erase( d.cbegin() + pos );
       ref.erase( ref.cbegin() + pos );
