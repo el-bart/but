@@ -125,6 +125,7 @@ struct ButContainerBitPackedSequence: public testing::Test
     EXPECT_EQ( cd[3], Elem::Y );
     EXPECT_EQ( cd[4], Elem::Y );
 
+    // itearating
     {
       const std::vector<Elem> cmp{ Elem::X, Elem::Y, Elem::Z, Elem::Y, Elem::Y };
       ASSERT_EQ( d.size(), cmp.size() );
@@ -134,33 +135,49 @@ struct ButContainerBitPackedSequence: public testing::Test
       EXPECT_EQ(out, cmp);
     }
 
-    d[4] = Elem::Z;
-    EXPECT_EQ( cd[4], Elem::Z );
+    // reverse itearating
+    {
+      const std::vector<Elem> cmp{ Elem::Y, Elem::Y, Elem::Z, Elem::Y, Elem::X };
+      ASSERT_EQ( d.size(), cmp.size() );
+      std::vector<Elem> out;
+      for(auto rit = cd.rbegin(); rit != cd.rend(); ++rit)
+        out.push_back(*rit);
+      EXPECT_EQ(out, cmp);
+    }
 
-    d.erase( d.begin() + 2 );
-    ASSERT_EQ( cd.size(), 4u );
-    EXPECT_EQ( cd[0], Elem::X );
-    EXPECT_EQ( cd[1], Elem::Y );
-    EXPECT_EQ( cd[2], Elem::Y );
-    EXPECT_EQ( cd[3], Elem::Z );
+    // overwriting
+    {
+      d[4] = Elem::Z;
+      EXPECT_EQ( cd[4], Elem::Z );
+    }
 
-    d.erase( d.begin() + 1 );
-    ASSERT_EQ( cd.size(), 3u );
-    EXPECT_EQ( cd[0], Elem::X );
-    EXPECT_EQ( cd[1], Elem::Y );
-    EXPECT_EQ( cd[2], Elem::Z );
+    // erasing random elements
+    {
+      d.erase( d.begin() + 2 );
+      ASSERT_EQ( cd.size(), 4u );
+      EXPECT_EQ( cd[0], Elem::X );
+      EXPECT_EQ( cd[1], Elem::Y );
+      EXPECT_EQ( cd[2], Elem::Y );
+      EXPECT_EQ( cd[3], Elem::Z );
 
-    d.erase( d.begin() + 2 );
-    ASSERT_EQ( cd.size(), 2u );
-    EXPECT_EQ( cd[0], Elem::X );
-    EXPECT_EQ( cd[1], Elem::Y );
+      d.erase( d.begin() + 1 );
+      ASSERT_EQ( cd.size(), 3u );
+      EXPECT_EQ( cd[0], Elem::X );
+      EXPECT_EQ( cd[1], Elem::Y );
+      EXPECT_EQ( cd[2], Elem::Z );
 
-    d.erase( d.begin() + 0 );
-    ASSERT_EQ( cd.size(), 1u );
-    EXPECT_EQ( cd[0], Elem::Y );
+      d.erase( d.begin() + 2 );
+      ASSERT_EQ( cd.size(), 2u );
+      EXPECT_EQ( cd[0], Elem::X );
+      EXPECT_EQ( cd[1], Elem::Y );
 
-    d.erase( d.begin() );
-    ASSERT_EQ( cd.size(), 0u );
+      d.erase( d.begin() + 0 );
+      ASSERT_EQ( cd.size(), 1u );
+      EXPECT_EQ( cd[0], Elem::Y );
+
+      d.erase( d.begin() );
+      ASSERT_EQ( cd.size(), 0u );
+    }
   }
 
   using Data = BitPackedSequence<Elem, Packer>;
