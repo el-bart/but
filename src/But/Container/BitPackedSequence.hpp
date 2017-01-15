@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <limits>
+#include <iterator>
 #include <type_traits>
 #include "OffsetIterator.hpp"
 
@@ -69,8 +70,10 @@ public:
     size_type pos_;
   };
 
-  using iterator       = OffsetIterator<this_type, BitProxy>;
+  using iterator = OffsetIterator<this_type, BitProxy>;
   using const_iterator = OffsetIterator<const this_type, value_type>;
+  using reverse_iterator = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
@@ -84,6 +87,14 @@ public:
   auto end()   const { return const_iterator{*this, size()}; }
   auto cbegin() const { return begin(); }
   auto cend()   const { return end(); }
+
+  auto rbegin() { return reverse_iterator{ end() }; }
+  auto rend()   { return reverse_iterator{ begin() }; }
+
+  auto rbegin() const { return const_reverse_iterator{ end() }; }
+  auto rend()   const { return const_reverse_iterator{ begin() }; }
+  auto crbegin() const { return rbegin(); }
+  auto crend()   const { return rend(); }
 
   void push_back(const value_type v)
   {

@@ -101,6 +101,8 @@ struct ButContainerBitPackedSequence: public testing::Test
     EXPECT_EQ(errors, 0u);
   }
 
+  // TODO: test on big sequence, generated elements and removal of random values...
+
   template<typename Container>
   void basicContainerCheck()
   {
@@ -132,11 +134,9 @@ struct ButContainerBitPackedSequence: public testing::Test
       EXPECT_EQ(out, cmp);
     }
 
-
     d[4] = Elem::Z;
     EXPECT_EQ( cd[4], Elem::Z );
 
-    // TODO: erasing
   }
 
   using Data = BitPackedSequence<Elem, Packer>;
@@ -406,15 +406,89 @@ TEST_F(ButContainerBitPackedSequence, ConstIterating)
 }
 
 
+TEST_F(ButContainerBitPackedSequence, ReverseIteratingEmptyCollection)
+{
+  EXPECT_TRUE( d_.rbegin() == d_.rend() );
+}
+
+
 TEST_F(ButContainerBitPackedSequence, ReverseIterating)
 {
-  // TODO
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+
+  auto rit = d_.rbegin();
+  const auto end = d_.rend();
+
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Z );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Y );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::X );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Z );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::X );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Y );
+
+  ++rit;
+  ASSERT_TRUE( rit == end );
 }
 
 
 TEST_F(ButContainerBitPackedSequence, ConstReverseIterating)
 {
-  // TODO
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+
+  auto rit = cd_.rbegin();
+  const auto end = cd_.rend();
+
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Z );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Y );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::X );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Z );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::X );
+
+  ++rit;
+  ASSERT_TRUE( rit != end );
+  EXPECT_EQ( *rit, Elem::Y );
+
+  ++rit;
+  ASSERT_TRUE( rit == end );
 }
 
 
