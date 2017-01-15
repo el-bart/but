@@ -868,4 +868,22 @@ TEST_F(ButContainerBitPackedSequence, PopBackFromSequence)
   EXPECT_EQ( cd_[0], Elem::Z );
 }
 
+
+TEST_F(ButContainerBitPackedSequence, ShringToFitSmokeTest)
+{
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  ASSERT_EQ( cd_.size(), 9u );
+
+  d_.shrink_to_fit();
+  ASSERT_EQ( cd_.size(), 9u );
+}
+
 }

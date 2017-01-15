@@ -79,6 +79,7 @@ public:
   size_type size() const { return size_; }
   size_type capacity() const { return ( c_.size() * array_element_bits ) / Packer::bits_count; }
   void reserve(const size_type size) { c_.reserve( ( size * Packer::bits_count ) / bits_per_byte + 1 ); }
+  void shrink_to_fit() { c_.shrink_to_fit(); }
 
   auto begin() { return iterator{*this, 0}; }
   auto end()   { return iterator{*this, size()}; }
