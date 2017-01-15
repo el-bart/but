@@ -152,7 +152,7 @@ private:
   }
   void resizeToReducedSize()
   {
-    const auto bitsAvailable = c_.size() * bits_per_byte;
+    const auto bitsAvailable = c_.size() * static_cast<unsigned>(bits_per_byte);
     const auto bitsRequired = size_ * Packer::bits_count;
     assert( bitsRequired <= bitsAvailable );
     if( bitsAvailable - bitsRequired >= bits_per_byte )
