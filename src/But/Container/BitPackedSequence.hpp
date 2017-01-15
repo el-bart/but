@@ -27,6 +27,7 @@ class BitPackedSequence final
   static_assert( std::is_pod<typename Container::value_type>::value, "array element must be POD" );
 
   using this_type = BitPackedSequence<T, Packer, Container>;
+  static constexpr uint8_t bits_per_byte = 8u;
 
 public:
   using size_type = typename Container::size_type;
@@ -74,7 +75,7 @@ public:
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
   size_type capacity() const { return ( c_.size() * array_element_bits ) / Packer::bits_count; }
-
+  void reserve(const size_type size) { c_.reserve( ( size * Packer::bits_count ) / bits_per_byte + 1 ); }
 
   auto begin() { return iterator{*this, 0}; }
   auto end()   { return iterator{*this, size()}; }
@@ -122,7 +123,6 @@ private:
     return (1<<(count-1)) | maskForFirstBits(count-1);
   }
 
-  static constexpr uint8_t bits_per_byte      = 8u;
   static constexpr uint8_t array_element_bits = sizeof(array_element_type) * bits_per_byte;
   static constexpr auto    array_element_mask = std::numeric_limits<array_element_type>::max();
   static constexpr auto    element_bits_mask  = maskForFirstBits(Packer::bits_count);

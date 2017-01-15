@@ -674,4 +674,24 @@ TEST_F(ButContainerBitPackedSequence, WorksWith7BitOnMultipleBytes)
   EXPECT_EQ( cd[1], Elem7::Y );
 }
 
+
+TEST_F(ButContainerBitPackedSequence, ReservingSpaceForElements)
+{
+  // just a smoke test...
+  d_.reserve(42);
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  d_.push_back(Elem::Y);
+  ASSERT_EQ( cd_.size(), 6u );
+  EXPECT_EQ( cd_[0], Elem::Y );
+  EXPECT_EQ( cd_[1], Elem::Z );
+  EXPECT_EQ( cd_[2], Elem::X );
+  EXPECT_EQ( cd_[3], Elem::Z );
+  EXPECT_EQ( cd_[4], Elem::X );
+  EXPECT_EQ( cd_[5], Elem::Y );
+}
+
 }
