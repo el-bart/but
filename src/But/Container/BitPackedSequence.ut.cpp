@@ -101,7 +101,37 @@ struct ButContainerBitPackedSequence: public testing::Test
     EXPECT_EQ(errors, 0u);
   }
 
-  // TODO: test on big sequence, generated elements and removal of random values...
+  template<typename C>
+  auto toVector(C const& c)
+  {
+    std::vector<typename C::value_type> out;
+    out.reserve( c.size() );
+    for(auto const& e: c)
+      out.push_back(e);
+    return out;
+  }
+
+  template<typename TPacker, typename T>
+  void smokeTestErasingFromBigSequence(std::vector<T> const& input)
+  {
+    auto ref = generateLongSequence(102, input);
+
+    using Data = BitPackedSequence<T, TPacker>;
+    Data d;
+    for(auto e: ref)
+      d.push_back(e);
+
+    unsigned pos = 0;
+    while( d.size() > 10 )
+    {
+      ASSERT_EQ( d.size(), ref.size() );
+      pos = d.size() - 9;
+      assert( pos < d.size() );
+      d.erase( d.cbegin() + pos );
+      ref.erase( ref.cbegin() + pos );
+      ASSERT_EQ( toVector(d), ref );
+    }
+  }
 
   template<typename Container>
   void basicContainerCheck()
@@ -538,6 +568,7 @@ TEST_F(ButContainerBitPackedSequence, SmallBitsCountSmokeTestOnHugeSequence)
   const std::vector<Elem> input{ Elem::X, Elem::Y, Elem::Z };
   smokeTestPackingLongSequence<Packer>(input);
   smokeTestOverwritingValuesInLongSequence<Packer>(input);
+  smokeTestErasingFromBigSequence<Packer>(input);
 }
 
 
@@ -694,6 +725,7 @@ TEST_F(ButContainerBitPackedSequence, OddBitsSmokeTestOnHugeSequence)
   const std::vector<OddElem> input{ OddElem::X, OddElem::Y, OddElem::Z, OddElem::W, OddElem::Q, OddElem::Y, OddElem::Z, OddElem::W };
   smokeTestPackingLongSequence<OddPacker>(input);
   smokeTestOverwritingValuesInLongSequence<OddPacker>(input);
+  smokeTestErasingFromBigSequence<OddPacker>(input);
 }
 
 
@@ -734,6 +766,7 @@ TEST_F(ButContainerBitPackedSequence, UpTo8BitsSmokeTestOnHugeSequence)
   const std::vector<MaxElem> input{ MaxElem::X, MaxElem::Y };
   smokeTestPackingLongSequence<MaxPacker>(input);
   smokeTestOverwritingValuesInLongSequence<MaxPacker>(input);
+  smokeTestErasingFromBigSequence<MaxPacker>(input);
 }
 
 
