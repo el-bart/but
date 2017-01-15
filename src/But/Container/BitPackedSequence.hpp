@@ -104,6 +104,12 @@ public:
     ++size_;
   }
 
+  void pop_back()
+  {
+    --size_;
+    resizeToReducedSize();
+  }
+
   void erase(const const_iterator pos)
   {
     if( pos == end() )

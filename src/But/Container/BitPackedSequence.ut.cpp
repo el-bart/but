@@ -842,4 +842,30 @@ TEST_F(ButContainerBitPackedSequence, ReservingSpaceForElements)
   EXPECT_EQ( cd_[5], Elem::Y );
 }
 
+
+TEST_F(ButContainerBitPackedSequence, PopBackFromSequence)
+{
+  d_.push_back(Elem::Y);
+  d_.push_back(Elem::Z);
+  d_.push_back(Elem::X);
+  ASSERT_EQ( cd_.size(), 3u );
+
+  d_.pop_back();
+  ASSERT_EQ( cd_.size(), 2u );
+  EXPECT_EQ( cd_[0], Elem::Y );
+  EXPECT_EQ( cd_[1], Elem::Z );
+
+  d_.pop_back();
+  ASSERT_EQ( cd_.size(), 1u );
+  EXPECT_EQ( cd_[0], Elem::Y );
+
+  d_.pop_back();
+  ASSERT_EQ( cd_.size(), 0u );
+
+  // check if adding still works
+  d_.push_back(Elem::Z);
+  ASSERT_EQ( cd_.size(), 1u );
+  EXPECT_EQ( cd_[0], Elem::Z );
+}
+
 }
