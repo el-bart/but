@@ -54,8 +54,17 @@
             bad_alloc is just fine - otherwise a lot of extra code will be generated, just to serve almost non-appearing condition
         </comment>
     </note>
-    <note priority="high" time="1482428187">
+    <note priority="low" time="1453546619" done="1483475640">
+        but::optional, that is movable
+        <comment>
+            done in latest versions of boost already
+        </comment>
+    </note>
+    <note priority="high" time="1482428187" done="1484513461">
         implement BitStoredVector, for values encoded in (any) N-bit values, with serialization and deserialization (sth. like std::vector&lt;bool&gt;, but for any type)
+        <comment>
+            BitPackedSequence implemented and tested
+        </comment>
     </note>
     <note priority="high" time="1483373129">
         remove sources-auto detection in favour of explicitly listing source files (CMake six here - sorry...)
@@ -98,12 +107,6 @@
     </note>
     <note priority="low" time="1449762961">
         But::Mpl::LastType&lt;&gt; in O(1)
-    </note>
-    <note priority="low" time="1453546619" done="1483475640">
-        but::optional, that is movable
-        <comment>
-            done in latest versions of boost already
-        </comment>
     </note>
     <note priority="low" time="1455729383">
         C++ streams formating via overloads? sth. like out &lt;&lt; hex(42) maybe?
