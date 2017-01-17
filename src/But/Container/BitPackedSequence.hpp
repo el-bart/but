@@ -10,13 +10,40 @@ namespace But
 namespace Container
 {
 
-/** @brief container-adapter for keeping data bit-wise (as an oposite to typical byte-wise).
+/** @brief container-adapter for transparently saving data bit-wise (as an oposite to typical byte-wise).
+ *         this is typically very usefull for enums, that can be encoded in few bits.
  *
- *  @warning writing to different elements of the same container may be a data race. just don't do that.
+ *  @warning writing to different elements of the same container may be a data race. just don't do that. ;)
  *
- * TODO: finish description
+ *  @par
+ *  in order to use this class, provide a type that you want to serialize and a Packer class, that provides
+ *  encoding and decodeing operations.
  *
- * TODO: provide usage example
+ *  @par
+ *  example usage follows:
+ *  <code>
+ *  // actuall data, as seen by the user:
+ *  enum class Stuff
+ *  {
+ *    A = 0,
+ *    B = 1,
+ *    C = 2
+ *  };
+ *
+ *  // (un)packing helper:
+ *  struct StuffPacker
+ *  {
+ *    static constexpr unsigned bits_count = 2; // number of bits required to encode a type
+ *    // encodeing and decodeing operations:
+ *    static auto encode(const Stuff s) { return static_cast<uint8_t>(s); }
+ *    static auto decode(uint8_t v)     { return static_cast<Stuff>(v); }
+ *  };
+ *
+ *  // usage example:
+ *  BitPackedSequence<Stuff, StuffPacker> bps;
+ *  bps.push_back( Stuff:B );
+ *  assert( bps[0] == Stuff::B );
+ *  </code>
  */
 template<typename T, typename Packer, typename Container = std::vector<uint8_t>>
 class BitPackedSequence final
