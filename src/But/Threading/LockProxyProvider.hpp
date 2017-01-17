@@ -7,35 +7,27 @@ namespace But
 namespace Threading
 {
 
-/** @brief TODO
+/** @brief class to be used as a base, that provides convenient way of doing 1-liner ops under a lock.
+ *
+ *  @note user's class must either implement lock()/unlock() methods or derive from BasicLockabke template too.
  *
  *  <code>
- *  class MyCollection: BasicLocable<MyCollection>
+ *  class MyObject: LockProxyProvider<MyObject>
  *  {
  *    // ...
- *    bool empty();
- *    Element& top();
- *    void pop();
+ *    void lock();
+ *    void unlock();
+ *    // ...
+ *    void changeState();
  *    // ...
  *  };
  *
- *  MyCollection mc;
+ *  MyObject mo;
  *
  *  // ...
  *
- *  {
- *    // NOTE: this whole block is locked, so sequence of operations is secure!
- *    const std::lock_guard<MyCollection> lock{mc};
- *    if( not mc.empty() )
- *    {
- *      process( mc.top() );
- *      mc.pop();
- *    }
- *  }
+ *  mo.withLock()->changeState(); // this one line happens under a lock!
  *  </code>
- *
- *  @note each method of your type, should first do 'assert( locked() )', before proceeding.
- *        'locked()' is only available in debug mode, but can save a lot of time when looking for sync issues.
  */
 template<typename Derived>
 class LockProxyProvider
