@@ -40,10 +40,10 @@ TEST_F(ButThreadingLockProxyProvider, ProxyLocksAndUnlocksObjectAutomatically)
 
 TEST_F(ButThreadingLockProxyProvider, ArrowOperatorOnProxyForwardsToActualClass)
 {
-  EXPECT_EQ(md_.locks_, 0u);
+  EXPECT_EQ(md_.locks_, 0);
   const auto cnt = md_.withLock()->locks();
-  EXPECT_EQ(cnt, 1u);
-  EXPECT_EQ(md_.locks_, 0u);
+  EXPECT_EQ(cnt, 1);
+  EXPECT_EQ(md_.locks_, 0);
 }
 
 
