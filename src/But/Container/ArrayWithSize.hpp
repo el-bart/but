@@ -9,6 +9,14 @@ namespace But
 namespace Container
 {
 
+/** @brief simple std::array<> replacement, that keeps number of elements. this way
+ *         container can appear to be resizing, even though the maximum number of elements
+ *         is predefined with N.
+ *
+ *  @note elements T must be default-constructible, just like in regular std::array<>
+ *
+ *  @note when element is removed, it is internally overwritten with a default-value.
+ */
 template<typename T, size_t N>
 class ArrayWithSize final
 {
@@ -70,7 +78,6 @@ public:
 
   iterator begin() { using std::begin; return begin(c_); }
   iterator end() { return begin() + size_; }
-
 
 private:
   Container c_;
