@@ -60,6 +60,12 @@
             CacheLine implemented
         </comment>
     </note>
+    <note priority="medium" time="1447865296" done="1484685707">
+        implement BasicLockable&lt;CRTP&gt;
+        <comment>
+            implemented
+        </comment>
+    </note>
     <note priority="low" time="1392392163" done="1405245837">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
         <comment>
@@ -96,14 +102,11 @@
     <note priority="medium" time="1447835445">
         add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
     </note>
-    <note priority="medium" time="1447865296" done="1484685707">
-        implement BasicLockable&lt;CRTP&gt;
+    <note priority="medium" time="1447865309" done="1484690029">
+        implement BasicLockableWithLockProxy&lt;CRTP&gt;
         <comment>
             implemented
         </comment>
-    </note>
-    <note priority="medium" time="1447865309">
-        implement BasicLockableWithLockProxy&lt;CRTP&gt;
     </note>
     <note priority="medium" time="1456730821">
         iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
