@@ -135,8 +135,8 @@ TEST_F(ButContainerArrayWithSize, SizeTypeIsMinimalForParametrizedSize)
   using Small = ArrayWithSize<char, 3>;
   EXPECT_EQ( sizeof(Small), sizeof(std::array<char,3>) + 1u );
 
-  using Medium = ArrayWithSize<char, 3000>;
-  EXPECT_EQ( sizeof(Medium), sizeof(std::array<char,3000>) + 2u );
+  using Medium = ArrayWithSize<char, 1022>;
+  EXPECT_EQ( sizeof(Medium), sizeof(std::array<char,1022>) + 2u );
 
   using Large = ArrayWithSize<char, 123000>;
   EXPECT_EQ( sizeof(Large), sizeof(std::array<char,123000>) + 4u );
