@@ -369,4 +369,14 @@ TEST_F(ButContainerUnorderedArray, AllocatorAware)
   EXPECT_EQ( 0u, g_dataBlocks.size() );
 }
 
+
+TEST_F(ButContainerUnorderedArray, MovableAndCopyable)
+{
+  EXPECT_TRUE( std::is_copy_constructible<DataArray>::value );
+  EXPECT_TRUE( std::is_copy_assignable<DataArray>::value );
+
+  EXPECT_TRUE( std::is_move_constructible<DataArray>::value );
+  EXPECT_TRUE( std::is_move_assignable<DataArray>::value );
+}
+
 }

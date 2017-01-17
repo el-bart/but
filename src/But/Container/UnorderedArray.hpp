@@ -44,6 +44,10 @@ public:
 
   UnorderedArray() = default;
   UnorderedArray(std::initializer_list<T> const& lst): c_{lst} { }
+  UnorderedArray(UnorderedArray const&) = default;
+  UnorderedArray& operator=(UnorderedArray const&) = default;
+  UnorderedArray(UnorderedArray&&) = default;
+  UnorderedArray& operator=(UnorderedArray&&) = default;
 
   bool empty() const { return c_.empty(); }
   size_type size() const { return c_.size(); }
