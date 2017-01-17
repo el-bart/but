@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <initializer_list>
 #include <cassert>
 #include "But/Mpl/SizeTypeFor.hpp"
 
@@ -19,6 +20,18 @@ public:
   using value_type = typename Container::value_type;
   using iterator = typename Container::iterator;
   using const_iterator = typename Container::const_iterator;
+
+  ArrayWithSize() = default;
+  ArrayWithSize(std::initializer_list<T> lst)
+  {
+    assert( lst.size() <= N && "too many arguments for a given type" );
+    for(auto& e: lst)
+      push_back(e);
+  }
+  ArrayWithSize(ArrayWithSize const& other) = default;
+  ArrayWithSize& operator=(ArrayWithSize const& other) = default;
+  ArrayWithSize(ArrayWithSize&& other) = default;
+  ArrayWithSize& operator=(ArrayWithSize&& other) = default;
 
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }

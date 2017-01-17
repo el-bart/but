@@ -1,4 +1,5 @@
 #include <memory>
+#include <type_traits>
 #include "gtest/gtest.h"
 #include "ArrayWithSize.hpp"
 
@@ -140,6 +141,25 @@ TEST_F(ButContainerArrayWithSize, SizeTypeIsMinimalForParametrizedSize)
 
   using Large = ArrayWithSize<char, 123000>;
   EXPECT_EQ( sizeof(Large), sizeof(std::array<char,123000>) + 4u );
+}
+
+
+TEST_F(ButContainerArrayWithSize, InitializingWithInitializerList)
+{
+  Sequence s{"test", "values"};
+  ASSERT_EQ( s.size(), 2u );
+  EXPECT_EQ( s[0], "test" );
+  EXPECT_EQ( s[1], "values" );
+}
+
+
+TEST_F(ButContainerArrayWithSize, MovableAndCopyable)
+{
+  EXPECT_TRUE( std::is_copy_constructible<Sequence>::value );
+  EXPECT_TRUE( std::is_copy_assignable<Sequence>::value );
+
+  EXPECT_TRUE( std::is_move_constructible<Sequence>::value );
+  EXPECT_TRUE( std::is_move_assignable<Sequence>::value );
 }
 
 }
