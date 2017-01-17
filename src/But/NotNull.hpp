@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <utility>
 #include <cassert>
 #include <boost/operators.hpp>
@@ -82,5 +83,25 @@ private:
 
   P p_;
 };
+
+
+
+template<typename P>
+auto makeNN(P p)
+{
+  return NotNull<P>{ std::move(p) };
+}
+
+template<typename P, typename ...Args>
+auto makeUniqueNN(Args&&... args)
+{
+  return makeNN( std::make_unique<P>( std::forward<Args>(args)... ) );
+}
+
+template<typename P, typename ...Args>
+auto makeSharedNN(Args&&... args)
+{
+  return makeNN( std::make_shared<P>( std::forward<Args>(args)... ) );
+}
 
 }

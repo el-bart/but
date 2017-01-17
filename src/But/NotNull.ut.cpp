@@ -27,6 +27,9 @@ struct Derived: public Base
 
 
 using But::NotNull;
+using But::makeNN;
+using But::makeUniqueNN;
+using But::makeSharedNN;
 
 using RawNN    = NotNull<Data*>;
 using UniqueNN = NotNull<std::unique_ptr<Data>>;
@@ -427,6 +430,36 @@ TEST_F(ButNotNull, InplicitConversionToConst)
   using Ptr      = NotNull<boost::shared_ptr<Data>>;
   using PtrConst = NotNull<boost::shared_ptr<Data const>>;
   PtrConst pc{ Ptr{new Data} };
+}
+
+
+TEST_F(ButNotNull, MakeNN)
+{
+  auto ptr = makeNN<char const*>("stuff");
+  EXPECT_TRUE( ( std::is_same<decltype(ptr), NotNull<char const*>>::value ) );
+  ASSERT_TRUE(ptr);
+  EXPECT_TRUE( ( strcmp(ptr.get(), "stuff") == 0 ) );
+}
+
+
+TEST_F(ButNotNull, MakeUniqueNN)
+{
+  auto ptr = makeUniqueNN<Data>("stuff");
+  EXPECT_TRUE( ( std::is_same<decltype(ptr), NotNull<std::unique_ptr<Data>>>::value ) );
+  ASSERT_TRUE(ptr);
+  EXPECT_EQ( ptr->s_, "stuff" );
+}
+
+
+TEST_F(ButNotNull, MakeSharedNN)
+{
+  auto ptr = makeSharedNN<Data>("stuff");
+  EXPECT_TRUE( ( std::is_same<decltype(ptr), NotNull<std::shared_ptr<Data>>>::value ) );
+  ASSERT_TRUE(ptr);
+  EXPECT_EQ( ptr->s_, "stuff" );
+
+  auto ptr2 = ptr;
+  EXPECT_EQ( ptr2.get(), ptr.get() );
 }
 
 }
