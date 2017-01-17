@@ -262,11 +262,12 @@ TEST_F(ButContainerUnorderedArray, ReservingSpaceForElements)
 
 TEST_F(ButContainerUnorderedArray, ReservingSpaceForElementsOnNonEmptyContainer)
 {
-  data_.emplace("a", 911);
-  data_.emplace("a", 911);
   data_.reserve(1000);
-  EXPECT_GE( data_.capacity(), 1000u );
-  // TODO: capacity+reserve
+  const auto cap = data_.capacity();
+  EXPECT_GE( cap, 1000u );
+  data_.emplace("a", 911);
+  data_.emplace("a", 911);
+  EXPECT_GE( data_.capacity(), cap );
 }
 
 
