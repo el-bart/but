@@ -22,7 +22,7 @@ struct TestDescriptor
     fdProcPath_{ fs::path{"/proc"} / boost::lexical_cast<std::string>(getpid()) / "fdinfo" / boost::lexical_cast<std::string>(fd_) }
   {
     if(fd_ == -1)
-      throw std::logic_error{"unable to create sockets pair for tests"};
+      throw std::logic_error{"unable to create descriptor for tests"};
     if( not isOpen() )
       throw std::logic_error{"descriptor does not appear to be opened: " + fdProcPath_.string()};
   }
