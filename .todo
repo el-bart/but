@@ -18,6 +18,12 @@
             BitPackedSequence implemented and tested
         </comment>
     </note>
+    <note priority="high" time="1483373129" done="1484683401">
+        remove sources-auto detection in favour of explicitly listing source files (CMake six here - sorry...)
+        <comment>
+            nah - will work as it is... :P
+        </comment>
+    </note>
     <note priority="medium" time="1391105418" done="1405245748">
         smart pointer that is guaranteed not to be nullptr
         <comment>
@@ -84,20 +90,17 @@
             done in latest versions of boost already
         </comment>
     </note>
-    <note priority="high" time="1483373129" done="1484683401">
-        remove sources-auto detection in favour of explicitly listing source files (CMake six here - sorry...)
-        <comment>
-            nah - will work as it is... :P
-        </comment>
-    </note>
     <note priority="medium" time="1400512964">
         tests for logging facilities
     </note>
     <note priority="medium" time="1447835445">
         add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
     </note>
-    <note priority="medium" time="1447865296">
+    <note priority="medium" time="1447865296" done="1484685707">
         implement BasicLockable&lt;CRTP&gt;
+        <comment>
+            implemented
+        </comment>
     </note>
     <note priority="medium" time="1447865309">
         implement BasicLockableWithLockProxy&lt;CRTP&gt;
