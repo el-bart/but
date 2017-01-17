@@ -38,7 +38,7 @@ namespace Threading
  *  @note each method of your type, should first do 'assert( locked() )', before proceeding.
  *        'locked()' is only available in debug mode, but can save a lot of time when looking for sync issues.
  */
-template<typename CRTP>
+template<typename Derived>
 class BasicLockable
 {
 public:
@@ -57,8 +57,8 @@ public:
 protected:
   BasicLockable()
   {
-    // test is here, as CRTP must be defined, before it can be used... :P
-    static_assert( std::is_base_of<BasicLockable, CRTP>::value, "this class is meant to be derived from, to make it work" );
+    // test is here, as 'Derived' must be defined, before it can be used... :P
+    static_assert( std::is_base_of<BasicLockable, Derived>::value, "this class is meant to be derived from, to make it work" );
   }
 
   ~BasicLockable() = default;
