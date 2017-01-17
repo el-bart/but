@@ -886,4 +886,23 @@ TEST_F(ButContainerBitPackedSequence, ShringToFitSmokeTest)
   ASSERT_EQ( cd_.size(), 9u );
 }
 
+
+TEST_F(ButContainerBitPackedSequence, InitializingWithInitializerList)
+{
+  Data d{ Elem::Y, Elem::Z };
+  ASSERT_EQ( d.size(), 2u );
+  EXPECT_EQ( d[0], Elem::Y );
+  EXPECT_EQ( d[1], Elem::Z );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, MovableAndCopyable)
+{
+  EXPECT_TRUE( std::is_copy_constructible<Data>::value );
+  EXPECT_TRUE( std::is_copy_assignable<Data>::value );
+
+  EXPECT_TRUE( std::is_move_constructible<Data>::value );
+  EXPECT_TRUE( std::is_move_assignable<Data>::value );
+}
+
 }

@@ -75,6 +75,17 @@ public:
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
+  BitPackedSequence() = default;
+  BitPackedSequence(std::initializer_list<T> const& lst)
+  {
+    for(auto& e: lst)
+      push_back(e);
+  }
+  BitPackedSequence(BitPackedSequence const&) = default;
+  BitPackedSequence& operator=(BitPackedSequence const&) = default;
+  BitPackedSequence(BitPackedSequence&&) = default;
+  BitPackedSequence& operator=(BitPackedSequence&&) = default;
+
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
   size_type capacity() const { return ( c_.size() * array_element_bits ) / Packer::bits_count; }
