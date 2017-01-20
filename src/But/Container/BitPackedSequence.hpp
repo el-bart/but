@@ -182,6 +182,7 @@ private:
   static constexpr uint8_t array_element_bits = sizeof(array_element_type) * bits_per_byte;
   static constexpr auto    array_element_mask = std::numeric_limits<array_element_type>::max();
   static constexpr auto    element_bits_mask  = maskForFirstBits(Packer::bits_count);
+  static constexpr auto    can_split_between_bytes = ( array_element_bits % Packer::bits_count ) != 0;
 
   void resizeToFitAdditional(const size_type additional)
   {
@@ -209,12 +210,14 @@ private:
     const auto maskForStart = ~ ( element_bits_mask << shiftForStart );
     c_[startByte] &= maskForStart;
     c_[startByte] |= bits << shiftForStart;
-
-    if( bitsLeftInStartByte < Packer::bits_count )
+    if( can_split_between_bytes )   // hint for a compiler - this removes this branch, if it will never be exercised any way
     {
-      const auto endByte = startByte + 1u;
-      c_[endByte] &= ~ ( element_bits_mask >> bitsLeftInStartByte );
-      c_[endByte] |= bits >> bitsLeftInStartByte;
+      if( bitsLeftInStartByte < Packer::bits_count )
+      {
+        const auto endByte = startByte + 1u;
+        c_[endByte] &= ~ ( element_bits_mask >> bitsLeftInStartByte );
+        c_[endByte] |= bits >> bitsLeftInStartByte;
+      }
     }
   }
 
@@ -228,16 +231,19 @@ private:
     const auto maskForStart = element_bits_mask << shiftForStart;
     const auto firstByte = c_[startByte] & maskForStart;
     const auto firstPart = firstByte >> startOffset;
-    if( bits_per_byte < shiftForStart + Packer::bits_count )
+    if( can_split_between_bytes )   // hint for a compiler - this removes this branch, if it will never be exercised any way
     {
-      const auto endByte = startByte+1;
-      assert( endByte < size() );
-      const auto lastByte = c_[endByte];
-      const auto bitsLeft = ( shiftForStart + Packer::bits_count ) - bits_per_byte;
-      const auto maskForEnd = element_bits_mask >> ( Packer::bits_count - bitsLeft );
-      const auto lastPart = lastByte & maskForEnd;
-      const auto data = firstPart | ( lastPart << bitsLeftInStartByte );
-      return Packer::decode(data);
+      if( bits_per_byte < shiftForStart + Packer::bits_count )
+      {
+        const auto endByte = startByte+1;
+        assert( endByte < size() );
+        const auto lastByte = c_[endByte];
+        const auto bitsLeft = ( shiftForStart + Packer::bits_count ) - bits_per_byte;
+        const auto maskForEnd = element_bits_mask >> ( Packer::bits_count - bitsLeft );
+        const auto lastPart = lastByte & maskForEnd;
+        const auto data = firstPart | ( lastPart << bitsLeftInStartByte );
+        return Packer::decode(data);
+      }
     }
     return Packer::decode(firstPart);
   }
