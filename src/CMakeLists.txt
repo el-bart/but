@@ -6,7 +6,7 @@ include(cmake/sources.cmake)
 include(cmake/coverage.cmake)
 include(cmake/sanitizers.cmake)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(but ${SOURCES_LIB})
+target_include_directories(but PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(cmake/tests.cmake)
