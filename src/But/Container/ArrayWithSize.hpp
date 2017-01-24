@@ -37,15 +37,11 @@ public:
       push_back(e);
   }
 
-  ArrayWithSize(ArrayWithSize const& )  =default;
-  /*
   ArrayWithSize(ArrayWithSize const& other)
   {
     for(auto const& e: other)
       push_back(e);
   }
-  */
-
   ArrayWithSize& operator=(ArrayWithSize const& other)
   {
     if(this==&other)

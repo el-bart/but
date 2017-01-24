@@ -182,22 +182,36 @@ struct CopyObserver final
   CopyObserver(CopyObserver const& other):
     copies_{other.copies_}
   {
-    if(copies_)
-      ++(*copies_);
+    ++(*copies_);
   }
 
   CopyObserver& operator=(CopyObserver const& other)
   {
     copies_ = other.copies_;
-    if(copies_)
-      ++(*copies_);
+    ++(*copies_);
     return *this;
   }
 
   unsigned* copies_{nullptr};
 };
 
-TEST_F(ButContainerArrayWithSize, CopyAssignmentofContainerCopiesOnlyElementsInUse)
+
+TEST_F(ButContainerArrayWithSize, CopyConstructingContainerCopiesOnlyElementsInUse)
+{
+  auto copyCount = 0u;
+  CopyObserver co1{copyCount};
+  CopyObserver co2{copyCount};
+
+  using CpSeq= ArrayWithSize<CopyObserver, 3>;
+  CpSeq cs1{co1, co2};
+  copyCount = 0;
+  CpSeq cs2{cs1};
+  EXPECT_EQ( cs2.size(), cs1.size() );
+  EXPECT_EQ(copyCount, 2u);
+}
+
+
+TEST_F(ButContainerArrayWithSize, CopyAssignmenTofContainerCopiesOnlyElementsInUse)
 {
   auto copyCount = 0u;
   CopyObserver co1{copyCount};
