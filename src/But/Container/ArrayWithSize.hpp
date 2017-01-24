@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <algorithm>
 #include <initializer_list>
 #include <cassert>
 #include "But/Mpl/SizeTypeFor.hpp"
@@ -132,6 +133,48 @@ private:
   Container c_;
   size_type size_{0};
 };
+
+
+template<typename T, size_t N>
+bool operator==(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
+{
+  if( lhs.size() != rhs.size() )
+    return false;
+  for(typename ArrayWithSize<T,N>::size_type i=0; i<lhs.size(); ++i)
+    if( lhs[i] != rhs[i] )
+      return false;
+  return true;
+}
+
+template<typename T, size_t N>
+bool operator!=(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
+{
+  return not ( lhs == rhs );
+}
+
+template<typename T, size_t N>
+bool operator<(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
+{
+  return std::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
+}
+
+template<typename T, size_t N>
+bool operator<=(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
+{
+  return lhs == rhs || lhs < rhs;
+}
+
+template<typename T, size_t N>
+bool operator>(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
+{
+  return not ( lhs <= rhs );
+}
+
+template<typename T, size_t N>
+bool operator>=(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
+{
+  return not ( lhs < rhs );
+}
 
 }
 }
