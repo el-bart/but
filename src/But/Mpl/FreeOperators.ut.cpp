@@ -42,21 +42,4 @@ TEST_F(ButMplFreeOperators, OperatorsForRegularClass)
   EXPECT_FALSE( d1 != d1 );
 }
 
-
-template<typename T>
-struct TmpData
-{
-  typename T::value_type t_;
-};
-
-//BUT_MPL_FREE_OPERATORS_COMPARE_SWO( TmpData, .t_.size() )
-
-
-TEST_F(ButMplFreeOperators, TemplateClassIsHandled)
-{
-//  const MixData md1{"alice", 3};
-//  const MixData md2{"alice", 4};
-//  const MixData md3{"bob",   1};
-}
-
 }

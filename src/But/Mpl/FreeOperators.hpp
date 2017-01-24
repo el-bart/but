@@ -17,12 +17,3 @@
   inline bool operator>=(Class const& lhs, Class const& rhs) { return lhs Extract >= rhs Extract ; } \
   inline bool operator==(Class const& lhs, Class const& rhs) { return lhs Extract == rhs Extract ; } \
   inline bool operator!=(Class const& lhs, Class const& rhs) { return lhs Extract != rhs Extract ; }
-
-// TODO: template
-#define BUT_MPL_FREE_OPERATORS_TEMPLATE_COMPARE(Class, ...) \
-  inline bool operator< (Class const& lhs, Class const& rhs) { return lhs Extract <  rhs Extract ; } \
-  inline bool operator<=(Class const& lhs, Class const& rhs) { return lhs Extract <= rhs Extract ; } \
-  inline bool operator> (Class const& lhs, Class const& rhs) { return lhs Extract >  rhs Extract ; } \
-  inline bool operator>=(Class const& lhs, Class const& rhs) { return lhs Extract >= rhs Extract ; } \
-  inline bool operator==(Class const& lhs, Class const& rhs) { return lhs Extract == rhs Extract ; } \
-  inline bool operator!=(Class const& lhs, Class const& rhs) { return lhs Extract != rhs Extract ; }
