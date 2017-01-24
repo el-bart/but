@@ -129,6 +129,14 @@ TEST_F(ButContainerArrayWithSize, WhenElementIsPopedItIsOverwritenWithDefaultVal
 }
 
 
+TEST_F(ButContainerArrayWithSize, ElementsCanBeMovedInWithPushBack)
+{
+  ArrayWithSize<std::unique_ptr<int>, 3> tab;
+  tab.push_back( std::make_unique<int>(42) );
+  EXPECT_EQ( tab.size(), 1u );
+}
+
+
 TEST_F(ButContainerArrayWithSize, SizeTypeIsMinimalForParametrizedSize)
 {
   // yes, yes... this is not portable, not guaranteed, etc...
@@ -160,6 +168,77 @@ TEST_F(ButContainerArrayWithSize, MovableAndCopyable)
 
   EXPECT_TRUE( std::is_move_constructible<Sequence>::value );
   EXPECT_TRUE( std::is_move_assignable<Sequence>::value );
+}
+
+
+struct CopyObserver final
+{
+  CopyObserver() = default;
+
+  explicit CopyObserver(unsigned& copies):
+    copies_{&copies}
+  { }
+
+  CopyObserver(CopyObserver const& other):
+    copies_{other.copies_}
+  {
+    if(copies_)
+      ++(*copies_);
+  }
+
+  CopyObserver& operator=(CopyObserver const& other)
+  {
+    copies_ = other.copies_;
+    if(copies_)
+      ++(*copies_);
+    return *this;
+  }
+
+  unsigned* copies_{nullptr};
+};
+
+TEST_F(ButContainerArrayWithSize, CopyAssignmentofContainerCopiesOnlyElementsInUse)
+{
+  auto copyCount = 0u;
+  CopyObserver co1{copyCount};
+  CopyObserver co2{copyCount};
+
+  using CpSeq= ArrayWithSize<CopyObserver, 3>;
+  CpSeq cs1{co1, co2};
+  CpSeq cs2;
+  copyCount = 0;
+  cs2 = cs1;
+  EXPECT_EQ(copyCount, 2u);
+}
+
+
+TEST_F(ButContainerArrayWithSize, CopyAsignmentOverwritesPreviousContent)
+{
+  Sequence s1{"abc"};
+  const Sequence s2{"test", "values"};
+  s1 = s2;
+  ASSERT_EQ( s1.size(), 2u );
+  EXPECT_EQ( s1[0], "test" );
+  EXPECT_EQ( s1[1], "values" );
+}
+
+
+TEST_F(ButContainerArrayWithSize, CopyAsignmentToSelfDoesNothing)
+{
+  Sequence s{"test", "values"};
+  s = s;
+  ASSERT_EQ( s.size(), 2u );
+  EXPECT_EQ( s[0], "test" );
+  EXPECT_EQ( s[1], "values" );
+}
+
+
+TEST_F(ButContainerArrayWithSize, ClearingContainersContent)
+{
+  Sequence s{"test", "values"};
+  EXPECT_EQ( s.size(), 2u );
+  s.clear();
+  EXPECT_EQ( s.size(), 0u );
 }
 
 }

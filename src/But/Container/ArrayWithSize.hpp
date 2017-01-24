@@ -36,8 +36,26 @@ public:
     for(auto& e: lst)
       push_back(e);
   }
-  ArrayWithSize(ArrayWithSize const& other) = default;
-  ArrayWithSize& operator=(ArrayWithSize const& other) = default;
+
+  ArrayWithSize(ArrayWithSize const& )  =default;
+  /*
+  ArrayWithSize(ArrayWithSize const& other)
+  {
+    for(auto const& e: other)
+      push_back(e);
+  }
+  */
+
+  ArrayWithSize& operator=(ArrayWithSize const& other)
+  {
+    if(this==&other)
+      return *this;
+    clear();
+    for(auto const& e: other)
+      push_back(e);
+    return *this;
+  }
+
   ArrayWithSize(ArrayWithSize&& other) = default;
   ArrayWithSize& operator=(ArrayWithSize&& other) = default;
 
@@ -45,7 +63,13 @@ public:
   size_type size() const { return size_; }
   constexpr size_t max_size() const { return N; }
 
-  void push_back(value_type vt)
+  void push_back(value_type const& vt)
+  {
+    assert( size() < max_size() && "overflow detected" );
+    c_[size_] = vt;
+    ++size_;
+  }
+  void push_back(value_type&& vt)
   {
     assert( size() < max_size() && "overflow detected" );
     c_[size_] = std::move(vt);
@@ -68,6 +92,12 @@ public:
   {
     assert( pos < size() && "index out of bound" );
     return c_[pos];
+  }
+
+  void clear()
+  {
+    while( not empty() )
+      pop_back();
   }
 
   const_iterator cbegin() const { using std::begin; return begin(c_); }
