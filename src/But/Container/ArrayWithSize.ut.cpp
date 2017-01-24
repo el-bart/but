@@ -349,4 +349,36 @@ TEST_F(ButContainerArrayWithSize, MoveAsignmentToSelfDoesNothing)
   EXPECT_EQ( *s[1],  42 );
 }
 
+
+struct CtorTest
+{
+  CtorTest(): called_{0} { }
+  CtorTest(int): called_{1} { }
+  CtorTest(double): called_{2} { }
+  CtorTest(double, int): called_{3} { }
+
+  CtorTest(CtorTest const&) = delete;
+  CtorTest& operator=(CtorTest const&) = delete;
+  CtorTest(CtorTest&&) = default;
+  CtorTest& operator=(CtorTest&&) = default;
+
+  int called_;
+};
+
+
+TEST_F(ButContainerArrayWithSize, EmplacingBack)
+{
+  using Seq= ArrayWithSize<CtorTest, 4>;
+  Seq s;
+  s.emplace_back();
+  s.emplace_back(42);
+  s.emplace_back(3.14);
+  s.emplace_back(3.14, 42);
+  ASSERT_EQ( s.size(), 4u );
+  EXPECT_EQ( s[0].called_, 0 );
+  EXPECT_EQ( s[1].called_, 1 );
+  EXPECT_EQ( s[2].called_, 2 );
+  EXPECT_EQ( s[3].called_, 3 );
+}
+
 }

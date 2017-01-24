@@ -65,6 +65,12 @@ public:
   size_type size() const { return size_; }
   constexpr size_t max_size() const { return N; }
 
+  template<typename ...Args>
+  void emplace_back(Args&&... args)
+  {
+    push_back( value_type{ std::forward<Args>(args)... } );
+  }
+
   void push_back(value_type const& vt)
   {
     assert( size() < max_size() && "overflow detected" );
