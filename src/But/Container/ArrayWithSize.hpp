@@ -44,16 +44,22 @@ public:
   }
   ArrayWithSize& operator=(ArrayWithSize const& other)
   {
-    if(this==&other)
-      return *this;
-    clear();
-    for(auto const& e: other)
-      push_back(e);
+    copyOrMove(other);
     return *this;
   }
 
-  ArrayWithSize(ArrayWithSize&& other) = default;
-  ArrayWithSize& operator=(ArrayWithSize&& other) = default;
+  ArrayWithSize(ArrayWithSize&& other)
+  {
+    for(auto&& e: other)
+      push_back( std::move(e) );
+    other.size_ = 0u;
+  }
+  ArrayWithSize& operator=(ArrayWithSize&& other)
+  {
+    if( copyOrMove( std::move(other) ) )
+      other.size_ = 0u;
+    return *this;
+  }
 
   bool empty() const { return size() == 0u; }
   size_type size() const { return size_; }
@@ -106,6 +112,17 @@ public:
   iterator end() { return begin() + size_; }
 
 private:
+  template<typename Other>
+  bool copyOrMove(Other&& other)
+  {
+    if(this==&other)
+      return false;
+    clear();
+    for(auto&& e: other)
+      push_back( std::move(e) );
+    return true;
+  }
+
   Container c_;
   size_type size_{0};
 };

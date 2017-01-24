@@ -231,9 +231,14 @@ TEST_F(ButContainerArrayWithSize, CopyAsignmentOverwritesPreviousContent)
   Sequence s1{"abc"};
   const Sequence s2{"test", "values"};
   s1 = s2;
+
   ASSERT_EQ( s1.size(), 2u );
   EXPECT_EQ( s1[0], "test" );
   EXPECT_EQ( s1[1], "values" );
+
+  ASSERT_EQ( s2.size(), 2u );
+  EXPECT_EQ( s2[0], "test" );
+  EXPECT_EQ( s2[1], "values" );
 }
 
 
@@ -253,6 +258,95 @@ TEST_F(ButContainerArrayWithSize, ClearingContainersContent)
   EXPECT_EQ( s.size(), 2u );
   s.clear();
   EXPECT_EQ( s.size(), 0u );
+}
+
+
+struct MoveObserver final
+{
+  MoveObserver() = default;
+
+  explicit MoveObserver(unsigned& moves):
+    moves_{&moves}
+  { }
+
+  MoveObserver(MoveObserver&& other):
+    moves_{other.moves_}
+  {
+    ++(*moves_);
+    other.moves_ = nullptr;
+  }
+
+  MoveObserver& operator=(MoveObserver&& other)
+  {
+    moves_ = other.moves_;
+    ++(*moves_);
+    other.moves_ = nullptr;
+    return *this;
+  }
+
+  unsigned* moves_{nullptr};
+};
+
+
+TEST_F(ButContainerArrayWithSize, MoveConstructingContainerMovesOnlyElementsInUse)
+{
+  auto moveCount = 0u;
+
+  using CpSeq= ArrayWithSize<MoveObserver, 3>;
+  CpSeq cs1;
+  cs1.push_back( MoveObserver{moveCount} );
+  cs1.push_back( MoveObserver{moveCount} );
+  moveCount = 0;
+  CpSeq cs2{ std::move(cs1) };
+  EXPECT_EQ( cs1.size(), 0u );
+  EXPECT_EQ( cs2.size(), 2u );
+  EXPECT_EQ(moveCount, 2u);
+}
+
+
+TEST_F(ButContainerArrayWithSize, MoveAssignmenTofContainerMovesOnlyElementsInUse)
+{
+  auto copyCount = 0u;
+  using CpSeq= ArrayWithSize<MoveObserver, 3>;
+  CpSeq cs1;
+  cs1.push_back( MoveObserver{copyCount} );
+  cs1.push_back( MoveObserver{copyCount} );
+  CpSeq cs2;
+  copyCount = 0;
+  cs2 = std::move(cs1);
+  EXPECT_EQ( cs1.size(), 0u );
+  EXPECT_EQ( cs2.size(), 2u );
+  EXPECT_EQ(copyCount, 2u);
+}
+
+
+TEST_F(ButContainerArrayWithSize, MoveAsignmentOverwritesPreviousContent)
+{
+  using CpSeq= ArrayWithSize<std::unique_ptr<int>, 3>;
+  CpSeq s1;
+  s1.push_back( std::make_unique<int>(997) );
+  CpSeq s2;
+  s2.push_back( std::make_unique<int>(69) );
+  s2.push_back( std::make_unique<int>(42) );
+  s1 = std::move(s2);
+  EXPECT_EQ( s2.size(), 0u );
+  ASSERT_EQ( s1.size(), 2u );
+  EXPECT_EQ( *s1[0], 69 );
+  EXPECT_EQ( *s1[1], 42 );
+}
+
+
+TEST_F(ButContainerArrayWithSize, MoveAsignmentToSelfDoesNothing)
+{
+  using CpSeq= ArrayWithSize<std::unique_ptr<int>, 3>;
+  CpSeq s;
+  s.push_back( std::make_unique<int>(997) );
+  s.push_back( std::make_unique<int>(42) );
+  auto&& tmp = std::move(s);    // little hack to disable compiler warning
+  tmp = std::move(s);
+  ASSERT_EQ( s.size(), 2u );
+  EXPECT_EQ( *s[0], 997 );
+  EXPECT_EQ( *s[1],  42 );
 }
 
 }
