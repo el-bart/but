@@ -1,3 +1,4 @@
+#include <deque>
 #include <memory>
 #include <random>
 #include <string>
@@ -360,14 +361,26 @@ struct TestAllocator
   }
 };
 
-TEST_F(ButContainerUnorderedArray, AllocatorAware)
+TEST_F(ButContainerUnorderedArray, ChangingUnderlyuingContainersAllocator)
 {
   EXPECT_TRUE( g_dataBlocks.empty() );
-  UnorderedArray<Data, TestAllocator<Data>> data;
+  using Container = std::vector<Data, TestAllocator<Data>>;
+  UnorderedArray<Data, Container> data;
   data.emplace("lucky", 13);
   EXPECT_EQ( 1u, g_dataBlocks.size() );
   data.clear();
   EXPECT_EQ( 0u, g_dataBlocks.size() );
+}
+
+
+TEST_F(ButContainerUnorderedArray, ChangingUnderlyuingContainerType)
+{
+  using Container = std::deque<Data>;
+  UnorderedArray<Data, Container> data;
+  EXPECT_TRUE( data.empty() );
+  Data d{"answer", 42};
+  data.add(d);
+  EXPECT_EQ( data.size(), 1u );
 }
 
 

@@ -31,10 +31,9 @@ namespace Container
  *  @par
  *  each insertion or removal invalidates all iterators.
  */
-template<typename T, typename Allocator = std::allocator<T>>
+template<typename T, typename ImplContainer = std::vector<T>>
 class UnorderedArray final
 {
-  using ImplContainer = std::vector<T, Allocator>;
 public:
   using value_type     = T;
   using allocator_type = typename ImplContainer::allocator_type;
