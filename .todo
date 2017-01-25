@@ -66,6 +66,12 @@
             implemented
         </comment>
     </note>
+    <note priority="medium" time="1447865309" done="1484690029">
+        implement BasicLockableWithLockProxy&lt;CRTP&gt;
+        <comment>
+            implemented
+        </comment>
+    </note>
     <note priority="low" time="1392392163" done="1405245837">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
         <comment>
@@ -102,12 +108,6 @@
     <note priority="medium" time="1447835445">
         add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
     </note>
-    <note priority="medium" time="1447865309" done="1484690029">
-        implement BasicLockableWithLockProxy&lt;CRTP&gt;
-        <comment>
-            implemented
-        </comment>
-    </note>
     <note priority="medium" time="1456730821">
         iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
     </note>
@@ -119,6 +119,12 @@
     </note>
     <note priority="medium" time="1469898747">
         add Guard class and makeGuardhelper functor
+    </note>
+    <note priority="medium" time="1485377159">
+        add comparison operators to BitPackedSequence
+    </note>
+    <note priority="medium" time="1485377166">
+        add comparison operators to UnorderedArray
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
