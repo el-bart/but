@@ -4,6 +4,7 @@
 #include <iterator>
 #include <algorithm>
 #include <type_traits>
+#include "But/Mpl/FreeOperators.hpp"
 #include "OffsetIterator.hpp"
 
 namespace But
@@ -257,43 +258,9 @@ private:
 };
 
 
-template<typename T, typename Packer, typename Container>
-bool operator==(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
-{
-  using std::begin;
-  using std::end;
-  return std::equal( begin(lhs), end(lhs), begin(rhs), end(rhs) );
-}
-
-template<typename T, typename Packer, typename Container>
-bool operator!=(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
-{
-  return not ( lhs == rhs );
-}
-
-template<typename T, typename Packer, typename Container>
-bool operator<(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
-{
-  return std::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
-}
-
-template<typename T, typename Packer, typename Container>
-bool operator<=(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
-{
-  return lhs == rhs || lhs < rhs;
-}
-
-template<typename T, typename Packer, typename Container>
-bool operator>(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
-{
-  return not ( lhs <= rhs );
-}
-
-template<typename T, typename Packer, typename Container>
-bool operator>=(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
-{
-  return not ( lhs < rhs );
-}
+#define COLLECTION BitPackedSequence<T,Packer,Container>
+BUT_MPL_FREE_OPERATORS_COLLECTION_TEMPLATE_COMPARE(COLLECTION, typename T, typename Packer, typename Container)
+#undef COLLECTION
 
 }
 }

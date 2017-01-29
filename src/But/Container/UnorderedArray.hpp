@@ -3,6 +3,7 @@
 #include <iterator>
 #include <initializer_list>
 #include <cassert>
+#include "But/Mpl/FreeOperators.hpp"
 
 namespace But
 {
@@ -130,43 +131,9 @@ void swap(UnorderedArray<T,ImplContainer>& lhs, UnorderedArray<T,ImplContainer>&
 }
 
 
-template<typename T, typename ImplContainer>
-bool operator==(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
-{
-  using std::begin;
-  using std::end;
-  return std::equal( begin(lhs), end(lhs), begin(rhs), end(rhs) );
-}
-
-template<typename T, typename ImplContainer>
-bool operator!=(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
-{
-  return not ( lhs == rhs );
-}
-
-template<typename T, typename ImplContainer>
-bool operator<(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
-{
-  return std::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
-}
-
-template<typename T, typename ImplContainer>
-bool operator<=(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
-{
-  return lhs == rhs || lhs < rhs;
-}
-
-template<typename T, typename ImplContainer>
-bool operator>(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
-{
-  return not ( lhs <= rhs );
-}
-
-template<typename T, typename ImplContainer>
-bool operator>=(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
-{
-  return not ( lhs < rhs );
-}
+#define COLLECTION UnorderedArray<T,ImplContainer>
+BUT_MPL_FREE_OPERATORS_COLLECTION_TEMPLATE_COMPARE(COLLECTION, typename T, typename ImplContainer)
+#undef COLLECTION
 
 }
 }
