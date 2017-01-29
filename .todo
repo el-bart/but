@@ -120,8 +120,11 @@
     <note priority="medium" time="1469898747">
         add Guard class and makeGuardhelper functor
     </note>
-    <note priority="medium" time="1485377159">
+    <note priority="medium" time="1485377159" done="1485717621">
         add comparison operators to BitPackedSequence
+        <comment>
+            added
+        </comment>
     </note>
     <note priority="medium" time="1485377166">
         add comparison operators to UnorderedArray

@@ -905,4 +905,36 @@ TEST_F(ButContainerBitPackedSequence, MovableAndCopyable)
   EXPECT_TRUE( std::is_move_assignable<Data>::value );
 }
 
+
+TEST_F(ButContainerBitPackedSequence, ComparingContainers)
+{
+  using Seq= BitPackedSequence<Elem, Packer>;
+  const Seq s1{ Elem::X, Elem::Y, Elem::Z };
+  const Seq s2{ Elem::X, Elem::Y };
+  const Seq s3{ Elem::Z, Elem::Z, Elem::X };
+
+  EXPECT_TRUE(  s1 == s1 );
+  EXPECT_FALSE( s1 == s2 );
+  EXPECT_FALSE( s1 == s3 );
+
+  EXPECT_FALSE( s1 != s1 );
+  EXPECT_TRUE(  s1 != s2 );
+  EXPECT_TRUE(  s1 != s3 );
+
+  EXPECT_FALSE( s1 < s1 );
+  EXPECT_TRUE(  s2 < s1 );
+  EXPECT_TRUE(  s1 < s3 );
+
+  EXPECT_FALSE( s1 <= s2 );
+  EXPECT_TRUE(  s2 <= s1 );
+  EXPECT_TRUE(  s1 <= s3 );
+
+  EXPECT_FALSE( s1 > s1 );
+  EXPECT_TRUE(  s1 > s2 );
+  EXPECT_TRUE(  s3 > s1 );
+
+  EXPECT_FALSE( s2 >= s1 );
+  EXPECT_TRUE(  s1 >= s2 );
+}
+
 }

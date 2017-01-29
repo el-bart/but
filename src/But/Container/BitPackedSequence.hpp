@@ -2,6 +2,7 @@
 #include <vector>
 #include <limits>
 #include <iterator>
+#include <algorithm>
 #include <type_traits>
 #include "OffsetIterator.hpp"
 
@@ -254,6 +255,45 @@ private:
   size_type size_{0};
   Container c_;
 };
+
+
+template<typename T, typename Packer, typename Container>
+bool operator==(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
+{
+  using std::begin;
+  using std::end;
+  return std::equal( begin(lhs), end(lhs), begin(rhs), end(rhs) );
+}
+
+template<typename T, typename Packer, typename Container>
+bool operator!=(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
+{
+  return not ( lhs == rhs );
+}
+
+template<typename T, typename Packer, typename Container>
+bool operator<(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
+{
+  return std::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
+}
+
+template<typename T, typename Packer, typename Container>
+bool operator<=(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
+{
+  return lhs == rhs || lhs < rhs;
+}
+
+template<typename T, typename Packer, typename Container>
+bool operator>(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
+{
+  return not ( lhs <= rhs );
+}
+
+template<typename T, typename Packer, typename Container>
+bool operator>=(BitPackedSequence<T,Packer,Container> const& lhs, BitPackedSequence<T,Packer,Container> const& rhs)
+{
+  return not ( lhs < rhs );
+}
 
 }
 }
