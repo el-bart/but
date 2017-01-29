@@ -138,12 +138,9 @@ private:
 template<typename T, size_t N>
 bool operator==(ArrayWithSize<T,N> const& lhs, ArrayWithSize<T,N> const& rhs)
 {
-  if( lhs.size() != rhs.size() )
-    return false;
-  for(typename ArrayWithSize<T,N>::size_type i=0; i<lhs.size(); ++i)
-    if( lhs[i] != rhs[i] )
-      return false;
-  return true;
+  using std::begin;
+  using std::end;
+  return std::equal( begin(lhs), end(lhs), begin(rhs), end(rhs) );
 }
 
 template<typename T, size_t N>
