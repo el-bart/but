@@ -382,7 +382,7 @@ TEST_F(ButContainerArrayWithSize, EmplacingBack)
 }
 
 
-TEST_F(ButContainerArrayWithSize, ComparingContainer)
+TEST_F(ButContainerArrayWithSize, ComparingContainers)
 {
   using Seq= ArrayWithSize<int, 4>;
   const Seq s1{1, 2, 3};
