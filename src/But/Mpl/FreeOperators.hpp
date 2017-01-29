@@ -20,6 +20,45 @@
   inline bool operator!=(Class const& lhs, Class const& rhs) { return lhs Extract != rhs Extract ; }
 
 
+/** @brief helper macro to define all comparison operators, for a given template class, based on a provided extract operator.
+ *  <code>
+ *  template<typename T>
+ *  struct MyClass { T a_; }
+ *  BUT_MPL_FREE_OPERATORS_COMPARE(MyClass<T>, .a_, typename T)
+ *  // ...
+ *  const MyClass<std::string> x{"foo"};
+ *  const MyClass<std::string> y{"bar"};
+ *  assert( x > y );
+ *  </code>
+ *
+ *  @note for class with multiple template parameters, helper macro definition is needed:
+ *  <code>
+ *  template<typename T, typename U>
+ *  struct MyClass { T a_; }
+ *  #define CLASS MyClass<T,U>
+ *  BUT_MPL_FREE_OPERATORS_COMPARE(CLASS, .a_, typename T, typename U)
+ *  #ifdef CLASS
+ *  // ...
+ *  const MyClass<std::string,int> x{"foo"};
+ *  const MyClass<std::string,int> y{"bar"};
+ *  assert( x > y );
+ *  </code>
+ */
+#define BUT_MPL_FREE_OPERATORS_TEMPLATE_COMPARE(Class, Extract, ...) \
+  template<__VA_ARGS__> \
+  inline bool operator< (Class const& lhs, Class const& rhs) { return lhs Extract <  rhs Extract ; } \
+  template<__VA_ARGS__> \
+  inline bool operator<=(Class const& lhs, Class const& rhs) { return lhs Extract <= rhs Extract ; } \
+  template<__VA_ARGS__> \
+  inline bool operator> (Class const& lhs, Class const& rhs) { return lhs Extract >  rhs Extract ; } \
+  template<__VA_ARGS__> \
+  inline bool operator>=(Class const& lhs, Class const& rhs) { return lhs Extract >= rhs Extract ; } \
+  template<__VA_ARGS__> \
+  inline bool operator==(Class const& lhs, Class const& rhs) { return lhs Extract == rhs Extract ; } \
+  template<__VA_ARGS__> \
+  inline bool operator!=(Class const& lhs, Class const& rhs) { return lhs Extract != rhs Extract ; }
+
+
 /** @brief helper macro to define all comparison operators, for a given collection type
  *  <code>
  *  struct MyCollection

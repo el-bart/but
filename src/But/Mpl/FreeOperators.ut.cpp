@@ -44,6 +44,62 @@ TEST_F(ButMplFreeOperators, OperatorsForRegularClass)
 }
 
 
+template<typename T>
+struct MyTemplateData
+{
+  T value_;
+};
+
+BUT_MPL_FREE_OPERATORS_TEMPLATE_COMPARE(MyTemplateData<T>, .value_, typename T)
+
+
+TEST_F(ButMplFreeOperators, OperatorsForTemplateClass)
+{
+  const MyTemplateData<int> d1{13};
+  const MyTemplateData<int> d2{42};
+
+  EXPECT_TRUE( d1 <  d2 );
+
+  EXPECT_TRUE( d1 <= d2 );
+  EXPECT_TRUE( d1 <= d1 );
+
+  EXPECT_TRUE( d1 >= d1 );
+  EXPECT_TRUE( d2 >= d1 );
+
+  EXPECT_TRUE( d1 == d1 );
+  EXPECT_TRUE( d1 != d2 );
+
+  EXPECT_FALSE( d1 >  d2 );
+
+  EXPECT_FALSE( d1 >= d2 );
+
+  EXPECT_FALSE( d2 <= d1 );
+
+  EXPECT_FALSE( d1 == d2 );
+  EXPECT_FALSE( d1 != d1 );
+}
+
+
+template<typename T, typename U>
+struct My2TemplateData
+{
+  T value_;
+};
+
+#define CLASS My2TemplateData<T,U>
+BUT_MPL_FREE_OPERATORS_TEMPLATE_COMPARE(CLASS, .value_, typename T, typename U)
+#undef CLASS
+
+
+TEST_F(ButMplFreeOperators, OperatorsForMultiTemplateClass)
+{
+  const My2TemplateData<int,double> d1{13};
+  const My2TemplateData<int,double> d2{42};
+
+  EXPECT_TRUE( d1 <  d2 );
+}
+
+
 struct MyCollection
 {
   explicit MyCollection(std::initializer_list<std::string> lst): c_{lst} { }
