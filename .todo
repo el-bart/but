@@ -72,6 +72,12 @@
             implemented
         </comment>
     </note>
+    <note priority="medium" time="1485377159" done="1485717621">
+        add comparison operators to BitPackedSequence
+        <comment>
+            added
+        </comment>
+    </note>
     <note priority="low" time="1392392163" done="1405245837">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
         <comment>
@@ -120,14 +126,11 @@
     <note priority="medium" time="1469898747">
         add Guard class and makeGuardhelper functor
     </note>
-    <note priority="medium" time="1485377159" done="1485717621">
-        add comparison operators to BitPackedSequence
+    <note priority="medium" time="1485377166" done="1485717831">
+        add comparison operators to UnorderedArray
         <comment>
             added
         </comment>
-    </note>
-    <note priority="medium" time="1485377166">
-        add comparison operators to UnorderedArray
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?

@@ -123,10 +123,49 @@ private:
 };
 
 
-template<typename T>
-void swap(UnorderedArray<T>& lhs, UnorderedArray<T>& rhs)
+template<typename T, typename ImplContainer>
+void swap(UnorderedArray<T,ImplContainer>& lhs, UnorderedArray<T,ImplContainer>& rhs)
 {
   lhs.swap(rhs);
+}
+
+
+template<typename T, typename ImplContainer>
+bool operator==(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
+{
+  using std::begin;
+  using std::end;
+  return std::equal( begin(lhs), end(lhs), begin(rhs), end(rhs) );
+}
+
+template<typename T, typename ImplContainer>
+bool operator!=(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
+{
+  return not ( lhs == rhs );
+}
+
+template<typename T, typename ImplContainer>
+bool operator<(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
+{
+  return std::lexicographical_compare( lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
+}
+
+template<typename T, typename ImplContainer>
+bool operator<=(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
+{
+  return lhs == rhs || lhs < rhs;
+}
+
+template<typename T, typename ImplContainer>
+bool operator>(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
+{
+  return not ( lhs <= rhs );
+}
+
+template<typename T, typename ImplContainer>
+bool operator>=(UnorderedArray<T,ImplContainer> const& lhs, UnorderedArray<T,ImplContainer> const& rhs)
+{
+  return not ( lhs < rhs );
 }
 
 }
