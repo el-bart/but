@@ -3,11 +3,16 @@ set -e
 
 for tc in gcc clang default
 do
-  for build in Debug Release Profile Relwithdebinfo
+  for build in Debug Release Relwithdebinfo Profile
   do
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "$0: building $build with $tc toolchain"
     echo ""
+    if [ "$build" = "Profile" ] && [ "$tc" = "clang" ]
+    then
+      echo "$0: skipping clang/Profile build, due to Clang error..."
+      continue
+    fi
     (
       mkdir -p "build/script/$tc/$build"
       cd "$_"
