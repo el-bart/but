@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "Priority.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 using But::Log::Field::Priority;
 

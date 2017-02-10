@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
