@@ -19,6 +19,11 @@ public:
     value_{ toString(value) }
   { }
 
+  explicit FieldInfo(std::string&& value):
+    type_{ typeString(value) },
+    value_{ std::move(value) }
+  { }
+
   FieldInfo(std::string type, std::string value):
     type_{ std::move(type) },
     value_{ std::move(value) }
