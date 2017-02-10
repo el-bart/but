@@ -1,4 +1,5 @@
-#include <cstdlib>
+#include <type_traits>
+#include <stdexcept>
 #include <cassert>
 
 #include "Priority.hpp"
@@ -8,33 +9,33 @@ namespace But
 namespace Log
 {
 
-char const* toString(const Priority pri) noexcept
+std::string const& toString(const Priority pri) noexcept
 {
-  switch(pri)
-  {
-    case Priority::debug:   return "debug";
-    case Priority::info:    return "info";
-    case Priority::warning: return "warning";
-    case Priority::error:   return "ERROR";
-    case Priority::fatal:   return "FATAL";
-  }
-  assert(!"unknown priority");
-  abort();
+  static const std::string out[] =
+                    {
+                      "debug",
+                      "info",
+                      "warning",
+                      "error"
+                    };
+  const auto num = static_cast<unsigned>(pri);
+  assert( num < std::extent<decltype(out)>::value && "unknown priority" );
+  return out[num];
 }
 
 
-char const* toStringConstLen(const Priority pri) noexcept
+std::string const& toStringConstLen(const Priority pri) noexcept
 {
-  switch(pri)
-  {
-    case Priority::debug:   return "debug  ";
-    case Priority::info:    return "info   ";
-    case Priority::warning: return "warning";
-    case Priority::error:   return "ERROR  ";
-    case Priority::fatal:   return "FATAL  ";
-  }
-  assert(!"unknown priority");
-  abort();
+  static const std::string out[] =
+                    {
+                      "debug  ",
+                      "info   ",
+                      "warning",
+                      "error  "
+                    };
+  const auto num = static_cast<unsigned>(pri);
+  assert( num < std::extent<decltype(out)>::value && "unknown priority" );
+  return out[num];
 }
 
 }
