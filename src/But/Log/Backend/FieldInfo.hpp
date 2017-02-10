@@ -35,6 +35,11 @@ public:
   FieldInfo(FieldInfo const&) = default;
   FieldInfo& operator=(FieldInfo const&) = default;
 
+  bool operator==(FieldInfo const& other) const
+  {
+    return type_ == other.type_ && value_ == other.value_;
+  }
+
   std::string const& type() const { return type_; }
   std::string const& value() const { return value_; }
 

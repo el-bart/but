@@ -48,4 +48,13 @@ TEST_F(ButLogBackendFieldInfo, AutoGettingTypeNames)
   EXPECT_EQ( FieldInfo{ AnotherCustomType{} }.value(), "whatever" );
 }
 
+
+TEST_F(ButLogBackendFieldInfo, CompareValues)
+{
+  const auto fi1 = FieldInfo{"one", "1"};
+  const auto fi2 = FieldInfo{"two", "2"};
+  EXPECT_TRUE( fi1 == fi1 );
+  EXPECT_FALSE( fi1 == fi2 );
+}
+
 }
