@@ -8,6 +8,8 @@ namespace But
 {
 namespace Log
 {
+namespace Field
+{
 
 std::string const& toString(const Priority pri) noexcept
 {
@@ -38,5 +40,6 @@ std::string const& toStringConstLen(const Priority pri) noexcept
   return out[num];
 }
 
+}
 }
 }

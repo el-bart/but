@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 #include "Priority.hpp"
 
-using But::Log::Priority;
+using But::Log::Field::Priority;
 
 namespace
 {
 
-struct ButLogPriority: public testing::Test
+struct ButLogFieldPriority: public testing::Test
 { };
 
 
-TEST_F(ButLogPriority, ConvertingToString)
+TEST_F(ButLogFieldPriority, ConvertingToString)
 {
   EXPECT_EQ( toString(Priority::debug),   "debug" );
   EXPECT_EQ( toString(Priority::info),    "info" );
@@ -19,7 +19,7 @@ TEST_F(ButLogPriority, ConvertingToString)
 }
 
 
-TEST_F(ButLogPriority, ConvertingToStringOfConstantLength)
+TEST_F(ButLogFieldPriority, ConvertingToStringOfConstantLength)
 {
   EXPECT_EQ( toStringConstLen(Priority::debug),   "debug  " );
   EXPECT_EQ( toStringConstLen(Priority::info),    "info   " );

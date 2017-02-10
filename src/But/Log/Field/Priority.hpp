@@ -5,6 +5,8 @@ namespace But
 {
 namespace Log
 {
+namespace Field
+{
 
 enum class Priority
 {
@@ -18,5 +20,6 @@ std::string const& toString(const Priority pri) noexcept;
 
 std::string const& toStringConstLen(const Priority pri) noexcept;
 
+}
 }
 }

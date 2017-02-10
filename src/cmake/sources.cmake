@@ -9,6 +9,8 @@ set(SRC_DIRS
     But
     But/Container
     But/Log
+    But/Log/Backend
+    But/Log/Field
     But/Log/detail
     But/Mpl
     But/System
