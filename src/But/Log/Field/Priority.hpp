@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -16,9 +17,10 @@ enum class Priority
   error   = 3
 };
 
-std::string const& toString(const Priority pri) noexcept;
+std::string const& toString(Priority pri) noexcept;
+std::string const& toStringConstLen(Priority pri) noexcept;
 
-std::string const& toStringConstLen(const Priority pri) noexcept;
+inline Backend::FieldInfo toFieldInfo(Priority pri) { return { "But::Log::Field::Priority", toString(pri) }; }
 
 }
 }

@@ -1,8 +1,8 @@
 #include <type_traits>
 #include <stdexcept>
 #include <cassert>
-
 #include "Priority.hpp"
+
 
 namespace But
 {

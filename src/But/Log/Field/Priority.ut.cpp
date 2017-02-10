@@ -27,4 +27,12 @@ TEST_F(ButLogFieldPriority, ConvertingToStringOfConstantLength)
   EXPECT_EQ( toStringConstLen(Priority::error),   "error  " );
 }
 
+
+TEST_F(ButLogFieldPriority, ConvertingToEntry)
+{
+  const auto fi = toFieldInfo(Priority::info);
+  EXPECT_EQ( fi.type_, "But::Log::Field::Priority" );
+  EXPECT_EQ( fi.value_, "info" );
+}
+
 }
