@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include "toString.hpp"
+#include "typeString.hpp"
 
 namespace But
 {
@@ -8,8 +10,15 @@ namespace Log
 namespace Backend
 {
 
-struct FieldInfo final
+class FieldInfo final
 {
+public:
+  template<typename T>
+  explicit FieldInfo(T const& value):
+    type_{ typeString(value) },
+    value_{ toString(value) }
+  { }
+
   FieldInfo(std::string type, std::string value):
     type_{ std::move(type) },
     value_{ std::move(value) }
