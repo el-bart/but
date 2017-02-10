@@ -16,8 +16,9 @@ enum class Priority
   error   = 3
 };
 
-std::string const& toString(Priority pri) noexcept;
-std::string const& toStringConstLen(Priority pri) noexcept;
+inline std::string typeString(Priority const&) { return "But::Priority"; }
+std::string const& toString(Priority pri);
+std::string const& toStringConstLen(Priority pri);
 
 }
 }

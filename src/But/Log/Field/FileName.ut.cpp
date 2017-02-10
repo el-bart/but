@@ -21,7 +21,7 @@ TEST_F(ButLogFieldFileName, ConvertingToString)
 TEST_F(ButLogFieldFileName, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{ FileName{__FILE__} };
-  EXPECT_EQ( fi.type(), "But::Log::Field::FileName" );
+  EXPECT_EQ( fi.type(), "But::FileName" );
   EXPECT_EQ( fi.value(), __FILE__ );
 }
 

@@ -14,6 +14,7 @@ struct FileName final
 };
 
 
+inline std::string typeString(FileName const&) { return "But::FileName"; }
 inline std::string toString(FileName const& fn) { return fn.value_.string(); }
 
 }

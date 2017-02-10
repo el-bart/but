@@ -14,6 +14,7 @@ struct LineNumber final
 };
 
 
+inline std::string typeString(LineNumber const&) { return "But::LineNumber"; }
 inline std::string toString(const LineNumber ln) { return std::to_string(ln.value_); }
 
 }

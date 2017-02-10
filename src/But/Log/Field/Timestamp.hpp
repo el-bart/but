@@ -9,11 +9,11 @@ namespace Log
 namespace Field
 {
 
-struct UnixTimestamp final
+struct Timestamp final
 {
   using Clock = std::chrono::high_resolution_clock;
-  UnixTimestamp(): tp_{ Clock::now() } { }
-  explicit UnixTimestamp(const Clock::time_point tp): tp_{tp} { }
+  Timestamp(): tp_{ Clock::now() } { }
+  explicit Timestamp(const Clock::time_point tp): tp_{tp} { }
 
   auto timePoint() const { return tp_; }
 
@@ -22,7 +22,8 @@ private:
 };
 
 
-std::string toString(UnixTimestamp uts);
+inline std::string typeString(Timestamp const&) { return "But::Timestamp"; }
+std::string toString(Timestamp uts);
 
 }
 }

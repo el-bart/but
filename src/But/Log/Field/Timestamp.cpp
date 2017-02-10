@@ -1,6 +1,6 @@
 #include <iomanip>
 #include <sstream>
-#include "UnixTimestamp.hpp"
+#include "Timestamp.hpp"
 
 namespace But
 {
@@ -9,7 +9,7 @@ namespace Log
 namespace Field
 {
 
-std::string toString(const UnixTimestamp uts)
+std::string toString(const Timestamp uts)
 {
   const auto duration = uts.timePoint().time_since_epoch();
   const auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
