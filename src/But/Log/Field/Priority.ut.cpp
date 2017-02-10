@@ -30,7 +30,7 @@ TEST_F(ButLogFieldPriority, ConvertingToStringOfConstantLength)
 
 TEST_F(ButLogFieldPriority, ConvertingToEntry)
 {
-  const auto fi = toFieldInfo(Priority::info);
+  const auto fi = But::Log::Backend::FieldInfo{Priority::info};
   EXPECT_EQ( fi.type(), "But::Log::Field::Priority" );
   EXPECT_EQ( fi.value(), "info" );
 }

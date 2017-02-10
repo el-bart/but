@@ -20,8 +20,6 @@ enum class Priority
 std::string const& toString(Priority pri) noexcept;
 std::string const& toStringConstLen(Priority pri) noexcept;
 
-inline Backend::FieldInfo toFieldInfo(Priority pri) { return { "But::Log::Field::Priority", toString(pri) }; }
-
 }
 }
 }
