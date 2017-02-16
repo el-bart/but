@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# all builds with ninja
 for tc in gcc clang default
 do
   for build in Debug Release Relwithdebinfo Profile
@@ -28,3 +29,14 @@ do
     )
   done
 done
+
+# check build with make
+(
+  mkdir -p "build/script/make-based"
+  cd "$_"
+  time cmake -G 'Unix Makefiles' ../../../
+  time make -j$(nproc) all
+  time make -j$(nproc) but_tests_manual
+  time make -j$(nproc) but_tests_auto
+  time ctest
+)
