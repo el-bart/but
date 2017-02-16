@@ -17,7 +17,11 @@ set(CMAKE_EXE_LINKER_FLAGS_PROFILE "${CMAKE_EXE_LINKER_FLAGS_PROFILE} -pg -flto"
 if(${CMAKE_COMPILER_IS_GNUCXX})
     # unfortunately 'archive' flags do not have per-build-type variants...
     if(DEFINED CMAKE_BUILD_TYPE AND NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        set(LTO_PLUGIN "--plugin=$$(gcc --print-file-name=liblto_plugin.so)")
+        execute_process(COMMAND gcc --print-file-name=liblto_plugin.so
+                        OUTPUT_VARIABLE LTO_PLUGIN_PATH
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
+        message(STATUS "using LTO plugin path: ${LTO_PLUGIN_PATH}")
+        set(LTO_PLUGIN "--plugin=\"${LTO_PLUGIN_PATH}\"")
         set(CMAKE_CXX_ARCHIVE_CREATE "${CMAKE_CXX_ARCHIVE_CREATE} ${LTO_PLUGIN}")
         set(CMAKE_CXX_ARCHIVE_FINISH "${CMAKE_CXX_ARCHIVE_FINISH} ${LTO_PLUGIN}")
     endif()
