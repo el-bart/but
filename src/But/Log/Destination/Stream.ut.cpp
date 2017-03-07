@@ -26,7 +26,7 @@ TEST_F(ButLogDestinationStream, PrintingSampleData)
 TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
 {
   s_.log( "beep \07 / CRLF \r\n / normal: ", LineNumber{42} );
-  EXPECT_EQ( ss_.str(), "beep . / CRLF .. / normal: 43\n" );
+  EXPECT_EQ( ss_.str(), "beep . / CRLF .. / normal: 42\n" );
 }
 
 }
