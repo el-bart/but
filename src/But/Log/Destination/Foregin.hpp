@@ -1,15 +1,17 @@
 #pragma once
-#include "Backend/Entry.hpp"
+#include "But/Log/Backend/Entry.hpp"
 
 namespace But
 {
 namespace Log
 {
+namespace Destination
+{
 
-class ForeginDestination
+class Foregin
 {
 public:
-  virtual ~ForeginDestination() = default;
+  virtual ~Foregin() = default;
 
   template<typename ...Args>
   void log(Args&& ...args)
@@ -32,5 +34,6 @@ private:
   virtual void logImpl(Backend::Entry e) = 0;
 };
 
+}
 }
 }

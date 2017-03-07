@@ -1,33 +1,33 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "ForeginDestination.hpp"
+#include "Foregin.hpp"
 
-using But::Log::ForeginDestination;
+using But::Log::Destination::Foregin;
 using But::Log::Backend::Entry;
 using But::Log::Backend::FieldInfo;
 
 namespace
 {
 
-struct DestinationMock: public ForeginDestination
+struct DestinationMock: public Foregin
 {
   MOCK_METHOD1(logImpl, void(Entry));
 };
 
 
-struct ButLogForeginDestination: public testing::Test
+struct ButLogDestinationForegin: public testing::Test
 {
   testing::StrictMock<DestinationMock> mock_;
 };
 
 
-TEST_F(ButLogForeginDestination, NothingIsCalledByDefault)
+TEST_F(ButLogDestinationForegin, NothingIsCalledByDefault)
 {
   // no calls - no logs
 }
 
 
-TEST_F(ButLogForeginDestination, ForwardingWithProperTypes)
+TEST_F(ButLogDestinationForegin, ForwardingWithProperTypes)
 {
   const std::vector<FieldInfo> expected{
           FieldInfo{42},
