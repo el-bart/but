@@ -35,7 +35,7 @@ private:
     (*os_) << std::endl;
   }
 
-  static std::string trimNonPrintable(std::string&& in)
+  static std::string trimNonPrintable(std::string in)
   {
     for(auto& e: in)
       if( not isprint(e) )
