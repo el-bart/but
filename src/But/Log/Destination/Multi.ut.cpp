@@ -115,11 +115,23 @@ TEST_F(ButLogDestinationMulti, ExceptionInAnyPrinterDoesNotStopProcessing)
 
 TEST_F(ButLogDestinationMulti, ReloadingReloadsAllDestinations)
 {
+  multi_.reload();
+  EXPECT_EQ( 1u, td1_.reloads_ );
+  EXPECT_EQ( 1u, td2_.reloads_ );
+  EXPECT_EQ( 1u, td3_.reloads_ );
 }
 
 
 TEST_F(ButLogDestinationMulti, ExceptionInAnyDestinationDoesNotStopProcessing)
 {
+  td1_.throws_ = true;
+  td2_.throws_ = true;
+  td3_.throws_ = true;
+
+  multi_.reload();
+  EXPECT_EQ( 1u, td1_.reloads_ );
+  EXPECT_EQ( 1u, td2_.reloads_ );
+  EXPECT_EQ( 1u, td3_.reloads_ );
 }
 
 }

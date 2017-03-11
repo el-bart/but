@@ -1,6 +1,7 @@
 #pragma once
 #include <tuple>
 #include "detail/LogForwarder.hpp"
+#include "detail/ReloadForwarder.hpp"
 
 namespace But
 {
@@ -34,6 +35,7 @@ public:
 
   void reload()
   {
+    detail::ReloadForwarder<1, sizeof...(Dsts)>::pass( dsts_ );
   }
 
   auto operator->() { return this; }
