@@ -2,6 +2,7 @@
 #include "gmock/gmock.h"
 #include "Foregin.hpp"
 
+using testing::_;
 using But::Log::Destination::Foregin;
 using But::Log::Backend::Entry;
 using But::Log::Backend::FieldInfo;
@@ -37,6 +38,14 @@ TEST_F(ButLogDestinationForegin, ForwardingWithProperTypes)
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(42, "foo bar", 3.14);
+}
+
+
+TEST_F(ButLogDestinationForegin, CheckArrowOperator)
+{
+  EXPECT_CALL( mock_, logImpl(_) )
+    .Times(1);
+  mock_->log(42, "foo bar", 3.14);
 }
 
 }

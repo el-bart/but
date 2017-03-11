@@ -22,6 +22,8 @@ public:
     logImpl( std::move(e) );
   }
 
+  auto operator->() { return this; }
+
 private:
   template<typename H, typename ...T>
   static void append(Backend::Entry& e, H&& head, T&& ...tail)

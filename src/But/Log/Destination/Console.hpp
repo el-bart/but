@@ -20,6 +20,8 @@ public:
     s_.log(args...);
   }
 
+  auto operator->() { return &s_; }
+
 private:
   Stream s_{std::cout};
 };
