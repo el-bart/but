@@ -5,6 +5,7 @@
 #include "But/Log/Field/LineNumber.hpp"
 
 using But::Log::Destination::Stream;
+using But::Log::Destination::Foregin;
 using But::Log::Field::LineNumber;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
@@ -32,6 +33,14 @@ TEST_F(ButLogDestinationStream, CheckArrowOperator)
 }
 
 
+TEST_F(ButLogDestinationStream, OperatingViaBaseClass)
+{
+  auto& base = static_cast<Foregin&>(s_);
+  base->log( "line: ", LineNumber{42} );
+  EXPECT_EQ( ss_.str(), "line: 42\n" );
+}
+
+
 TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
 {
   s_.log( "beep \07 / CRLF \r\n / normal: ", LineNumber{42} );
@@ -55,6 +64,19 @@ TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutput)
 {
   {
     auto logger = std::make_shared<Stream>(ss_);
+    auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
+    Thread th1(multiLog);
+    Thread th2(multiLog);
+    Thread th3(multiLog);
+  }
+  EXPECT_EQ( 3u*100u, countLines(ss_) );
+}
+
+
+TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
+{
+  {
+    std::shared_ptr<Foregin> logger = std::make_shared<Stream>(ss_);
     auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
     Thread th1(multiLog);
     Thread th2(multiLog);

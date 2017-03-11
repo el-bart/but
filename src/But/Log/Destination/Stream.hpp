@@ -2,9 +2,9 @@
 #include <iosfwd>
 #include <mutex>
 #include <cctype>
-#include "But/Log/Backend/Entry.hpp"
 #include "But/Log/Backend/toString.hpp"
 #include "But/Log/Backend/trimNonPrintable.hpp"
+#include "Foregin.hpp"
 
 namespace But
 {
@@ -13,7 +13,7 @@ namespace Log
 namespace Destination
 {
 
-class Stream final
+class Stream final: public Foregin
 {
 public:
   explicit Stream(std::ostream& os): os_{&os} { }
@@ -24,8 +24,6 @@ public:
     const std::lock_guard<std::mutex> lock(mutex_);
     append(args...);
   }
-
-  void reload() { }
 
   auto operator->() { return this; }
 
@@ -41,6 +39,16 @@ private:
   {
     (*os_) << std::endl;
   }
+
+  void logImpl(Backend::Entry e) override
+  {
+    const std::lock_guard<std::mutex> lock(mutex_);
+    for(auto& f: e)
+      (*os_) << Backend::trimNonPrintable( f.value() );
+    (*os_) << std::endl;
+  }
+
+  void reloadImpl() override { }
 
   std::mutex mutex_;
   std::ostream* os_;
