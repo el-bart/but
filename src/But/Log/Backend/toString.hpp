@@ -13,6 +13,7 @@ namespace Backend
 
 inline std::string toString(char const* v) { return v; }
 
+inline std::string toString(const char v) { return std::string(1, v); }
 inline std::string toString(const int v) { return std::to_string(v); }
 inline std::string toString(const long v) { return std::to_string(v); }
 inline std::string toString(const long long v) { return std::to_string(v); }
