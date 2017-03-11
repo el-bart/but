@@ -27,7 +27,7 @@ public:
     s_.log(args...);
   }
 
-  auto operator->() { return &s_; }
+  auto operator->() { return this; }
 
 private:
   void logImpl(Backend::Entry e) override { static_cast<Foregin&>(s_).log( std::move(e) ); }
