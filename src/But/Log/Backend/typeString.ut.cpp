@@ -69,6 +69,11 @@ TEST_F(ButLogBackendTypeInfo, AllCstringPointerTypesAreStdString)
   checkCharPtr<char       volatile * const          >("std::string");
   checkCharPtr<char const volatile * const          >("std::string");
 
+  checkCharPtr<char                *       volatile>("std::string");
+  checkCharPtr<char const          *       volatile>("std::string");
+  checkCharPtr<char       volatile *       volatile>("std::string");
+  checkCharPtr<char const volatile *       volatile>("std::string");
+
   checkCharPtr<char                * const volatile>("std::string");
   checkCharPtr<char const          * const volatile>("std::string");
   checkCharPtr<char       volatile * const volatile>("std::string");
