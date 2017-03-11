@@ -17,9 +17,15 @@ namespace Backend
 template<typename T>
 std::string typeString(T const&) { return boost::typeindex::type_id<T>().pretty_name(); }
 
-/** @brief it is quite common case, yet it outputs implementation details, instead of a human-readable typedef.
- */
-inline std::string typeString(std::string const&) { return "std::string"; }
+// it is quite common case, yet it outputs implementation details, instead of a human-readable typedef.
+inline std::string typeString(std::string const&)  { return "std::string"; }
+inline std::string typeString(std::wstring const&) { return "std::wstring"; }
+
+// all CV-qualified char* types are considered just string, for the sake of simplicity
+inline std::string typeString(char                *) { return "std::string"; }
+inline std::string typeString(char const          *) { return "std::string"; }
+inline std::string typeString(char       volatile *) { return "std::string"; }
+inline std::string typeString(char const volatile *) { return "std::string"; }
 
 }
 }
