@@ -21,13 +21,11 @@ public:
     s_.log(args...);
   }
 
-  void relad() { s_.reload(); }
-
   auto operator->() { return &s_; }
 
 private:
   void logImpl(Backend::Entry e) override { static_cast<Foregin&>(s_).log( std::move(e) ); }
-  void reloadImpl() override { reload(); }
+  void reloadImpl() override { s_.reload(); }
 
   Stream s_{std::cout};
 };
