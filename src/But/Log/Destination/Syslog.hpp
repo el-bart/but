@@ -2,6 +2,7 @@
 #include <sstream>
 #include "But/Log/Backend/toString.hpp"
 #include "But/Log/Backend/trimNonPrintable.hpp"
+#include "But/Log/Field/Priority.hpp"
 #include "Foregin.hpp"
 
 namespace But
@@ -18,21 +19,26 @@ public:
   void log(Args const& ...args)
   {
     std::stringstream ss;
-    append(ss, args...);
+    append(ss, Field::Priority::info, args...);
   }
 
   auto operator->() { return this; }
 
 private:
   template<typename H, typename ...T>
-  void append(std::stringstream& ss, H const& head, T const& ...tail)
+  void append(std::stringstream& ss, const Field::Priority p, H const& head, T const& ...tail)
   {
     using Backend::toString;
     ss << Backend::trimNonPrintable( toString(head) );
-    append(ss, tail...);
+    const auto pNew = selectPriority(p, head);
+    append(ss, pNew, tail...);
   }
-  void append(std::stringstream& ss);
+  void append(std::stringstream& ss, Field::Priority p);
   void logImpl(Backend::Entry e) override;
+
+  Field::Priority selectPriority(Field::Priority /*pOld*/, Field::Priority pNew) const { return pNew; }
+  template<typename T>
+  Field::Priority selectPriority(Field::Priority p, T const&) const { return p; }
 
   void reloadImpl() override { }
 };
