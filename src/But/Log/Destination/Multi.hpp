@@ -1,5 +1,6 @@
 #pragma once
 #include <tuple>
+#include "detail/LogForwarder.hpp"
 
 namespace But
 {
@@ -19,15 +20,16 @@ namespace Destination
 template<typename ...Dsts>
 class Multi final
 {
-  //static_assert( sizeof...(Dsts) > 0u, "need at least one output" );
+  static_assert( sizeof...(Dsts) > 0u, "need at least one output" );
 public:
-  explicit Multi()
-  {
-  }
+  explicit Multi(Dsts... dsts):
+    dsts_{ std::forward<Dsts>(dsts)... }
+  { }
 
   template<typename ...Args>
-  void log(Args const& ...)
+  void log(Args&& ...args)
   {
+    detail::LogForwarder<1, sizeof...(Dsts)>::pass( dsts_, std::forward<Args>(args)... );
   }
 
   void reload()
@@ -37,6 +39,8 @@ public:
   auto operator->() { return this; }
 
 private:
+  // TODO: last element of tuple should get elements moved in, to save a memory allocation.
+  std::tuple<Dsts...> dsts_;
 };
 
 }
