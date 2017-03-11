@@ -22,6 +22,13 @@ TEST_F(ButLogDestinationStream, PrintingSampleData)
 }
 
 
+TEST_F(ButLogDestinationStream, CheckArrowOperator)
+{
+  s_->log( "line: ", LineNumber{42} );
+  EXPECT_EQ( ss_.str(), "line: 42\n" );
+}
+
+
 TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
 {
   s_.log( "beep \07 / CRLF \r\n / normal: ", LineNumber{42} );

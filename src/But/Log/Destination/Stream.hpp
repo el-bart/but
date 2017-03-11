@@ -23,6 +23,8 @@ public:
     append(args...);
   }
 
+  auto operator->() { return this; }
+
 private:
   template<typename H, typename ...T>
   void append(H const& head, T const& ...tail)
