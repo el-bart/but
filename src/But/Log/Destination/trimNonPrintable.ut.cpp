@@ -40,7 +40,7 @@ TEST_F(ButLogDestinationTrimNonPrintable, CheckWole8bitRange)
     if( c == '.' )
       ++dots;
 
-  EXPECT_EQ( dots + printable, 256u );
+  EXPECT_EQ( dots + printable, 256u+1u );   // +1 for '.' character... :)
 }
 
 }

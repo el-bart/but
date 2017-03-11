@@ -1,4 +1,5 @@
 #include <array>
+#include <cinttypes>
 #include "trimNonPrintable.hpp"
 
 namespace But
@@ -26,7 +27,7 @@ std::string trimNonPrintable(std::string in)
 {
   static const auto lut = constructLut();
   for(auto& e: in)
-    e = lut[ (unsigned)e ];
+    e = lut[ (uint8_t)e ];
   return in;
 }
 
