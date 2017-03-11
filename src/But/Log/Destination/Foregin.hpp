@@ -22,6 +22,11 @@ public:
     logImpl( std::move(e) );
   }
 
+  void reload()
+  {
+    reloadImpl();
+  }
+
   auto operator->() { return this; }
 
 private:
@@ -34,6 +39,7 @@ private:
   static void append(Backend::Entry&) { }
 
   virtual void logImpl(Backend::Entry e) = 0;
+  virtual void reloadImpl() = 0;
 };
 
 }

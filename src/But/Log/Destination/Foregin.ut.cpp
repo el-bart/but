@@ -13,6 +13,7 @@ namespace
 struct DestinationMock: public Foregin
 {
   MOCK_METHOD1(logImpl, void(Entry));
+  MOCK_METHOD0(reloadImpl, void());
 };
 
 
@@ -46,6 +47,14 @@ TEST_F(ButLogDestinationForegin, CheckArrowOperator)
   EXPECT_CALL( mock_, logImpl(_) )
     .Times(1);
   mock_->log(42, "foo bar", 3.14);
+}
+
+
+TEST_F(ButLogDestinationForegin, ReloadForwardingWorks)
+{
+  EXPECT_CALL( mock_, reloadImpl() )
+    .Times(1);
+  mock_->reload();
 }
 
 }
