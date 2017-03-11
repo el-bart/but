@@ -22,10 +22,7 @@ public:
     logImpl( std::move(e) );
   }
 
-  void reload()
-  {
-    reloadImpl();
-  }
+  void reload() { reloadImpl(); }
 
   auto operator->() { return this; }
 

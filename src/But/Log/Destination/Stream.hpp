@@ -23,6 +23,8 @@ public:
     append(args...);
   }
 
+  void reload() { }
+
   auto operator->() { return this; }
 
 private:

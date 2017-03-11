@@ -20,6 +20,8 @@ public:
     s_.log(args...);
   }
 
+  void relad() { s_.reload(); }
+
   auto operator->() { return &s_; }
 
 private:
