@@ -1,5 +1,6 @@
 #pragma once
 #include <iosfwd>
+#include <mutex>
 #include <cctype>
 #include "But/Log/Backend/Entry.hpp"
 #include "But/Log/Backend/toString.hpp"
@@ -20,6 +21,7 @@ public:
   template<typename ...Args>
   void log(Args const& ...args)
   {
+    const std::lock_guard<std::mutex> lock(mutex_);
     append(args...);
   }
 
@@ -40,6 +42,7 @@ private:
     (*os_) << std::endl;
   }
 
+  std::mutex mutex_;
   std::ostream* os_;
 };
 
