@@ -18,7 +18,7 @@ public:
   {
     Backend::Entry e;
     e.reserve( sizeof...(args) );
-    append(e, args...);
+    append(e, std::forward<Args>(args)...);
     logImpl( std::move(e) );
   }
 
