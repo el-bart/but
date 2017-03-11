@@ -28,12 +28,27 @@ class LoggerProxy final
 public:
   explicit LoggerProxy(Destination dst): dst_{ std::move(dst) } { }
 
+  /** @brief creates a single log entry, out of a given parameters and strings.
+   */
   template<typename ...Args>
   void log(Args&& ...args) const
   {
     try
     {
       dst_->log( std::forward<Args>(args)... );
+    }
+    catch(...)
+    { /* this is <del>sparta</del> logger! */ }
+  }
+
+  /** @brief triggers destination-specific reload actions (re-open output file, reconnect
+   *         network socket, etc...). typicaly used for implementing easy log rotation.
+   */
+  void reload()
+  {
+    try
+    {
+      dst_->reload();
     }
     catch(...)
     { /* this is <del>sparta</del> logger! */ }

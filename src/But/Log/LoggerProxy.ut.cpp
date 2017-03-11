@@ -15,11 +15,11 @@ struct TestForeginDestination: public Foregin
 {
   explicit TestForeginDestination(std::stringstream& ss): ss_{&ss} { }
 
-   void logImpl(Entry e) override
-   {
-     for(auto& f: e)
-       (*ss_) << f.type() << "=" << f.value() << " ";
-   }
+  void logImpl(Entry e) override
+  {
+    for(auto& f: e)
+      (*ss_) << f.type() << "=" << f.value() << " ";
+  }
 
   std::stringstream* ss_;
 };
@@ -36,7 +36,13 @@ struct TestNativeDestination final
 
   auto operator->() { return this; }
 
+  void reload()
+  {
+    ++reloads_;
+  }
+
   std::stringstream* ss_;
+  unsigned reloads_{0};
 };
 
 
@@ -101,6 +107,29 @@ TEST_F(ButLogLoggerProxy, LoggerIsMovable)
 {
   LoggerProxy< std::unique_ptr<TestNativeDestination> > log{ std::make_unique<TestNativeDestination>(buffer_) };
   auto other = std::move(log);
+}
+
+
+TEST_F(ButLogLoggerProxy, LogReloadingIsForwarder)
+{
+  TestNativeDestination dst{buffer_};
+  LoggerProxy<TestNativeDestination*> log{&dst};
+  EXPECT_EQ( 0u, dst.reloads_ );
+  log.reload();
+  EXPECT_EQ( 1u, dst.reloads_ );
+}
+
+
+struct ErrorReloadDestination
+{
+  void reload() { throw std::runtime_error{"ignored"}; }
+  auto operator->() { return this; }
+};
+
+TEST_F(ButLogLoggerProxy, ErrorsDuringReloadingAreIngored)
+{
+  LoggerProxy<ErrorReloadDestination> log{ ErrorReloadDestination{} };
+  EXPECT_NO_THROW( log.reload() );
 }
 
 }
