@@ -20,6 +20,11 @@ namespace Log
  *          for implementing any output for you want. as a parameter you will receive a
  *          collection of type-value pairs, reprenseting each argument.
  *
+ * @note this class offers an option to either use your Destination directly (eg. Destination::Console),
+ *       so that you can configure logger with a sinle typedef, or provide a runtime-dependent
+ *       argument (i.e. Destination::Foregin derived class) and allow to change destination, depending
+ *       on eg. config file entries.
+ *
  * @warning it is "destination"'s implemented responsability to handile output in a thread-safe manner!
  */
 template<typename Destination>
