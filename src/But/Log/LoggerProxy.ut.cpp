@@ -21,6 +21,8 @@ struct TestForeginDestination: public Foregin
       (*ss_) << f.type() << "=" << f.value() << " ";
   }
 
+  void reloadImpl() override { }
+
   std::stringstream* ss_;
 };
 
