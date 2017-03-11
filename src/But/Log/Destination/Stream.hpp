@@ -3,6 +3,7 @@
 #include <cctype>
 #include "But/Log/Backend/Entry.hpp"
 #include "But/Log/Backend/toString.hpp"
+#include "trimNonPrintable.hpp"
 
 namespace But
 {
@@ -33,14 +34,6 @@ private:
   void append()
   {
     (*os_) << std::endl;
-  }
-
-  static std::string trimNonPrintable(std::string in)
-  {
-    for(auto& e: in)
-      if( not isprint(e) )
-        e = '.';
-    return in;
   }
 
   std::ostream* os_;
