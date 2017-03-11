@@ -81,7 +81,7 @@ struct CopyMoveDst final
   unsigned move_{0};
 };
 
-TEST_F(ButLogDestinationMulti, ArgumentsArePassedToLastDestinationOnly)
+TEST_F(ButLogDestinationMulti, ArgumentsAreMovedToLastDestinationOnly)
 {
   CopyMoveDst cp1;
   CopyMoveDst cp2;
