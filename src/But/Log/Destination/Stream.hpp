@@ -3,7 +3,7 @@
 #include <cctype>
 #include "But/Log/Backend/Entry.hpp"
 #include "But/Log/Backend/toString.hpp"
-#include "trimNonPrintable.hpp"
+#include "But/Log/Backend/trimNonPrintable.hpp"
 
 namespace But
 {
@@ -32,7 +32,7 @@ private:
   void append(H const& head, T const& ...tail)
   {
     using Backend::toString;
-    (*os_) << trimNonPrintable( toString(head) );
+    (*os_) << Backend::trimNonPrintable( toString(head) );
     append(tail...);
   }
   void append()

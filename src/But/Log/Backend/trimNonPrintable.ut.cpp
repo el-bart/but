@@ -1,29 +1,29 @@
 #include "gtest/gtest.h"
 #include "trimNonPrintable.hpp"
 
-using But::Log::Destination::trimNonPrintable;
+using But::Log::Backend::trimNonPrintable;
 
 namespace
 {
 
-struct ButLogDestinationTrimNonPrintable: public testing::Test
+struct ButLogBackendTrimNonPrintable: public testing::Test
 { };
 
 
-TEST_F(ButLogDestinationTrimNonPrintable, DataNotRequiringAnyChanges)
+TEST_F(ButLogBackendTrimNonPrintable, DataNotRequiringAnyChanges)
 {
   EXPECT_EQ( trimNonPrintable(""), "" );
   EXPECT_EQ( trimNonPrintable("test string !@# 42"), "test string !@# 42" );
 }
 
 
-TEST_F(ButLogDestinationTrimNonPrintable, RemovingNonPrintableCharacters)
+TEST_F(ButLogBackendTrimNonPrintable, RemovingNonPrintableCharacters)
 {
   EXPECT_EQ( trimNonPrintable("beep \07 / CRLF \r\n / normal: 42"), "beep . / CRLF .. / normal: 42" );
 }
 
 
-TEST_F(ButLogDestinationTrimNonPrintable, CheckWole8bitRange)
+TEST_F(ButLogBackendTrimNonPrintable, CheckWole8bitRange)
 {
   auto printable = 0u;
   for(auto i=0u; i<256; ++i)

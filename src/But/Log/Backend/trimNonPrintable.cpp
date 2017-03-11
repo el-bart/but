@@ -6,7 +6,7 @@ namespace But
 {
 namespace Log
 {
-namespace Destination
+namespace Backend
 {
 
 namespace

@@ -5,7 +5,7 @@ namespace But
 {
 namespace Log
 {
-namespace Destination
+namespace Backend
 {
 
 std::string trimNonPrintable(std::string in);
