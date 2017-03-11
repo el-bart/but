@@ -12,6 +12,9 @@ namespace Field
 
 struct UtcIsoDateTime final
 {
+  UtcIsoDateTime(): timestamp_{ ::time(nullptr) } { }
+  explicit UtcIsoDateTime(time_t ts): timestamp_{ts} { }
+
   std::string date() const;
   std::string time() const;
 

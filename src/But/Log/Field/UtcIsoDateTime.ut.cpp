@@ -34,4 +34,14 @@ TEST_F(ButLogFieldUtcIsoDateTime, HelperMethods)
   EXPECT_EQ( uidt.time(), "05:33:20" );
 }
 
+
+TEST_F(ButLogFieldUtcIsoDateTime, AutomaticExtractionOfCurrentTimestamp)
+{
+  const auto pre = time(nullptr);
+  const UtcIsoDateTime uidt{};
+  const auto post = time(nullptr);
+  EXPECT_LE( pre, uidt.timestamp_ );
+  EXPECT_LE( uidt.timestamp_, post );
+}
+
 }
