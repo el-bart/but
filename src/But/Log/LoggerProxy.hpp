@@ -12,13 +12,18 @@ public:
   explicit LoggerProxy(Destination dst): dst_{ std::move(dst) } { }
 
   template<typename ...Args>
-  void log(Args&& ...args)
+  void log(Args&& ...args) const
   {
-    dst_->log( std::forward<Args>(args)... );
+    try
+    {
+      dst_->log( std::forward<Args>(args)... );
+    }
+    catch(...)
+    { /* this is <del>sparta</del> logger! */ }
   }
 
 private:
-  Destination dst_;
+  mutable Destination dst_;
 };
 
 }

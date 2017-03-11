@@ -64,6 +64,14 @@ TEST_F(ButLogLoggerProxy, LoggingMultipleSimpleValuesAtOnce)
 }
 
 
+TEST_F(ButLogLoggerProxy, LoggingViaSmartPointerToDestination)
+{
+  LoggerProxy< std::shared_ptr<TestNativeDestination> > log{ std::make_shared<TestNativeDestination>(buffer_) };
+  log.log(42, "foo", 3.14);
+  EXPECT_EQ( buffer_.str(), "int,string,double|");
+}
+
+
 TEST_F(ButLogLoggerProxy, ForeginTypeValueLogging)
 {
   LoggerProxy<TestForeginDestination> log{ TestForeginDestination{buffer_} };
@@ -71,6 +79,28 @@ TEST_F(ButLogLoggerProxy, ForeginTypeValueLogging)
   EXPECT_EQ( buffer_.str(), "int=42 std::string=foo char=a ");
 }
 
-// TODO: exceptions are not propagated
+
+struct SomeThrowingType { };
+std::string toString(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
+
+TEST_F(ButLogLoggerProxy, InternalExceptionsAreNotPropagatedToCaller)
+{
+  LoggerProxy<TestForeginDestination> log{ TestForeginDestination{buffer_} };
+  EXPECT_NO_THROW( log.log( SomeThrowingType{} ) );
+}
+
+
+TEST_F(ButLogLoggerProxy, LoggerIsConst)
+{
+  const LoggerProxy<TestForeginDestination> log{ TestForeginDestination{buffer_} };
+  log.log(42);
+}
+
+
+TEST_F(ButLogLoggerProxy, LoggerIsMovable)
+{
+  LoggerProxy< std::unique_ptr<TestNativeDestination> > log{ std::make_unique<TestNativeDestination>(buffer_) };
+  auto other = std::move(log);
+}
 
 }
