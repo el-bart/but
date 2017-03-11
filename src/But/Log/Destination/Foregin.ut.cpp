@@ -57,4 +57,13 @@ TEST_F(ButLogDestinationForegin, ReloadForwardingWorks)
   mock_->reload();
 }
 
+
+TEST_F(ButLogDestinationForegin, PassingEntryTypeDirectory)
+{
+  const std::vector<FieldInfo> expected{ FieldInfo{42}, FieldInfo{"foo bar"}, };
+  EXPECT_CALL( mock_, logImpl(expected) )
+    .Times(1);
+  mock_.log(expected);
+}
+
 }

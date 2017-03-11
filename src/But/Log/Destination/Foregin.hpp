@@ -22,6 +22,8 @@ public:
     logImpl( std::move(e) );
   }
 
+  void log(Backend::Entry e) { logImpl( std::move(e) ); }
+
   void reload() { reloadImpl(); }
 
   auto operator->() { return this; }
