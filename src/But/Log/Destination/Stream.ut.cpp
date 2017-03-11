@@ -1,5 +1,4 @@
 #include "gtest/gtest.h"
-#include "gmock/gmock.h"
 #include "Stream.hpp"
 #include "But/Log/Field/LineNumber.hpp"
 
