@@ -63,8 +63,53 @@ TEST_F(ButLogDestinationMulti, PrintingGoesThroughAllDestinations)
 }
 
 
+struct CopyMoveDst final
+{
+  void log(std::string const& str)
+  {
+    EXPECT_EQ( "data", str );
+    ++copy_;
+  }
+  void log(std::string&& str)
+  {
+    EXPECT_EQ( "data", str );
+    str.clear();
+    ++move_;
+  }
+
+  unsigned copy_{0};
+  unsigned move_{0};
+};
+
+TEST_F(ButLogDestinationMulti, ArgumentsArePassedToLastDestinationOnly)
+{
+  CopyMoveDst cp1;
+  CopyMoveDst cp2;
+  CopyMoveDst mv;
+  Multi<CopyMoveDst*, CopyMoveDst*, CopyMoveDst*> multi{&cp1, &cp2, &mv};
+  multi.log( std::string{"data"} );
+
+  EXPECT_EQ( 1u, cp1.copy_ );
+  EXPECT_EQ( 0u, cp1.move_ );
+
+  EXPECT_EQ( 1u, cp2.copy_ );
+  EXPECT_EQ( 0u, cp2.move_ );
+
+  EXPECT_EQ( 0u, mv.copy_ );
+  EXPECT_EQ( 1u, mv.move_ );
+}
+
+
 TEST_F(ButLogDestinationMulti, ExceptionInAnyPrinterDoesNotStopProcessing)
 {
+  td1_.throws_ = true;
+  td2_.throws_ = true;
+  td3_.throws_ = true;
+
+  multi_.log("one");
+  EXPECT_EQ( 1u, td1_.logs_ );
+  EXPECT_EQ( 1u, td2_.logs_ );
+  EXPECT_EQ( 1u, td3_.logs_ );
 }
 
 

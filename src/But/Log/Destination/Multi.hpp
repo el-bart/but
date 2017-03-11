@@ -39,7 +39,6 @@ public:
   auto operator->() { return this; }
 
 private:
-  // TODO: last element of tuple should get elements moved in, to save a memory allocation.
   std::tuple<Dsts...> dsts_;
 };
 
