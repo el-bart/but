@@ -10,6 +10,11 @@ namespace
 
 struct ButLogDestinationStream: public testing::Test
 {
+  ~ButLogDestinationStream()
+  {
+    tmp_.unlink();
+  }
+
   auto countLines() const
   {
     std::ifstream is{ tmp_.path().string() };
