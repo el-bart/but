@@ -1,6 +1,7 @@
 #pragma once
-#include <iosfwd>
 #include <mutex>
+#include <iosfwd>
+#include <sstream>
 #include <cctype>
 #include "But/Log/Backend/toString.hpp"
 #include "But/Log/Backend/trimNonPrintable.hpp"
@@ -21,31 +22,35 @@ public:
   template<typename ...Args>
   void log(Args const& ...args)
   {
-    const std::lock_guard<std::mutex> lock(mutex_);
-    append(args...);
+    std::stringstream ss;
+    append(ss, args...);
   }
 
   auto operator->() { return this; }
 
 private:
   template<typename H, typename ...T>
-  void append(H const& head, T const& ...tail)
+  void append(std::stringstream& ss, H const& head, T const& ...tail)
   {
     using Backend::toString;
-    (*os_) << Backend::trimNonPrintable( toString(head) );
-    append(tail...);
+    ss << Backend::trimNonPrintable( toString(head) );
+    append(ss, tail...);
   }
-  void append()
+  void append(std::stringstream& ss)
   {
-    (*os_) << std::endl;
+    ss << std::endl;
+    const std::lock_guard<std::mutex> lock(mutex_);
+    (*os_) << ss.rdbuf();
   }
 
   void logImpl(Backend::Entry e) override
   {
-    const std::lock_guard<std::mutex> lock(mutex_);
+    std::stringstream ss;
     for(auto& f: e)
-      (*os_) << Backend::trimNonPrintable( f.value() );
-    (*os_) << std::endl;
+      ss << Backend::trimNonPrintable( f.value() );
+    ss << std::endl;
+    const std::lock_guard<std::mutex> lock(mutex_);
+    (*os_) << ss.rdbuf();
   }
 
   void reloadImpl() override { }
