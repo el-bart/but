@@ -54,6 +54,7 @@ private:
   }
 
   void reloadImpl() override { }
+  void flushImpl() override { (*os_) << std::flush; }
 
   std::mutex mutex_;
   std::ostream* os_;

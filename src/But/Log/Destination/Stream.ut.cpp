@@ -85,4 +85,18 @@ TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutputWhe
   EXPECT_EQ( 3u*100u, countLines(ss_) );
 }
 
+
+TEST_F(ButLogDestinationStream, ReloadingSmokeTest)
+{
+  Stream s{ss_};
+  s.reload();
+}
+
+
+TEST_F(ButLogDestinationStream, FlushingSmokeTest)
+{
+  Stream s{ss_};
+  s.flush();
+}
+
 }
