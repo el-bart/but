@@ -26,6 +26,7 @@ public:
 private:
   void logImpl(Backend::Entry e) override { static_cast<Foregin&>(s_).log( std::move(e) ); }
   void reloadImpl() override { s_.reload(); }
+  void flushImpl() override { s_.flush(); }
 
   Stream s_{std::cout};
 };
