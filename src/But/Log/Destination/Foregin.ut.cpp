@@ -14,6 +14,7 @@ struct DestinationMock: public Foregin
 {
   MOCK_METHOD1(logImpl, void(Entry));
   MOCK_METHOD0(reloadImpl, void());
+  MOCK_METHOD0(flushImpl, void());
 };
 
 
@@ -64,6 +65,14 @@ TEST_F(ButLogDestinationForegin, PassingEntryTypeDirectory)
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(expected);
+}
+
+
+TEST_F(ButLogDestinationForegin, FlusingIsForwarded)
+{
+  EXPECT_CALL( mock_, flushImpl() )
+    .Times(1);
+  mock_.flush();
 }
 
 }

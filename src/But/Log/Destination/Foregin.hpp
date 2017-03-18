@@ -29,8 +29,8 @@ public:
   }
 
   void log(Backend::Entry e) { logImpl( std::move(e) ); }
-
   void reload() { reloadImpl(); }
+  void flush() { flushImpl(); }
 
   auto operator->() { return this; }
 
@@ -45,6 +45,7 @@ private:
 
   virtual void logImpl(Backend::Entry e) = 0;
   virtual void reloadImpl() = 0;
+  virtual void flushImpl() = 0;
 };
 
 }
