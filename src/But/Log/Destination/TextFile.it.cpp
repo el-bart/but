@@ -15,7 +15,7 @@ struct ButLogDestinationTextFile: public testing::Test
     tmp_.unlink();
   }
 
-  auto countLines(boost::filesystem::path const& path) const
+  auto countLinesNoFlush(boost::filesystem::path const& path) const
   {
     std::ifstream is{ path.string() };
     if( not is.is_open() )
@@ -27,7 +27,13 @@ struct ButLogDestinationTextFile: public testing::Test
     return lines;
   }
 
-  auto countLines() const
+  auto countLines(boost::filesystem::path const& path)
+  {
+    tf_.flush();
+    return countLinesNoFlush(path);
+  }
+
+  auto countLines()
   {
     return countLines( tmp_.path() );
   }

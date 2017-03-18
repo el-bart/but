@@ -32,6 +32,7 @@ public:
 private:
   void logImpl(Backend::Entry e) override { static_cast<Foregin&>(s_).log( std::move(e) ); }
   void reloadImpl() override;
+  void flushImpl() override { s_.flush(); }
 
   boost::filesystem::path path_;
   std::ofstream file_;
