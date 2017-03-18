@@ -78,6 +78,12 @@
             implemented
         </comment>
     </note>
+    <note priority="medium" time="1469898747" done="1489869546">
+        add Guard class and makeGuardhelper functor
+        <comment>
+            done
+        </comment>
+    </note>
     <note priority="medium" time="1485377159" done="1485717621">
         add comparison operators to BitPackedSequence
         <comment>
@@ -132,17 +138,14 @@
     <note priority="medium" time="1466352707">
         add convenience function: apply(function, tuple)
     </note>
-    <note priority="medium" time="1469898747" done="1489869546">
-        add Guard class and makeGuardhelper functor
-        <comment>
-            done
-        </comment>
-    </note>
     <note priority="medium" time="1486756168">
         add Log/Fields for: DateTime, ModuleName, FunctionName, PrettyFunctionName
     </note>
     <note priority="medium" time="1489864071">
         Log::Destination::BackgroundThread{ForeginDestination}
+    </note>
+    <note priority="medium" time="1489869603">
+        add Foregin::Destination, that process logs in a separate thread"
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
