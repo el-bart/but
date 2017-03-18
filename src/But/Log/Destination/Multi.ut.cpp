@@ -24,11 +24,19 @@ struct TestDst final
       throw std::runtime_error{"throwing, as requested"};
   }
 
+  void flush()
+  {
+    ++flushes_;
+    if(throws_)
+      throw std::runtime_error{"throwing, as requested"};
+  }
+
   auto operator->() { return this; }
 
   bool throws_{false};
   unsigned logs_{0};
   unsigned reloads_{0};
+  unsigned flushes_{0};
 };
 
 
@@ -122,7 +130,7 @@ TEST_F(ButLogDestinationMulti, ReloadingReloadsAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMulti, ExceptionInAnyDestinationDoesNotStopProcessing)
+TEST_F(ButLogDestinationMulti, ExceptionInAnyReloadDoesNotStopProcessing)
 {
   td1_.throws_ = true;
   td2_.throws_ = true;
@@ -132,6 +140,28 @@ TEST_F(ButLogDestinationMulti, ExceptionInAnyDestinationDoesNotStopProcessing)
   EXPECT_EQ( 1u, td1_.reloads_ );
   EXPECT_EQ( 1u, td2_.reloads_ );
   EXPECT_EQ( 1u, td3_.reloads_ );
+}
+
+
+TEST_F(ButLogDestinationMulti, FlushingFlushsAllDestinations)
+{
+  multi_.flush();
+  EXPECT_EQ( 1u, td1_.flushes_ );
+  EXPECT_EQ( 1u, td2_.flushes_ );
+  EXPECT_EQ( 1u, td3_.flushes_ );
+}
+
+
+TEST_F(ButLogDestinationMulti, ExceptionInAnyFlushDoesNotStopProcessing)
+{
+  td1_.throws_ = true;
+  td2_.throws_ = true;
+  td3_.throws_ = true;
+
+  multi_.flush();
+  EXPECT_EQ( 1u, td1_.flushes_ );
+  EXPECT_EQ( 1u, td2_.flushes_ );
+  EXPECT_EQ( 1u, td3_.flushes_ );
 }
 
 }

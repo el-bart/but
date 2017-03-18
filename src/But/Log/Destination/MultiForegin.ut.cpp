@@ -25,9 +25,17 @@ struct TestDst final: public Foregin
       throw std::runtime_error{"throwing, as requested"};
   }
 
+  void flushImpl() override
+  {
+    ++flushes_;
+    if(throws_)
+      throw std::runtime_error{"throwing, as requested"};
+  }
+
   bool throws_{false};
   unsigned logs_{0};
   unsigned reloads_{0};
+  unsigned flushes_{0};
 };
 
 
@@ -76,6 +84,7 @@ struct CopyMoveDst final: public Foregin
     EXPECT_EQ( 2u, e.size() );
   }
   void reloadImpl() override { }
+  void flushImpl() override { }
 };
 
 TEST_F(ButLogDestinationMultiForegin, ArgumentsAreMoveToLastDestinationOnlySmokeTest)
@@ -110,7 +119,7 @@ TEST_F(ButLogDestinationMultiForegin, ReloadingReloadsAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyDestinationDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyReloadDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;
@@ -120,6 +129,28 @@ TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyDestinationDoesNotStopProces
   EXPECT_EQ( 1u, td1_->reloads_ );
   EXPECT_EQ( 1u, td2_->reloads_ );
   EXPECT_EQ( 1u, td3_->reloads_ );
+}
+
+
+TEST_F(ButLogDestinationMultiForegin, FlusingFlushesAllDestinations)
+{
+  multi_.flush();
+  EXPECT_EQ( 1u, td1_->flushes_ );
+  EXPECT_EQ( 1u, td2_->flushes_ );
+  EXPECT_EQ( 1u, td3_->flushes_ );
+}
+
+
+TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyFlushDoesNotStopProcessing)
+{
+  td1_->throws_ = true;
+  td2_->throws_ = true;
+  td3_->throws_ = true;
+
+  multi_.flush();
+  EXPECT_EQ( 1u, td1_->flushes_ );
+  EXPECT_EQ( 1u, td2_->flushes_ );
+  EXPECT_EQ( 1u, td3_->flushes_ );
 }
 
 }

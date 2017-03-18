@@ -2,6 +2,7 @@
 #include <tuple>
 #include "detail/LogForwarder.hpp"
 #include "detail/ReloadForwarder.hpp"
+#include "detail/FlushForwarder.hpp"
 
 namespace But
 {
@@ -36,6 +37,11 @@ public:
   void reload()
   {
     detail::ReloadForwarder<1, sizeof...(Dsts)>::pass( dsts_ );
+  }
+
+  void flush()
+  {
+    detail::FlushForwarder<1, sizeof...(Dsts)>::pass( dsts_ );
   }
 
   auto operator->() { return this; }

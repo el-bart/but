@@ -24,6 +24,7 @@ public:
 private:
   void logImpl(Backend::Entry e) override;
   void reloadImpl() override;
+  void flushImpl() override;
 
   collection_type dsts_;
 };

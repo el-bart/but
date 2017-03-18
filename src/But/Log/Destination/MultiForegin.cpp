@@ -40,7 +40,21 @@ void MultiForegin::reloadImpl()
       d->reload();
     }
     catch(...)
-    { /* this is logger - ignoring any errors when forwarind logs! */ }
+    { /* this is logger - ignoring any errors when reloading logs destinations! */ }
+  }
+}
+
+
+void MultiForegin::flushImpl()
+{
+  for(auto& d: dsts_)
+  {
+    try
+    {
+      d->flush();
+    }
+    catch(...)
+    { /* this is logger - ignoring any errors when flushing logs! */ }
   }
 }
 
