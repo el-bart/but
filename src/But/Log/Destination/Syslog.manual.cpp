@@ -28,4 +28,10 @@ int main()
 
   s.log("logging without", " priority");
   base.log("logging without", " priority", ", with base class");
+
+  s.flush();
+  base.flush();
+
+  s.reload();
+  base.reload();
 }

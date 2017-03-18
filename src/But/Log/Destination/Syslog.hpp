@@ -41,6 +41,7 @@ private:
   Field::Priority selectPriority(Field::Priority p, T const&) const { return p; }
 
   void reloadImpl() override { }
+  void flushImpl() override { }
 };
 
 }
