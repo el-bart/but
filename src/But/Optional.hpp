@@ -37,9 +37,6 @@ public:
     return *this;
   }
 
-  auto operator->() { return &get(); }
-  auto operator->() const { return &get(); }
-
   explicit operator bool() const { return static_cast<bool>(t_); }
 
   T& get()
@@ -52,6 +49,12 @@ public:
     assert( static_cast<bool>(t_) && "optional is not set" );
     return t_.get();
   }
+
+  auto& operator*() { return get(); }
+  auto& operator*() const { return get(); }
+
+  auto operator->() { return &get(); }
+  auto operator->() const { return &get(); }
 
   void reset() { t_.reset(); }
 

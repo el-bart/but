@@ -127,4 +127,19 @@ TEST_F(ButOptional, ValueType)
   EXPECT_TRUE( (std::is_same<std::string, Optional<std::string>::value_type>::value) );
 }
 
+
+TEST_F(ButOptional, AsteriskOperator)
+{
+  auto opt = makeOptional<std::string>("data");
+  *opt = "other";
+  EXPECT_EQ( "other", *opt );
+}
+
+
+TEST_F(ButOptional, ConstAsteriskOperator)
+{
+  const auto opt = makeOptional<std::string>("data");
+  EXPECT_EQ( "data", *opt );
+}
+
 }
