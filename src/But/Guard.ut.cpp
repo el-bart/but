@@ -46,7 +46,6 @@ TEST_F(ButGuard, CreatingFromFunctor)
 
 TEST_F(ButGuard, Movable)
 {
-  return;                       
   auto count = 0;
   {
     Guard<std::function<void()>> g1{ [&](){ ++count; } };

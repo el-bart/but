@@ -1,5 +1,5 @@
 #pragma once
-#include <boost/optional.hpp>
+#include "Optional.hpp"
 
 namespace But
 {
@@ -24,7 +24,7 @@ public:
   void cancel() { f_.reset(); }
 
 private:
-  boost::optional<F> f_;
+  Optional<F> f_;
 };
 
 
