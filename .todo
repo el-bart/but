@@ -132,8 +132,11 @@
     <note priority="medium" time="1466352707">
         add convenience function: apply(function, tuple)
     </note>
-    <note priority="medium" time="1469898747">
+    <note priority="medium" time="1469898747" done="1489869546">
         add Guard class and makeGuardhelper functor
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="medium" time="1486756168">
         add Log/Fields for: DateTime, ModuleName, FunctionName, PrettyFunctionName
