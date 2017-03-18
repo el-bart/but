@@ -11,7 +11,7 @@ using But::Log::Backend::Entry;
 namespace
 {
 
-struct TestForeginDestination: public Foregin
+struct TestForeginDestination final: public Foregin
 {
   explicit TestForeginDestination(std::stringstream& ss): ss_{&ss} { }
 
@@ -22,6 +22,7 @@ struct TestForeginDestination: public Foregin
   }
 
   void reloadImpl() override { }
+  void flushImpl() override { }
 
   std::stringstream* ss_;
 };
@@ -38,13 +39,12 @@ struct TestNativeDestination final
 
   auto operator->() { return this; }
 
-  void reload()
-  {
-    ++reloads_;
-  }
+  void reload() { ++reloads_; }
+  void flush() { ++flushes_; }
 
   std::stringstream* ss_;
   unsigned reloads_{0};
+  unsigned flushes_{0};
 };
 
 
@@ -122,16 +122,30 @@ TEST_F(ButLogLoggerProxy, LogReloadingIsForwarder)
 }
 
 
-struct ErrorReloadDestination
+TEST_F(ButLogLoggerProxy, LogFlushingIsForwarder)
 {
+  TestNativeDestination dst{buffer_};
+  LoggerProxy<TestNativeDestination*> log{&dst};
+  EXPECT_EQ( 0u, dst.flushes_ );
+  log.flush();
+  EXPECT_EQ( 1u, dst.flushes_ );
+}
+
+
+struct ThrowingDestination final
+{
+  void log(...) { throw std::runtime_error{"ignored"}; }
   void reload() { throw std::runtime_error{"ignored"}; }
+  void flush()  { throw std::runtime_error{"ignored"}; }
   auto operator->() { return this; }
 };
 
-TEST_F(ButLogLoggerProxy, ErrorsDuringReloadingAreIngored)
+TEST_F(ButLogLoggerProxy, AllErrorsFromActualDestinationsAreIgnored)
 {
-  LoggerProxy<ErrorReloadDestination> log{ ErrorReloadDestination{} };
+  LoggerProxy<ThrowingDestination> log{ ThrowingDestination{} };
+  EXPECT_NO_THROW( log.log("hello", "john") );
   EXPECT_NO_THROW( log.reload() );
+  EXPECT_NO_THROW( log.flush() );
 }
 
 }

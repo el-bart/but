@@ -25,7 +25,9 @@ namespace Log
  *       argument (i.e. Destination::Foregin derived class) and allow to change destination, depending
  *       on eg. config file entries.
  *
- * @warning it is "destination"'s implemented responsability to handile output in a thread-safe manner!
+ * @warning it is "destination"'s implemented responsability to handile input/output in a thread-safe manner!
+ *
+ * @note all Destinations must either be (smart) pointers or provide an arrow operator.
  */
 template<typename Destination>
 class LoggerProxy final
@@ -54,6 +56,18 @@ public:
     try
     {
       dst_->reload();
+    }
+    catch(...)
+    { /* this is <del>sparta</del> logger! */ }
+  }
+
+  /** @brief forces all buffered data (if any) to be flushed to its destination. this call may block.
+   */
+  void flush()
+  {
+    try
+    {
+      dst_->flush();
     }
     catch(...)
     { /* this is <del>sparta</del> logger! */ }
