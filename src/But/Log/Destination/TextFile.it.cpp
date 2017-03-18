@@ -15,11 +15,11 @@ struct ButLogDestinationTextFile: public testing::Test
     tmp_.unlink();
   }
 
-  auto countLinesNoFlush(boost::filesystem::path const& path) const
+  auto countLinesNoFlush() const
   {
-    std::ifstream is{ path.string() };
+    std::ifstream is{ tmp_.path().string() };
     if( not is.is_open() )
-      throw std::runtime_error{"cannot open file: " + path.string() };
+      throw std::runtime_error{"cannot open file: " + tmp_.path().string() };
     auto lines = 0u;
     std::string ignored;
     while( std::getline(is, ignored) )
@@ -27,15 +27,10 @@ struct ButLogDestinationTextFile: public testing::Test
     return lines;
   }
 
-  auto countLines(boost::filesystem::path const& path)
-  {
-    tf_.flush();
-    return countLinesNoFlush(path);
-  }
-
   auto countLines()
   {
-    return countLines( tmp_.path() );
+    tf_.flush();
+    return countLinesNoFlush();
   }
 
   But::System::TempFile tmp_{"/tmp/but_text_file_destination_it"};
@@ -81,6 +76,15 @@ TEST_F(ButLogDestinationTextFile, ReloadFileWorks)
 
   tf_.log("is anybody there?");
   EXPECT_EQ( 1u, countLines() );
+}
+
+
+TEST_F(ButLogDestinationTextFile, FlushingWorks)
+{
+  tf_.log("test", "data");
+  EXPECT_EQ( 0u, countLinesNoFlush() );
+  tf_.flush();
+  EXPECT_EQ( 1u, countLinesNoFlush() );
 }
 
 }
