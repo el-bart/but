@@ -48,6 +48,12 @@
             fixed - the problem was variable has been set BEFORE project() was called - looks like in this case order is important as well..."
         </comment>
     </note>
+    <note priority="medium" time="1400512964" done="1489864011">
+        tests for logging facilities
+        <comment>
+            refactored and tested
+        </comment>
+    </note>
     <note priority="medium" time="1403381658" done="1408282267">
         add dispatcher automatically passing messages to their destinations (customizable message type ID getting)
         <comment>
@@ -114,9 +120,6 @@
             done in latest versions of boost already
         </comment>
     </note>
-    <note priority="medium" time="1400512964">
-        tests for logging facilities
-    </note>
     <note priority="medium" time="1447835445">
         add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
     </note>
@@ -134,6 +137,9 @@
     </note>
     <note priority="medium" time="1486756168">
         add Log/Fields for: DateTime, ModuleName, FunctionName, PrettyFunctionName
+    </note>
+    <note priority="medium" time="1489864071">
+        Log::Destination::BackgroundThread{ForeginDestination}
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
