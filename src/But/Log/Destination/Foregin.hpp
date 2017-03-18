@@ -11,7 +11,13 @@ namespace Destination
 class Foregin
 {
 public:
+  Foregin() = default;
   virtual ~Foregin() = default;
+
+  Foregin(Foregin const&) = delete;
+  Foregin& operator=(Foregin const&) = delete;
+  Foregin(Foregin&&) = delete;
+  Foregin& operator=(Foregin&&) = delete;
 
   template<typename ...Args>
   void log(Args&& ...args)

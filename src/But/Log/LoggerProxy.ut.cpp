@@ -82,7 +82,7 @@ TEST_F(ButLogLoggerProxy, LoggingViaSmartPointerToDestination)
 
 TEST_F(ButLogLoggerProxy, ForeginTypeValueLogging)
 {
-  LoggerProxy<TestForeginDestination> log{ TestForeginDestination{buffer_} };
+  LoggerProxy<std::unique_ptr<TestForeginDestination>> log{ std::make_unique<TestForeginDestination>(buffer_) };
   log.log(42, "foo", 'a');
   EXPECT_EQ( buffer_.str(), "int=42 std::string=foo char=a ");
 }
@@ -93,14 +93,14 @@ std::string toString(SomeThrowingType const&) { throw std::runtime_error{"this o
 
 TEST_F(ButLogLoggerProxy, InternalExceptionsAreNotPropagatedToCaller)
 {
-  LoggerProxy<TestForeginDestination> log{ TestForeginDestination{buffer_} };
+  LoggerProxy<std::unique_ptr<TestForeginDestination>> log{ std::make_unique<TestForeginDestination>(buffer_) };
   EXPECT_NO_THROW( log.log( SomeThrowingType{} ) );
 }
 
 
 TEST_F(ButLogLoggerProxy, LoggerIsConst)
 {
-  const LoggerProxy<TestForeginDestination> log{ TestForeginDestination{buffer_} };
+  const LoggerProxy<std::unique_ptr<TestForeginDestination>> log{ std::make_unique<TestForeginDestination>(buffer_) };
   log.log(42);
 }
 
