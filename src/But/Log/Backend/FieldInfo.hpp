@@ -40,8 +40,11 @@ public:
     return type_ == other.type_ && value_ == other.value_;
   }
 
-  std::string const& type() const { return type_; }
-  std::string const& value() const { return value_; }
+  std::string const& type() const & { return type_; }
+  std::string const& value() const & { return value_; }
+
+  std::string&& type() && { return std::move(type_); }
+  std::string&& value() && { return std::move(value_); }
 
 private:
   std::string type_;
