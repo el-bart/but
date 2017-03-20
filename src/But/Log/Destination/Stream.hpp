@@ -20,21 +20,21 @@ public:
   explicit Stream(std::ostream& os): os_{&os} { }
 
   template<typename ...Args>
-  void log(Args const& ...args)
+  void log(Args&& ...args)
   {
     std::stringstream ss;
-    append(ss, args...);
+    append(ss, std::forward<Args>(args)...);
   }
 
   auto operator->() { return this; }
 
 private:
   template<typename H, typename ...T>
-  void append(std::stringstream& ss, H const& head, T const& ...tail)
+  void append(std::stringstream& ss, H&& head, T&& ...tail)
   {
     using Backend::toString;
-    ss << Backend::trimNonPrintable( toString(head) );
-    append(ss, tail...);
+    ss << Backend::trimNonPrintable( toString( std::forward<H>(head) ) );
+    append(ss, std::forward<T>(tail)... );
   }
   void append(std::stringstream& ss)
   {
@@ -47,7 +47,7 @@ private:
   {
     std::stringstream ss;
     for(auto& f: e)
-      ss << Backend::trimNonPrintable( f.value() );
+      ss << Backend::trimNonPrintable( std::move(f).value() );
     ss << std::endl;
     const std::lock_guard<std::mutex> lock(mutex_);
     (*os_) << ss.rdbuf();
