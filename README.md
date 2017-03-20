@@ -10,6 +10,9 @@ following sections give a top-level overview on each part of the library.
 passed info like file, line and function to the message. allows to create whole tree of exceptions.
  * NotNull - wrapper for (smart)pointers, that ensures element held inside is not null. if user would
 pass such a pointer, exception will be thrown during construction.
+ * Optional - template fixing boost::optional's issues with move semantics.
+ * Guard - helper object (and "make" function) to generate RAII-style cleanup, for local elements, that
+are not worth a dedicated, reusable class, yet still must be exception-safe.
 
 
 ## container
@@ -24,6 +27,37 @@ of a given container.
 for lack of guarantees on objects order, after addition/removal of any element.
 
 
+## logger
+this module implements a type-safe, style-unified logger, with different output "destinations".
+note that this logger is NOT line oriented!
+instead it is entry-oriented, where entry is a sequence of <type,value> pairs, that can be formatted later on.
+this allows creating arbitrary filtering mechanisms and any output format, including structured ones.
+
+for example logger can save timestamp, thread-id and message with 2 parameters.
+this will render 5 (or more) parameters, that are named (by its type) and have value.
+it is easy to convert such a data entry to structured json, xml or even log to data base or other key-value store.
+
+all destinations implement dual interface.
+on one hand they can support getting already-formatted sequence of type-value elements.
+on the other there is a "raw" mode, where they get all the parameters "as is", from a caller.
+this means that user can choose more abstract format, that can be changed at runtime, or static one,
+with no extra overhead, if it is known that only a certain output type is required and all the abstractions
+can be dropped.
+
+loggers are designed to be passed by values, though it is also possible to make it "enterprise-style", by
+providing a global variable, used for logging from everywhere.
+user can also provide macros to wrap that up with things like: file names, line numbers or function names.
+
+all destinations support `flush()` method, that forces all logs to be sent to their destination (file, socket, etc...).
+another option is `reload()`, that forces to re-establish destination (reconnect, reopen file, etc...),
+so that log rotation can be implemented.
+
+ * LoggerProxy - proxy object making usage simpler. in order to use logger, one should provide convenience
+wrapper for this object, adding fields to achieve required log message content.
+ * Destination - namespace containing typical destinations, that are provided out of the box.
+ * Destination::Foregin - base class for dynamic destinations.
+
+
 ## meta programming
  * FreeOperators - set of macros for fast definitions of comparison operators for a simple structure types
 and collections. both regular and template types are supported.
@@ -33,7 +67,7 @@ typedef, that can be expanded later on.
 fit given value.
 
 
-## (design) pattern
+## (design) patterns
  * AbstractFactory - compact implementation of abstract factory, based on functors. this makes C++14
 code compact on user's side, as there is no need to create special derived classes for builders.
  * Dispatcher - C++14 implementation of dispatcher pattern, keeping user code as short as possible.
@@ -42,14 +76,15 @@ in general user should only derive from the class and provide names of message t
 
 ## system (utilities)
  * Descriptor - smart-pointer-like file/socket descriptor wrapper (RAII style).
+ * TempFile - convenient wrapper for creating temporary files in one line.
 
 
 ## threading
  * ActiveObject - functor based active object implementation.
- * CacheLine - helper data type wrapper, that helps preventing false-sharing issues in multithreaded
-code.
  * BasicLockable - base class for extending given derived, with a basic-lockable interface concept.
 this means the class can be used as a mutex too (eg. a collection with external locking support).
+ * CacheLine - helper data type wrapper, that helps preventing false-sharing issues in multithreaded
+code.
  * Event - event flag, that can be set in one thread and block another, until it is not set.
  * Fifo - thread-safe queue to passing data between threads.
  * JoiningThread - wrapper for thread that joins thread in d-tor. any thread's implementation with
