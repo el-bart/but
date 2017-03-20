@@ -22,9 +22,9 @@ public:
   explicit TextFile(boost::filesystem::path path);
 
   template<typename ...Args>
-  void log(Args const& ...args)
+  void log(Args&& ...args)
   {
-    s_.log(args...);
+    s_.log( std::forward<Args>(args)... );
   }
 
   auto operator->() { return this; }

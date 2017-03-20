@@ -16,22 +16,22 @@ class Syslog final: public Foregin
 {
 public:
   template<typename ...Args>
-  void log(Args const& ...args)
+  void log(Args&& ...args)
   {
     std::stringstream ss;
-    append(ss, Field::Priority::info, args...);
+    append( ss, Field::Priority::info, std::forward<Args>(args)... );
   }
 
   auto operator->() { return this; }
 
 private:
   template<typename H, typename ...T>
-  void append(std::stringstream& ss, const Field::Priority p, H const& head, T const& ...tail)
+  void append(std::stringstream& ss, const Field::Priority p, H&& head, T&& ...tail)
   {
-    using Backend::toString;
-    ss << Backend::trimNonPrintable( toString(head) );
     const auto pNew = selectPriority(p, head);
-    append(ss, pNew, tail...);
+    using Backend::toString;
+    ss << Backend::trimNonPrintable( toString( std::forward<H>(head) ) );
+    append( ss, pNew, std::forward<T>(tail)... );
   }
   void append(std::stringstream& ss, Field::Priority p);
   void logImpl(Backend::Entry e) override;
