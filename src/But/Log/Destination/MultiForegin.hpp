@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <memory>
+#include "But/NotNull.hpp"
 #include "Foregin.hpp"
 
 namespace But
@@ -16,7 +16,7 @@ namespace Destination
 class MultiForegin final: public Foregin
 {
 public:
-  using value_type = std::shared_ptr<Foregin>;
+  using value_type = NotNullShared<Foregin>;
   using collection_type = std::vector<value_type>;
 
   explicit MultiForegin(collection_type dsts): dsts_{ std::move(dsts) } { }

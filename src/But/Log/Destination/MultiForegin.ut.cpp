@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "MultiForegin.hpp"
 
+using But::makeSharedNN;
+using But::NotNullShared;
 using But::Log::Backend::Entry;
 using But::Log::Destination::Foregin;
 using But::Log::Destination::MultiForegin;
@@ -41,9 +43,9 @@ struct TestDst final: public Foregin
 
 struct ButLogDestinationMultiForegin: public testing::Test
 {
-  std::shared_ptr<TestDst<1>> td1_{ std::make_shared<TestDst<1>>() };
-  std::shared_ptr<TestDst<2>> td2_{ std::make_shared<TestDst<2>>() };
-  std::shared_ptr<TestDst<3>> td3_{ std::make_shared<TestDst<3>>() };
+  NotNullShared<TestDst<1>> td1_{ makeSharedNN<TestDst<1>>() };
+  NotNullShared<TestDst<2>> td2_{ makeSharedNN<TestDst<2>>() };
+  NotNullShared<TestDst<3>> td3_{ makeSharedNN<TestDst<3>>() };
   MultiForegin multi_{ {td1_, td2_, td3_} };
 };
 
@@ -89,9 +91,9 @@ struct CopyMoveDst final: public Foregin
 
 TEST_F(ButLogDestinationMultiForegin, ArgumentsAreMoveToLastDestinationOnlySmokeTest)
 {
-  auto cp1 = std::make_shared<CopyMoveDst>();
-  auto cp2 = std::make_shared<CopyMoveDst>();
-  auto mv  = std::make_shared<CopyMoveDst>();
+  auto cp1 = makeSharedNN<CopyMoveDst>();
+  auto cp2 = makeSharedNN<CopyMoveDst>();
+  auto mv  = makeSharedNN<CopyMoveDst>();
   MultiForegin multi{ {cp1, cp2, mv} };
   multi.log( "answer: ", 42 );
 }
