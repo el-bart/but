@@ -342,9 +342,9 @@ TEST_F(ButNotNull, CopyInpternalPointerType)
 
 TEST_F(ButNotNull, MoveInpternalPointerType)
 {
-  Data*                 p1 = std::move(r_).pointerMove();
-  std::unique_ptr<Data> p2 = std::move(u_).pointerMove();
-  std::shared_ptr<Data> p3 = std::move(s_).pointerMove();
+  Data*                 p1 = std::move(r_).pointer();
+  std::unique_ptr<Data> p2 = std::move(u_).pointer();
+  std::shared_ptr<Data> p3 = std::move(s_).pointer();
   ASSERT_TRUE(p1);
   ASSERT_TRUE(p2.get());
   ASSERT_TRUE(p3.get());
