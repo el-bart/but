@@ -21,7 +21,7 @@ public:
    *  @param destination destination that shall receive matching logs.
    */
   template<typename F>
-  explicit Filter(F&& f, NotNull<std::shared_ptr<Foregin>> destination):
+  explicit Filter(F&& f, NotNullShared<Foregin> destination):
     filter_{ std::forward<F>(f) },
     destination_{ std::move(destination) }
   {
@@ -38,7 +38,7 @@ private:
   void flushImpl() override { destination_->flush(); }
 
   std::function<bool(Backend::Entry const&)> filter_;
-  NotNull<std::shared_ptr<Foregin>> destination_;
+  NotNullShared<Foregin> destination_;
 };
 
 }
