@@ -462,4 +462,21 @@ TEST_F(ButNotNull, MakeSharedNN)
   EXPECT_EQ( ptr2.get(), ptr.get() );
 }
 
+
+struct NonCopyable final
+{
+  NonCopyable() = default;
+  NonCopyable(NonCopyable const&) = delete;
+  NonCopyable& operator=(NonCopyable const&) = delete;
+
+  int answer() { return 42; }
+};
+
+TEST_F(ButNotNull, AsteriskOperatorReturnsReferenceNotValue)
+{
+  auto ptr = makeSharedNN<NonCopyable>();
+  EXPECT_TRUE( ( std::is_same<NonCopyable&, decltype(*ptr)>::value ) );
+  EXPECT_EQ( 42, (*ptr).answer() );     // this line should just compile
+}
+
 }
