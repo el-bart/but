@@ -147,8 +147,11 @@
     <note priority="medium" time="1489869603">
         add Foregin::Destination, that process logs in a separate thread"
     </note>
-    <note priority="medium" time="1490376612">
+    <note priority="medium" time="1490376612" done="1490383058">
         add filtering backedn for logger
+        <comment>
+            added filtering backend
+        </comment>
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
