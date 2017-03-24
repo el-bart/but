@@ -479,4 +479,23 @@ TEST_F(ButNotNull, AsteriskOperatorReturnsReferenceNotValue)
   EXPECT_EQ( 42, (*ptr).answer() );     // this line should just compile
 }
 
+
+TEST_F(ButNotNull, TemplateUsingHelpersArePresent)
+{
+  // just a smoke test...
+  {
+    auto answer = 42;
+    But::NotNullRaw<int> ptr = makeNN<int*>(&answer);
+    EXPECT_EQ(42, *ptr);
+  }
+  {
+    But::NotNullUnique<int> ptr = makeUniqueNN<int>(42);
+    EXPECT_EQ(42, *ptr);
+  }
+  {
+    But::NotNullShared<int> ptr = makeSharedNN<int>(42);
+    EXPECT_EQ(42, *ptr);
+  }
+}
+
 }

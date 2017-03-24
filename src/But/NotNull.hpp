@@ -104,4 +104,14 @@ auto makeSharedNN(Args&&... args)
   return makeNN( std::make_shared<P>( std::forward<Args>(args)... ) );
 }
 
+
+template<typename P>
+using NotNullRaw = NotNull<P*>;
+
+template<typename P>
+using NotNullUnique = NotNull<std::unique_ptr<P>>;
+
+template<typename P>
+using NotNullShared = NotNull<std::shared_ptr<P>>;
+
 }
