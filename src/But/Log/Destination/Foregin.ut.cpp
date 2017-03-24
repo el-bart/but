@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "Foregin.hpp"
+#include "ForeginMock.ut.hpp"
 
 using testing::_;
 using But::Log::Destination::Foregin;
@@ -10,17 +11,9 @@ using But::Log::Backend::FieldInfo;
 namespace
 {
 
-struct DestinationMock: public Foregin
-{
-  MOCK_METHOD1(logImpl, void(Entry));
-  MOCK_METHOD0(reloadImpl, void());
-  MOCK_METHOD0(flushImpl, void());
-};
-
-
 struct ButLogDestinationForegin: public testing::Test
 {
-  testing::StrictMock<DestinationMock> mock_;
+  testing::StrictMock<But::Log::Destination::ForeginMock> mock_;
 };
 
 
