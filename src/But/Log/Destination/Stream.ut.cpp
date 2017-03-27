@@ -5,7 +5,7 @@
 #include "But/Log/Field/LineNumber.hpp"
 
 using But::Log::Destination::Stream;
-using But::Log::Destination::Foregin;
+using But::Log::Destination::Foreign;
 using But::Log::Field::LineNumber;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
@@ -35,7 +35,7 @@ TEST_F(ButLogDestinationStream, CheckArrowOperator)
 
 TEST_F(ButLogDestinationStream, OperatingViaBaseClass)
 {
-  auto& base = static_cast<Foregin&>(s_);
+  auto& base = static_cast<Foreign&>(s_);
   base->log( "line: ", LineNumber{42} );
   EXPECT_EQ( ss_.str(), "line: 42\n" );
 }
@@ -76,7 +76,7 @@ TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutput)
 TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
 {
   {
-    std::shared_ptr<Foregin> logger = std::make_shared<Stream>(ss_);
+    std::shared_ptr<Foreign> logger = std::make_shared<Stream>(ss_);
     auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
     Thread th1(multiLog);
     Thread th2(multiLog);

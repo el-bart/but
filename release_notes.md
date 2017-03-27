@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+ * fixed typo in foreign destination base class name
  * now linking with boost\_filesystem
  * Log::Destination::Filter
  * convenience using statements for NotNull<> pointer

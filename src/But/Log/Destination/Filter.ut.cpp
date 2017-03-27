@@ -1,19 +1,19 @@
 #include "gtest/gtest.h"
 #include "Filter.hpp"
-#include "ForeginMock.ut.hpp"
+#include "ForeignMock.ut.hpp"
 
 using testing::_;
 using testing::StrictMock;
 using But::Log::Destination::Filter;
-using But::Log::Destination::Foregin;
-using But::Log::Destination::ForeginMock;
+using But::Log::Destination::Foreign;
+using But::Log::Destination::ForeignMock;
 
 namespace
 {
 
 struct ButLogDestinationFilter: public testing::Test
 {
-  But::NotNull<std::shared_ptr<StrictMock<ForeginMock>>> mock_{ std::make_shared<StrictMock<ForeginMock>>() };
+  But::NotNull<std::shared_ptr<StrictMock<ForeignMock>>> mock_{ std::make_shared<StrictMock<ForeignMock>>() };
   Filter filter_{ [](Entry const&) { return true; }, mock_ };
 };
 

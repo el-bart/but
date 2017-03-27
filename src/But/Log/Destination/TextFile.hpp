@@ -2,7 +2,7 @@
 #include <fstream>
 #include <boost/filesystem/path.hpp>
 #include "Stream.hpp"
-#include "Foregin.hpp"
+#include "Foreign.hpp"
 #include "But/Exception.hpp"
 
 namespace But
@@ -14,7 +14,7 @@ namespace Destination
 
 /** @brief typical output - text file, with one log per line.
  */
-class TextFile final: public Foregin
+class TextFile final: public Foreign
 {
 public:
   BUT_DEFINE_EXCEPTION(OpeningLogFileFailed, Exception, "opening log file failed");
@@ -30,7 +30,7 @@ public:
   auto operator->() { return this; }
 
 private:
-  void logImpl(Backend::Entry e) override { static_cast<Foregin&>(s_).log( std::move(e) ); }
+  void logImpl(Backend::Entry e) override { static_cast<Foreign&>(s_).log( std::move(e) ); }
   void reloadImpl() override;
   void flushImpl() override { s_.flush(); }
 

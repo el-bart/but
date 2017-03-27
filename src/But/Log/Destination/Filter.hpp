@@ -2,7 +2,7 @@
 #include <memory>
 #include <functional>
 #include "But/NotNull.hpp"
-#include "Foregin.hpp"
+#include "Foreign.hpp"
 
 namespace But
 {
@@ -13,7 +13,7 @@ namespace Destination
 
 /** @brief filtering backend, that pass through only logs, that are match by a given functor.
  */
-class Filter: public Foregin
+class Filter: public Foreign
 {
 public:
   /** @brief define a filter to accept logs.
@@ -21,7 +21,7 @@ public:
    *  @param destination destination that shall receive matching logs.
    */
   template<typename F>
-  explicit Filter(F&& f, NotNullShared<Foregin> destination):
+  explicit Filter(F&& f, NotNullShared<Foreign> destination):
     filter_{ std::forward<F>(f) },
     destination_{ std::move(destination) }
   {
@@ -38,7 +38,7 @@ private:
   void flushImpl() override { destination_->flush(); }
 
   std::function<bool(Backend::Entry const&)> filter_;
-  NotNullShared<Foregin> destination_;
+  NotNullShared<Foreign> destination_;
 };
 
 }

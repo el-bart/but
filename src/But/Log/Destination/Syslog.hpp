@@ -3,7 +3,7 @@
 #include "But/Log/Backend/toString.hpp"
 #include "But/Log/Backend/trimNonPrintable.hpp"
 #include "But/Log/Field/Priority.hpp"
-#include "Foregin.hpp"
+#include "Foreign.hpp"
 
 namespace But
 {
@@ -12,7 +12,7 @@ namespace Log
 namespace Destination
 {
 
-class Syslog final: public Foregin
+class Syslog final: public Foreign
 {
 public:
   template<typename ...Args>

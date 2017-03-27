@@ -5,7 +5,7 @@
 #include <cctype>
 #include "But/Log/Backend/toString.hpp"
 #include "But/Log/Backend/trimNonPrintable.hpp"
-#include "Foregin.hpp"
+#include "Foreign.hpp"
 
 namespace But
 {
@@ -14,7 +14,7 @@ namespace Log
 namespace Destination
 {
 
-class Stream final: public Foregin
+class Stream final: public Foreign
 {
 public:
   explicit Stream(std::ostream& os): os_{&os} { }

@@ -1,4 +1,4 @@
-#include "MultiForegin.hpp"
+#include "MultiForeign.hpp"
 
 namespace But
 {
@@ -7,7 +7,7 @@ namespace Log
 namespace Destination
 {
 
-void MultiForegin::logImpl(Backend::Entry e)
+void MultiForeign::logImpl(Backend::Entry e)
 {
   if( dsts_.empty() )
     return;
@@ -31,7 +31,7 @@ void MultiForegin::logImpl(Backend::Entry e)
 }
 
 
-void MultiForegin::reloadImpl()
+void MultiForeign::reloadImpl()
 {
   for(auto& d: dsts_)
   {
@@ -45,7 +45,7 @@ void MultiForegin::reloadImpl()
 }
 
 
-void MultiForegin::flushImpl()
+void MultiForeign::flushImpl()
 {
   for(auto& d: dsts_)
   {

@@ -1,17 +1,17 @@
 #include "gtest/gtest.h"
-#include "MultiForegin.hpp"
+#include "MultiForeign.hpp"
 
 using But::makeSharedNN;
 using But::NotNullShared;
 using But::Log::Backend::Entry;
-using But::Log::Destination::Foregin;
-using But::Log::Destination::MultiForegin;
+using But::Log::Destination::Foreign;
+using But::Log::Destination::MultiForeign;
 
 namespace
 {
 
 template<int N>
-struct TestDst final: public Foregin
+struct TestDst final: public Foreign
 {
   void logImpl(Entry) override
   {
@@ -41,31 +41,31 @@ struct TestDst final: public Foregin
 };
 
 
-struct ButLogDestinationMultiForegin: public testing::Test
+struct ButLogDestinationMultiForeign: public testing::Test
 {
   NotNullShared<TestDst<1>> td1_{ makeSharedNN<TestDst<1>>() };
   NotNullShared<TestDst<2>> td2_{ makeSharedNN<TestDst<2>>() };
   NotNullShared<TestDst<3>> td3_{ makeSharedNN<TestDst<3>>() };
-  MultiForegin multi_{ {td1_, td2_, td3_} };
+  MultiForeign multi_{ {td1_, td2_, td3_} };
 };
 
 
-TEST_F(ButLogDestinationMultiForegin, NoDestinationsSmokeTest)
+TEST_F(ButLogDestinationMultiForeign, NoDestinationsSmokeTest)
 {
-  MultiForegin m{ {} };
+  MultiForeign m{ {} };
   m.log("test");
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, SingleDestinationWorks)
+TEST_F(ButLogDestinationMultiForeign, SingleDestinationWorks)
 {
-  MultiForegin m{ {td1_} };
+  MultiForeign m{ {td1_} };
   m.log("test");
   EXPECT_EQ( 1u, td1_->logs_ );
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, PrintingGoesThroughAllDestinations)
+TEST_F(ButLogDestinationMultiForeign, PrintingGoesThroughAllDestinations)
 {
   multi_.log("one");
   EXPECT_EQ( 1u, td1_->logs_ );
@@ -79,7 +79,7 @@ TEST_F(ButLogDestinationMultiForegin, PrintingGoesThroughAllDestinations)
 }
 
 
-struct CopyMoveDst final: public Foregin
+struct CopyMoveDst final: public Foreign
 {
   void logImpl(Entry e) override
   {
@@ -89,17 +89,17 @@ struct CopyMoveDst final: public Foregin
   void flushImpl() override { }
 };
 
-TEST_F(ButLogDestinationMultiForegin, ArgumentsAreMoveToLastDestinationOnlySmokeTest)
+TEST_F(ButLogDestinationMultiForeign, ArgumentsAreMoveToLastDestinationOnlySmokeTest)
 {
   auto cp1 = makeSharedNN<CopyMoveDst>();
   auto cp2 = makeSharedNN<CopyMoveDst>();
   auto mv  = makeSharedNN<CopyMoveDst>();
-  MultiForegin multi{ {cp1, cp2, mv} };
+  MultiForeign multi{ {cp1, cp2, mv} };
   multi.log( "answer: ", 42 );
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyPrinterDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyPrinterDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;
@@ -112,7 +112,7 @@ TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyPrinterDoesNotStopProcessing
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, ReloadingReloadsAllDestinations)
+TEST_F(ButLogDestinationMultiForeign, ReloadingReloadsAllDestinations)
 {
   multi_.reload();
   EXPECT_EQ( 1u, td1_->reloads_ );
@@ -121,7 +121,7 @@ TEST_F(ButLogDestinationMultiForegin, ReloadingReloadsAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyReloadDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyReloadDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;
@@ -134,7 +134,7 @@ TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyReloadDoesNotStopProcessing)
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, FlusingFlushesAllDestinations)
+TEST_F(ButLogDestinationMultiForeign, FlusingFlushesAllDestinations)
 {
   multi_.flush();
   EXPECT_EQ( 1u, td1_->flushes_ );
@@ -143,7 +143,7 @@ TEST_F(ButLogDestinationMultiForegin, FlusingFlushesAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMultiForegin, ExceptionInAnyFlushDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyFlushDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;

@@ -14,9 +14,9 @@ int main()
   c.flush();
   c.reload();
 
-  But::Log::Destination::Foregin& base = c;
-  base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "hello, foregin world" );
-  base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "bye, foregin world" );
+  But::Log::Destination::Foreign& base = c;
+  base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "hello, foreign world" );
+  base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "bye, foreign world" );
   base.flush();
   base.reload();
 }

@@ -8,16 +8,16 @@ namespace Log
 namespace Destination
 {
 
-class Foregin
+class Foreign
 {
 public:
-  Foregin() = default;
-  virtual ~Foregin() = default;
+  Foreign() = default;
+  virtual ~Foreign() = default;
 
-  Foregin(Foregin const&) = delete;
-  Foregin& operator=(Foregin const&) = delete;
-  Foregin(Foregin&&) = delete;
-  Foregin& operator=(Foregin&&) = delete;
+  Foreign(Foreign const&) = delete;
+  Foreign& operator=(Foreign const&) = delete;
+  Foreign(Foreign&&) = delete;
+  Foreign& operator=(Foreign&&) = delete;
 
   template<typename ...Args>
   void log(Args&& ...args)

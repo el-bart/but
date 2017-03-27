@@ -1,29 +1,29 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "Foregin.hpp"
-#include "ForeginMock.ut.hpp"
+#include "Foreign.hpp"
+#include "ForeignMock.ut.hpp"
 
 using testing::_;
-using But::Log::Destination::Foregin;
+using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
 using But::Log::Backend::FieldInfo;
 
 namespace
 {
 
-struct ButLogDestinationForegin: public testing::Test
+struct ButLogDestinationForeign: public testing::Test
 {
-  testing::StrictMock<But::Log::Destination::ForeginMock> mock_;
+  testing::StrictMock<But::Log::Destination::ForeignMock> mock_;
 };
 
 
-TEST_F(ButLogDestinationForegin, NothingIsCalledByDefault)
+TEST_F(ButLogDestinationForeign, NothingIsCalledByDefault)
 {
   // no calls - no logs
 }
 
 
-TEST_F(ButLogDestinationForegin, ForwardingWithProperTypes)
+TEST_F(ButLogDestinationForeign, ForwardingWithProperTypes)
 {
   const std::vector<FieldInfo> expected{
           FieldInfo{42},
@@ -36,7 +36,7 @@ TEST_F(ButLogDestinationForegin, ForwardingWithProperTypes)
 }
 
 
-TEST_F(ButLogDestinationForegin, CheckArrowOperator)
+TEST_F(ButLogDestinationForeign, CheckArrowOperator)
 {
   EXPECT_CALL( mock_, logImpl(_) )
     .Times(1);
@@ -44,7 +44,7 @@ TEST_F(ButLogDestinationForegin, CheckArrowOperator)
 }
 
 
-TEST_F(ButLogDestinationForegin, ReloadForwardingWorks)
+TEST_F(ButLogDestinationForeign, ReloadForwardingWorks)
 {
   EXPECT_CALL( mock_, reloadImpl() )
     .Times(1);
@@ -52,7 +52,7 @@ TEST_F(ButLogDestinationForegin, ReloadForwardingWorks)
 }
 
 
-TEST_F(ButLogDestinationForegin, PassingEntryTypeDirectory)
+TEST_F(ButLogDestinationForeign, PassingEntryTypeDirectory)
 {
   const std::vector<FieldInfo> expected{ FieldInfo{42}, FieldInfo{"foo bar"}, };
   EXPECT_CALL( mock_, logImpl(expected) )
@@ -61,7 +61,7 @@ TEST_F(ButLogDestinationForegin, PassingEntryTypeDirectory)
 }
 
 
-TEST_F(ButLogDestinationForegin, FlusingIsForwarded)
+TEST_F(ButLogDestinationForeign, FlusingIsForwarded)
 {
   EXPECT_CALL( mock_, flushImpl() )
     .Times(1);

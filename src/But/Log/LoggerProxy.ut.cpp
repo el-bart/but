@@ -2,18 +2,18 @@
 #include <sstream>
 #include "gtest/gtest.h"
 #include "LoggerProxy.hpp"
-#include "Destination/Foregin.hpp"
+#include "Destination/Foreign.hpp"
 
 using But::Log::LoggerProxy;
-using But::Log::Destination::Foregin;
+using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
 
 namespace
 {
 
-struct TestForeginDestination final: public Foregin
+struct TestForeignDestination final: public Foreign
 {
-  explicit TestForeginDestination(std::stringstream& ss): ss_{&ss} { }
+  explicit TestForeignDestination(std::stringstream& ss): ss_{&ss} { }
 
   void logImpl(Entry e) override
   {
@@ -80,9 +80,9 @@ TEST_F(ButLogLoggerProxy, LoggingViaSmartPointerToDestination)
 }
 
 
-TEST_F(ButLogLoggerProxy, ForeginTypeValueLogging)
+TEST_F(ButLogLoggerProxy, ForeignTypeValueLogging)
 {
-  LoggerProxy<std::unique_ptr<TestForeginDestination>> log{ std::make_unique<TestForeginDestination>(buffer_) };
+  LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42, "foo", 'a');
   EXPECT_EQ( buffer_.str(), "int=42 std::string=foo char=a ");
 }
@@ -93,14 +93,14 @@ std::string toString(SomeThrowingType const&) { throw std::runtime_error{"this o
 
 TEST_F(ButLogLoggerProxy, InternalExceptionsAreNotPropagatedToCaller)
 {
-  LoggerProxy<std::unique_ptr<TestForeginDestination>> log{ std::make_unique<TestForeginDestination>(buffer_) };
+  LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   EXPECT_NO_THROW( log.log( SomeThrowingType{} ) );
 }
 
 
 TEST_F(ButLogLoggerProxy, LoggerIsConst)
 {
-  const LoggerProxy<std::unique_ptr<TestForeginDestination>> log{ std::make_unique<TestForeginDestination>(buffer_) };
+  const LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42);
 }
 
