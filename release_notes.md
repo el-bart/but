@@ -6,6 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+## v0.2.0 (2017-03-27)
+small interface updates along with minor fixes here and there.
+the only purely-new elements is filtering backend for logger.
+
  * some push\_back()s replaced with emplace\_back()s
  * fixed typo in foreign destination base class name
  * now linking with boost\_filesystem
