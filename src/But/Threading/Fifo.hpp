@@ -72,7 +72,7 @@ public:
   void push(U&& u)
   {
     assert(locked_);
-    q_.push_back(std::forward<U>(u));
+    q_.emplace_back( std::forward<U>(u) );
     hasNewElements_ = true;
   }
 

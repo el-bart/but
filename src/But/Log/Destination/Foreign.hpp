@@ -38,7 +38,7 @@ private:
   template<typename H, typename ...T>
   static void append(Backend::Entry& e, H&& head, T&& ...tail)
   {
-    e.push_back( Backend::FieldInfo{ std::forward<H>(head) } );
+    e.emplace_back( std::forward<H>(head) );
     append(e, std::forward<T>(tail)... );
   }
   static void append(Backend::Entry&) { }

@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+ * some push\_back()s replaced with emplace\_back()s
  * fixed typo in foreign destination base class name
  * now linking with boost\_filesystem
  * Log::Destination::Filter
