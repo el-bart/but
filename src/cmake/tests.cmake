@@ -6,7 +6,11 @@ foreach(app but_uts but_mts but_its)
   target_link_libraries(${app} but)
   target_link_libraries(${app} gmock_main gmock gtest)
   target_link_libraries(${app} boost_serialization)
-  add_test(NAME run_${app} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${app})
+  add_test(NAME run_${app}
+           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${app}
+                   --gtest_shuffle
+                   --gtest_color=yes
+                   --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${app}_report.xml)
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 
