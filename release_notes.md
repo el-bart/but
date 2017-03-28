@@ -6,6 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * all automated tests are now run in random order (with printing seed each time).
+  * test applications generate XML reports in JUnit format.
+  * color output from ctest.
+
 ## v0.2.0 (2017-03-27)
 small interface updates along with minor fixes here and there.
 the only purely-new elements is filtering backend for logger.
