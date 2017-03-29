@@ -8,6 +8,7 @@ using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
 using But::Log::Backend::FieldInfo;
 
+
 namespace
 {
 

@@ -4,6 +4,7 @@
 
 using testing::_;
 using testing::StrictMock;
+using But::Log::Backend::Entry;
 using But::Log::Destination::Filter;
 using But::Log::Destination::Foreign;
 using But::Log::Destination::ForeignMock;
