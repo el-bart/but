@@ -96,6 +96,12 @@
             added
         </comment>
     </note>
+    <note priority="medium" time="1490376612" done="1490383058">
+        add filtering backedn for logger
+        <comment>
+            added filtering backend
+        </comment>
+    </note>
     <note priority="low" time="1392392163" done="1405245837">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
         <comment>
@@ -147,11 +153,11 @@
     <note priority="medium" time="1489869603">
         add Foregin::Destination, that process logs in a separate thread"
     </note>
-    <note priority="medium" time="1490376612" done="1490383058">
-        add filtering backedn for logger
-        <comment>
-            added filtering backend
-        </comment>
+    <note priority="medium" time="1490819320">
+        add Log::Field::Pid
+    </note>
+    <note priority="medium" time="1490819334">
+        add Log::Field::ThreadId
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
@@ -167,5 +173,8 @@
     </note>
     <note priority="low" time="1482426926">
         modify Exception message, so that all static info from base to the last derived class are shown
+    </note>
+    <note priority="low" time="1490819328">
+        add Log::Field::ProcessName
     </note>
 </todo>
