@@ -10,6 +10,7 @@ target_include_directories(but PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(but
     boost_filesystem
     boost_system
+    pthread
 )
 
 include(cmake/tests.cmake)
