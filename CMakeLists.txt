@@ -8,4 +8,10 @@ add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
 enable_testing()
 
+if(SANITIZE)
+  message(STATUS "enabling ${SANITIZE} sanitizer")
+  add_compile_options(-fsanitize=${SANITIZE})
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${SANITIZE}")
+endif()
+
 add_subdirectory(src)
