@@ -6,7 +6,7 @@ using But::Log::Backend::typeString;
 namespace
 {
 
-struct ButLogBackendTypeInfo: public testing::Test
+struct ButLogBackendTypeString: public testing::Test
 {
   template<typename T>
   void checkNum(std::string const& exp)
@@ -39,7 +39,7 @@ struct ButLogBackendTypeInfo: public testing::Test
 
 
 
-TEST_F(ButLogBackendTypeInfo, CheckBasicValues)
+TEST_F(ButLogBackendTypeString, CheckBasicValues)
 {
   checkNum<char>("char");
   checkNum<short>("short");
@@ -57,7 +57,7 @@ TEST_F(ButLogBackendTypeInfo, CheckBasicValues)
 }
 
 
-TEST_F(ButLogBackendTypeInfo, AllCstringPointerTypesAreStdString)
+TEST_F(ButLogBackendTypeString, AllCstringPointerTypesAreStdString)
 {
   checkCharPtr<char                *                >("std::string");
   checkCharPtr<char const          *                >("std::string");
@@ -81,7 +81,7 @@ TEST_F(ButLogBackendTypeInfo, AllCstringPointerTypesAreStdString)
 }
 
 
-TEST_F(ButLogBackendTypeInfo, AllCharArrayTypesAreStdString)
+TEST_F(ButLogBackendTypeString, AllCharArrayTypesAreStdString)
 {
   checkCharArray<char               >("std::string");
   checkCharArray<char const         >("std::string");
@@ -90,7 +90,7 @@ TEST_F(ButLogBackendTypeInfo, AllCharArrayTypesAreStdString)
 }
 
 
-TEST_F(ButLogBackendTypeInfo, StringIsSimplified)
+TEST_F(ButLogBackendTypeString, StringIsSimplified)
 {
   checkStr<std::string> ("std::string");
   checkStr<std::wstring>("std::wstring");
