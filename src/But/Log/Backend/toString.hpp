@@ -11,13 +11,17 @@ namespace Log
 namespace Backend
 {
 
+inline std::string toString(std::string v) { return v; }
 inline std::string toString(char const* v) { return v; }
 
 inline std::string toString(const char v) { return std::string(1, v); }
+inline std::string toString(const short v) { return std::to_string( int{v} ); }
 inline std::string toString(const int v) { return std::to_string(v); }
 inline std::string toString(const long v) { return std::to_string(v); }
 inline std::string toString(const long long v) { return std::to_string(v); }
 
+inline std::string toString(const unsigned char v) { return std::to_string( unsigned{v} ); }
+inline std::string toString(const unsigned short v) { return std::to_string( unsigned{v} ); }
 inline std::string toString(const unsigned int v) { return std::to_string(v); }
 inline std::string toString(const unsigned long v) { return std::to_string(v); }
 inline std::string toString(const unsigned long long v) { return std::to_string(v); }
