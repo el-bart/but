@@ -19,18 +19,18 @@ struct TestEx: public Exception
   { }
 };
 
-struct ButThreadingException: public testing::Test
+struct ButException: public testing::Test
 { };
 
 
-TEST_F(ButThreadingException, SomeMessage)
+TEST_F(ButException, SomeMessage)
 {
   const TestEx ex{"file.hpp", 42u, "func()", "defMsg", "msg"};
   EXPECT_EQ(ex.what(), std::string{"file.hpp:42 defMsg: msg (in func())"});
 }
 
 
-TEST_F(ButThreadingException, MaxLineNumber)
+TEST_F(ButException, MaxLineNumber)
 {
   constexpr auto max = std::numeric_limits<unsigned>::max();
   const TestEx ex{"file.hpp", max, "func()", "defMsg", "msg"};
@@ -40,7 +40,7 @@ TEST_F(ButThreadingException, MaxLineNumber)
 }
 
 
-TEST_F(ButThreadingException, DefiningAndThrowing)
+TEST_F(ButException, DefiningAndThrowing)
 {
   BUT_DEFINE_EXCEPTION(Problem, Exception, "holy shit");
   try
@@ -59,7 +59,7 @@ TEST_F(ButThreadingException, DefiningAndThrowing)
 }
 
 
-TEST_F(ButThreadingException, MultipleDeriving)
+TEST_F(ButException, MultipleDeriving)
 {
   BUT_DEFINE_EXCEPTION(Problem, Exception, "base");
   BUT_DEFINE_EXCEPTION(NewProblem, Problem, "derived");
@@ -80,7 +80,7 @@ TEST_F(ButThreadingException, MultipleDeriving)
 }
 
 
-TEST_F(ButThreadingException, DefiningAndThrowingWithEmptyMessage)
+TEST_F(ButException, DefiningAndThrowingWithEmptyMessage)
 {
   BUT_DEFINE_EXCEPTION(Sth, Exception, "holy shit");
   try
@@ -94,7 +94,7 @@ TEST_F(ButThreadingException, DefiningAndThrowingWithEmptyMessage)
 }
 
 
-TEST_F(ButThreadingException, DefiningWithEmptyMessage)
+TEST_F(ButException, DefiningWithEmptyMessage)
 {
   BUT_DEFINE_EXCEPTION(Sth, Exception, "");
   try
