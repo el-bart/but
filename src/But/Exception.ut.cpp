@@ -57,19 +57,20 @@ TEST_F(ButException, MultipleDeriving)
 {
   BUT_DEFINE_EXCEPTION(Problem, Exception, "base");
   BUT_DEFINE_EXCEPTION(NewProblem, Problem, "derived");
+  BUT_DEFINE_EXCEPTION(TopProblem, NewProblem, "last");
   EXPECT_TRUE( (std::is_base_of<Problem, NewProblem>::value) );
   try
   {
-    BUT_THROW(NewProblem, "whatever " << 10);
+    BUT_THROW(TopProblem, "whatever " << 10);
     FAIL() << "no exception has been thrown";
   }
-  catch(NewProblem const& ex)
+  catch(TopProblem const& ex)
   {
-    EXPECT_EQ( std::string(typeid(ex).name()), typeid(NewProblem).name() );
+    EXPECT_EQ( std::string(typeid(ex).name()), typeid(TopProblem).name() );
     const std::string m = ex.what();
     EXPECT_TRUE( m.find(__FILE__) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find(BOOST_CURRENT_FUNCTION) != std::string::npos ) << "actuall got: " << m;
-    EXPECT_TRUE( m.find("base: derived: whatever 10") != std::string::npos ) << "actuall got: " << m;
+    EXPECT_TRUE( m.find("base: derived: last: whatever 10") != std::string::npos ) << "actuall got: " << m;
   }
 }
 
