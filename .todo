@@ -96,6 +96,12 @@
             added
         </comment>
     </note>
+    <note priority="medium" time="1489869603" done="1491334543">
+        add Foregin::Destination, that process logs in a separate thread"
+        <comment>
+            duplicate with 28
+        </comment>
+    </note>
     <note priority="medium" time="1490376612" done="1490383058">
         add filtering backedn for logger
         <comment>
@@ -150,9 +156,6 @@
     <note priority="medium" time="1489864071">
         Log::Destination::BackgroundThread{ForeginDestination}
     </note>
-    <note priority="medium" time="1489869603">
-        add Foregin::Destination, that process logs in a separate thread"
-    </note>
     <note priority="medium" time="1490819320">
         add Log::Field::Pid
     </note>
@@ -171,8 +174,11 @@
     <note priority="low" time="1461493855">
         logger feature for buffering debug logs for some time, so that they are logged only if warning/error occures, but dropping if nothing 'special' happens for some time
     </note>
-    <note priority="low" time="1482426926">
+    <note priority="low" time="1482426926" done="1491334558">
         modify Exception message, so that all static info from base to the last derived class are shown
+        <comment>
+            implemented
+        </comment>
     </note>
     <note priority="low" time="1490819328">
         add Log::Field::ProcessName
