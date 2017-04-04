@@ -11,13 +11,7 @@ namespace
 {
 
 // helper needed, since original c-tor is protected, as class is not to be used as a standalone object
-struct TestEx: public Exception
-{
-  template<typename ...Args>
-  explicit TestEx(Args&&... args):
-    Exception{ std::forward<Args>(args)... }
-  { }
-};
+BUT_DEFINE_EXCEPTION(TestEx, Exception, "default");
 
 struct ButException: public testing::Test
 { };
@@ -25,17 +19,17 @@ struct ButException: public testing::Test
 
 TEST_F(ButException, SomeMessage)
 {
-  const TestEx ex{"file.hpp", 42u, "func()", "defMsg", "msg"};
-  EXPECT_EQ(ex.what(), std::string{"file.hpp:42 defMsg: msg (in func())"});
+  const TestEx ex{"file.hpp", 42u, "func()", "msg"};
+  EXPECT_EQ(ex.what(), std::string{"file.hpp:42 default: msg (in func())"});
 }
 
 
 TEST_F(ButException, MaxLineNumber)
 {
   constexpr auto max = std::numeric_limits<unsigned>::max();
-  const TestEx ex{"file.hpp", max, "func()", "defMsg", "msg"};
+  const TestEx ex{"file.hpp", max, "func()", "msg"};
   std::stringstream ss;
-  ss << "file.hpp:" << max << " defMsg: msg (in func())";
+  ss << "file.hpp:" << max << " default: msg (in func())";
   EXPECT_EQ(ex.what(), ss.str());
 }
 
@@ -75,7 +69,7 @@ TEST_F(ButException, MultipleDeriving)
     const std::string m = ex.what();
     EXPECT_TRUE( m.find(__FILE__) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find(BOOST_CURRENT_FUNCTION) != std::string::npos ) << "actuall got: " << m;
-    EXPECT_TRUE( m.find("derived: whatever 10") != std::string::npos ) << "actuall got: " << m;
+    EXPECT_TRUE( m.find("base: derived: whatever 10") != std::string::npos ) << "actuall got: " << m;
   }
 }
 
