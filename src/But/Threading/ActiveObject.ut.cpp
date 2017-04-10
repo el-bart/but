@@ -1,6 +1,5 @@
 #include <string>
 #include <chrono>
-
 #include "gtest/gtest.h"
 #include "ActiveObject.hpp"
 

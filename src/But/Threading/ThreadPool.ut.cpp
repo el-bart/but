@@ -2,13 +2,13 @@
 #include <chrono>
 #include "gtest/gtest.h"
 #include "ThreadPool.hpp"
-#include "ThreadPoolStdPolicy.hpp"
-#include "ThreadPoolBoostPolicy.hpp"
+#include "Policy/Std.hpp"
+#include "Policy/Boost.hpp"
 #include "Event.hpp"
 
 using But::Threading::ThreadsCount;
-using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::ThreadPoolStdPolicy>;
-using ThreadPoolBoost = But::Threading::ThreadPool<But::Threading::ThreadPoolBoostPolicy>;
+using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::Policy::Std>;
+using ThreadPoolBoost = But::Threading::ThreadPool<But::Threading::Policy::Boost>;
 
 namespace
 {

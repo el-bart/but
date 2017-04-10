@@ -6,12 +6,16 @@ namespace But
 {
 namespace Threading
 {
+namespace Policy
+{
 
-struct ThreadPoolBoostPolicy
+struct Boost
 {
   template<typename T>
   using promise_type = boost::promise<T>;
   using thread_type = boost::thread;
 };
+
+}
 }
 }
