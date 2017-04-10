@@ -2,6 +2,7 @@
 #include <memory>
 #include <atomic>
 #include "Fifo.hpp"
+#include "ThreadsCount.hpp"
 #include "JoiningThread.hpp"
 #include "detail/Command.hpp"
 
@@ -19,7 +20,7 @@ public:
   using thread_type = typename Policy::thread_type;
 
   // TODO: threads count...
-  ThreadPool():
+  explicit ThreadPool(const ThreadsCount ):
     quit_{false},
     th_{&ThreadPool::processingLoop, this}
   { }
@@ -51,6 +52,8 @@ public:
     }
     return fut;
   }
+
+  auto size() const { return 42u; }     
 
 private:
   auto getCommand()

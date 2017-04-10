@@ -20,7 +20,8 @@ public:
   }
 
 private:
-  ThreadPool<Policy> tp_;
+  using PoolType = ThreadPool<Policy>;
+  PoolType tp_{ ThreadsCount{1} };
 };
 
 

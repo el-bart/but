@@ -5,6 +5,7 @@
 #include "ThreadPoolStdPolicy.hpp"
 #include "ThreadPoolBoostPolicy.hpp"
 
+using But::Threading::ThreadsCount;
 using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::ThreadPoolStdPolicy>;
 using ThreadPoolBoost = But::Threading::ThreadPool<But::Threading::ThreadPoolBoostPolicy>;
 
@@ -14,6 +15,8 @@ namespace
 template<typename ThreadPoolType>
 struct ButThreadingThreadPool: public testing::Test
 {
+  using Type = ThreadPoolType;
+
   template<typename T>
   bool waitForFuture(std::future<T>& f) const
   {
@@ -30,7 +33,7 @@ struct ButThreadingThreadPool: public testing::Test
     return f.wait_for( boost::chrono::seconds{timeout_.count()} ) == boost::future_status::ready;
   }
 
-  ThreadPoolType tp_;
+  ThreadPoolType tp_{ ThreadsCount{1} };
   std::chrono::seconds timeout_{5};
 };
 
@@ -133,6 +136,35 @@ TYPED_TEST_P(ButThreadingThreadPool, ProcessingIsRunningInSeparateThread)
 }
 
 
+TYPED_TEST_P(ButThreadingThreadPool, GettingThreadPoolSize)
+{
+  using PoolType = decltype(this->tp_);
+  EXPECT_EQ( 3u, PoolType{ ThreadsCount{3} }.size() );
+  EXPECT_EQ( 1u, this->tp_.size() );
+}
+
+
+TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
+{
+  using PoolType = decltype(this->tp_);
+  PoolType tp{ ThreadsCount{4} };
+
+  std::vector< decltype(typename PoolType::template promise_type<std::thread::id>{}.get_future()) > ids;
+  for(auto i=0u; i<tp.size(); ++i)
+    ids.push_back( tp.run( []{ return std::this_thread::get_id(); } ) );
+  for(auto& f: ids)
+    ASSERT_TRUE( this->waitForFuture(f) );
+
+  std::set<std::thread::id> uniqueIds;
+  for(auto& f: ids)
+    uniqueIds.insert( f.get() );
+  EXPECT_EQ( ids.size(), uniqueIds.size() ) << "not all requests were spawned from a separate thread";
+
+  for(auto& id: uniqueIds)
+    EXPECT_TRUE( id != std::this_thread::get_id() );
+}
+
+
 REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
         ClosingRightAway,
         PassSomethingToProcess,
@@ -142,7 +174,9 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
         MultipleCalls,
         NoReturnValueSmokeTest,
         ForwardingExceptionWithAnExactTypeInStdVersion,
-        ProcessingIsRunningInSeparateThread
+        ProcessingIsRunningInSeparateThread,
+        GettingThreadPoolSize,
+        RunningOnMultipleThreads
     );
 
 
