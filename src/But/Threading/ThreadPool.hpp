@@ -18,6 +18,7 @@ public:
   using promise_type = typename Policy::template promise_type<T>;
   using thread_type = typename Policy::thread_type;
 
+  // TODO: threads count...
   ThreadPool():
     quit_{false},
     th_{&ThreadPool::processingLoop, this}
