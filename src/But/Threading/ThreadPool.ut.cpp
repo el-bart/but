@@ -1,42 +1,63 @@
 #include <string>
 #include <chrono>
-
 #include "gtest/gtest.h"
 #include "ThreadPool.hpp"
 #include "ThreadPoolStdPolicy.hpp"
+#include "ThreadPoolBoostPolicy.hpp"
 
-using ActObj = But::Threading::ThreadPool<But::Threading::ThreadPoolStdPolicy>;
+using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::ThreadPoolStdPolicy>;
+using ThreadPoolBoost = But::Threading::ThreadPool<But::Threading::ThreadPoolBoostPolicy>;
 
 namespace
 {
 
+template<typename ThreadPoolType>
 struct ButThreadingThreadPool: public testing::Test
 {
-  ActObj               ao_;
+  template<typename T>
+  bool waitForFuture(std::future<T>& f) const
+  {
+    return f.wait_for(timeout_) == std::future_status::ready;
+  }
+
+  template<typename T>
+#ifdef BOOST_THREAD_PROVIDES_FUTURE
+  bool waitForFuture(boost::future<T>& f) const
+#else
+  bool waitForFuture(boost::unique_future<T>& f) const
+#endif
+  {
+    return f.wait_for( boost::chrono::seconds{timeout_.count()} ) == boost::future_status::ready;
+  }
+
+  ThreadPoolType tp_;
   std::chrono::seconds timeout_{5};
 };
 
+TYPED_TEST_CASE_P(ButThreadingThreadPool);
 
-TEST_F(ButThreadingThreadPool, ClosingRightAway)
+
+
+TYPED_TEST_P(ButThreadingThreadPool, ClosingRightAway)
 {
   // leave this empty
 }
 
 
-TEST_F(ButThreadingThreadPool, PassSomethingToProcess)
+TYPED_TEST_P(ButThreadingThreadPool, PassSomethingToProcess)
 {
-  auto f = ao_.run( []{ return std::string{"narf"}; } );
-  ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
+  auto f = this->tp_.run( []{ return std::string{"narf"}; } );
+  ASSERT_TRUE( this->waitForFuture(f) );
   EXPECT_EQ( f.get(), "narf" );
 }
 
 
 int getAnswer() { return 42; }
 
-TEST_F(ButThreadingThreadPool, ProcessingFunction)
+TYPED_TEST_P(ButThreadingThreadPool, ProcessingFunction)
 {
-  auto f = ao_.run(getAnswer);
-  ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
+  auto f = this->tp_.run(getAnswer);
+  ASSERT_TRUE( this->waitForFuture(f) );
   EXPECT_EQ( f.get(), 42 );
 }
 
@@ -49,47 +70,74 @@ struct MovableOnly
   int operator()() { return 997; }
 };
 
-TEST_F(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
+TYPED_TEST_P(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
 {
-  auto f = ao_.run(MovableOnly{});
-  ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
+  auto f = this->tp_.run(MovableOnly{});
+  ASSERT_TRUE( this->waitForFuture(f) );
   EXPECT_EQ( f.get(), 997 );
 }
 
 
-struct CustomExceptionType { };
-
-TEST_F(ButThreadingThreadPool, ForwardingExceptions)
+TYPED_TEST_P(ButThreadingThreadPool, ForwardingException)
 {
-  auto f = ao_.run( []()->int { throw CustomExceptionType{}; } );
-  ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
-  EXPECT_THROW( f.get(), CustomExceptionType );
+  auto f = this->tp_.run( []()->int { throw std::runtime_error{"expected"}; } );
+  ASSERT_TRUE( this->waitForFuture(f) );
+  EXPECT_ANY_THROW( f.get() );  // note: boost throws a different exception type here...
 }
 
 
 template<int N>
 int getSth() { return N; }
 
-TEST_F(ButThreadingThreadPool, MultipleCalls)
+TYPED_TEST_P(ButThreadingThreadPool, MultipleCalls)
 {
-  auto f0 = ao_.run(getSth<0>);
-  auto f1 = ao_.run(getSth<1>);
-  auto f2 = ao_.run(getSth<2>);
-  ASSERT_TRUE( f0.wait_for(timeout_)==std::future_status::ready );
+  auto f0 = this->tp_.run(getSth<0>);
+  auto f1 = this->tp_.run(getSth<1>);
+  auto f2 = this->tp_.run(getSth<2>);
+  ASSERT_TRUE( this->waitForFuture(f0) );
   EXPECT_EQ( f0.get(), 0 );
-  ASSERT_TRUE( f1.wait_for(timeout_)==std::future_status::ready );
+  ASSERT_TRUE( this->waitForFuture(f1) );
   EXPECT_EQ( f1.get(), 1 );
-  ASSERT_TRUE( f2.wait_for(timeout_)==std::future_status::ready );
+  ASSERT_TRUE( this->waitForFuture(f2) );
   EXPECT_EQ( f2.get(), 2 );
 }
 
 
 void doNothing() { }
 
-TEST_F(ButThreadingThreadPool, NoReturnValueSmokeTest)
+TYPED_TEST_P(ButThreadingThreadPool, NoReturnValueSmokeTest)
 {
-  auto f = ao_.run(doNothing);
-  ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
+  auto f = this->tp_.run(doNothing);
+  ASSERT_TRUE( this->waitForFuture(f) );
 }
+
+
+struct CustomExceptionType { };
+
+TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVersion)
+{
+  // this test does not work in boost... :/
+  if( std::is_same<decltype(this->tp_), ThreadPoolBoost>::value )
+    return;
+  auto f = this->tp_.run( []()->int { throw CustomExceptionType{}; } );
+  ASSERT_TRUE( this->waitForFuture(f) );
+  EXPECT_THROW( f.get(), CustomExceptionType );
+}
+
+
+REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
+        ClosingRightAway,
+        PassSomethingToProcess,
+        ProcessingFunction,
+        ProcessingMovableOnlyFunctor,
+        ForwardingException,
+        MultipleCalls,
+        NoReturnValueSmokeTest,
+        ForwardingExceptionWithAnExactTypeInStdVersion
+    );
+
+
+INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingThreadPool, ::testing::Types<ThreadPoolStd>);
+INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingThreadPool, ::testing::Types<ThreadPoolBoost>);
 
 }
