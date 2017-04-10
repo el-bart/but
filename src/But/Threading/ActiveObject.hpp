@@ -1,12 +1,16 @@
 #pragma once
 #include "ThreadPool.hpp"
+#include "ThreadPoolStdPolicy.hpp"
 
 namespace But
 {
 namespace Threading
 {
 
-using ActiveObject = ThreadPool;
+template<typename Policy>
+using GenericActiveObject = ThreadPool<Policy>;
+
+using ActiveObject = GenericActiveObject<ThreadPoolStdPolicy>;
 
 }
 }

@@ -3,8 +3,9 @@
 
 #include "gtest/gtest.h"
 #include "ThreadPool.hpp"
+#include "ThreadPoolStdPolicy.hpp"
 
-using ActObj = But::Threading::ThreadPool;
+using ActObj = But::Threading::ThreadPool<But::Threading::ThreadPoolStdPolicy>;
 
 namespace
 {

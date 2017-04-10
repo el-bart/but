@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include <future>
+#include <atomic>
 #include "Fifo.hpp"
 #include "JoiningThread.hpp"
 #include "detail/Command.hpp"
@@ -10,9 +10,14 @@ namespace But
 namespace Threading
 {
 
+template<typename Policy>
 class ThreadPool final
 {
 public:
+  template<typename T>
+  using promise_type = typename Policy::template promise_type<T>;
+  using thread_type = typename Policy::thread_type;
+
   ThreadPool():
     quit_{false},
     th_{&ThreadPool::processingLoop, this}
@@ -37,7 +42,7 @@ public:
   template<typename F>
   auto run(F f)
   {
-    auto cmd = std::make_unique<detail::Task<F>>( std::move(f) );
+    auto cmd = std::make_unique< detail::Task<F,Policy> >( std::move(f) );
     auto fut = cmd->promise_.get_future();
     {
       const Queue::lock_type lock{q_};
@@ -76,7 +81,7 @@ private:
 
   Queue q_;
   std::atomic<bool> quit_;
-  JoiningThread<std::thread> th_;
+  JoiningThread<thread_type> th_;
 };
 
 }
