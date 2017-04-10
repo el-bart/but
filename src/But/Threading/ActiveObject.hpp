@@ -3,6 +3,7 @@
 #include <future>
 #include "Fifo.hpp"
 #include "JoiningThread.hpp"
+#include "detail/Command.hpp"
 
 namespace But
 {
@@ -36,7 +37,7 @@ public:
   template<typename F>
   auto run(F f)
   {
-    auto cmd = std::make_unique<Task<F>>( std::move(f) );
+    auto cmd = std::make_unique<detail::Task<F>>( std::move(f) );
     auto fut = cmd->promise_.get_future();
     {
       const Queue::lock_type lock{q_};
@@ -46,48 +47,6 @@ public:
   }
 
 private:
-  struct Command
-  {
-    virtual ~Command() { }
-    virtual void run() = 0;
-  };
-
-  template<typename F>
-  struct Task final: public Command
-  {
-    explicit Task(F f): f_{ std::move(f) } { }
-
-    virtual void run() noexcept
-    {
-      try
-      {
-        const auto tag = static_cast<value_type const*>(nullptr);
-        runAndSetValue(tag);
-      }
-      catch(...)
-      {
-        promise_.set_exception( std::current_exception() );
-      }
-    }
-
-    void runAndSetValue(void const*)
-    {
-      f_();
-      promise_.set_value();
-    }
-
-    template<typename Ignore>
-    void runAndSetValue(Ignore const*)
-    {
-      promise_.set_value( f_() );
-    }
-
-    F f_;
-    std::promise<decltype(f_())> promise_;
-
-    using value_type = typename std::decay<decltype(f_())>::type;
-  };
-
   auto getCommand()
   {
     Queue::lock_type lock{q_};
@@ -113,10 +72,10 @@ private:
     }
   }
 
-  using Queue = Fifo<std::unique_ptr<Command>>;
+  using Queue = Fifo<std::unique_ptr<detail::Command>>;
 
-  Queue                      q_;
-  std::atomic<bool>          quit_;
+  Queue q_;
+  std::atomic<bool> quit_;
   JoiningThread<std::thread> th_;
 };
 
