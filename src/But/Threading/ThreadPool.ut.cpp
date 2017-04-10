@@ -4,6 +4,7 @@
 #include "ThreadPool.hpp"
 #include "ThreadPoolStdPolicy.hpp"
 #include "ThreadPoolBoostPolicy.hpp"
+#include "Event.hpp"
 
 using But::Threading::ThreadsCount;
 using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::ThreadPoolStdPolicy>;
@@ -146,19 +147,33 @@ TYPED_TEST_P(ButThreadingThreadPool, GettingThreadPoolSize)
 
 TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
 {
+  constexpr auto count = 4u;
   using PoolType = decltype(this->tp_);
-  PoolType tp{ ThreadsCount{4} };
+  PoolType tp{ ThreadsCount{count} };
+
+  std::atomic<unsigned> started{0};
+  But::Threading::Event event;
+  event.clear();
 
   std::vector< decltype(typename PoolType::template promise_type<std::thread::id>{}.get_future()) > ids;
-  for(auto i=0u; i<tp.size(); ++i)
-    ids.push_back( tp.run( []{ return std::this_thread::get_id(); } ) );
+  for(auto i=0u; i<count; ++i)
+    ids.push_back( tp.run( [&]{
+                                ++started;
+                                event.wait(this->timeout_);
+                                return std::this_thread::get_id();
+                              } ) );
+
+  while( started != count )
+    std::this_thread::yield();
+
+  event.set();
   for(auto& f: ids)
     ASSERT_TRUE( this->waitForFuture(f) );
 
   std::set<std::thread::id> uniqueIds;
   for(auto& f: ids)
     uniqueIds.insert( f.get() );
-  EXPECT_EQ( ids.size(), uniqueIds.size() ) << "not all requests were spawned from a separate thread";
+  EXPECT_EQ( count, uniqueIds.size() ) << "not all requests were spawned from a separate thread";
 
   for(auto& id: uniqueIds)
     EXPECT_TRUE( id != std::this_thread::get_id() );

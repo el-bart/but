@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <memory>
 #include <atomic>
 #include "Fifo.hpp"
@@ -19,20 +20,23 @@ public:
   using promise_type = typename Policy::template promise_type<T>;
   using thread_type = typename Policy::thread_type;
 
-  // TODO: threads count...
-  explicit ThreadPool(const ThreadsCount ):
-    quit_{false},
-    th_{&ThreadPool::processingLoop, this}
-  { }
+  explicit ThreadPool(const ThreadsCount tc):
+    quit_{false}
+  {
+    threads_.reserve( tc.count() );
+    for(ThreadsCount::value_type i=0; i < tc.count(); ++i)
+      threads_.emplace_back( &ThreadPool::processingLoop, this );
+  }
 
   ~ThreadPool()
   {
     try
     {
       quit_ = true;
-      // unblock thread, if needed
+      // unblock all threads, if needed
       Queue::lock_type lock{q_};
-      q_.push(Queue::value_type{});
+      for(ThreadsCount::value_type i=0; i < size(); ++i)
+        q_.push(Queue::value_type{});
     }
     catch(...)
     {
@@ -53,7 +57,7 @@ public:
     return fut;
   }
 
-  auto size() const { return 42u; }     
+  auto size() const { return threads_.size(); }
 
 private:
   auto getCommand()
@@ -85,7 +89,7 @@ private:
 
   Queue q_;
   std::atomic<bool> quit_;
-  JoiningThread<thread_type> th_;
+  std::vector<JoiningThread<thread_type>> threads_;
 };
 
 }
