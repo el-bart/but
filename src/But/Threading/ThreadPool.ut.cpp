@@ -125,6 +125,14 @@ TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVers
 }
 
 
+TYPED_TEST_P(ButThreadingThreadPool, ProcessingIsRunningInSeparateThread)
+{
+  auto f = this->tp_.run( []{ return std::this_thread::get_id(); } );
+  ASSERT_TRUE( this->waitForFuture(f) );
+  EXPECT_TRUE( f.get() != std::this_thread::get_id() );
+}
+
+
 REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
         ClosingRightAway,
         PassSomethingToProcess,
@@ -133,7 +141,8 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
         ForwardingException,
         MultipleCalls,
         NoReturnValueSmokeTest,
-        ForwardingExceptionWithAnExactTypeInStdVersion
+        ForwardingExceptionWithAnExactTypeInStdVersion,
+        ProcessingIsRunningInSeparateThread
     );
 
 
