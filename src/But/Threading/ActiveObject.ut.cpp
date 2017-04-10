@@ -56,11 +56,13 @@ TEST_F(ButThreadingActiveObject, ProcessingMovableOnlyFunctor)
 }
 
 
+struct CustomExceptionType { };
+
 TEST_F(ButThreadingActiveObject, ForwardingExceptions)
 {
-  auto f = ao_.run( []()->int { throw std::runtime_error{"kaboom!"}; } );
+  auto f = ao_.run( []()->int { throw CustomExceptionType{}; } );
   ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
-  EXPECT_THROW( f.get(), std::runtime_error );
+  EXPECT_THROW( f.get(), CustomExceptionType );
 }
 
 
