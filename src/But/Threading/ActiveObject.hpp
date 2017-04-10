@@ -8,7 +8,21 @@ namespace Threading
 {
 
 template<typename Policy>
-using GenericActiveObject = ThreadPool<Policy>;
+class GenericActiveObject final
+{
+public:
+  GenericActiveObject() = default;
+
+  template<typename F>
+  auto run(F f)
+  {
+    return tp_.run( std::move(f) );
+  }
+
+private:
+  ThreadPool<Policy> tp_;
+};
+
 
 using ActiveObject = GenericActiveObject<ThreadPoolStdPolicy>;
 
