@@ -91,6 +91,7 @@ code.
 C++11-compatible API will work.
  * LockProxyProvider - base class for providing withLock() method, that returns temporary object, with
 overloaded arrow-operator, to make one-shot, synchronized class, one-liners in implementation as well.
+ * ThreadPool - policy-driven thread pool implementation.
  * WaitWrapper - helper structure that provide a wait() wrappers, that throw exceptions in case of
 time-out. these are useful for testing, but keep in mind that having a blocking-wait in a high-throughput
 system, effectively makes low-throughput system. ;)

@@ -6,6 +6,8 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * added generic thread pool implementation (policy based).
+  * ActiveObject is now policy-driven.
   * exception now shows all the messages from all the base classes, in error message.
   * added Log::Destination::Null, that ignores all the output (useful for tests, that need to take logger argument).
   * all automated tests are now run in random order (with printing seed each time).
