@@ -1,13 +1,27 @@
 #pragma once
-#include "GenericActiveObject.hpp"
-#include "Policy/Std.hpp"
+#include "ThreadPool.hpp"
 
 namespace But
 {
 namespace Threading
 {
 
-using ActiveObject = GenericActiveObject<Policy::Std>;
+template<typename Policy>
+class ActiveObject final
+{
+public:
+  ActiveObject() = default;
+
+  template<typename F>
+  auto run(F f)
+  {
+    return tp_.run( std::move(f) );
+  }
+
+private:
+  using PoolType = ThreadPool<Policy>;
+  PoolType tp_{ ThreadsCount{1} };
+};
 
 }
 }

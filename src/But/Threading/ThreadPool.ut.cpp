@@ -1,12 +1,14 @@
 #include <string>
 #include <chrono>
 #include "gtest/gtest.h"
+#include "Event.hpp"
 #include "ThreadPool.hpp"
 #include "Policy/Std.hpp"
 #include "Policy/Boost.hpp"
-#include "Event.hpp"
+#include "detail/waitForFuture.ut.hpp"
 
 using But::Threading::ThreadsCount;
+using But::Threading::detail::waitForFuture;
 using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::Policy::Std>;
 using ThreadPoolBoost = But::Threading::ThreadPool<But::Threading::Policy::Boost>;
 
@@ -18,24 +20,7 @@ struct ButThreadingThreadPool: public testing::Test
 {
   using Type = ThreadPoolType;
 
-  template<typename T>
-  bool waitForFuture(std::future<T>& f) const
-  {
-    return f.wait_for(timeout_) == std::future_status::ready;
-  }
-
-  template<typename T>
-#ifdef BOOST_THREAD_PROVIDES_FUTURE
-  bool waitForFuture(boost::future<T>& f) const
-#else
-  bool waitForFuture(boost::unique_future<T>& f) const
-#endif
-  {
-    return f.wait_for( boost::chrono::seconds{timeout_.count()} ) == boost::future_status::ready;
-  }
-
   ThreadPoolType tp_{ ThreadsCount{1} };
-  std::chrono::seconds timeout_{5};
 };
 
 TYPED_TEST_CASE_P(ButThreadingThreadPool);
@@ -51,7 +36,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ClosingRightAway)
 TYPED_TEST_P(ButThreadingThreadPool, PassSomethingToProcess)
 {
   auto f = this->tp_.run( []{ return std::string{"narf"}; } );
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_EQ( f.get(), "narf" );
 }
 
@@ -61,7 +46,7 @@ int getAnswer() { return 42; }
 TYPED_TEST_P(ButThreadingThreadPool, ProcessingFunction)
 {
   auto f = this->tp_.run(getAnswer);
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_EQ( f.get(), 42 );
 }
 
@@ -77,7 +62,7 @@ struct MovableOnly
 TYPED_TEST_P(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
 {
   auto f = this->tp_.run(MovableOnly{});
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_EQ( f.get(), 997 );
 }
 
@@ -85,7 +70,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
 TYPED_TEST_P(ButThreadingThreadPool, ForwardingException)
 {
   auto f = this->tp_.run( []()->int { throw std::runtime_error{"expected"}; } );
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_ANY_THROW( f.get() );  // note: boost throws a different exception type here...
 }
 
@@ -98,11 +83,11 @@ TYPED_TEST_P(ButThreadingThreadPool, MultipleCalls)
   auto f0 = this->tp_.run(getSth<0>);
   auto f1 = this->tp_.run(getSth<1>);
   auto f2 = this->tp_.run(getSth<2>);
-  ASSERT_TRUE( this->waitForFuture(f0) );
+  ASSERT_TRUE( waitForFuture(f0) );
   EXPECT_EQ( f0.get(), 0 );
-  ASSERT_TRUE( this->waitForFuture(f1) );
+  ASSERT_TRUE( waitForFuture(f1) );
   EXPECT_EQ( f1.get(), 1 );
-  ASSERT_TRUE( this->waitForFuture(f2) );
+  ASSERT_TRUE( waitForFuture(f2) );
   EXPECT_EQ( f2.get(), 2 );
 }
 
@@ -112,7 +97,7 @@ void doNothing() { }
 TYPED_TEST_P(ButThreadingThreadPool, NoReturnValueSmokeTest)
 {
   auto f = this->tp_.run(doNothing);
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
 }
 
 
@@ -124,7 +109,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVers
   if( std::is_same<decltype(this->tp_), ThreadPoolBoost>::value )
     return;
   auto f = this->tp_.run( []()->int { throw CustomExceptionType{}; } );
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_THROW( f.get(), CustomExceptionType );
 }
 
@@ -132,7 +117,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVers
 TYPED_TEST_P(ButThreadingThreadPool, ProcessingIsRunningInSeparateThread)
 {
   auto f = this->tp_.run( []{ return std::this_thread::get_id(); } );
-  ASSERT_TRUE( this->waitForFuture(f) );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_TRUE( f.get() != std::this_thread::get_id() );
 }
 
@@ -159,7 +144,7 @@ TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
   for(auto i=0u; i<count; ++i)
     ids.push_back( tp.run( [&]{
                                 ++started;
-                                event.wait(this->timeout_);
+                                event.wait( std::chrono::seconds{5} );
                                 return std::this_thread::get_id();
                               } ) );
 
@@ -168,7 +153,7 @@ TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
 
   event.set();
   for(auto& f: ids)
-    ASSERT_TRUE( this->waitForFuture(f) );
+    ASSERT_TRUE( waitForFuture(f) );
 
   std::set<std::thread::id> uniqueIds;
   for(auto& f: ids)

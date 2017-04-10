@@ -2,29 +2,46 @@
 #include <chrono>
 #include "gtest/gtest.h"
 #include "ActiveObject.hpp"
+#include "Policy/Std.hpp"
+#include "Policy/Boost.hpp"
+#include "detail/waitForFuture.ut.hpp"
+
+using But::Threading::detail::waitForFuture;
 
 
 namespace
 {
 
+template<typename Policy>
 struct ButThreadingActiveObject: public testing::Test
 {
-  But::Threading::ActiveObject ao_;
-  std::chrono::seconds timeout_{5};
+  But::Threading::ActiveObject<Policy> ao_;
 };
 
+TYPED_TEST_CASE_P(ButThreadingActiveObject);
 
-TEST_F(ButThreadingActiveObject, ClosingRightAway)
+
+TYPED_TEST_P(ButThreadingActiveObject, ClosingRightAway)
 {
   // leave this empty
 }
 
 
-TEST_F(ButThreadingActiveObject, ProcessingIsRunningInSeparateThread)
+TYPED_TEST_P(ButThreadingActiveObject, ProcessingIsRunningInSeparateThread)
 {
-  auto f = ao_.run( []{ return std::this_thread::get_id(); } );
-  ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
+  auto f = this->ao_.run( []{ return std::this_thread::get_id(); } );
+  ASSERT_TRUE( waitForFuture(f) );
   EXPECT_TRUE( f.get() != std::this_thread::get_id() );
 }
+
+
+REGISTER_TYPED_TEST_CASE_P(ButThreadingActiveObject,
+        ClosingRightAway,
+        ProcessingIsRunningInSeparateThread
+    );
+
+
+INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Std>);
+INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Boost>);
 
 }
