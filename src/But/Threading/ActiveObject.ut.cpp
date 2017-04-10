@@ -85,7 +85,7 @@ TEST_F(ButThreadingActiveObject, MultipleCalls)
 
 void doNothing() { }
 
-TEST_F(ButThreadingActiveObject, NoReturnValueDoesNothing)
+TEST_F(ButThreadingActiveObject, NoReturnValueSmokeTest)
 {
   auto f = ao_.run(doNothing);
   ASSERT_TRUE( f.wait_for(timeout_)==std::future_status::ready );
