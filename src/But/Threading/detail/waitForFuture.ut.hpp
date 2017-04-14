@@ -1,3 +1,4 @@
+#pragma once
 #include <future>
 #include <boost/thread/future.hpp>
 
