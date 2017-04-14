@@ -26,6 +26,10 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
         set(CMAKE_CXX_ARCHIVE_CREATE "${CMAKE_CXX_ARCHIVE_CREATE} ${LTO_PLUGIN}")
         set(CMAKE_CXX_ARCHIVE_FINISH "${CMAKE_CXX_ARCHIVE_FINISH} ${LTO_PLUGIN}")
     endif()
+    # enable incremental linking for gcc in debug mode
+    #if(DEFINED CMAKE_BUILD_TYPE AND "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    #    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -fno-use-linker-plugin -Wl,--incremental")
+    #endif()
 endif()
 
 
