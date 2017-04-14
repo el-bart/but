@@ -28,7 +28,7 @@ struct Task final: public Command
     }
     catch(...)
     {
-      promise_.set_exception( std::current_exception() );
+      promise_.set_exception( Policy::currentException() );
     }
   }
 
