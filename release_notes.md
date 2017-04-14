@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * test headers now have #pragma once.
   * added generic thread pool implementation (policy based).
   * ActiveObject is now policy-driven.
   * exception now shows all the messages from all the base classes, in error message.
