@@ -55,9 +55,9 @@ do
     echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
     echo "$0: building $san-sanitized clang debug"
     echo ""
-    mkdir -p "build/script/sanitize-clang-$san/"
+    mkdir -p "build/script/clang/sanitize/$san"
     cd "$_"
-    time cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DSANITIZE="$san" -DCMAKE_TOOLCHAIN_FILE=../../../src/cmake/toolchains/clang.cmake ../../../
+    time cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DSANITIZE="$san" -DCMAKE_TOOLCHAIN_FILE=../../../../../src/cmake/toolchains/clang.cmake ../../../../../
     time ninja all but_tests_manual but_tests_auto
     time ctest
   )
