@@ -1,4 +1,4 @@
-#include <boost/lexical_cast.hpp>
+#include <sstream>
 #include "ThreadId.hpp"
 
 namespace But
@@ -10,7 +10,9 @@ namespace Field
 
 std::string toString(ThreadId const& tid)
 {
-  return boost::lexical_cast<std::string>(tid.value_);
+  std::ostringstream ss;
+  ss << tid.value_;
+  return ss.str();
 }
 
 }
