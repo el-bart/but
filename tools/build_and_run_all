@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# enter project's root dir
+APP_DIR=$(dirname "$(readlink -e "$0")")
+cd "$APP_DIR/.."
+
 # all builds with ninja
 for tc in gcc clang default
 do
@@ -32,6 +36,9 @@ done
 
 # check build with make
 (
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    echo "$0: building make-based build"
+    echo ""
   mkdir -p "build/script/make-based"
   cd "$_"
   time cmake -G 'Unix Makefiles' ../../../
@@ -40,3 +47,18 @@ done
   time make -j$(nproc) but_tests_auto
   time ctest
 )
+
+# sanitizers
+for san in address undefined thread
+do
+  (
+    echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+    echo "$0: building $san-sanitized clang debug"
+    echo ""
+    mkdir -p "build/script/sanitize-clang-$san/"
+    cd "$_"
+    time cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug -DSANITIZE="$san" -DCMAKE_TOOLCHAIN_FILE=../../../src/cmake/toolchains/clang.cmake ../../../
+    time ninja all but_tests_manual but_tests_auto
+    time ctest
+  )
+done
