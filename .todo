@@ -108,6 +108,12 @@
             added filtering backend
         </comment>
     </note>
+    <note priority="medium" time="1490819334" done="1492716546">
+        add Log::Field::ThreadId
+        <comment>
+            added
+        </comment>
+    </note>
     <note priority="low" time="1392392163" done="1405245837">
         exception throwing funciton, that ensures some reasonable error on memeory allocation
         <comment>
@@ -138,6 +144,12 @@
             done in latest versions of boost already
         </comment>
     </note>
+    <note priority="low" time="1482426926" done="1491334558">
+        modify Exception message, so that all static info from base to the last derived class are shown
+        <comment>
+            implemented
+        </comment>
+    </note>
     <note priority="medium" time="1447835445">
         add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
     </note>
@@ -159,8 +171,14 @@
     <note priority="medium" time="1490819320">
         add Log::Field::Pid
     </note>
-    <note priority="medium" time="1490819334">
-        add Log::Field::ThreadId
+    <note priority="medium" time="1492716531">
+        But::Format - simple formatter, to be used with But::Log: syntax: ${1}, $1, ${1#desc}, ${T1#shows type}, ${V1#show value}, $$, etc...
+    </note>
+    <note priority="medium" time="1492716571">
+        split build into core and dev
+    </note>
+    <note priority="medium" time="1492716613">
+        but::throw with comma-based syntax, instead of streams (comaptible with logging + no need for a macro to use it)
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
@@ -173,12 +191,6 @@
     </note>
     <note priority="low" time="1461493855">
         logger feature for buffering debug logs for some time, so that they are logged only if warning/error occures, but dropping if nothing 'special' happens for some time
-    </note>
-    <note priority="low" time="1482426926" done="1491334558">
-        modify Exception message, so that all static info from base to the last derived class are shown
-        <comment>
-            implemented
-        </comment>
     </note>
     <note priority="low" time="1490819328">
         add Log::Field::ProcessName
