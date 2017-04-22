@@ -16,6 +16,7 @@ are not worth a dedicated, reusable class, yet still must be exception-safe.
 
 
 ## container
+ * Array- std::array replacement, that is constexpr-compatible (will be typedef after C++17).
  * ArrayWithSize - std::array equivalent, that additionally holds a number of elements stored inside.
 this makes it a perfect replacement for std::vector, when maximum size is small, and known a priory.
  * BitPackedSequence - std::vector<bool>-like structure, that is capable of storing elements that
