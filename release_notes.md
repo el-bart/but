@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * Container::Array - a temporary std::array<> replacement, that works with constexpr functions.
   * Mpl::NamedVariadicTemplate now supports getting arguments count.
   * 'gold' is now used as a default linkder.
   * added logger fields: ThreadId and ThreadNo (more human-friendly representation).
