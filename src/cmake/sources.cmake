@@ -8,6 +8,8 @@ endmacro()
 set(SRC_DIRS
     But
     But/Container
+    But/Format
+    But/Format/detail
     But/Log
     But/Log/Backend
     But/Log/Destination
