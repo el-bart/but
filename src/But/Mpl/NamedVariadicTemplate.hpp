@@ -31,7 +31,9 @@ namespace Mpl
  */
 template<typename ...Args>
 struct NamedVariadicTemplate final
-{ };
+{
+  static constexpr auto size() { return sizeof...(Args); }
+};
 
 }
 }
