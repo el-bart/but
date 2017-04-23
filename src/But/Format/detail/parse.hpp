@@ -10,6 +10,13 @@ namespace Format
 namespace detail
 {
 
+constexpr auto skipUntilEndOfComment(char const* fmt)
+{
+  while( not isEos(*fmt) && *fmt!='}' )
+    ++fmt;
+  return throwOnInvalidSyntax( *fmt!='}', "variable does not end with closing brace", fmt );
+}
+
 constexpr auto parseBraceTypeName(State& st, char const* fmt)
 {
   throwOnInvalidSyntax( not isDigit(*fmt), "brace type variable declaration is not complete", fmt );
@@ -18,9 +25,12 @@ constexpr auto parseBraceTypeName(State& st, char const* fmt)
   st.end_ = fmt;
   while( isDigit(*st.end_) )
     ++st.end_;
+  const auto numberEnd = st.end_;
+  if( *st.end_ == '#' )
+    st.end_ = skipUntilEndOfComment(st.end_);
   throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
-  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + 3, st.end_);
   ++st.end_;
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + 3, numberEnd);
   return st.end_;
 }
 
@@ -30,10 +40,13 @@ constexpr auto parseBraceVariable(State& st, char const* fmt)
   st.end_ = fmt;
   while( isDigit(*st.end_) )
     ++st.end_;
+  const auto numberEnd = st.end_;
+  if( *st.end_ == '#' )
+    st.end_ = skipUntilEndOfComment(st.end_);
   throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
-  const auto beginOffset = st.begin_[2] == 'V' ? 3 : 2;
-  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + beginOffset, st.end_);
   ++st.end_;
+  const auto beginOffset = st.begin_[2] == 'V' ? 3 : 2;
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + beginOffset, numberEnd);
   return st.end_;
 }
 

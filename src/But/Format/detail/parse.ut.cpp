@@ -430,8 +430,75 @@ TEST_F(ButFormatDetailParse, TypeArguments)
 }
 
 
+TEST_F(ButFormatDetailParse, EmptyCommentArgument)
+{
+  {
+    constexpr auto ps = parse<3>("${42#}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${42#}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("${T42#}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${T42#}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("${V42#}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${V42#}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  EXPECT_THROW( parse<10>("$12#"), Invalid ) << "comment on non-brace variable reference";
+  EXPECT_THROW( parse<10>("${12#"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<10>("${T12#"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<10>("${V12#"), Invalid ) << "missing closing brace";
+}
+
+
 TEST_F(ButFormatDetailParse, CommentedArguments)
 {
+  {
+    constexpr auto ps = parse<3>("${42#some comment}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${42#some comment}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("${T42#some comment}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${T42#some comment}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("${V42#some comment}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${V42#some comment}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  EXPECT_THROW( parse<10>("$12#tag"), Invalid ) << "comment on non-brace variable reference";
+  EXPECT_THROW( parse<10>("${12#tag"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<10>("${T12#tag"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<10>("${V12#tag"), Invalid ) << "missing closing brace";
 }
 
 
@@ -450,7 +517,6 @@ TEST_F(ButFormatDetailParse, MixedTokens)
 TEST_F(ButFormatDetailParse, MiscInvalidFormats)
 {
   EXPECT_THROW( parse<10>("${X12}"), Invalid ) << "invalid modifier";
-  EXPECT_THROW( parse<10>("$12#tag"), Invalid ) << "comment on non-brace variable reference";
   EXPECT_THROW( parse<10>("$V12"), Invalid ) << "explicit variable without brace is not possible";
   EXPECT_THROW( parse<10>("$T12"), Invalid ) << "explicit type name without brace is not possible";
 }
