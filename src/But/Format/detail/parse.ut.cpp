@@ -353,6 +353,80 @@ TEST_F(ButFormatDetailParse, ValueArguments)
 
 TEST_F(ButFormatDetailParse, TypeArguments)
 {
+  {
+    constexpr auto ps = parse<3>("${T42}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("${T42} beginning");
+    ASSERT_EQ( 2u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::TypeName, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("in ${T42} the middle");
+    ASSERT_EQ( 3u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::TypeName, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+    // 2
+    {
+      constexpr auto s = ps.segments_[2];
+      EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("the end ${T42}");
+    ASSERT_EQ( 2u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::TypeName, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+  }
+
+  EXPECT_THROW( parse<10>("${T12x}"), Invalid ) << "invalid number";
+  EXPECT_THROW( parse<10>("${Toops}"), Invalid ) << "not a number";
+  EXPECT_THROW( parse<10>("${T} "), Invalid ) << "missing number";
+  EXPECT_THROW( parse<10>("${T-2}"), Invalid ) << "wrong number";
+  EXPECT_THROW( parse<10>("${T12"), Invalid ) << "brace not closed";
 }
 
 
@@ -370,6 +444,15 @@ TEST_F(ButFormatDetailParse, ArgumentsArrayCanBeLargerThanNeeded)
 
 TEST_F(ButFormatDetailParse, MixedTokens)
 {
+}
+
+
+TEST_F(ButFormatDetailParse, MiscInvalidFormats)
+{
+  EXPECT_THROW( parse<10>("${X12}"), Invalid ) << "invalid modifier";
+  EXPECT_THROW( parse<10>("$12#tag"), Invalid ) << "comment on non-brace variable reference";
+  EXPECT_THROW( parse<10>("$V12"), Invalid ) << "explicit variable without brace is not possible";
+  EXPECT_THROW( parse<10>("$T12"), Invalid ) << "explicit type name without brace is not possible";
 }
 
 }

@@ -10,6 +10,20 @@ namespace Format
 namespace detail
 {
 
+constexpr auto parseBraceTypeName(State& st, char const* fmt)
+{
+  throwOnInvalidSyntax( not isDigit(*fmt), "brace type variable declaration is not complete", fmt );
+  ++fmt;
+  st.type_ = State::Type::TypeName;
+  st.end_ = fmt;
+  while( isDigit(*st.end_) )
+    ++st.end_;
+  throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + 3, st.end_);
+  ++st.end_;
+  return st.end_;
+}
+
 constexpr auto parseBraceVariable(State& st, char const* fmt)
 {
   st.type_ = State::Type::Value;
@@ -30,6 +44,8 @@ constexpr auto parseBrace(State& st, char const* fmt)
     ++fmt;
   if( isDigit(*fmt) )
     return parseBraceVariable(st, fmt+1);
+  if( *fmt == 'T' )
+    return parseBraceTypeName(st, fmt+1);
   return throwOnInvalidSyntax(true, "invalid brace variable init sequence", fmt);
 }
 
