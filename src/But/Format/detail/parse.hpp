@@ -10,37 +10,44 @@ namespace Format
 namespace detail
 {
 
+constexpr auto parseBraceVariable(State& st, char const* fmt)
+{
+  (void)st;
+  // TODO...
+  return throwOnInvalidSyntax(true, "not yet implemented", fmt);
+}
+
 constexpr auto parseSimpleVariable(State& st, char const* fmt)
 {
+  throwOnInvalidSyntax( not isDigit(*fmt), "simple variable declaration is not followed with a number", fmt );
   st.type_ = State::Type::Value;
-  st.begin_ = fmt;
   st.end_  = fmt+1;
   while( isDigit(*st.end_) )
     ++st.end_;
   throwOnInvalidSyntax( not isEos(*st.end_) && not isSpace(*st.end_), "variable does not end with end of data not space", st.end_ );
   st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+1, st.end_);
   return st.end_;
+}
+
+constexpr auto parseStringVariable(State& st, char const* fmt)
+{
+  st.type_ = State::Type::String;
+  st.end_ = fmt;
+  return fmt;
 }
 
 constexpr auto parseVariable(State& st, char const* fmt)
 {
-  st.type_ = State::Type::Value;
   st.begin_ = fmt;
-  st.end_  = fmt+1;
-  while( isDigit(*st.end_) )
-    ++st.end_;
-  throwOnInvalidSyntax( not isEos(*st.end_) && not isSpace(*st.end_), "variable does not end with end of data not space", st.end_ );
-  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+1, st.end_);
-  return st.end_;
-}
+  ++fmt;
+  throwOnInvalidSyntax( isEos(*fmt), "end of data while declaring a variable", fmt );
 
+  if( isVariableBegin(*fmt) )   // "$$" case
+    return parseStringVariable(st, fmt+1);
 
-constexpr auto parseStringVar(State& st, char const* fmt)
-{
-  st.type_ = State::Type::String;
-  st.begin_ = fmt;
-  st.end_  = fmt+2;
-  return st.end_;
+  if( *fmt=='{' )
+    return parseBraceVariable(st, fmt+1);
+  return parseSimpleVariable(st, fmt);
 }
 
 
@@ -62,13 +69,7 @@ constexpr auto parseImpl(ParserState<N>&& ps, char const* fmt)
   {
     State st;
     if( isVariableBegin(*fmt) )
-    {
-      throwOnInvalidSyntax( isEos(fmt[1]), "end of data while declaring a variable", fmt+1 );
-      if( isVariableBegin(fmt[1]) ) // "$$" case
-        fmt = parseStringVar(st, fmt);
-      else
-        fmt = parseVariable(st, fmt);
-    }
+      fmt = parseVariable(st, fmt);
     else
       fmt = parseString(st, fmt);
 
