@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include "format.hpp"
 
 namespace But
 {
@@ -11,7 +10,9 @@ namespace Format
  *  @note format of the parameter is defined by its type, via toString() function. it
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
+ *  @param N number of arguments
  */
+template<unsigned N>
 class Parsed final
 {
 public:
@@ -30,8 +31,14 @@ public:
     format_{format}
   { }
 
+  constexpr auto expectedArguments() const { return N; }
+
   template<typename ...Args>
-  std::string format(Args const& ...args);
+  std::string format(Args const& .../*args*/) const
+  {
+    // TODO: static assert here...
+    return format_;
+  }
 
 private:
   char const* format_;
