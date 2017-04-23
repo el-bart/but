@@ -23,7 +23,6 @@ TEST_F(ButFormat, SampleStrings)
 }
 
 
-/*
 TEST_F(ButFormat, OneArgument)
 {
   constexpr auto fmt = BUT_FORMAT("try $1 out");
@@ -32,6 +31,7 @@ TEST_F(ButFormat, OneArgument)
 }
 
 
+/*
 TEST_F(ButFormat, MultipleArguments)
 {
   constexpr auto fmt = BUT_FORMAT("$2 $1");
@@ -70,5 +70,20 @@ TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
   }
 }
 */
+
+
+TEST_F(ButFormat, DenseFormats)
+{
+  {
+    constexpr auto fmt = BUT_FORMAT("$$$1");
+    EXPECT_EQ( 1u, fmt.expectedArguments() );
+    EXPECT_EQ( "$kszy", fmt.format("kszy") );
+  }
+  {
+    constexpr auto fmt = BUT_FORMAT("$$x");
+    EXPECT_EQ( 0u, fmt.expectedArguments() );
+    EXPECT_EQ( "$x", fmt.format() );
+  }
+}
 
 }
