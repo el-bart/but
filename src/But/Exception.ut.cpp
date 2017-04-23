@@ -24,6 +24,13 @@ TEST_F(ButException, SomeMessage)
 }
 
 
+TEST_F(ButException, SomeMessageWithStdString)
+{
+  const TestEx ex{"file.hpp", 42u, "func()", std::string{"msg"}};
+  EXPECT_EQ(ex.what(), std::string{"file.hpp:42 default: msg (in func())"});
+}
+
+
 TEST_F(ButException, MaxLineNumber)
 {
   constexpr auto max = std::numeric_limits<unsigned>::max();
