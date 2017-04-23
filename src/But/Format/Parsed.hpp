@@ -1,8 +1,11 @@
 #pragma once
 #include <string>
+#include <sstream>
 #include <cassert>
 #include "detail/parse.hpp"
 #include "detail/argumentsCount.hpp"
+#include "But/Log/Backend/toString.hpp"
+#include "But/Log/Backend/typeString.hpp"
 
 namespace But
 {
@@ -15,7 +18,7 @@ namespace Format
  *        is always constant.
  *  @param N number of arguments
  */
-template<unsigned N>
+template<unsigned N, unsigned MaxSegments>
 class Parsed final
 {
 public:
@@ -32,7 +35,7 @@ public:
    *  @note all numbers are 0-based (i.e. 1st arguments has index 0).
    */
   constexpr explicit Parsed(char const* format):
-    ps_{ detail::parse<N+1>(format) },
+    ps_{ detail::parse<MaxSegments>(format) },
     format_{format}
   { }
 
@@ -44,12 +47,41 @@ public:
   {
     static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
     assert( expectedArguments() == detail::argumentsCount(ps_) );
-    // TODO: static assert here...
-    return format_;
+    std::stringstream ss;
+    for(auto i=0u; i<ps_.count_; ++i)
+    {
+      const auto argPos = ps_.segments_[i].referencedArgument_;
+      switch(ps_.segments_[i].type_)
+      {
+        case detail::State::Type::String:
+             ss << std::string{ ps_.segments_[i].begin_, ps_.segments_[i].end_ };
+             break;
+        case detail::State::Type::Value:
+             ss << getArgumentValue(argPos, args...);
+             break;
+        case detail::State::Type::TypeName:
+             ss << getArgumentType(argPos, args...);
+             break;
+      }
+    }
+    return ss.str();
   }
 
 private:
-  detail::ParserState<N+1> ps_;
+  template<typename ...Args>
+  std::string getArgumentType(unsigned /*pos*/, Args const& .../*args*/) const
+  {
+    using Log::Backend::typeString; // TODO - should be moved here...
+    return "T-TODO...";
+  }
+  template<typename ...Args>
+  std::string getArgumentValue(unsigned /*pos*/, Args const& .../*args*/) const
+  {
+    using Log::Backend::toString;   // TODO - should be moved here...
+    return "V-TODO...";
+  }
+
+  detail::ParserState<MaxSegments> ps_;
   char const* format_;
 };
 
