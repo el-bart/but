@@ -469,7 +469,7 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
 TEST_F(ButFormatDetailParse, CommentedArguments)
 {
   {
-    constexpr auto ps = parse<3>("${42#some comment}");
+    constexpr auto ps = parse<1>("${42#some comment}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${42#some comment}", std::string(s.begin_, s.end_) );
@@ -478,7 +478,7 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
   }
 
   {
-    constexpr auto ps = parse<3>("${T42#some comment}");
+    constexpr auto ps = parse<1>("${T42#some comment}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${T42#some comment}", std::string(s.begin_, s.end_) );
@@ -487,7 +487,7 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
   }
 
   {
-    constexpr auto ps = parse<3>("${V42#some comment}");
+    constexpr auto ps = parse<1>("${V42#some comment}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${V42#some comment}", std::string(s.begin_, s.end_) );
@@ -509,8 +509,87 @@ TEST_F(ButFormatDetailParse, ArgumentsArrayCanBeLargerThanNeeded)
 }
 
 
+TEST_F(ButFormatDetailParse, BracesWithoutLeadingDolarSignHaveNoSpecialMinning)
+{
+  constexpr auto ps = parse<3>("}foo{}bar{");
+  ASSERT_EQ( 1u, ps.count_ );
+  constexpr auto s = ps.segments_[0];
+  EXPECT_EQ( "}foo{}bar{", std::string(s.begin_, s.end_) );
+  EXPECT_EQ( State::Type::String, s.type_ );
+}
+
+
 TEST_F(ButFormatDetailParse, MixedTokens)
 {
+  constexpr auto args = 10u;
+  constexpr auto ps = parse<args>("in${T42#test}xxx${V69#ff}${13}$21 $$${997#narf}${T666}");
+  ASSERT_EQ( args, ps.count_ );
+  // 0
+  {
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "in", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::String, s.type_ );
+  }
+  // 1
+  {
+    constexpr auto s = ps.segments_[1];
+    EXPECT_EQ( "${T42#test}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+  // 2
+  {
+    constexpr auto s = ps.segments_[2];
+    EXPECT_EQ( "xxx", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::String, s.type_ );
+  }
+  // 3
+  {
+    constexpr auto s = ps.segments_[3];
+    EXPECT_EQ( "${V69#ff}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 69u, s.referencedArgument_ );
+  }
+  // 4
+  {
+    constexpr auto s = ps.segments_[4];
+    EXPECT_EQ( "${13}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 13u, s.referencedArgument_ );
+  }
+  // 5
+  {
+    constexpr auto s = ps.segments_[5];
+    EXPECT_EQ( "$21", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 21u, s.referencedArgument_ );
+  }
+  // 6
+  {
+    constexpr auto s = ps.segments_[6];
+    EXPECT_EQ( " ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::String, s.type_ );
+  }
+  // 7
+  {
+    constexpr auto s = ps.segments_[7];
+    EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::String, s.type_ );
+  }
+  // 8
+  {
+    constexpr auto s = ps.segments_[8];
+    EXPECT_EQ( "${997#narf}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 997u, s.referencedArgument_ );
+  }
+  // 9
+  {
+    constexpr auto s = ps.segments_[9];
+    EXPECT_EQ( "${T666}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( 666u, s.referencedArgument_ );
+  }
 }
 
 
