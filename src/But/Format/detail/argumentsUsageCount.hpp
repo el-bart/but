@@ -64,6 +64,7 @@ constexpr auto argumentsUsageCount(char const* fmt)
     else
       fmt = consumeUntilTheEndOfString(fmt+1);
   }
+  // TODO: this function could equally well just count number of '$' characters, as this is only a hint...
   return args;
 }
 
