@@ -66,6 +66,7 @@ and collections. both regular and template types are supported.
 typedef, that can be expanded later on.
  * SizeTypeFor - type-deriving template, that provides the smallest, unsigned, integral type, that will
 fit given value.
+ * parseSigned/parseUnsigned - parses numbers at compile-time (and runtime, if needed).
 
 
 ## (design) patterns
