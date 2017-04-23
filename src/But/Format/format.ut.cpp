@@ -23,6 +23,7 @@ TEST_F(ButFormat, SampleStrings)
 }
 
 
+/*
 TEST_F(ButFormat, OneArgument)
 {
   constexpr auto fmt = BUT_FORMAT("try $1 out");
@@ -68,5 +69,6 @@ TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
     EXPECT_EQ( "x x std::string", fmt.format("x") );
   }
 }
+*/
 
 }
