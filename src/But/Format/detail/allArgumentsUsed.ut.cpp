@@ -13,6 +13,14 @@ struct ButFormatDetailAllArgumentsUsed: public testing::Test
 { };
 
 
+TEST_F(ButFormatDetailAllArgumentsUsed, EmptyString)
+{
+  constexpr auto ps = parse<1>("");
+  constexpr auto ret = allArgumentsUsed(ps);
+  EXPECT_TRUE(ret);
+}
+
+
 TEST_F(ButFormatDetailAllArgumentsUsed, ConsecutiveOrder)
 {
   {
