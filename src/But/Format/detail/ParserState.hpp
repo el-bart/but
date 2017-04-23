@@ -20,7 +20,7 @@ struct State
   char const* begin_{nullptr};
   char const* end_{nullptr};
   Type type_{Type::String};
-  unsigned referencedArgument_{0};  // zero means - none.
+  unsigned referencedArgument_{0};  // only valid for Value and TypeName types
 };
 
 template<unsigned N>
