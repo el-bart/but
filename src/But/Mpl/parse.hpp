@@ -1,57 +1,36 @@
 #pragma once
 #include "But/Exception.hpp"
+#include "ParseError.hpp"
+#include "detail/parse.hpp"
 
 namespace But
 {
 namespace Mpl
 {
 
-BUT_DEFINE_EXCEPTION(ParseError, Exception, "parse error");
+template<typename T>
+constexpr auto parseUnsigned(char const* str)
+{
+  return detail::parseUnsigned<T>( str, nullptr, detail::isEndValue );
+}
 
-namespace detail
+template<typename T>
+constexpr auto parseUnsigned(char const* begin, char const* end)
 {
-constexpr unsigned isDigit(const char c)
-{
-  return '0' <= c && c <= '9';
-}
-constexpr unsigned parseDigit(const char c)
-{
-  if( not isDigit(c) )
-    throw ParseError{__FILE__, __LINE__, BOOST_CURRENT_FUNCTION, "invalid digit: " + std::string{c}};
-  return c - '0';
-}
+  return detail::parseUnsigned<T>( begin, end, detail::isEndPtr );
 }
 
 
 template<typename T>
-constexpr auto parseUnsigned(char const* fmt)
+constexpr auto parseSigned(char const* str)
 {
-  T out{0};
-  for(; *fmt; ++fmt)
-    out = out*10u + detail::parseDigit(*fmt);
-  return out;
+  return detail::parseSigned<T>( str, nullptr, detail::isEndValue );
 }
 
-
 template<typename T>
-constexpr auto parseSigned(char const* fmt)
+constexpr auto parseSigned(char const* begin, char const* end)
 {
-  T out{0};
-  T sig{+1};
-  switch(*fmt)
-  {
-    case '-':
-         sig = -1;
-         ++fmt;
-         break;
-    case '+':
-         sig = +1;
-         ++fmt;
-         break;
-  }
-  for(; *fmt; ++fmt)
-    out = out*10u + detail::parseDigit(*fmt);
-  return sig*out;
+  return detail::parseSigned<T>( begin, end, detail::isEndPtr );
 }
 
 }

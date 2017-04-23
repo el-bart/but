@@ -36,6 +36,13 @@ TEST_F(ButMplParse, ConstexprUnsigned)
 }
 
 
+TEST_F(ButMplParse, UnsignedOnIteratorRange)
+{
+  const auto str = "x42y";
+  EXPECT_EQ( 42u, parseUnsigned<unsigned>(str+1, str+3) );
+}
+
+
 TEST_F(ButMplParse, Signed)
 {
   EXPECT_EQ( 0, parseSigned<int>("0") );
@@ -77,6 +84,13 @@ TEST_F(ButMplParse, ConstexprSigned)
     constexpr auto n = parseSigned<int>("+42");
     EXPECT_EQ( 42, n );
   }
+}
+
+
+TEST_F(ButMplParse, SignedOnIteratorRange)
+{
+  const auto str = "x-42y";
+  EXPECT_EQ( -42, parseSigned<int>(str+1, str+4) );
 }
 
 }
