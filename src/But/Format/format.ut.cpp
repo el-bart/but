@@ -31,7 +31,6 @@ TEST_F(ButFormat, OneArgument)
 }
 
 
-/*
 TEST_F(ButFormat, MultipleArguments)
 {
   constexpr auto fmt = BUT_FORMAT("$2 $1");
@@ -41,16 +40,17 @@ TEST_F(ButFormat, MultipleArguments)
 }
 
 
+/*
 TEST_F(ButFormat, RepeatedArguments)
 {
-  {
-    constexpr auto fmt = BUT_FORMAT("$1 $2 $1");
-    EXPECT_EQ( 2u, fmt.expectedArguments() );
-    EXPECT_EQ( "1 2 1", fmt.format(1,2) );
-  }
+  constexpr auto fmt = BUT_FORMAT("$1 $2 $1");
+  EXPECT_EQ( 2u, fmt.expectedArguments() );
+  EXPECT_EQ( "1 2 1", fmt.format(1,2) );
 }
+*/
 
 
+/*
 TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
 {
   {
