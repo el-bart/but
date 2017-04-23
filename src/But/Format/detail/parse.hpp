@@ -13,18 +13,24 @@ namespace detail
 constexpr auto parseBraceVariable(State& st, char const* fmt)
 {
   st.type_ = State::Type::Value;
-  throwOnInvalidSyntax( not isDigit(*fmt), "brace variable declaration is not followed by a number", fmt );
   st.end_ = fmt;
-  do
-  {
+  while( isDigit(*st.end_) )
     ++st.end_;
-  }
-  while( isDigit(*st.end_) );
   throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
-  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+2, st.end_);
+  const auto beginOffset = st.begin_[2] == 'V' ? 3 : 2;
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + beginOffset, st.end_);
   ++st.end_;
   return st.end_;
-  //return throwOnInvalidSyntax(true, "not yet implemented", fmt);        
+}
+
+constexpr auto parseBrace(State& st, char const* fmt)
+{
+  throwOnInvalidSyntax( isEos(*fmt), "brace variable declaration is not complete", fmt );
+  if( *fmt == 'V' )
+    ++fmt;
+  if( isDigit(*fmt) )
+    return parseBraceVariable(st, fmt+1);
+  return throwOnInvalidSyntax(true, "invalid brace variable init sequence", fmt);
 }
 
 constexpr auto parseSimpleVariable(State& st, char const* fmt)
@@ -51,12 +57,10 @@ constexpr auto parseVariable(State& st, char const* fmt)
   st.begin_ = fmt;
   ++fmt;
   throwOnInvalidSyntax( isEos(*fmt), "end of data while declaring a variable", fmt );
-
   if( isVariableBegin(*fmt) )   // "$$" case
     return parseStringVariable(st, fmt);
-
   if( *fmt=='{' )
-    return parseBraceVariable(st, fmt+1);
+    return parseBrace(st, fmt+1);
   return parseSimpleVariable(st, fmt);
 }
 

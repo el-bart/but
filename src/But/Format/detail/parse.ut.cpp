@@ -268,11 +268,86 @@ TEST_F(ButFormatDetailParse, BraceArgument)
   EXPECT_THROW( parse<10>("${} "), Invalid ) << "missing number";
   EXPECT_THROW( parse<10>("${-2}"), Invalid ) << "wrong number";
   EXPECT_THROW( parse<10>("${12"), Invalid ) << "brace not closed";
+  EXPECT_THROW( parse<10>("${"), Invalid ) << "no number and no closing brace";
 }
 
 
 TEST_F(ButFormatDetailParse, ValueArguments)
 {
+  {
+    constexpr auto ps = parse<3>("${V42}");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("${V42} beginning");
+    ASSERT_EQ( 2u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("in ${V42} the middle");
+    ASSERT_EQ( 3u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+    // 2
+    {
+      constexpr auto s = ps.segments_[2];
+      EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("the end ${V42}");
+    ASSERT_EQ( 2u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+  }
+
+  EXPECT_THROW( parse<10>("${V12x}"), Invalid ) << "invalid number";
+  EXPECT_THROW( parse<10>("${Voops}"), Invalid ) << "not a number";
+  EXPECT_THROW( parse<10>("${V} "), Invalid ) << "missing number";
+  EXPECT_THROW( parse<10>("${V-2}"), Invalid ) << "wrong number";
+  EXPECT_THROW( parse<10>("${V12"), Invalid ) << "brace not closed";
 }
 
 
