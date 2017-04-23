@@ -14,7 +14,7 @@ struct State
   {
     String,
     Value,
-    Type
+    TypeName
   };
 
   char const* begin_{nullptr};
