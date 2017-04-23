@@ -53,7 +53,7 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
   EXPECT_THROW( parse<10>("$"), Invalid ) << "parameter declaraion too short";
 
   {
-    constexpr auto ps = parse<3>("$$at the beginning");
+    constexpr auto ps = parse<2>("$$at the beginning");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -93,7 +93,7 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
   }
 
   {
-    constexpr auto ps = parse<3>("at the end$$");
+    constexpr auto ps = parse<2>("at the end$$");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -109,14 +109,14 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
     }
   }
 
-  EXPECT_THROW( parse<10>("oops $"), Invalid ) << "parameter declaraion too short";
+  EXPECT_THROW( parse<2>("oops $"), Invalid ) << "parameter declaraion too short";
 }
 
 
 TEST_F(ButFormatDetailParse, SimpleArgument)
 {
   {
-    constexpr auto ps = parse<3>("$42");
+    constexpr auto ps = parse<1>("$42");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
@@ -125,7 +125,7 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
   }
 
   {
-    constexpr auto ps = parse<3>("$42 beginning");
+    constexpr auto ps = parse<2>("$42 beginning");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -167,7 +167,7 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
   }
 
   {
-    constexpr auto ps = parse<3>("the end $42");
+    constexpr auto ps = parse<2>("the end $42");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -184,18 +184,18 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
     }
   }
 
-  EXPECT_THROW( parse<10>("$12x"), Invalid ) << "invalid number";
-  EXPECT_THROW( parse<10>("$oops"), Invalid ) << "not a number";
-  EXPECT_THROW( parse<10>("$ "), Invalid ) << "missing number";
-  EXPECT_THROW( parse<10>("$-2"), Invalid ) << "wrong number";
-  EXPECT_THROW( parse<10>("$2}"), Invalid ) << "missing beginning brace";
+  EXPECT_THROW( parse<2>("$12x"), Invalid ) << "invalid number";
+  EXPECT_THROW( parse<2>("$oops"), Invalid ) << "not a number";
+  EXPECT_THROW( parse<2>("$ "), Invalid ) << "missing number";
+  EXPECT_THROW( parse<2>("$-2"), Invalid ) << "wrong number";
+  EXPECT_THROW( parse<2>("$2}"), Invalid ) << "missing beginning brace";
 }
 
 
 TEST_F(ButFormatDetailParse, BraceArgument)
 {
   {
-    constexpr auto ps = parse<3>("${42}");
+    constexpr auto ps = parse<1>("${42}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
@@ -204,7 +204,7 @@ TEST_F(ButFormatDetailParse, BraceArgument)
   }
 
   {
-    constexpr auto ps = parse<3>("${42} beginning");
+    constexpr auto ps = parse<2>("${42} beginning");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -246,7 +246,7 @@ TEST_F(ButFormatDetailParse, BraceArgument)
   }
 
   {
-    constexpr auto ps = parse<3>("the end ${42}");
+    constexpr auto ps = parse<2>("the end ${42}");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -275,7 +275,7 @@ TEST_F(ButFormatDetailParse, BraceArgument)
 TEST_F(ButFormatDetailParse, ValueArguments)
 {
   {
-    constexpr auto ps = parse<3>("${V42}");
+    constexpr auto ps = parse<1>("${V42}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
@@ -284,7 +284,7 @@ TEST_F(ButFormatDetailParse, ValueArguments)
   }
 
   {
-    constexpr auto ps = parse<3>("${V42} beginning");
+    constexpr auto ps = parse<2>("${V42} beginning");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -326,7 +326,7 @@ TEST_F(ButFormatDetailParse, ValueArguments)
   }
 
   {
-    constexpr auto ps = parse<3>("the end ${V42}");
+    constexpr auto ps = parse<2>("the end ${V42}");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -354,7 +354,7 @@ TEST_F(ButFormatDetailParse, ValueArguments)
 TEST_F(ButFormatDetailParse, TypeArguments)
 {
   {
-    constexpr auto ps = parse<3>("${T42}");
+    constexpr auto ps = parse<1>("${T42}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
@@ -363,7 +363,7 @@ TEST_F(ButFormatDetailParse, TypeArguments)
   }
 
   {
-    constexpr auto ps = parse<3>("${T42} beginning");
+    constexpr auto ps = parse<2>("${T42} beginning");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -405,7 +405,7 @@ TEST_F(ButFormatDetailParse, TypeArguments)
   }
 
   {
-    constexpr auto ps = parse<3>("the end ${T42}");
+    constexpr auto ps = parse<2>("the end ${T42}");
     ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
@@ -433,7 +433,7 @@ TEST_F(ButFormatDetailParse, TypeArguments)
 TEST_F(ButFormatDetailParse, EmptyCommentArgument)
 {
   {
-    constexpr auto ps = parse<3>("${42#}");
+    constexpr auto ps = parse<1>("${42#}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${42#}", std::string(s.begin_, s.end_) );
@@ -442,7 +442,7 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
   }
 
   {
-    constexpr auto ps = parse<3>("${T42#}");
+    constexpr auto ps = parse<1>("${T42#}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${T42#}", std::string(s.begin_, s.end_) );
@@ -451,7 +451,7 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
   }
 
   {
-    constexpr auto ps = parse<3>("${V42#}");
+    constexpr auto ps = parse<1>("${V42#}");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${V42#}", std::string(s.begin_, s.end_) );
@@ -459,10 +459,10 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
-  EXPECT_THROW( parse<10>("$12#"), Invalid ) << "comment on non-brace variable reference";
-  EXPECT_THROW( parse<10>("${12#"), Invalid ) << "missing closing brace";
-  EXPECT_THROW( parse<10>("${T12#"), Invalid ) << "missing closing brace";
-  EXPECT_THROW( parse<10>("${V12#"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<2>("$12#"), Invalid ) << "comment on non-brace variable reference";
+  EXPECT_THROW( parse<2>("${12#"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<2>("${T12#"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( parse<2>("${V12#"), Invalid ) << "missing closing brace";
 }
 
 
@@ -504,14 +504,14 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
 
 TEST_F(ButFormatDetailParse, ArgumentsArrayCanBeLargerThanNeeded)
 {
-  constexpr auto ps = parse<42>("");    // smoke test, in fact... ;)
-  ASSERT_EQ( 0u, ps.count_ );
+  constexpr auto ps = parse<42>("foo/bar"); // smoke test, in fact... ;)
+  ASSERT_EQ( 1u, ps.count_ );
 }
 
 
 TEST_F(ButFormatDetailParse, BracesWithoutLeadingDolarSignHaveNoSpecialMinning)
 {
-  constexpr auto ps = parse<3>("}foo{}bar{");
+  constexpr auto ps = parse<1>("}foo{}bar{");
   ASSERT_EQ( 1u, ps.count_ );
   constexpr auto s = ps.segments_[0];
   EXPECT_EQ( "}foo{}bar{", std::string(s.begin_, s.end_) );
@@ -595,9 +595,9 @@ TEST_F(ButFormatDetailParse, MixedTokens)
 
 TEST_F(ButFormatDetailParse, MiscInvalidFormats)
 {
-  EXPECT_THROW( parse<10>("${X12}"), Invalid ) << "invalid modifier";
-  EXPECT_THROW( parse<10>("$V12"), Invalid ) << "explicit variable without brace is not possible";
-  EXPECT_THROW( parse<10>("$T12"), Invalid ) << "explicit type name without brace is not possible";
+  EXPECT_THROW( parse<2>("${X12}"), Invalid ) << "invalid modifier";
+  EXPECT_THROW( parse<2>("$V12"), Invalid ) << "explicit variable without brace is not possible";
+  EXPECT_THROW( parse<2>("$T12"), Invalid ) << "explicit type name without brace is not possible";
 }
 
 }
