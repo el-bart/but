@@ -7,11 +7,11 @@ using But::Format::detail::argumentsUsageCount;
 namespace
 {
 
-struct ButFormatDetailArgumentsCount: public testing::Test
+struct ButFormatDetailArgumentsUsageCount: public testing::Test
 { };
 
 
-TEST_F(ButFormatDetailArgumentsCount, SimpleStrings)
+TEST_F(ButFormatDetailArgumentsUsageCount, SimpleStrings)
 {
   {
     constexpr auto cnt = argumentsUsageCount("");
@@ -36,7 +36,7 @@ TEST_F(ButFormatDetailArgumentsCount, SimpleStrings)
 }
 
 
-TEST_F(ButFormatDetailArgumentsCount, OneArgument)
+TEST_F(ButFormatDetailArgumentsUsageCount, OneArgument)
 {
   {
     constexpr auto cnt = argumentsUsageCount("$1");
@@ -89,7 +89,7 @@ TEST_F(ButFormatDetailArgumentsCount, OneArgument)
 }
 
 
-TEST_F(ButFormatDetailArgumentsCount, ExceptionIsThrownOnInvalidFormat)
+TEST_F(ButFormatDetailArgumentsUsageCount, ExceptionIsThrownOnInvalidFormat)
 {
   EXPECT_THROW( argumentsUsageCount("$1oops"), Invalid ) << "invalid number";
   EXPECT_THROW( argumentsUsageCount("${1"), Invalid ) << "missing closing brace";
@@ -100,28 +100,28 @@ TEST_F(ButFormatDetailArgumentsCount, ExceptionIsThrownOnInvalidFormat)
 }
 
 
-TEST_F(ButFormatDetailArgumentsCount, MultipleArguments)
+TEST_F(ButFormatDetailArgumentsUsageCount, MultipleArguments)
 {
   constexpr auto cnt = argumentsUsageCount("test $1 data $3\t$2\n");
   EXPECT_EQ( 3u, cnt );
 }
 
 
-TEST_F(ButFormatDetailArgumentsCount, MultipleArgumentsMultipleStyles)
+TEST_F(ButFormatDetailArgumentsUsageCount, MultipleArgumentsMultipleStyles)
 {
   constexpr auto cnt = argumentsUsageCount("test $1 data ${3} ${V2#xx} ${T4}");
   EXPECT_EQ( 4u, cnt );
 }
 
 
-TEST_F(ButFormatDetailArgumentsCount, RepeatedArguments)
+TEST_F(ButFormatDetailArgumentsUsageCount, RepeatedArguments)
 {
   constexpr auto cnt = argumentsUsageCount("test $1 data $1\t$2\n");
   EXPECT_EQ( 3u, cnt );
 }
 
 
-TEST_F(ButFormatDetailArgumentsCount, NonContinuousArguments)
+TEST_F(ButFormatDetailArgumentsUsageCount, NonContinuousArguments)
 {
   constexpr auto cnt = argumentsUsageCount("test $42 data $1");
   EXPECT_EQ( 2u, cnt );
