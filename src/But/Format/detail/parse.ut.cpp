@@ -36,49 +36,119 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     EXPECT_EQ( "test\n\r\tstring", std::string(s.begin_, s.end_) );
     EXPECT_EQ( State::Type::String, s.type_ );
   }
+}
 
+
+TEST_F(ButFormatDetailParse, EscapeSequence)
+{
   {
     constexpr auto ps = parse<1>("$$");
     ASSERT_EQ( 1u, ps.count_ );
     constexpr auto s = ps.segments_[0];
-    EXPECT_EQ( "$$", std::string(s.begin_, s.end_) );
+    EXPECT_TRUE( s.begin_ != s.end_ );
+    EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
     EXPECT_EQ( State::Type::String, s.type_ );
   }
 
+  EXPECT_THROW( parse<10>("$"), Invalid ) << "parameter declaraion too short";
+
   {
-    constexpr auto ps = parse<3>("some $$ non-var");
-    ASSERT_EQ( 3u, ps.count_ );
+    constexpr auto ps = parse<3>("$$at the beginning");
+    ASSERT_EQ( 2u, ps.count_ );
     // 0
     {
       constexpr auto s = ps.segments_[0];
-      EXPECT_EQ( "some ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
       EXPECT_EQ( State::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
-      EXPECT_EQ( "$$", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( "at the beginning", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("in the$$middle");
+    ASSERT_EQ( 3u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "in the", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
       EXPECT_EQ( State::Type::String, s.type_ );
     }
     // 2
     {
       constexpr auto s = ps.segments_[2];
-      EXPECT_EQ( " non-var", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( "middle", std::string(s.begin_, s.end_) );
       EXPECT_EQ( State::Type::String, s.type_ );
     }
   }
+
+  {
+    constexpr auto ps = parse<3>("at the end$$");
+    ASSERT_EQ( 2u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "at the end", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  EXPECT_THROW( parse<10>("oops $"), Invalid ) << "parameter declaraion too short";
 }
 
 
 TEST_F(ButFormatDetailParse, SimpleArgument)
 {
   {
-    constexpr auto ps = parse<3>("some $42 var");
+    constexpr auto ps = parse<3>("$42");
+    ASSERT_EQ( 1u, ps.count_ );
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("$42 beginning");
+    ASSERT_EQ( 2u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("in $42 the middle");
     ASSERT_EQ( 3u, ps.count_ );
     // 0
     {
       constexpr auto s = ps.segments_[0];
-      EXPECT_EQ( "some ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
       EXPECT_EQ( State::Type::String, s.type_ );
     }
     // 1
@@ -91,56 +161,40 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
     // 2
     {
       constexpr auto s = ps.segments_[2];
-      EXPECT_EQ( " var", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
       EXPECT_EQ( State::Type::String, s.type_ );
     }
   }
 
   {
-    constexpr auto ps = parse<3>("some $42");
+    constexpr auto ps = parse<3>("the end $42");
     ASSERT_EQ( 2u, ps.count_ );
-    constexpr auto s = ps.segments_[1];
-    EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
-    EXPECT_EQ( 42u, s.referencedArgument_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
   }
 
-  {
-    constexpr auto ps = parse<3>("some $42 xx");
-    ASSERT_EQ( 3u, ps.count_ );
-    constexpr auto s = ps.segments_[1];
-    EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
-    EXPECT_EQ( 42u, s.referencedArgument_ );
-  }
+  EXPECT_THROW( parse<10>("$12x"), Invalid ) << "invalid number";
+  EXPECT_THROW( parse<10>("$oops"), Invalid ) << "not a number";
+  EXPECT_THROW( parse<10>("$ "), Invalid ) << "missing number";
+  EXPECT_THROW( parse<10>("$-2"), Invalid ) << "wrong number";
 }
 
 
 TEST_F(ButFormatDetailParse, BraceArgument)
 {
-/*
-  constexpr auto ps = parse<3>("some ${42} var");
-  ASSERT_EQ( 3u, ps.count_ );
-  // 0
-  {
-    constexpr auto s = ps.segments_[0];
-    EXPECT_EQ( "some ", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
-  }
-  // 1
-  {
-    constexpr auto s = ps.segments_[1];
-    EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
-    EXPECT_EQ( 42u, s.referencedArgument_ );
-  }
-  // 2
-  {
-    constexpr auto s = ps.segments_[2];
-    EXPECT_EQ( " var", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
-  }
-  */
+  EXPECT_THROW( parse<10>("${12"), Invalid ) << "brace not closed";
+  EXPECT_THROW( parse<10>("${x}"), Invalid ) << "invalid number";
 }
 
 
@@ -161,23 +215,13 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
 
 TEST_F(ButFormatDetailParse, ArgumentsArrayCanBeLargerThanNeeded)
 {
+  constexpr auto ps = parse<42>("");    // smoke test, in fact... ;)
+  ASSERT_EQ( 0u, ps.count_ );
 }
 
 
 TEST_F(ButFormatDetailParse, MixedTokens)
 {
-}
-
-
-TEST_F(ButFormatDetailParse, InvalidFormats)
-{
-  EXPECT_THROW( parse<10>("$"), Invalid ) << "parameter declaraion too short";
-  EXPECT_THROW( parse<10>("oops $"), Invalid ) << "parameter declaraion too short";
-  EXPECT_THROW( parse<10>("$oops"), Invalid ) << "not a number";
-  EXPECT_THROW( parse<10>("${12"), Invalid ) << "brace not closed";
-  EXPECT_THROW( parse<10>("$12x"), Invalid ) << "invalid number";
-  EXPECT_THROW( parse<10>("${x}"), Invalid ) << "invalid number";
-  EXPECT_THROW( parse<10>("$ "), Invalid ) << "missing number";
 }
 
 }
