@@ -2,10 +2,14 @@
 #include "argumentsUsageCount.hpp"
 
 using But::Format::Invalid;
-using But::Format::detail::argumentsUsageCount;
 
 namespace
 {
+
+constexpr auto argumentsUsageCount(char const* fmt) // helper for a more compact syntax
+{
+  return But::Format::detail::argumentsUsageCount<100>(fmt);
+}
 
 struct ButFormatDetailArgumentsUsageCount: public testing::Test
 { };
