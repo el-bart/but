@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
+#include <cassert>
 #include "detail/parse.hpp"
+#include "detail/argumentsCount.hpp"
 
 namespace But
 {
@@ -34,12 +36,14 @@ public:
     format_{format}
   { }
 
+  //constexpr auto expectedArguments() const { return detail::argumentsCount(ps_); } // TODO: will not work with static_assert...
   static constexpr auto expectedArguments() { return N; }
 
   template<typename ...Args>
-  std::string format(Args const& .../*args*/) const
+  std::string format(Args const& ...args) const
   {
-    //static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
+    static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
+    assert( expectedArguments() == detail::argumentsCount(ps_) );
     // TODO: static assert here...
     return format_;
   }
