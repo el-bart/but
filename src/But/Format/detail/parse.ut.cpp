@@ -18,6 +18,7 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     constexpr auto ps = parse<1>("");
     ASSERT_EQ( 0u, ps.count_ );
   }
+
   {
     constexpr auto ps = parse<1>("test string");
     ASSERT_EQ( 1u, ps.count_ );
@@ -26,6 +27,7 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     EXPECT_EQ( "test string", std::string(s.begin_, s.end_) );
     EXPECT_EQ( State::Type::String, s.type_ );
   }
+
   {
     constexpr auto ps = parse<1>("test\n\r\tstring");
     ASSERT_EQ( 1u, ps.count_ );
@@ -34,6 +36,7 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     EXPECT_EQ( "test\n\r\tstring", std::string(s.begin_, s.end_) );
     EXPECT_EQ( State::Type::String, s.type_ );
   }
+
   {
     constexpr auto ps = parse<1>("$$");
     ASSERT_EQ( 1u, ps.count_ );
@@ -41,6 +44,7 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     EXPECT_EQ( "$$", std::string(s.begin_, s.end_) );
     EXPECT_EQ( State::Type::String, s.type_ );
   }
+
   {
     constexpr auto ps = parse<3>("some $$ non-var");
     ASSERT_EQ( 3u, ps.count_ );
@@ -66,8 +70,77 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
 }
 
 
-TEST_F(ButFormatDetailParse, SimpleArguments)
+TEST_F(ButFormatDetailParse, SimpleArgument)
 {
+  {
+    constexpr auto ps = parse<3>("some $42 var");
+    ASSERT_EQ( 3u, ps.count_ );
+    // 0
+    {
+      constexpr auto s = ps.segments_[0];
+      EXPECT_EQ( "some ", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+    // 1
+    {
+      constexpr auto s = ps.segments_[1];
+      EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( 42u, s.referencedArgument_ );
+    }
+    // 2
+    {
+      constexpr auto s = ps.segments_[2];
+      EXPECT_EQ( " var", std::string(s.begin_, s.end_) );
+      EXPECT_EQ( State::Type::String, s.type_ );
+    }
+  }
+
+  {
+    constexpr auto ps = parse<3>("some $42");
+    ASSERT_EQ( 2u, ps.count_ );
+    constexpr auto s = ps.segments_[1];
+    EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+
+  {
+    constexpr auto ps = parse<3>("some $42 xx");
+    ASSERT_EQ( 3u, ps.count_ );
+    constexpr auto s = ps.segments_[1];
+    EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+}
+
+
+TEST_F(ButFormatDetailParse, BraceArgument)
+{
+/*
+  constexpr auto ps = parse<3>("some ${42} var");
+  ASSERT_EQ( 3u, ps.count_ );
+  // 0
+  {
+    constexpr auto s = ps.segments_[0];
+    EXPECT_EQ( "some ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::String, s.type_ );
+  }
+  // 1
+  {
+    constexpr auto s = ps.segments_[1];
+    EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+  // 2
+  {
+    constexpr auto s = ps.segments_[2];
+    EXPECT_EQ( " var", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( State::Type::String, s.type_ );
+  }
+  */
 }
 
 
@@ -101,6 +174,10 @@ TEST_F(ButFormatDetailParse, InvalidFormats)
   EXPECT_THROW( parse<10>("$"), Invalid ) << "parameter declaraion too short";
   EXPECT_THROW( parse<10>("oops $"), Invalid ) << "parameter declaraion too short";
   EXPECT_THROW( parse<10>("$oops"), Invalid ) << "not a number";
+  EXPECT_THROW( parse<10>("${12"), Invalid ) << "brace not closed";
+  EXPECT_THROW( parse<10>("$12x"), Invalid ) << "invalid number";
+  EXPECT_THROW( parse<10>("${x}"), Invalid ) << "invalid number";
+  EXPECT_THROW( parse<10>("$ "), Invalid ) << "missing number";
 }
 
 }

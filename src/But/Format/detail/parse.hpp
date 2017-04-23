@@ -1,6 +1,7 @@
 #pragma once
 #include "ParserState.hpp"
 #include "common.hpp"
+#include "But/Mpl/parse.hpp"
 
 namespace But
 {
@@ -9,9 +10,28 @@ namespace Format
 namespace detail
 {
 
-constexpr auto parseVariable(State& , char const* fmt)
+constexpr auto parseSimpleVariable(State& st, char const* fmt)
 {
-  return throwOnInvalidSyntax( true, "not yet implemented", fmt );
+  st.type_ = State::Type::Value;
+  st.begin_ = fmt;
+  st.end_  = fmt+1;
+  while( isDigit(*st.end_) )
+    ++st.end_;
+  throwOnInvalidSyntax( not isEos(*st.end_) && not isSpace(*st.end_), "variable does not end with end of data not space", st.end_ );
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+1, st.end_);
+  return st.end_;
+}
+
+constexpr auto parseVariable(State& st, char const* fmt)
+{
+  st.type_ = State::Type::Value;
+  st.begin_ = fmt;
+  st.end_  = fmt+1;
+  while( isDigit(*st.end_) )
+    ++st.end_;
+  throwOnInvalidSyntax( not isEos(*st.end_) && not isSpace(*st.end_), "variable does not end with end of data not space", st.end_ );
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+1, st.end_);
+  return st.end_;
 }
 
 
