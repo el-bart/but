@@ -102,17 +102,29 @@ TEST_F(ButFormatDetailArgumentsCount, ExceptionIsThrownOnInvalidFormat)
 
 TEST_F(ButFormatDetailArgumentsCount, MultipleArguments)
 {
-  {
-    constexpr auto cnt = argumentsCount("test $1 data $3\t$4\n");
-    EXPECT_EQ( 3u, cnt );
-  }
+  constexpr auto cnt = argumentsCount("test $1 data $3\t$2\n");
+  EXPECT_EQ( 3u, cnt );
 }
 
 
 TEST_F(ButFormatDetailArgumentsCount, MultipleArgumentsMultipleStyles)
 {
-  constexpr auto cnt = argumentsCount("test $1 data ${3} ${V4#xx} ${T8}");
+  constexpr auto cnt = argumentsCount("test $1 data ${3} ${V2#xx} ${T4}");
   EXPECT_EQ( 4u, cnt );
+}
+
+
+TEST_F(ButFormatDetailArgumentsCount, RepeatedArguments)
+{
+  constexpr auto cnt = argumentsCount("test $1 data $1\t$2\n");
+  EXPECT_EQ( 2u, cnt );
+}
+
+
+TEST_F(ButFormatDetailArgumentsCount, NonContinuousArguments)
+{
+  constexpr auto cnt = argumentsCount("test $42 data $1");
+  EXPECT_EQ( 42u, cnt );
 }
 
 }
