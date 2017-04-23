@@ -11,6 +11,7 @@ namespace detail
 template<unsigned N>
 constexpr auto argumentsCount(ParserState<N> const& ps)
 {
+  // TODO: repeated arguments should not be taken into account!
   auto count = 0u;
   for(auto i=0u; i<ps.count_; ++i)
   {
