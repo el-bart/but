@@ -31,11 +31,12 @@ public:
     format_{format}
   { }
 
-  constexpr auto expectedArguments() const { return N; }
+  static constexpr auto expectedArguments() { return N; }
 
   template<typename ...Args>
   std::string format(Args const& .../*args*/) const
   {
+    //static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
     // TODO: static assert here...
     return format_;
   }
