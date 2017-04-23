@@ -33,7 +33,7 @@ constexpr auto parseStringVariable(State& st, char const* fmt)
 {
   st.type_ = State::Type::String;
   st.end_ = fmt;
-  return fmt;
+  return fmt+1;
 }
 
 constexpr auto parseVariable(State& st, char const* fmt)
@@ -43,7 +43,7 @@ constexpr auto parseVariable(State& st, char const* fmt)
   throwOnInvalidSyntax( isEos(*fmt), "end of data while declaring a variable", fmt );
 
   if( isVariableBegin(*fmt) )   // "$$" case
-    return parseStringVariable(st, fmt+1);
+    return parseStringVariable(st, fmt);
 
   if( *fmt=='{' )
     return parseBraceVariable(st, fmt+1);
