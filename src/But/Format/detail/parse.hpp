@@ -12,14 +12,24 @@ namespace detail
 
 constexpr auto parseBraceVariable(State& st, char const* fmt)
 {
-  (void)st;
-  // TODO...
-  return throwOnInvalidSyntax(true, "not yet implemented", fmt);
+  st.type_ = State::Type::Value;
+  throwOnInvalidSyntax( not isDigit(*fmt), "brace variable declaration is not followed by a number", fmt );
+  st.end_ = fmt;
+  do
+  {
+    ++st.end_;
+  }
+  while( isDigit(*st.end_) );
+  throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
+  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+2, st.end_);
+  ++st.end_;
+  return st.end_;
+  //return throwOnInvalidSyntax(true, "not yet implemented", fmt);        
 }
 
 constexpr auto parseSimpleVariable(State& st, char const* fmt)
 {
-  throwOnInvalidSyntax( not isDigit(*fmt), "simple variable declaration is not followed with a number", fmt );
+  throwOnInvalidSyntax( not isDigit(*fmt), "simple variable declaration is not followed by a number", fmt );
   st.type_ = State::Type::Value;
   st.end_  = fmt+1;
   while( isDigit(*st.end_) )
