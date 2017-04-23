@@ -61,7 +61,7 @@ constexpr auto consumeUntilEndOfVariable(char const* fmt)
 
 /** @brief helper function that determines number of arguments, based on a simplified syntax grammar.
  */
-constexpr auto argumentsCount(char const* fmt)
+constexpr auto argumentsUsageCount(char const* fmt)
 {
   auto args = 0u;
   while(*fmt)
