@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "detail/parse.hpp"
 
 namespace But
 {
@@ -26,8 +27,10 @@ public:
    *          ${VN} - the same as $N.
    *          ${VN#some text} - the same as $N, but allowing some textual description along (useful for translations!).
    *          $$ - liternal '$' character.
+   *  @note all numbers are 0-based (i.e. 1st arguments has index 0).
    */
   constexpr explicit Parsed(char const* format):
+    ps_{ detail::parse<N+1>(format) },
     format_{format}
   { }
 
@@ -42,6 +45,7 @@ public:
   }
 
 private:
+  detail::ParserState<N+1> ps_;
   char const* format_;
 };
 
