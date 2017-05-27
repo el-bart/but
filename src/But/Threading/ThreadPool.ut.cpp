@@ -103,7 +103,7 @@ TYPED_TEST_P(ButThreadingThreadPool, NoReturnValueSmokeTest)
 
 struct CustomExceptionType { };
 
-TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVersion)
+TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactType)
 {
   // boost does not support this feature...
   if( std::is_same<decltype(this->tp_), ThreadPoolBoost>::value )
@@ -173,7 +173,7 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
         ForwardingException,
         MultipleCalls,
         NoReturnValueSmokeTest,
-        ForwardingExceptionWithAnExactTypeInStdVersion,
+        ForwardingExceptionWithAnExactType,
         ProcessingIsRunningInSeparateThread,
         GettingThreadPoolSize,
         RunningOnMultipleThreads
