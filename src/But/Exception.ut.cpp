@@ -1,6 +1,7 @@
 #include <limits>
 #include <typeinfo>
 #include <type_traits>
+#include <boost/exception/all.hpp>
 
 #include "gtest/gtest.h"
 #include "Exception.hpp"
@@ -42,9 +43,8 @@ TEST_F(ButException, DefiningAndThrowing)
     BUT_THROW(Problem, "what the hell is that? " << 52 << "? should be " << 2*21 << "!");
     FAIL() << "no exception has been thrown";
   }
-  catch(Exception const& ex)
+  catch(Problem const& ex)
   {
-    EXPECT_EQ( std::string(typeid(ex).name()), typeid(Problem).name() );
     const std::string m = ex.what();
     EXPECT_TRUE( m.find(__FILE__) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find(BOOST_CURRENT_FUNCTION) != std::string::npos ) << "actuall got: " << m;
@@ -59,6 +59,7 @@ TEST_F(ButException, MultipleDeriving)
   BUT_DEFINE_EXCEPTION(NewProblem, Problem, "derived");
   BUT_DEFINE_EXCEPTION(TopProblem, NewProblem, "last");
   EXPECT_TRUE( (std::is_base_of<Problem, NewProblem>::value) );
+
   try
   {
     BUT_THROW(TopProblem, "whatever " << 10);
@@ -66,11 +67,30 @@ TEST_F(ButException, MultipleDeriving)
   }
   catch(TopProblem const& ex)
   {
-    EXPECT_EQ( std::string(typeid(ex).name()), typeid(TopProblem).name() );
     const std::string m = ex.what();
     EXPECT_TRUE( m.find(__FILE__) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find(BOOST_CURRENT_FUNCTION) != std::string::npos ) << "actuall got: " << m;
     EXPECT_TRUE( m.find("base: derived: last: whatever 10") != std::string::npos ) << "actuall got: " << m;
+  }
+
+  try
+  {
+    BUT_THROW(TopProblem, "whatever " << 10);
+    FAIL() << "no exception has been thrown";
+  }
+  catch(NewProblem const&)
+  {
+    // ok
+  }
+
+  try
+  {
+    BUT_THROW(TopProblem, "whatever " << 10);
+    FAIL() << "no exception has been thrown";
+  }
+  catch(Problem const&)
+  {
+    // ok
   }
 }
 
@@ -100,6 +120,50 @@ TEST_F(ButException, DefiningWithEmptyMessage)
   catch(Sth const&)
   {
   }
+}
+
+
+TEST_F(ButException, ForwardingExactExceptionTypeWithStd)
+{
+  BUT_DEFINE_EXCEPTION(Sth, Exception, "sth");
+  try
+  {
+    BUT_THROW(Sth, "test");
+  }
+  catch(...)
+  {
+    try
+    {
+      std::rethrow_exception( std::current_exception() );
+    }
+    catch(Sth const&)
+    {
+      return; // ok
+    }
+  }
+  FAIL() << "oops...";
+}
+
+
+TEST_F(ButException, ForwardingExactExceptionTypeWithBoost)
+{
+  BUT_DEFINE_EXCEPTION(Sth, Exception, "sth");
+  try
+  {
+    BUT_THROW(Sth, "test");
+  }
+  catch(...)
+  {
+    try
+    {
+      boost::rethrow_exception( boost::current_exception() );
+    }
+    catch(Sth const&)
+    {
+      return; // ok
+    }
+  }
+  FAIL() << "oops...";
 }
 
 }
