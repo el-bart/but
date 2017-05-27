@@ -105,7 +105,7 @@ struct CustomExceptionType { };
 
 TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVersion)
 {
-  // this test does not work in boost, with clang... :/
+  // boost does not support this feature...
   if( std::is_same<decltype(this->tp_), ThreadPoolBoost>::value )
     return;
   auto f = this->tp_.run( []()->int { throw CustomExceptionType{}; } );
