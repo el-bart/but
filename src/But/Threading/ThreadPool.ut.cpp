@@ -71,7 +71,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ForwardingException)
 {
   auto f = this->tp_.run( []()->int { throw std::runtime_error{"expected"}; } );
   ASSERT_TRUE( waitForFuture(f) );
-  EXPECT_ANY_THROW( f.get() );  // note: boost throws a different exception type here...
+  EXPECT_THROW( f.get(), std::runtime_error );
 }
 
 
@@ -103,9 +103,9 @@ TYPED_TEST_P(ButThreadingThreadPool, NoReturnValueSmokeTest)
 
 struct CustomExceptionType { };
 
-TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactTypeInStdVersion)
+TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactType)
 {
-  // this test does not work in boost... :/
+  // boost does not support this feature...
   if( std::is_same<decltype(this->tp_), ThreadPoolBoost>::value )
     return;
   auto f = this->tp_.run( []()->int { throw CustomExceptionType{}; } );
@@ -173,7 +173,7 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
         ForwardingException,
         MultipleCalls,
         NoReturnValueSmokeTest,
-        ForwardingExceptionWithAnExactTypeInStdVersion,
+        ForwardingExceptionWithAnExactType,
         ProcessingIsRunningInSeparateThread,
         GettingThreadPoolSize,
         RunningOnMultipleThreads

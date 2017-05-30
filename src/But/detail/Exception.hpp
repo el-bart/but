@@ -3,6 +3,7 @@
 #include <utility>
 #include <stdexcept>
 #include <boost/current_function.hpp>
+#include <boost/exception/enable_current_exception.hpp>
 
 namespace But
 {
@@ -35,7 +36,7 @@ namespace detail
   { \
     std::stringstream ss; \
     ss << msgExpr; \
-    throw type{ __FILE__, __LINE__, BOOST_CURRENT_FUNCTION, ss.str() }; \
+    throw boost::enable_current_exception( type{ __FILE__, __LINE__, BOOST_CURRENT_FUNCTION, ss.str() } ); \
   } while(false)
 
 }

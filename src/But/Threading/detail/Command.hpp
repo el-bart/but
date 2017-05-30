@@ -39,10 +39,10 @@ struct Task final: public Command
   }
 
   template<typename Ignore>
-    void runAndSetValue(Ignore const*)
-    {
-      promise_.set_value( f_() );
-    }
+  void runAndSetValue(Ignore const*)
+  {
+    promise_.set_value( f_() );
+  }
 
   F f_;
   typename Policy::template promise_type<decltype(f_())> promise_;

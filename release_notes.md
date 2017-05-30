@@ -6,7 +6,9 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * automated docker SDK build on dockerhub: baszerr/but-sdk
   * Mpl::parse{Signed,Unsigned} - number parsing, that works at compile time and runtime.
+  * BUT_THROW() now throws boost::current_exception()-compatible types (boost does not work with C++11 correctly here).
   * Container::Array - a temporary std::array<> replacement, that works with constexpr functions.
   * Mpl::NamedVariadicTemplate now supports getting arguments count.
   * 'gold' is now used as a default linkder.

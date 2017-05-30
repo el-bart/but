@@ -2,7 +2,6 @@
 #include <sstream>
 #include <utility>
 #include <stdexcept>
-#include <boost/current_function.hpp>
 #include "detail/Exception.hpp"
 
 namespace But
