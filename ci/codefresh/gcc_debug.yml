@@ -3,9 +3,7 @@ version: '1.0'
 steps:
   gcc_debug:
     image_name: baszerr/but-sdk
-    working_directory: ${{main_clone}}/build
+    working_directory: ${{main_clone}}
     description: building GCC/Debug
     commands:
-      - cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=${{main_clone}}/src/cmake/toolchains/gcc.cmake -DCMAKE_BUILD_TYPE=Debug ${{main_clone}}
-      - ninja
-      - ctest || ctest -V
+      - ./ci/.build Debug gcc none
