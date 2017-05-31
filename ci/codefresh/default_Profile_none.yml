@@ -1,0 +1,6 @@
+steps:
+  default_Profile_none:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/default_Profile_none

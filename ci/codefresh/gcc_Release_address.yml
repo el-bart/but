@@ -1,0 +1,6 @@
+steps:
+  gcc_Release_address:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/gcc_Release_address

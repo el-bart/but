@@ -1,0 +1,6 @@
+steps:
+  clang_Debug_undefined:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/clang_Debug_undefined
