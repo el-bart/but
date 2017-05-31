@@ -4,6 +4,10 @@ Basic Utilities and Tools is a set of useful helper functions, that make program
 
 following sections give a top-level overview on each part of the library.
 
+## CI
+
+* GCC/Debug: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=but&accountName=el-bart&date=1496260877780)
+
 
 ## basic content
  * Exception - allows to both define and throw exceptions in one line of code each. automatically
