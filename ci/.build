@@ -1,16 +1,13 @@
 #!/bin/bash
 set -ex
 
-if [ $# -ne 3 ]
+if [ $# -ne 0 ]
 then
-  echo "$0 <type> <toolchain> <sanitizer>" >&2
-  exit 2
+  echo "$0: this script takes no arguments"
+  exit 1
 fi
 
-TYPE=$1
-TOOLCHAIN=$2
-SANITIZER=$3
-shift 3
+read TOOLCHAIN TYPE SANITIZER <<< $(basename "$0" | tr '_' ' ')
 
 APP_DIR=$(dirname "$(readlink -e "$0")")
 SRC_DIR=$(readlink -e "$APP_DIR/..")
