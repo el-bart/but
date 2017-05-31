@@ -6,7 +6,8 @@ following sections give a top-level overview on each part of the library.
 
 ## CI
 
-* GCC/Debug: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=but&accountName=el-bart&date=1496260877780)
+* GCC / Debug / none: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=but&accountName=el-bart&date=1496261643920)
+* GCC / Release / none: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release&accountName=el-bart&date=1496261670532)
 
 
 ## basic content
