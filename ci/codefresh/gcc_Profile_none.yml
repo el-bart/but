@@ -1,3 +1,4 @@
+version: '1.0'
 steps:
   gcc_Profile_none:
     image: baszerr/but-sdk:latest

@@ -1,3 +1,4 @@
+version: '1.0'
 steps:
   gcc_Debug_thread:
     image: baszerr/but-sdk:latest

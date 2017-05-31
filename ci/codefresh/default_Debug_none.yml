@@ -1,3 +1,4 @@
+version: '1.0'
 steps:
   default_Debug_none:
     image: baszerr/but-sdk:latest

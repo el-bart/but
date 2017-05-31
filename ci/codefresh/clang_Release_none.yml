@@ -1,3 +1,4 @@
+version: '1.0'
 steps:
   clang_Release_none:
     image: baszerr/but-sdk:latest

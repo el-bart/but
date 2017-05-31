@@ -1,3 +1,4 @@
+version: '1.0'
 steps:
   gcc_Release_undefined:
     image: baszerr/but-sdk:latest
