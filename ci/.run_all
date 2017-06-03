@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+# enter project's root dir
+APP_DIR=$(dirname "$(readlink -e "$0")")
+cd "$APP_DIR"
+
+# all builds with ninja
+for bs in *
+do
+  [ -f "$bs" ] || continue
+  time "./$bs"
+done
