@@ -6,9 +6,58 @@ following sections give a top-level overview on each part of the library.
 
 ## CI
 
-* GCC / Debug / none: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none&accountName=el-bart)
-* GCC / Release / none: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20none&accountName=el-bart)
-* GCC / Profile / none: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Profile%20%2F%20none&accountName=el-bart)
+### GCC
+
+#### Debug
+
+* regular ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20address&accountName=el-bart&date=1496519038575)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20thread&accountName=el-bart&date=1496519496045)
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20undefined&accountName=el-bart&date=1496519496051)
+
+#### Release
+
+* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20none&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none6&accountName=el-bart&date=1496519748242)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none7&accountName=el-bart&date=1496519886857)
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20undefined&accountName=el-bart&date=1496519927539)
+
+#### Misc
+
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Profile%20%2F%20none&accountName=el-bart)
+* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20RelWithDebInfo%20%2F%20none&accountName=el-bart&date=1496519994332)
+
+
+### Clang
+
+#### Debug
+
+* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20none&accountName=el-bart&date=1496520094440)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20address&accountName=el-bart&date=1496520094475)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20thread&accountName=el-bart&date=1496520155288)
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20undefined&accountName=el-bart&date=1496520184432)
+
+#### Release
+
+* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20none&accountName=el-bart&date=1496520230975)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20address&accountName=el-bart&date=1496520357859)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20thread&accountName=el-bart&date=1496520402069)
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20undefined&accountName=el-bart&date=1496520434869)
+
+#### Misc
+
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Profile%20%2F%20none&accountName=el-bart&date=1496520465324)
+* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Relwithdebuginfo%20%2F%20none&accountName=el-bart&date=1496520535924)
+
+
+### Default
+
+* Debug: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Debug%20%2F%20none&accountName=el-bart&date=1496520535956)
+* Release: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Release%20%2F%20none&accountName=el-bart&date=1496520612011)
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Profile%20%2F%20none&accountName=el-bart&date=1496520644486)
+* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Relwithdebinfo%20%2F%20none&accountName=el-bart&date=1496520677976)
+
+
 
 
 ## basic content
