@@ -58,6 +58,10 @@ following sections give a top-level overview on each part of the library.
 * Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Relwithdebinfo%20%2F%20none&accountName=el-bart&date=1496520677976)
 
 
+### Misc
+
+* GNU/Make: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GNU%20%2F%20Make&accountName=el-bart&date=1496521102797)
+
 
 
 ## basic content
