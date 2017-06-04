@@ -6,6 +6,8 @@ following sections give a top-level overview on each part of the library.
 
 ## CI
 
+download automated build of ~[BUT's SDK Docker image](https://hub.docker.com/r/baszerr/but-sdk/), with a command: `docker pull baszerr/but-sdk`.
+
 ### GCC
 
 #### Debug
