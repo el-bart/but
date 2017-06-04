@@ -8,12 +8,23 @@ cd "$APP_DIR"
 # all builds with ninja
 ERRORS=0
 RUNS=0
+FAILED=""
 for bs in *
 do
   [ -f "$bs" ] || continue
   ((++RUNS))
-  time "./$bs" || ((++ERRORS))
+  time "./$bs" || { ((++ERRORS)) ; FAILED+=" $bs" ; }
 done
 
-echo "$0: found $ERRORS errors in total of $RUNS runs"
-exit "$ERRORS"
+if [ "$ERRORS" -gt 0 ]
+then
+  echo "$0: found $ERRORS errors in total of $RUNS configurations:"
+  for cfg in $FAILED
+  do
+    echo -e "\t$cfg"
+  done
+  exit 1
+else
+  echo "$0: total of $RUNS runs - all successful"
+  exit 0
+fi
