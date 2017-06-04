@@ -12,14 +12,14 @@ following sections give a top-level overview on each part of the library.
 
 * regular ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none&accountName=el-bart)
 * address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20address&accountName=el-bart)
-* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20thread&accountName=el-bart)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20thread&accountName=el-bart) (![GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
 * undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20undefined&accountName=el-bart)
 
 #### Release
 
 * regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20none&accountName=el-bart)
 * address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20address&accountName=el-bart)
-* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20thread&accountName=el-bart)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20thread&accountName=el-bart) (![GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
 * undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20undefined&accountName=el-bart)
 
 #### Misc
@@ -40,13 +40,13 @@ following sections give a top-level overview on each part of the library.
 #### Release
 
 * regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20none&accountName=el-bart)
-* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20address&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20address&accountName=el-bart) (![Clang problem](https://github.com/google/sanitizers/issues/647))
 * thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20thread&accountName=el-bart)
 * undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20undefined&accountName=el-bart)
 
 #### Misc
 
-* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Profile%20%2F%20none&accountName=el-bart)
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Profile%20%2F%20none&accountName=el-bart) 
 * Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Relwithdebuginfo%20%2F%20none&accountName=el-bart)
 
 
