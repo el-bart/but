@@ -6,8 +6,14 @@ APP_DIR=$(dirname "$(readlink -e "$0")")
 cd "$APP_DIR"
 
 # all builds with ninja
+ERRORS=0
+RUNS=0
 for bs in *
 do
   [ -f "$bs" ] || continue
-  time "./$bs"
+  ((++RUNS))
+  time "./$bs" || ((++ERRORS))
 done
+
+echo "$0: found $ERRORS errors in total of $RUNS runs"
+exit "$ERRORS"
