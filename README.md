@@ -4,6 +4,65 @@ Basic Utilities and Tools is a set of useful helper functions, that make program
 
 following sections give a top-level overview on each part of the library.
 
+## CI
+
+### GCC
+
+#### Debug
+
+* regular ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20address&accountName=el-bart)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20thread&accountName=el-bart) (![GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20undefined&accountName=el-bart)
+
+#### Release
+
+* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20none&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20address&accountName=el-bart)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20thread&accountName=el-bart) (![GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20undefined&accountName=el-bart)
+
+#### Misc
+
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Profile%20%2F%20none&accountName=el-bart)
+* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20RelWithDebInfo%20%2F%20none&accountName=el-bart)
+
+
+### Clang
+
+#### Debug
+
+* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20none&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20address&accountName=el-bart)
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20thread&accountName=el-bart)
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20undefined&accountName=el-bart)
+
+#### Release
+
+* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20none&accountName=el-bart)
+* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20address&accountName=el-bart) (![Clang problem](https://github.com/google/sanitizers/issues/647))
+* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20thread&accountName=el-bart)
+* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20undefined&accountName=el-bart)
+
+#### Misc
+
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Profile%20%2F%20none&accountName=el-bart) (![Clang problem](https://bugs.llvm.org/show_bug.cgi?id=31923))
+* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Relwithdebuginfo%20%2F%20none&accountName=el-bart)
+
+
+### Default
+
+* Debug: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Debug%20%2F%20none&accountName=el-bart)
+* Release: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Release%20%2F%20none&accountName=el-bart)
+* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Profile%20%2F%20none&accountName=el-bart)
+* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Relwithdebinfo%20%2F%20none&accountName=el-bart)
+
+
+### Misc
+
+* GNU/Make: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GNU%20%2F%20Make&accountName=el-bart)
+
+
 
 ## basic content
  * Exception - allows to both define and throw exceptions in one line of code each. automatically

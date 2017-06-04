@@ -1,0 +1,7 @@
+version: '1.0'
+steps:
+  clang_Release_thread:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/clang_Release_thread

@@ -1,0 +1,7 @@
+version: '1.0'
+steps:
+  gnu_make:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/gnu_make

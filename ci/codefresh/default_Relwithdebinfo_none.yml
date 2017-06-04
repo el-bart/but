@@ -1,0 +1,7 @@
+version: '1.0'
+steps:
+  default_Relwithdebinfo_none:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/default_Relwithdebinfo_none

@@ -1,0 +1,7 @@
+version: '1.0'
+steps:
+  gcc_Debug_thread:
+    image: baszerr/but-sdk:latest
+    working_directory: ${{main_clone}}
+    commands:
+      - ./ci/gcc_Debug_thread

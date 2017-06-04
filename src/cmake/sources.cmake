@@ -7,6 +7,7 @@ endmacro()
 
 set(SRC_DIRS
     But
+    But/detail
     But/Container
     But/Format
     But/Format/detail

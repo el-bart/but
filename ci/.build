@@ -1,0 +1,68 @@
+#!/bin/bash
+set -ex
+
+if [ $# -ne 0 ]
+then
+  echo "$0: this script takes no arguments"
+  exit 1
+fi
+
+read TOOLCHAIN TYPE SANITIZER <<< $(basename "$0" | tr '_' ' ')
+
+APP_DIR=$(dirname "$(readlink -e "$0")")
+SRC_DIR=$(readlink -e "$APP_DIR/..")
+
+cd "$SRC_DIR/build/"
+mkdir -p "${TOOLCHAIN}/$TYPE/${SANITIZER}"
+cd "$_"
+
+if [ "$TOOLCHAIN" = "default" ]
+then
+  TCC=""
+else
+  TCC="-DCMAKE_TOOLCHAIN_FILE=$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake"
+fi
+
+if [ "$SANITIZER" = "none" ]
+then
+  SAN=""
+else
+  SAN="-DSANITIZE=$SANITIZER"
+fi
+
+time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" -G Ninja "$SRC_DIR"
+time ninja all
+
+# self-test of sanitizers
+case "$SANITIZER" in
+  "thread")
+    if ./src/but_testThreadSanitizer.manual &>/dev/null
+    then
+      echo "$0: thread sanitizer does not work"
+      exit 40
+    fi
+  ;;
+
+  "address")
+    if ./src/but_testLeak.manual &>/dev/null
+    then
+      echo "$0: address sanitizer does not work"
+      exit 41
+    fi
+    if ./src/but_testAddressSanitizer.manual &>/dev/null
+    then
+      echo "$0: address sanitizer does not work"
+      exit 42
+    fi
+  ;;
+
+  "undefined")
+    if ./src/but_testUndefinedBehaviorSanitizer.manual &>/dev/null
+    then
+      echo "$0: undefined behavior sanitizer does not work"
+      exit 43
+    fi
+  ;;
+esac
+
+time ctest || ctest -V
