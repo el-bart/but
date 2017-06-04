@@ -32,4 +32,37 @@ fi
 
 time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" -G Ninja "$SRC_DIR"
 time ninja all
+
+# self-test of sanitizers
+case "$SANITIZER" in
+  "thread")
+    if ./src/but_testThreadSanitizer.manual &>/dev/null
+    then
+      echo "$0: thread sanitizer does not work"
+      exit 40
+    fi
+  ;;
+
+  "address")
+    if ./src/but_testLeak.manual &>/dev/null
+    then
+      echo "$0: address sanitizer does not work"
+      exit 41
+    fi
+    if ./src/but_testAddressSanitizer.manual &>/dev/null
+    then
+      echo "$0: address sanitizer does not work"
+      exit 42
+    fi
+  ;;
+
+  "undefined")
+    if ./src/but_testUndefinedBehaviorSanitizer.manual &>/dev/null
+    then
+      echo "$0: undefined behavior sanitizer does not work"
+      exit 43
+    fi
+  ;;
+esac
+
 time ctest || ctest -V
