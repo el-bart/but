@@ -12,57 +12,57 @@ download automated build of ~[BUT's SDK Docker image](https://hub.docker.com/r/b
 
 #### Debug
 
-* regular ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none&accountName=el-bart)
-* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20address&accountName=el-bart)
-* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20thread&accountName=el-bart) ([GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
-* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20undefined&accountName=el-bart)
+* regular [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:592dc9b6b0b4db000166f035~GCC / Debug / none)
+* address sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20address&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593311a1cb02b300014679fd~GCC / Debug / address)
+* thread sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20thread&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:59331317cb02b300014685ce~GCC / Debug / thread) ([GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
+* undefined behavior sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Debug%20%2F%20undefined&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:5933132f711e490001678bb3~GCC / Debug / undefined)
 
 #### Release
 
-* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20none&accountName=el-bart)
-* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20address&accountName=el-bart)
-* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20thread&accountName=el-bart) ([GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
-* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20undefined&accountName=el-bart)
+* regular: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:592f243f4c8edc00018b6366~GCC / Release / none)
+* address sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20address&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:5933143fcb02b30001468f54~GCC / Release / address)
+* thread sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20thread&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593314d2c757810001165ee3~GCC / Release / thread) ([GCC problem](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67308))
+* undefined behavior sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Release%20%2F%20undefined&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:59331507a11fd200010fdcbf~GCC / Release / undefined)
 
 #### Misc
 
-* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Profile%20%2F%20none&accountName=el-bart)
-* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20RelWithDebInfo%20%2F%20none&accountName=el-bart)
+* Profile: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20Profile%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:592f2a444c8edc00018b9509~GCC / Profile / none)
+* Release with debug info: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GCC%20%2F%20RelWithDebInfo%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:59331565c757810001166397~GCC / RelWithDebInfo / none)
 
 
 ### Clang
 
 #### Debug
 
-* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20none&accountName=el-bart)
-* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20address&accountName=el-bart)
-* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20thread&accountName=el-bart)
-* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20undefined&accountName=el-bart)
+* regular: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:5933158fcb02b300014699b3~Clang / Debug / none)
+* address sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20address&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593315bbf0fe8000018b2ed2~Clang / Debug / address)
+* thread sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20thread&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593315ef2f40e50001f20f6e~Clang / Debug / thread)
+* undefined behavior sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Debug%20%2F%20undefined&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:59331616711e49000167a381~Clang / Debug / undefined)
 
 #### Release
 
-* regular: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20none&accountName=el-bart)
-* address sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20address&accountName=el-bart) ([Clang problem](https://github.com/google/sanitizers/issues/647))
-* thread sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20thread&accountName=el-bart)
-* undefined behavior sanitizer: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20undefined&accountName=el-bart)
+* regular: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:5933163ce2f8a70001cea2db~Clang / Release / none)
+* address sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20address&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593316b8a11fd200010fea75~Clang / Release / address) ([Clang problem](https://github.com/google/sanitizers/issues/647))
+* thread sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20thread&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593316e7cb02b3000146a4cb~Clang / Release / thread)
+* undefined behavior sanitizer: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Release%20%2F%20undefined&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:59331702a11fd200010fecc6~Clang / Release / undefined)
 
 #### Misc
 
-* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Profile%20%2F%20none&accountName=el-bart) ([Clang problem](https://bugs.llvm.org/show_bug.cgi?id=31923))
-* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Relwithdebuginfo%20%2F%20none&accountName=el-bart)
+* Profile: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Profile%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:59331727a11fd200010fedf8~Clang / Profile / none) ([Clang problem](https://bugs.llvm.org/show_bug.cgi?id=31923))
+* Release with debug info: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Clang%20%2F%20Relwithdebuginfo%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:5933174da11fd200010fef66~Clang / Relwithdebuginfo / none)
 
 
 ### Default
 
-* Debug: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Debug%20%2F%20none&accountName=el-bart)
-* Release: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Release%20%2F%20none&accountName=el-bart)
-* Profile: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Profile%20%2F%20none&accountName=el-bart)
-* Release with debug info: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Relwithdebinfo%20%2F%20none&accountName=el-bart)
+* Debug: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Debug%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593317762f40e50001f21b94~Default / Debug / none)
+* Release: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Release%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593317b4e2f8a70001ceaecc~Default / Release / none)
+* Profile: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Profile%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593317d9cb02b3000146ac49~Default / Profile / none)
+* Release with debug info: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=Default%20%2F%20Relwithdebinfo%20%2F%20none&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593317ff2f40e50001f22018~Default / Relwithdebinfo / none)
 
 
 ### Misc
 
-* GNU/Make: ![](https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GNU%20%2F%20Make&accountName=el-bart)
+* GNU/Make: [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=el-bart&repoName=but&branch=master&pipelineName=GNU%20%2F%20Make&accountName=el-bart&type=cf-1)]( https://g.codefresh.io/repositories/el-bart/but/builds?filter=trigger:build;branch:master;service:593319bf5845b900019d5906~GNU / Make)
 
 
 
