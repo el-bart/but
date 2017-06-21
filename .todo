@@ -180,6 +180,9 @@
     <note priority="medium" time="1492716613">
         but::throw with comma-based syntax, instead of streams (comaptible with logging + no need for a macro to use it)
     </note>
+    <note priority="medium" time="1498071766">
+        add RawPtr&lt;T&gt;, to be used with NotNull&lt;P&gt;
+    </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
     </note>
