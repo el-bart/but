@@ -498,4 +498,19 @@ TEST_F(ButNotNull, TemplateUsingHelpersArePresent)
   }
 }
 
+
+template<typename Unused>
+void testCallWithTemplate()
+{
+  std::string str;
+  But::NotNullRaw<std::string> ptr{&str};
+  (void)ptr->size();    // this line caused error in GCC
+}
+
+TEST_F(ButNotNull, TestForGccBugWithArrowOperatorCalledFromTemplateFunction)
+{
+  // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182
+  testCallWithTemplate<int>();
+}
+
 }
