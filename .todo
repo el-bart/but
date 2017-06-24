@@ -150,6 +150,9 @@
             implemented
         </comment>
     </note>
+    <note priority="high" time="1498305075">
+        log variadic template backend as a wrapper for vector&lt;&gt;-based ones - no dual interfaces
+    </note>
     <note priority="medium" time="1447835445">
         add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
     </note>
@@ -182,6 +185,9 @@
     </note>
     <note priority="medium" time="1498071766">
         add RawPtr&lt;T&gt;, to be used with NotNull&lt;P&gt;
+    </note>
+    <note priority="medium" time="1498304217">
+        make re-throwing exceptions from logger possible (but NOT default one)
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
