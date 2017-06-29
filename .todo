@@ -204,6 +204,9 @@
     <note priority="low" time="1490819328">
         add Log::Field::ProcessName
     </note>
+    <note priority="low" time="1498766638">
+        consider adding But::Net with some basic, easy to use wrappers
+    </note>
     <note priority="verylow" time="1497816984">
         Struct::PackedPointerVector&lt;T&gt;, where pointers to over-1B-aligned types are bit packed (based on BitPackedSequence)
     </note>
