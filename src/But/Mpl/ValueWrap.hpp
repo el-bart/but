@@ -15,6 +15,7 @@ namespace Mpl
   public: \
     template<typename ...Args> \
     explicit name(Args&& ...args): \
+      /* NOTE: value_(...) not value_{...} - see initializer_list<> overload */ \
       value_( std::forward<Args>(args)... ) \
     { } \
     \
