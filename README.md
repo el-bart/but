@@ -67,7 +67,6 @@ download automated build of [BUT's SDK Docker image](https://hub.docker.com/r/ba
 
 
 ## basic content
- * `BUT_VALUE_WRAP` - macro for generating full-blown object, that's only purpose is to keep a given value inside.
 it is very useful when type safety is a must, but underlying type is already existing and working.
 this is improved version of `struct MyIndex { unsigned value_; };` type of approach, that provides all the methods and encapsulation.
 with this class in place, code can be easily refactored later on, if needed (adding new methods, validating c-tor, etc...
@@ -125,6 +124,7 @@ wrapper for this object, adding fields to achieve required log message content.
 
 
 ## meta programming
+ * `BUT_MPL_VALUE_WRAP` - macro for generating full-blown object, that's only purpose is to keep a given value inside.
  * `FreeOperators` - set of macros for fast definitions of comparison operators for a simple structure types
 and collections. both regular and template types are supported.
  * `NamedVariadicTemplate` - helper template that allows to store variadic template arguments in a

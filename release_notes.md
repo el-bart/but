@@ -6,7 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
-  * `BUT_VALUE_WRAP` macro for generating full-blown object, that's only purpose is to keep a given value inside.
+  * `BUT_MPL_VALUE_WRAP` macro for generating full-blown object, that's only purpose is to keep a given value inside.
   * `toString(bool)` added for logger
   * `NotNull<>` has now a workaround for GCC compilation bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182)
   * automated docker SDK build on dockerhub: `baszerr/but-sdk`

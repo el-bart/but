@@ -1,12 +1,16 @@
 #pragma once
 #include <utility>
 #include <type_traits>
+#include <boost/operators.hpp>
 
 namespace But
 {
+namespace Mpl
+{
 
-#define BUT_VALUE_WRAP(name, type) \
-  class name final \
+#define BUT_MPL_VALUE_WRAP(name, type) \
+  class name final: public boost::equivalent<name>, \
+                    public boost::totally_ordered<name> \
   { \
   public: \
     template<typename ...Args> \
@@ -27,6 +31,8 @@ namespace But
     name(name&&) = default; \
     name& operator=(name&&) = default; \
     \
+    auto operator<(name const& rhs) const { return get() < rhs.get(); } \
+    \
     type const& get() const & { return value_; } \
     type&& get() && { return std::move(value_); } \
     \
@@ -34,4 +40,5 @@ namespace But
     type value_; \
   }
 
+}
 }
