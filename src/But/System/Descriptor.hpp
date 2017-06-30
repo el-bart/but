@@ -27,6 +27,8 @@ public:
     return *this;
   }
 
+  explicit operator bool() const { return opened(); }
+
   value_type get() const { return desc_; }
 
   value_type release()
