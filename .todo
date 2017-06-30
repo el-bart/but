@@ -189,6 +189,9 @@
     <note priority="medium" time="1498304217">
         make re-throwing exceptions from logger possible (but NOT default one)
     </note>
+    <note priority="medium" time="1498851917">
+        backtrace gathering helper
+    </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
     </note>
@@ -206,6 +209,12 @@
     </note>
     <note priority="low" time="1498766638">
         consider adding But::Net with some basic, easy to use wrappers
+    </note>
+    <note priority="low" time="1498851905">
+        add signal handler helper, that will wrap lamba into a handler runner
+    </note>
+    <note priority="low" time="1498851939">
+        add BUT_THROW_BT() that will throw exception and store backtrace inside
     </note>
     <note priority="verylow" time="1497816984">
         Struct::PackedPointerVector&lt;T&gt;, where pointers to over-1B-aligned types are bit packed (based on BitPackedSequence)
