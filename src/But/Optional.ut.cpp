@@ -142,4 +142,12 @@ TEST_F(ButOptional, ConstAsteriskOperator)
   EXPECT_EQ( "data", *opt );
 }
 
+
+TEST_F(ButOptional, ConstructibleFromNamedObject)
+{
+  const auto str = std::string{"test"};
+  Optional<std::string> os{str};
+  EXPECT_EQ(str, *os);
+}
+
 }
