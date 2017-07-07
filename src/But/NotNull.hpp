@@ -75,8 +75,10 @@ public:
   // TODO: temporary workaround for GCC bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182)
   element_type* operator->() const { return get(); }
 #endif
-  P pointer() const & { assert(p_); return p_; }
-  P pointer() &&      { assert(p_); return std::move(p_); }
+  P underlyingPointer() const & { assert(p_); return p_; }
+  P underlyingPointer() &&      { assert(p_); return std::move(p_); }
+  [[deprecated]] P pointer() const & { return underlyingPointer(); }
+  [[deprecated]] P pointer() &&      { return underlyingPointer(); }
   auto& operator*() const { return *get(); }
 
   explicit operator bool() const { assert(p_); return true; }

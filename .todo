@@ -198,8 +198,11 @@
     <note priority="medium" time="1498851917">
         backtrace gathering helper
     </note>
-    <note priority="medium" time="1499453659">
-        Optional: pointer() -&gt; underlyingPointer()
+    <note priority="medium" time="1499453659" done="1499456025">
+        NotNull: pointer() -&gt; underlyingPointer()
+        <comment>
+            done
+        </comment>
     </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
