@@ -6,9 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
-  * fixed `But::Optional` construction from `const` object.
-  * `But::NotNull::pointer` is deprecated in favor of more descriptive name `But::NotNull::underlyingPointer`.
-  * `But::System::Descriptor` has not explicit `bool` conversion operator.
+  * `Optional`'s c-tors are no longer explicit.
+  * fixed `Optional` construction from `const` object.
+  * `NotNull::pointer` is deprecated in favor of more descriptive name `NotNull::underlyingPointer`.
+  * `System::Descriptor` has not explicit `bool` conversion operator.
   * `BUT_MPL_VALUE_WRAP` macro for generating full-blown object, that's only purpose is to keep a given value inside.
   * `toString(bool)` added for logger
   * `NotNull<>` has now a workaround for GCC compilation bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182)

@@ -150,4 +150,21 @@ TEST_F(ButOptional, ConstructibleFromNamedObject)
   EXPECT_EQ(str, *os);
 }
 
+
+TEST_F(ButOptional, ImplicitConstructionFromUnderlyingLvalueType)
+{
+  const std::string str{"test"};
+  auto test = [](Optional<std::string> os) { return *os; };
+  EXPECT_EQ( str, test(str) );
+}
+
+
+TEST_F(ButOptional, ImplicitConstructionFromUnderlyingRvalueType)
+{
+  const std::string str{"test"};
+  auto in = str;
+  auto test = [](Optional<std::string> os) { return *os; };
+  EXPECT_EQ( str, test( std::move(in) ) );
+}
+
 }

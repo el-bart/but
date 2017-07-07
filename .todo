@@ -24,6 +24,12 @@
             nah - will work as it is... :P
         </comment>
     </note>
+    <note priority="high" time="1499453602" done="1499456239">
+        Optional -&gt; const arg forwarding
+        <comment>
+            fixed
+        </comment>
+    </note>
     <note priority="medium" time="1391105418" done="1405245748">
         smart pointer that is guaranteed not to be nullptr
         <comment>
@@ -159,13 +165,10 @@
     <note priority="high" time="1498305075">
         log variadic template backend as a wrapper for vector&lt;&gt;-based ones - no dual interfaces
     </note>
-    <note priority="high" time="1499453586">
+    <note priority="high" time="1499453586" done="1499456766">
         make Optional implicitly-constructible from internal type
-    </note>
-    <note priority="high" time="1499453602" done="1499456239">
-        Optional -&gt; const arg forwarding
         <comment>
-            fixed
+            done
         </comment>
     </note>
     <note priority="medium" time="1447835445">
