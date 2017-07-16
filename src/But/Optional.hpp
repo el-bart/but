@@ -17,7 +17,8 @@ public:
   using value_type = T;
 
   Optional() = default;
-  explicit Optional(T&& t): t_{ std::forward<T>(t) } { }
+  Optional(T const& t): t_{t} { }
+  Optional(T&& t): t_{ std::move(t) } { }
 
   Optional(Optional const&) = default;
   Optional& operator=(Optional const&) = default;

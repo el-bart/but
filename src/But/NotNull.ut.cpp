@@ -333,8 +333,8 @@ TEST_F(ButNotNull, ConvertingToNotBool)
 
 TEST_F(ButNotNull, CopyInpternalPointerType)
 {
-  Data*                 p1 = r_.pointer();
-  std::shared_ptr<Data> p3 = s_.pointer();
+  Data*                 p1 = r_.underlyingPointer();
+  std::shared_ptr<Data> p3 = s_.underlyingPointer();
   ASSERT_TRUE(p1);
   ASSERT_TRUE(p3.get());
 }
@@ -342,9 +342,9 @@ TEST_F(ButNotNull, CopyInpternalPointerType)
 
 TEST_F(ButNotNull, MoveInpternalPointerType)
 {
-  Data*                 p1 = std::move(r_).pointer();
-  std::unique_ptr<Data> p2 = std::move(u_).pointer();
-  std::shared_ptr<Data> p3 = std::move(s_).pointer();
+  Data*                 p1 = std::move(r_).underlyingPointer();
+  std::unique_ptr<Data> p2 = std::move(u_).underlyingPointer();
+  std::shared_ptr<Data> p3 = std::move(s_).underlyingPointer();
   ASSERT_TRUE(p1);
   ASSERT_TRUE(p2.get());
   ASSERT_TRUE(p3.get());
@@ -496,6 +496,21 @@ TEST_F(ButNotNull, TemplateUsingHelpersArePresent)
     But::NotNullShared<int> ptr = makeSharedNN<int>(42);
     EXPECT_EQ(42, *ptr);
   }
+}
+
+
+template<typename Unused>
+void testCallWithTemplate()
+{
+  std::string str;
+  But::NotNullRaw<std::string> ptr{&str};
+  (void)ptr->size();    // this line caused error in GCC
+}
+
+TEST_F(ButNotNull, TestForGccBugWithArrowOperatorCalledFromTemplateFunction)
+{
+  // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182
+  testCallWithTemplate<int>();
 }
 
 }

@@ -63,4 +63,11 @@ TEST_F(ButLogBackendToString, StringTypes)
   EXPECT_EQ( "test", toString( std::string{"test"} ) );
 }
 
+
+TEST_F(ButLogBackendToString, BooleanType)
+{
+  EXPECT_EQ( "true", toString(true) );
+  EXPECT_EQ( "false", toString(false) );
+}
+
 }

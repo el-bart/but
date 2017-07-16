@@ -69,7 +69,6 @@ TEST_F(ButSystemDescriptor, TestSuiteSanityCheck)
 TEST_F(ButSystemDescriptor, NoDescriptor)
 {
   const Descriptor d;
-  (void)d;
   EXPECT_FALSE( d.opened() );
   EXPECT_EQ(-1, d.get());
 }
@@ -204,6 +203,16 @@ TEST_F(ButSystemDescriptor, SwapFreeFunction)
   }
   EXPECT_FALSE( td1.isOpen() );
   EXPECT_FALSE( td1.isOpen() );
+}
+
+
+TEST_F(ButSystemDescriptor, ExplicitToBoolConversion)
+{
+  Descriptor fd{ td_.releaseFd() };
+  auto const& cref = fd;
+  EXPECT_TRUE( static_cast<bool>(cref) );
+  fd.reset();
+  EXPECT_FALSE( static_cast<bool>(cref) );
 }
 
 }

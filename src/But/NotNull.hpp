@@ -69,9 +69,16 @@ public:
   }
 
   auto get() const { assert(p_); return detail::getPointerValue(p_); }
+#if 0
   auto operator->() const { return get(); }
-  P pointer() const & { assert(p_); return p_; }
-  P pointer() &&      { assert(p_); return std::move(p_); }
+#else
+  // TODO: temporary workaround for GCC bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182)
+  element_type* operator->() const { return get(); }
+#endif
+  P underlyingPointer() const & { assert(p_); return p_; }
+  P underlyingPointer() &&      { assert(p_); return std::move(p_); }
+  [[deprecated]] P pointer() const & { return underlyingPointer(); }
+  [[deprecated]] P pointer() &&      { return underlyingPointer(); }
   auto& operator*() const { return *get(); }
 
   explicit operator bool() const { assert(p_); return true; }

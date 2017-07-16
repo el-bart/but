@@ -11,6 +11,8 @@ namespace Log
 namespace Backend
 {
 
+inline std::string toString(const bool v) { return v ? "true" : "false"; }
+
 inline std::string toString(std::string v) { return v; }
 inline std::string toString(char const* v) { return v; }
 

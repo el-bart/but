@@ -21,8 +21,8 @@ public:
     th_{ std::forward<Args>(args)... }
   { }
 
-  JoiningThread(JoiningThread&&)  =default;
-  JoiningThread& operator=(JoiningThread&&)  =default;
+  JoiningThread(JoiningThread&&) = default;
+  JoiningThread& operator=(JoiningThread&&) = default;
 
   ~JoiningThread()
   {
