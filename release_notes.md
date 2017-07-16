@@ -6,7 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
-  * added GCC-7.1 and Clang-4.0 to supported toolchains.
+  * added GCC-7.1 and Clang-4.0 to supported toolchains (and as default ones on CI).
   * `Optional`'s c-tors are no longer explicit.
   * fixed `Optional` construction from `const` object.
   * `NotNull::pointer` is deprecated in favor of more descriptive name `NotNull::underlyingPointer`.
