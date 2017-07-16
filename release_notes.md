@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * added GCC-7.1 and Clang-4.0 to supported toolchains.
   * `Optional`'s c-tors are no longer explicit.
   * automated docker SDK build on dockerhub: baszerr/but-sdk
   * `Mpl::parse{Signed,Unsigned}` - number parsing, that works at compile time and runtime.
