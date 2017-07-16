@@ -41,7 +41,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -finline-limit=150")
 endif()
 
-# strip binaries for GCC
 if(${CMAKE_COMPILER_IS_GNUCXX})
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s") # strip binaries for GCC
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-noexcept-type") # remove nonhelpful warning
 endif()
