@@ -12,7 +12,7 @@ steps:
     type: push
     candidate: ${{build_step}}
     tag: ${{CF_BRANCH}}
-    registry: cfdr
+    registry: cfcr
 
   gcc_Debug_none:
     image: el-bart/but-sdk:${{CF_BRANCH}}
