@@ -1,8 +1,6 @@
 #!/bin/bash
 set -ex
 
-dpkg -l
-
 if [ $# -ne 0 ]
 then
   echo "$0: this script takes no arguments"
@@ -23,6 +21,8 @@ then
   TCC=""
 else
   TCC="-DCMAKE_TOOLCHAIN_FILE=$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake"
+  cat "$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake"		
+ls -alh /usr/bin/g++*
 fi
 
 if [ "$SANITIZER" = "none" ]
