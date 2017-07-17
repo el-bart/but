@@ -1,6 +1,10 @@
 #!/bin/bash
 set -ex
 
+env
+g++ --version
+g++7 --version
+
 if [ $# -ne 0 ]
 then
   echo "$0: this script takes no arguments"
