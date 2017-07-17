@@ -1,11 +1,7 @@
 #!/bin/bash
 set -ex
 
-ps axlf
-docker images
-env
-g++ --version
-g++7 --version
+dpkg -l
 
 if [ $# -ne 0 ]
 then
