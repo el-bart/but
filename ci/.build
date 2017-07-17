@@ -1,6 +1,7 @@
 #!/bin/bash
 set -ex
 
+docker images
 env
 g++ --version
 g++7 --version
