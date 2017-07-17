@@ -5,6 +5,7 @@ steps:
     type: build
     description: BUT's SDK image
     dockerfile: sdk/Dockerfile
+    working_directory: sdk
     image_name: but-sdk
     tag: ${{CF_BRANCH}}
 
