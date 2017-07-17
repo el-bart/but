@@ -11,5 +11,6 @@ steps:
 
   gcc_Debug_none:
     image: ${{build_image}}
+    working_directory: ${{main_clone}}
     commands:
       - ./ci/gcc_Debug_none
