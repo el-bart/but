@@ -20,7 +20,7 @@ then
   then
     exec "$0" "--help"
   fi
-  rm -rf "$BUILD_DIR"
+  rm -rfv "$BUILD_DIR"
 fi
 mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
