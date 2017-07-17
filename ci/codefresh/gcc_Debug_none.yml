@@ -1,14 +1,10 @@
 version: '1.0'
 steps:
 
-  step_name:
+  gcc_Debug_none:
     type: build
-    description: BUT's SDK image
     dockerfile: sdk/Dockerfile
     image_name: el-bart/but-sdk
-
-  gcc_Debug_none:
-    image: r.cfcr.io/el-bart/but-sdk
     working_directory: ${{main_clone}}
     commands:
       - ./ci/gcc_Debug_none
