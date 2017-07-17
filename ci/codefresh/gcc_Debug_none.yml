@@ -13,4 +13,4 @@ steps:
     image: ${{build_image}}
     working_directory: ${{main_clone}}
     commands:
-      - ./ci/gcc_Debug_none
+      - ./ci/gcc_Debug_none --clean-build
