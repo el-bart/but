@@ -21,8 +21,6 @@ then
   TCC=""
 else
   TCC="-DCMAKE_TOOLCHAIN_FILE=$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake"
-  cat "$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake"		
-ls -alh /usr/bin/g++*
 fi
 
 if [ "$SANITIZER" = "none" ]
