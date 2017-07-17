@@ -1,5 +1,13 @@
 version: '1.0'
 steps:
+
+  step_name:
+    type: build
+    description: BUT's SDK image
+    dockerfile: sdk/Dockerfile
+    image_name: el-bart/but-sdk
+    tags: [ latest, ${{CF_BRANCH}} ]
+
   clang_Release_none:
     image: baszerr/but-sdk:latest
     working_directory: ${{main_clone}}
