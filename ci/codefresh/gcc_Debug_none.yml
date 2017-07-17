@@ -6,7 +6,6 @@ steps:
     description: BUT's SDK image
     dockerfile: sdk/Dockerfile
     image_name: el-bart/but-sdk
-    tags: [ latest, ${{CF_BRANCH}} ]
 
   gcc_Debug_none:
     image: r.cfcr.io/el-bart/but-sdk
