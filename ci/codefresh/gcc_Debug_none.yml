@@ -9,7 +9,7 @@ steps:
     tags: [ latest, ${{CF_BRANCH}} ]
 
   gcc_Debug_none:
-    image: baszerr/but-sdk:latest
+    image: r.cfcr.io/el-bart/but-sdk
     working_directory: ${{main_clone}}
     commands:
       - ./ci/gcc_Debug_none
