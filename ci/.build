@@ -20,7 +20,7 @@ if [ "$TOOLCHAIN" = "default" ]
 then
   TCC=""
 else
-  TCC="-DCMAKE_TOOLCHAIN_FILE=$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake"
+  TCC="-DCMAKE_TOOLCHAIN_FILE=$(readlink -e "$SRC_DIR/src/cmake/toolchains/${TOOLCHAIN}.cmake")"
 fi
 
 if [ "$SANITIZER" = "none" ]
