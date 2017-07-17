@@ -6,9 +6,10 @@ steps:
     description: BUT's SDK image
     dockerfile: sdk/Dockerfile
     image_name: el-bart/but-sdk
+    tag: latest
 
   gcc_Debug_none:
-    image: r.cfcr.io/el-bart/but-sdk
+    image: r.cfcr.io/el-bart/but-sdk:latest
     working_directory: ${{main_clone}}
     commands:
       - ./ci/gcc_Debug_none
