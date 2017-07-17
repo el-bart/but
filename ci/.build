@@ -13,7 +13,8 @@ APP_DIR=$(dirname "$(readlink -e "$0")")
 SRC_DIR=$(readlink -e "$APP_DIR/..")
 
 cd "$SRC_DIR/build/"
-mkdir "${TOOLCHAIN}/$TYPE/${SANITIZER}"
+rm -rf "${TOOLCHAIN}/$TYPE/${SANITIZER}"
+mkdir -p "${TOOLCHAIN}/$TYPE/${SANITIZER}"
 cd "$_"
 
 if [ "$TOOLCHAIN" = "default" ]
