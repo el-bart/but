@@ -30,7 +30,7 @@ else
   SAN="-DSANITIZE=$SANITIZER"
 fi
 
-time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" -G Ninja "$SRC_DIR"
+time cmake --debug-output --trace-expand $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" -G Ninja "$SRC_DIR"
 time ninja all
 
 # self-test of sanitizers
