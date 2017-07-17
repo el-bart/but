@@ -1,7 +1,7 @@
 version: '1.0'
 steps:
 
-  building_image:
+  build_image:
     type: build
     description: BUT's SDK image
     dockerfile: sdk/Dockerfile
@@ -10,7 +10,7 @@ steps:
 
   push_image:
     type: push
-    candidate: ${{build_step}}
+    candidate: ${{build_image}}
     tag: ${{CF_BRANCH}}
     registry: cfcr
 
