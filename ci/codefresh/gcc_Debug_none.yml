@@ -5,17 +5,11 @@ steps:
     type: build
     description: BUT's SDK image
     dockerfile: sdk/Dockerfile
-    image_name: el-bart/but-sdk
+    image_name: but-sdk
     tag: ${{CF_BRANCH}}
-
-  push_image:
-    type: push
-    candidate: ${{build_image}}
-    tag: ${{CF_BRANCH}}
-    registry: cfcr
 
   gcc_Debug_none:
-    image: el-bart/but-sdk:${{CF_BRANCH}}
+    image: ${{build_image}}
     working_directory: ${{main_clone}}
     commands:
       - ./ci/gcc_Debug_none
