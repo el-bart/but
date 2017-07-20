@@ -19,7 +19,7 @@ namespace Threading
  *  @note 64-bytes default alignment is just a typical value, that will work for MOST
  *        users. check if this is a cache line of your CPU, before usage!
  */
-template<typename T, std::size_t Align=64>
+template<typename T, std::size_t Align=64> // TODO: http://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size
 struct alignas(Align) CacheLine final
 {
   static_assert( std::is_standard_layout<T>::value, "cannot guarantee expected memory layout for non-standard-layout objects" );
