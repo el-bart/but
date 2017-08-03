@@ -213,6 +213,12 @@
     <note priority="medium" time="1500562353">
         consider unifying NotNullT vs. makeTNNN naming unification
     </note>
+    <note priority="medium" time="1501786879">
+        System::TempDir
+    </note>
+    <note priority="medium" time="1501786888">
+        Container::LRU
+    </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
     </note>
