@@ -35,9 +35,9 @@ if(BUT_ENABLE_LTO)
 endif()
 
 if(BUT_SANITIZE)
-  message(STATUS "enabling ${SANITIZE} sanitizer")
-  add_compile_options(-fsanitize=${SANITIZE} -fno-sanitize-recover=all)
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${SANITIZE} -fno-sanitize-recover=all")
+  message(STATUS "enabling ${BUT_SANITIZE} sanitizer")
+  add_compile_options(-fsanitize=${BUT_SANITIZE} -fno-sanitize-recover=all)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${BUT_SANITIZE} -fno-sanitize-recover=all")
 endif()
 
 add_subdirectory(src)
