@@ -1,7 +1,16 @@
 version: '1.0'
 steps:
+
+  build_image:
+    type: build
+    description: BUT's SDK image
+    dockerfile: Dockerfile
+    working_directory: sdk
+    image_name: but-sdk
+    tag: ${{CF_BRANCH}}
+
   default_Relwithdebinfo_none:
-    image: baszerr/but-sdk:latest
+    image: ${{build_image}}
     working_directory: ${{main_clone}}
     commands:
-      - ./ci/default_Relwithdebinfo_none
+      - ./ci/default_Relwithdebinfo_none --clean-build

@@ -1,9 +1,10 @@
 #!/bin/bash
 set -ex
 
-if [ $# -ne 0 ]
+if [ "$1" == "--help" ] || [ $# -ne 0 ] && [ $# -ne 1 ]
 then
-  echo "$0: this script takes no arguments"
+  echo "$0 # no arguments, for default, incremental build"
+  echo "$0 {--clean-build}  # will remove destination dir, if present"
   exit 1
 fi
 
@@ -13,8 +14,17 @@ APP_DIR=$(dirname "$(readlink -e "$0")")
 SRC_DIR=$(readlink -e "$APP_DIR/..")
 
 cd "$SRC_DIR/build/"
-mkdir -p "${TOOLCHAIN}/$TYPE/${SANITIZER}"
-cd "$_"
+BUILD_DIR="${TOOLCHAIN}/$TYPE/${SANITIZER}"
+if [ $# -eq 1 ]
+then
+  if [ "$1" != "--clean-build" ]
+  then
+    exec "$0" "--help"
+  fi
+  rm -rfv "$BUILD_DIR"
+fi
+mkdir -p "$BUILD_DIR"
+cd "$BUILD_DIR"
 
 if [ "$TOOLCHAIN" = "default" ]
 then
@@ -27,7 +37,7 @@ if [ "$SANITIZER" = "none" ]
 then
   SAN=""
 else
-  SAN="-DSANITIZE=$SANITIZER"
+  SAN="-DBUT_SANITIZE=$SANITIZER"
 fi
 
 time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" -G Ninja "$SRC_DIR"

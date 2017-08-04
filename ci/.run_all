@@ -13,7 +13,7 @@ for bs in *
 do
   [ -f "$bs" ] || continue
   ((++RUNS))
-  time "./$bs" || { ((++ERRORS)) ; FAILED+=" $bs" ; }
+  time "./$bs" "$@" || { ((++ERRORS)) ; FAILED+=" $bs" ; }
 done
 
 if [ "$ERRORS" -gt 0 ]
