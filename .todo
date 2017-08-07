@@ -222,6 +222,9 @@
     <note priority="medium" time="1501790881">
         Container::CircularBuffer
     </note>
+    <note priority="medium" time="1502134072">
+        but::guard&lt;A&gt; -&gt; but::guard&lt;B&gt; (lambda -&gt; std::fuunction&lt;void()&gt;)
+    </note>
     <note priority="low" time="1448391305">
         PRNG-seeded hash function wrapper, to prevent O(N) hash tables attack?
     </note>
