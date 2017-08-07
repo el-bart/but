@@ -189,8 +189,11 @@
     <note priority="medium" time="1489864071">
         Log::Destination::BackgroundThread{ForeginDestination}
     </note>
-    <note priority="medium" time="1490819320">
+    <note priority="medium" time="1490819320" done="1502143801">
         add Log::Field::Pid
+        <comment>
+            PID field added
+        </comment>
     </note>
     <note priority="medium" time="1492716531">
         But::Format - simple formatter, to be used with But::Log: syntax: ${1}, $1, ${1#desc}, ${T1#shows type}, ${V1#show value}, $$, etc...
