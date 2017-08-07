@@ -20,6 +20,9 @@ public:
   Optional(T const& t): t_{t} { }
   Optional(T&& t): t_{ std::move(t) } { }
 
+  template<typename... Args>
+  explicit Optional(Args&&... args): t_{ T{ std::forward<Args>(args)... } } { }
+
   Optional(Optional const&) = default;
   Optional& operator=(Optional const&) = default;
 
