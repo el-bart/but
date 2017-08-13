@@ -32,7 +32,7 @@ public:
    *          ${VN} - the same as $N.
    *          ${VN#some text} - the same as $N, but allowing some textual description along (useful for translations!).
    *          $$ - liternal '$' character.
-   *  @note all numbers are 0-based (i.e. 1st arguments has index 0).
+   *  @note all numbers are 0-based (i.e. 1st argument has index 0).
    */
   constexpr explicit Parsed(char const* format):
     ps_{ detail::parse<MaxSegments>(format) },
@@ -47,23 +47,9 @@ public:
   {
     static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
     assert( expectedArguments() == detail::argumentsCount(ps_) );
-    std::stringstream ss;
+    std::ostringstream ss;
     for(auto i=0u; i<ps_.count_; ++i)
-    {
-      const auto argPos = ps_.segments_[i].referencedArgument_;
-      switch(ps_.segments_[i].type_)
-      {
-        case detail::State::Type::String:
-             ss << std::string{ ps_.segments_[i].begin_, ps_.segments_[i].end_ };
-             break;
-        case detail::State::Type::Value:
-             ss << getArgumentValue(argPos, args...);
-             break;
-        case detail::State::Type::TypeName:
-             ss << getArgumentType(argPos, args...);
-             break;
-      }
-    }
+      formatBlock(ss, ps_.segments_[i], args...);
     return ss.str();
   }
 
@@ -81,7 +67,26 @@ private:
     return "V-TODO...";
   }
 
-  detail::ParserState<MaxSegments> ps_;
+
+  template<typename ...Args>
+  void formatBlock(std::ostringstream& ss, detail::State const& state, Args const& ...args) const
+  {
+    switch(state.type_)
+    {
+      case detail::State::Type::String:
+        ss << std::string{ state.begin_, state.end_ };
+        return;
+      case detail::State::Type::Value:
+        ss << getArgumentValue(state.referencedArgument_, args...);
+        return;
+      case detail::State::Type::TypeName:
+        ss << getArgumentType(state.referencedArgument_, args...);
+        return;
+    }
+    assert(!"missing type handle");
+  }
+
+  const detail::ParserState<MaxSegments> ps_;
   char const* format_;
 };
 
