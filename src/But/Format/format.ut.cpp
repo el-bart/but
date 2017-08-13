@@ -25,7 +25,7 @@ TEST_F(ButFormat, SampleStrings)
 
 TEST_F(ButFormat, OneArgument)
 {
-  constexpr auto fmt = BUT_FORMAT("try $1 out");
+  constexpr auto fmt = BUT_FORMAT("try $0 out");
   EXPECT_EQ( 1u, fmt.expectedArguments() );
   EXPECT_EQ( "try it out", fmt.format("it") );
 }
@@ -33,7 +33,7 @@ TEST_F(ButFormat, OneArgument)
 
 TEST_F(ButFormat, MultipleArguments)
 {
-  constexpr auto fmt = BUT_FORMAT("$2 $1");
+  constexpr auto fmt = BUT_FORMAT("$1 $0");
   EXPECT_EQ( 2u, fmt.expectedArguments() );
   EXPECT_EQ( "bar foo", fmt.format("foo", "bar") );
   EXPECT_EQ( "answer 42", fmt.format(42, "answer") );
@@ -43,7 +43,7 @@ TEST_F(ButFormat, MultipleArguments)
 /*
 TEST_F(ButFormat, RepeatedArguments)
 {
-  constexpr auto fmt = BUT_FORMAT("$1 $2 $1");
+  constexpr auto fmt = BUT_FORMAT("$0 $1 $0");
   EXPECT_EQ( 2u, fmt.expectedArguments() );
   EXPECT_EQ( "1 2 1", fmt.format(1,2) );
 }
@@ -54,17 +54,17 @@ TEST_F(ButFormat, RepeatedArguments)
 TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
 {
   {
-    constexpr auto fmt = BUT_FORMAT("${1} $1");
+    constexpr auto fmt = BUT_FORMAT("${0} $0");
     EXPECT_EQ( 2u, fmt.expectedArguments() );
     EXPECT_EQ( "x x", fmt.format("x") );
   }
   {
-    constexpr auto fmt = BUT_FORMAT("${V1}=${T1}");
+    constexpr auto fmt = BUT_FORMAT("${V0}=${T0}");
     EXPECT_EQ( 2u, fmt.expectedArguments() );
     EXPECT_EQ( "int=42", fmt.format(42) );
   }
   {
-    constexpr auto fmt = BUT_FORMAT("${1#info} ${V1#text} ${T1#foo}");
+    constexpr auto fmt = BUT_FORMAT("${0#info} ${V0#text} ${T0#foo}");
     EXPECT_EQ( 3u, fmt.expectedArguments() );
     EXPECT_EQ( "x x std::string", fmt.format("x") );
   }
@@ -75,7 +75,7 @@ TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
 TEST_F(ButFormat, DenseFormats)
 {
   {
-    constexpr auto fmt = BUT_FORMAT("$$$1");
+    constexpr auto fmt = BUT_FORMAT("$$$0");
     EXPECT_EQ( 1u, fmt.expectedArguments() );
     EXPECT_EQ( "$kszy", fmt.format("kszy") );
   }
