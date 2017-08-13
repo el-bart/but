@@ -47,40 +47,47 @@ public:
   {
     static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
     assert( expectedArguments() == detail::argumentsCount(ps_) );
-    std::ostringstream ss;
+    std::ostringstream os;
     for(auto i=0u; i<ps_.count_; ++i)
-      formatBlock(ss, ps_.segments_[i], args...);
-    return ss.str();
+      formatBlock(os, ps_.segments_[i], args...);
+    return os.str();
   }
 
 private:
+#if 1   // TODO...
   template<typename ...Args>
-  std::string getArgumentType(unsigned /*pos*/, Args const& .../*args*/) const
+  auto const& getArgument(const unsigned /*pos*/, Args const& .../*args*/) const
   {
-    using Log::Backend::typeString; // TODO - should be moved here...
-    return "T-TODO...";
+    return "xxx-TODO...";
+  }
+#endif
+  template<typename ...Args>
+  std::string getArgumentType(const unsigned pos, Args const& ...args) const
+  {
+    using Log::Backend::typeString;
+    return typeString( getArgument(pos, args...) );
   }
   template<typename ...Args>
-  std::string getArgumentValue(unsigned /*pos*/, Args const& .../*args*/) const
+  std::string getArgumentValue(const unsigned pos, Args const& ...args) const
   {
-    using Log::Backend::toString;   // TODO - should be moved here...
-    return "V-TODO...";
+    using Log::Backend::toString;
+    return toString( getArgument(pos, args...) );
   }
 
 
   template<typename ...Args>
-  void formatBlock(std::ostringstream& ss, detail::State const& state, Args const& ...args) const
+  void formatBlock(std::ostringstream& os, detail::State const& state, Args const& ...args) const
   {
     switch(state.type_)
     {
       case detail::State::Type::String:
-        ss << std::string{ state.begin_, state.end_ };
+        os << std::string{ state.begin_, state.end_ };
         return;
       case detail::State::Type::Value:
-        ss << getArgumentValue(state.referencedArgument_, args...);
+        os << getArgumentValue(state.referencedArgument_, args...);
         return;
       case detail::State::Type::TypeName:
-        ss << getArgumentType(state.referencedArgument_, args...);
+        os << getArgumentType(state.referencedArgument_, args...);
         return;
     }
     assert(!"missing type handle");
