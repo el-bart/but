@@ -54,24 +54,37 @@ public:
   }
 
 private:
-#if 1   // TODO...
-  template<typename ...Args>
-  auto const& getArgument(const unsigned /*pos*/, Args const& .../*args*/) const
+  template<typename F>
+  std::string processArgument(F&& /*f*/, const unsigned /*pos*/) const
   {
-    return "xxx-TODO...";
+    assert(!"this overload is never really called");
+    std::terminate();
   }
-#endif
+  template<typename F, typename Head>
+  std::string processArgument(F&& f, const unsigned pos, Head const& head) const
+  {
+    assert( pos == 0u && "format is not alligned with arguments" );
+    return f(head);
+  }
+  template<typename F, typename Head, typename ...Tail>
+  std::string processArgument(F&& f, const unsigned pos, Head const& head, Tail const& ...tail) const
+  {
+    if( pos == 0u )
+      return f(head);
+    return processArgument( std::forward<F>(f), pos-1u, tail... );
+  }
+
   template<typename ...Args>
   std::string getArgumentType(const unsigned pos, Args const& ...args) const
   {
     using Log::Backend::typeString;
-    return typeString( getArgument(pos, args...) );
+    return processArgument( [](auto& e) { return typeString(e); },  pos, args... );
   }
   template<typename ...Args>
   std::string getArgumentValue(const unsigned pos, Args const& ...args) const
   {
     using Log::Backend::toString;
-    return toString( getArgument(pos, args...) );
+    return processArgument( [](auto& e) { return toString(e); },  pos, args... );
   }
 
 
@@ -81,7 +94,7 @@ private:
     switch(state.type_)
     {
       case detail::State::Type::String:
-        os << std::string{ state.begin_, state.end_ };
+        os << std::string{ state.begin_, state.end_ };  // TODO: string_view? element-by-element insertion?
         return;
       case detail::State::Type::Value:
         os << getArgumentValue(state.referencedArgument_, args...);
