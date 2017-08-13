@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include <boost/filesystem/path.hpp>
 
 namespace But

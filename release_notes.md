@@ -6,6 +6,8 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Optional<T>` now supports multi-argument c-tors.
+  * `Log::Field::Pid` added.
   * added GCC-7.1 and Clang-4.0 to supported toolchains (and as default ones on CI).
   * `Optional`'s c-tors are no longer explicit.
   * automated docker SDK build on dockerhub: baszerr/but-sdk

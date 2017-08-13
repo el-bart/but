@@ -10,6 +10,11 @@ using But::makeOptional;
 namespace
 {
 
+struct MultiArgCtor
+{
+  MultiArgCtor(int, double, char) { }
+};
+
 struct ButOptional: public testing::Test
 { };
 
@@ -114,11 +119,39 @@ TEST_F(ButOptional, ConstArrowOperator)
 }
 
 
-TEST_F(ButOptional, HelperMakeFunction)
+TEST_F(ButOptional, HelperMakeFunctionBaiscUseCase)
 {
   auto opt = makeOptional<std::string>("test");
   ASSERT_TRUE(opt);
   EXPECT_EQ( "test", opt.get() );
+}
+
+
+TEST_F(ButOptional, HelperMakeFunctionMultiArgumentConstructor)
+{
+  auto opt = makeOptional<MultiArgCtor>(42, 4.2, 'B');
+  (void)opt;
+}
+
+
+TEST_F(ButOptional, BuildingFromMultiArgCtors)
+{
+  const Optional<MultiArgCtor> opt{42, 4.2, 'B'};
+  (void)opt;
+}
+
+
+TEST_F(ButOptional, BulidingFromPodLikeStructure)
+{
+  struct SimpleData
+  {
+    int i_;
+    double d_;
+  };
+  const Optional<SimpleData> opt{42, 4.2};
+  ASSERT_TRUE(opt);
+  EXPECT_EQ( 42, opt->i_ );
+  EXPECT_EQ( 4.2, opt->d_ );
 }
 
 

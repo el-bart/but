@@ -74,7 +74,7 @@ with this class in place, code can be easily refactored later on, if needed (add
 passed info like file, line and function to the message. allows to create whole tree of exceptions.
  * `NotNull` - wrapper for (smart)pointers, that ensures element held inside is not null. if user would
 pass such a pointer, exception will be thrown during construction.
- * `Optional` - template fixing boost::optional's issues with move semantics.
+ * `Optional` - template fixing boost::optional's issues with move semantics, multi-arg c-tors and references.
  * `Guard` - helper object (and "make" function) to generate RAII-style cleanup, for local elements, that
 are not worth a dedicated, reusable class, yet still must be exception-safe.
 
