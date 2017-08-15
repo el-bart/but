@@ -21,20 +21,12 @@ public:
 
   explicit TextFile(boost::filesystem::path path);
 
-  template<typename ...Args>
-  void log(Args&& ...args)
-  {
-    s_.log( std::forward<Args>(args)... );
-  }
-
-  auto operator->() { return this; }
-
 private:
-  void logImpl(Backend::Entry e) override { static_cast<Foreign&>(s_).log( std::move(e) ); }
+  void logImpl(Backend::Entry e) override { s_.log( std::move(e) ); }
   void reloadImpl() override;
   void flushImpl() override { s_.flush(); }
 
-  boost::filesystem::path path_;
+  const boost::filesystem::path path_;
   std::ofstream file_;
   Stream s_;
 };

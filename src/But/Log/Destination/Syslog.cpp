@@ -25,17 +25,7 @@ auto toSyslogPriority(const Field::Priority p)
   assert(!"unknown priority");
   throw std::logic_error{"unknown priority"};
 }
-}
 
-void Syslog::append(std::stringstream& ss, const Field::Priority p)
-{
-  const auto slp = toSyslogPriority(p);
-  syslog( slp, "%s", ss.str().c_str() );
-}
-
-
-namespace
-{
 auto stringToPriority(std::string const& str)
 {
   if( str == toString(Field::Priority::debug) )   return Field::Priority::debug;
