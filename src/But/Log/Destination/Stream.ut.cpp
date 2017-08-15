@@ -12,24 +12,30 @@ using Thread = But::Threading::JoiningThread<std::thread>;
 namespace
 {
 
+struct StringStream: public Stream
+{
+  StringStream(): Stream{ss_} { }
+  void reloadImplUnderLock() override { }
+  std::stringstream ss_;
+};
+
 struct ButLogDestinationStream: public testing::Test
 {
-  std::stringstream ss_;
-  Stream s_{ss_};
+  StringStream s_;
 };
 
 
 TEST_F(ButLogDestinationStream, PrintingSampleData)
 {
   s_.log( "line: ", LineNumber{42} );
-  EXPECT_EQ( ss_.str(), "line: 42\n" );
+  EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
 TEST_F(ButLogDestinationStream, CheckArrowOperator)
 {
   s_->log( "line: ", LineNumber{42} );
-  EXPECT_EQ( ss_.str(), "line: 42\n" );
+  EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
@@ -37,14 +43,14 @@ TEST_F(ButLogDestinationStream, OperatingViaBaseClass)
 {
   auto& base = static_cast<Foreign&>(s_);
   base->log( "line: ", LineNumber{42} );
-  EXPECT_EQ( ss_.str(), "line: 42\n" );
+  EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
 TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
 {
   s_.log( "beep \07 / CRLF \r\n / normal: ", LineNumber{42} );
-  EXPECT_EQ( ss_.str(), "beep . / CRLF .. / normal: 42\n" );
+  EXPECT_EQ( s_.ss_.str(), "beep . / CRLF .. / normal: 42\n" );
 }
 
 
@@ -62,41 +68,40 @@ auto countLines(std::stringstream& ss)
 
 TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutput)
 {
+  auto logger = std::make_shared<StringStream>();
   {
-    auto logger = std::make_shared<Stream>(ss_);
     auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
     Thread th1(multiLog);
     Thread th2(multiLog);
     Thread th3(multiLog);
   }
-  EXPECT_EQ( 3u*100u, countLines(ss_) );
+  EXPECT_EQ( 3u*100u, countLines(logger->ss_) );
 }
 
 
 TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
 {
+  auto loggerSS = std::make_shared<StringStream>();
   {
-    std::shared_ptr<Foreign> logger = std::make_shared<Stream>(ss_);
+    std::shared_ptr<Foreign> logger = loggerSS;
     auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
     Thread th1(multiLog);
     Thread th2(multiLog);
     Thread th3(multiLog);
   }
-  EXPECT_EQ( 3u*100u, countLines(ss_) );
+  EXPECT_EQ( 3u*100u, countLines(loggerSS->ss_) );
 }
 
 
 TEST_F(ButLogDestinationStream, ReloadingSmokeTest)
 {
-  Stream s{ss_};
-  s.reload();
+  s_.reload();
 }
 
 
 TEST_F(ButLogDestinationStream, FlushingSmokeTest)
 {
-  Stream s{ss_};
-  s.flush();
+  s_.flush();
 }
 
 }

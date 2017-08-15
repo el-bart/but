@@ -8,6 +8,18 @@ using But::Log::Destination::Stream;
 namespace
 {
 
+struct OutputFileStream: public Stream
+{
+  explicit OutputFileStream(std::string path):
+    Stream{os_},
+    os_{ std::move(path) }
+  { }
+
+  void reloadImplUnderLock() override { }
+
+  std::ofstream os_;
+};
+
 struct ButLogDestinationStream: public testing::Test
 {
   ~ButLogDestinationStream()
@@ -28,8 +40,7 @@ struct ButLogDestinationStream: public testing::Test
   }
 
   But::System::TempFile tmp_{"/tmp/but_text_file_destination_it"};
-  std::ofstream os_{ tmp_.path().string() };
-  Stream s_{os_};
+  OutputFileStream s_{ tmp_.path().string() };
 };
 
 

@@ -9,14 +9,14 @@ namespace Destination
 
 
 TextFile::TextFile(boost::filesystem::path path):
-  path_{ std::move(path) },
-  s_{file_}
+  Stream{file_},                // NOTE: not really used until the object is fully-constructed
+  path_{ std::move(path) }
 {
   reload();
 }
 
 
-void TextFile::reloadImpl()
+void TextFile::reloadImplUnderLock()
 {
   std::ofstream reloaded;
   reloaded.open( path_.string() );
@@ -24,9 +24,7 @@ void TextFile::reloadImpl()
     BUT_THROW(OpeningLogFileFailed, path_);
 
   file_.close();
-  file_ = std::move(reloaded);
-
-  s_.reload();
+  std::swap(file_, reloaded);
 }
 
 }

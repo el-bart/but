@@ -14,9 +14,9 @@ namespace Log
 namespace Destination
 {
 
-class Stream final: public Foreign
+class Stream: public Foreign
 {
-public:
+protected:
   explicit Stream(std::ostream& os): os_{&os} { }
 
 private:
@@ -30,12 +30,19 @@ private:
     (*os_) << ss.rdbuf();
   }
 
-  void reloadImpl() override { }
+  void reloadImpl() override
+  {
+    const std::lock_guard<std::mutex> lock(mutex_);
+    reloadImplUnderLock();
+  }
+
   void flushImpl() override
   {
     const std::lock_guard<std::mutex> lock(mutex_);
     (*os_) << std::flush;
   }
+
+  virtual void reloadImplUnderLock() = 0;
 
   std::mutex mutex_;
   std::ostream* os_;

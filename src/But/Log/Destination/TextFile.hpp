@@ -14,7 +14,7 @@ namespace Destination
 
 /** @brief typical output - text file, with one log per line.
  */
-class TextFile final: public Foreign
+class TextFile final: public Stream
 {
 public:
   BUT_DEFINE_EXCEPTION(OpeningLogFileFailed, Exception, "opening log file failed");
@@ -22,13 +22,10 @@ public:
   explicit TextFile(boost::filesystem::path path);
 
 private:
-  void logImpl(Backend::Entry e) override { s_.log( std::move(e) ); }
-  void reloadImpl() override;
-  void flushImpl() override { s_.flush(); }
+  void reloadImplUnderLock() override;
 
   const boost::filesystem::path path_;
   std::ofstream file_;
-  Stream s_;
 };
 
 }
