@@ -95,6 +95,7 @@ TEST_F(ButFormatDetailArgumentsUsageCount, OneArgument)
 
 TEST_F(ButFormatDetailArgumentsUsageCount, ExceptionIsThrownOnInvalidFormat)
 {
+  EXPECT_THROW( argumentsUsageCount("$ 1"), Invalid ) << "missing number";
   EXPECT_THROW( argumentsUsageCount("$1oops"), Invalid ) << "invalid number";
   EXPECT_THROW( argumentsUsageCount("${1"), Invalid ) << "missing closing brace";
   EXPECT_THROW( argumentsUsageCount("${1 x"), Invalid ) << "missing closing brace";
@@ -121,7 +122,7 @@ TEST_F(ButFormatDetailArgumentsUsageCount, MultipleArgumentsMultipleStyles)
 TEST_F(ButFormatDetailArgumentsUsageCount, RepeatedArguments)
 {
   constexpr auto cnt = argumentsUsageCount("test $1 data $1\t$2\n");
-  EXPECT_EQ( 3u, cnt );
+  EXPECT_EQ( 2u, cnt );
 }
 
 

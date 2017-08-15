@@ -52,7 +52,7 @@ TEST_F(ButFormatDetailArgumentsCount, OneArgument)
 
 TEST_F(ButFormatDetailArgumentsCount, MultipleArguments)
 {
-  constexpr auto ps = parse<10>("some $42 test $19 data");
+  constexpr auto ps = parse<10>("some $4 test $2 data");
   constexpr auto cnt = argumentsCount(ps);
   EXPECT_EQ(2u, cnt);
 }
