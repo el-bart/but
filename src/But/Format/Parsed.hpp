@@ -94,7 +94,7 @@ private:
     switch(state.type_)
     {
       case detail::State::Type::String:
-        os << std::string{ state.begin_, state.end_ };  // TODO: string_view? element-by-element insertion?
+        os.write( state.begin_, state.end_ - state.begin_ );
         return;
       case detail::State::Type::Value:
         os << getArgumentValue(state.referencedArgument_, args...);
