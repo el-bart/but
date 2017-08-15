@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `But::Format` for doing basic, common string formatting.
   * `Optional<T>` now supports multi-argument c-tors.
   * `Log::Field::Pid` added.
   * added GCC-7.1 and Clang-4.0 to supported toolchains (and as default ones on CI).

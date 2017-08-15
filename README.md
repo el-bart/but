@@ -162,3 +162,7 @@ overloaded arrow-operator, to make one-shot, synchronized class, one-liners in i
  * `WaitWrapper` - helper structure that provide a `wait()` wrappers, that throw exceptions in case of
 time-out. these are useful for testing, but keep in mind that having a blocking-wait in a high-throughput
 system, effectively makes low-throughput system. ;)
+
+
+## Format
+ * `BUT_FORMAT` - helper for generated parsed format, that can check syntax at compile time and process arguments at runtime (arity is always checked at compile time, too). since output format for each parameter is predefined, effectively all checks are done `static_assert`s.
