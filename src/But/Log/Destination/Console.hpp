@@ -10,7 +10,7 @@ namespace Log
 namespace Destination
 {
 
-class Console final: public Stream
+class Console: public Stream
 {
 public:
   Console(): Stream{std::cout} { }

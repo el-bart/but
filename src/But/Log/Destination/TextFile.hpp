@@ -14,7 +14,7 @@ namespace Destination
 
 /** @brief typical output - text file, with one log per line.
  */
-class TextFile final: public Stream
+class TextFile: public Stream
 {
 public:
   BUT_DEFINE_EXCEPTION(OpeningLogFileFailed, Exception, "opening log file failed");
