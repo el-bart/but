@@ -63,6 +63,7 @@ private:
   template<typename F, typename Head>
   std::string processArgument(F&& f, const unsigned pos, Head const& head) const
   {
+    (void)pos;
     assert( pos == 0u && "format is not alligned with arguments" );
     return f(head);
   }
