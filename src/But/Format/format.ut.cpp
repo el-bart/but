@@ -40,36 +40,32 @@ TEST_F(ButFormat, MultipleArguments)
 }
 
 
-/*
 TEST_F(ButFormat, RepeatedArguments)
 {
   constexpr auto fmt = BUT_FORMAT("$0 $1 $0");
   EXPECT_EQ( 2u, fmt.expectedArguments() );
   EXPECT_EQ( "1 2 1", fmt.format(1,2) );
 }
-*/
 
 
-/*
 TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
 {
   {
     constexpr auto fmt = BUT_FORMAT("${0} $0");
-    EXPECT_EQ( 2u, fmt.expectedArguments() );
+    EXPECT_EQ( 1u, fmt.expectedArguments() );
     EXPECT_EQ( "x x", fmt.format("x") );
   }
   {
-    constexpr auto fmt = BUT_FORMAT("${V0}=${T0}");
-    EXPECT_EQ( 2u, fmt.expectedArguments() );
+    constexpr auto fmt = BUT_FORMAT("${T0}=${V0}");
+    EXPECT_EQ( 1u, fmt.expectedArguments() );
     EXPECT_EQ( "int=42", fmt.format(42) );
   }
   {
     constexpr auto fmt = BUT_FORMAT("${0#info} ${V0#text} ${T0#foo}");
-    EXPECT_EQ( 3u, fmt.expectedArguments() );
+    EXPECT_EQ( 1u, fmt.expectedArguments() );
     EXPECT_EQ( "x x std::string", fmt.format("x") );
   }
 }
-*/
 
 
 TEST_F(ButFormat, DenseFormats)
