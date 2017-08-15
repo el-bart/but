@@ -31,7 +31,11 @@ private:
   }
 
   void reloadImpl() override { }
-  void flushImpl() override { (*os_) << std::flush; }
+  void flushImpl() override
+  {
+    const std::lock_guard<std::mutex> lock(mutex_);
+    (*os_) << std::flush;
+  }
 
   std::mutex mutex_;
   std::ostream* os_;
