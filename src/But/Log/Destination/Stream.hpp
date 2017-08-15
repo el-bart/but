@@ -20,7 +20,7 @@ protected:
   explicit Stream(std::ostream& os): os_{&os} { }
 
 private:
-  void logImpl(Backend::Entry e) override
+  void logImpl(Backend::Entry e) override final
   {
     std::stringstream ss;
     toStreamFormat( ss, std::move(e) );
@@ -28,13 +28,13 @@ private:
     (*os_) << ss.rdbuf();
   }
 
-  void reloadImpl() override
+  void reloadImpl() override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
     reloadImplUnderLock();
   }
 
-  void flushImpl() override
+  void flushImpl() override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
     (*os_) << std::flush;
