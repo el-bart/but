@@ -18,7 +18,7 @@ namespace Format
  *        is always constant.
  *  @param N number of arguments
  */
-template<unsigned N, unsigned MaxSegments>
+template<unsigned ArgumentsCount, unsigned MaxSegments>
 class Parsed final
 {
 public:
@@ -40,7 +40,7 @@ public:
   { }
 
   //constexpr auto expectedArguments() const { return detail::argumentsCount(ps_); } // TODO: will not work with static_assert...
-  static constexpr auto expectedArguments() { return N; }
+  static constexpr auto expectedArguments() { return ArgumentsCount; }
 
   template<typename ...Args>
   std::string format(Args const& ...args) const
