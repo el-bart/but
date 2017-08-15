@@ -23,9 +23,7 @@ private:
   void logImpl(Backend::Entry e) override
   {
     std::stringstream ss;
-    for(auto& f: e)
-      ss << Backend::trimNonPrintable( std::move(f).value() );
-    ss << std::endl;
+    toStreamFormat( ss, std::move(e) );
     const std::lock_guard<std::mutex> lock(mutex_);
     (*os_) << ss.rdbuf();
   }
@@ -43,6 +41,13 @@ private:
   }
 
   virtual void reloadImplUnderLock() = 0;
+
+  virtual void toStreamFormat(std::ostream& os, Backend::Entry&& e)
+  {
+    for(auto& f: e)
+      os << Backend::trimNonPrintable( std::move(f).value() );
+    os << std::endl;
+  }
 
   std::mutex mutex_;
   std::ostream* os_;

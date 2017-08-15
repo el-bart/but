@@ -54,8 +54,6 @@ TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
 }
 
 
-namespace
-{
 auto countLines(std::stringstream& ss)
 {
   auto lines = 0u;
@@ -63,7 +61,6 @@ auto countLines(std::stringstream& ss)
   while( std::getline(ss, ignored) )
     ++lines;
   return lines;
-}
 }
 
 TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutput)
@@ -102,6 +99,20 @@ TEST_F(ButLogDestinationStream, ReloadingSmokeTest)
 TEST_F(ButLogDestinationStream, FlushingSmokeTest)
 {
   s_.flush();
+}
+
+
+struct CustomFormatting: public StringStream
+{
+  void toStreamFormat(std::ostream& os, But::Log::Backend::Entry&& e) override { os << e.size() << "x"; }
+};
+
+TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)
+{
+  CustomFormatting cs;
+  cs.log("alice", "has", "a cat");
+  cs.log("so tech", "much wow");
+  EXPECT_EQ( "3x2x", cs.ss_.str() );
 }
 
 }
