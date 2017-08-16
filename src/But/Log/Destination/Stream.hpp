@@ -17,18 +17,13 @@ namespace Destination
 class Stream: public Foreign
 {
 protected:
-  explicit Stream(std::ostream& os):
-    os_{&os},
-    endline_{ determineEndline() }
-  { }
+  explicit Stream(std::ostream& os): os_{&os} { }
 
 private:
   void logImpl(Backend::Entry e) override final
   {
-    std::stringstream ss;
-    toStreamFormat( ss, std::move(e) );
     const std::lock_guard<std::mutex> lock(mutex_);
-    (*os_) << ss.rdbuf();
+    toStreamFormat( *os_, std::move(e) );
   }
 
   void reloadImpl() override final
@@ -52,7 +47,7 @@ private:
     os << endline_;
   }
 
-  static std::string determineEndline()
+  static std::string endlineType()
   {
     std::stringstream ss;
     ss << std::endl;
@@ -61,7 +56,7 @@ private:
 
   std::mutex mutex_;
   std::ostream* os_;
-  const std::string endline_;
+  const std::string endline_{ endlineType() };
 };
 
 }
