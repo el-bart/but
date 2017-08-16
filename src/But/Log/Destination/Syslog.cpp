@@ -1,7 +1,6 @@
 #include <cassert>
 #include <syslog.h>
 #include "But/Log/Backend/toString.hpp"
-#include "But/Log/Backend/trimNonPrintable.hpp"
 #include "Syslog.hpp"
 
 namespace But
@@ -43,7 +42,7 @@ void Syslog::logImpl(Backend::Entry e)
   std::stringstream ss;
   for(auto& f: e)
   {
-    ss << Backend::trimNonPrintable( std::move(f).value() );
+    ss << trim_( std::move(f).value() );
     if( f.type() == typeString(Field::Priority::info) )
       pri = f.value();
   }

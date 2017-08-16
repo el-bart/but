@@ -1,6 +1,4 @@
-#include <array>
-#include <cinttypes>
-#include "trimNonPrintable.hpp"
+#include "NonPrintableTrimmer.hpp"
 
 namespace But
 {
@@ -23,13 +21,9 @@ auto constructLut()
 }
 }
 
-std::string trimNonPrintable(std::string in)
-{
-  static const auto lut = constructLut();
-  for(auto& e: in)
-    e = lut[ (uint8_t)e ];
-  return in;
-}
+NonPrintableTrimmer::NonPrintableTrimmer():
+  lut_{ constructLut() }
+{ }
 
 }
 }

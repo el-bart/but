@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cctype>
 #include "But/Log/Backend/toString.hpp"
-#include "But/Log/Backend/trimNonPrintable.hpp"
+#include "But/Log/Backend/NonPrintableTrimmer.hpp"
 #include "Foreign.hpp"
 
 namespace But
@@ -43,7 +43,7 @@ private:
   virtual void toStreamFormat(std::ostream& os, Backend::Entry&& e)
   {
     for(auto& f: e)
-      os << Backend::trimNonPrintable( std::move(f).value() );
+      os << trim_( std::move(f).value() );
     os << endline_;
   }
 
@@ -57,6 +57,7 @@ private:
   std::mutex mutex_;
   std::ostream* os_;
   const std::string endline_{ endlineType() };
+  const Backend::NonPrintableTrimmer trim_;
 };
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
 #include "But/Log/Backend/toString.hpp"
-#include "But/Log/Backend/trimNonPrintable.hpp"
+#include "But/Log/Backend/NonPrintableTrimmer.hpp"
 #include "But/Log/Field/Priority.hpp"
 #include "Foreign.hpp"
 
@@ -23,6 +23,8 @@ private:
 
   void reloadImpl() override { }
   void flushImpl() override { }
+
+  const Backend::NonPrintableTrimmer trim_;
 };
 
 }
