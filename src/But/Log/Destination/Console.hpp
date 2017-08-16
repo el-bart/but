@@ -13,7 +13,11 @@ namespace Destination
 class Console: public Stream
 {
 public:
-  Console(): Stream{std::cout} { }
+  Console():
+    Stream{std::cout}
+  {
+    std::cout.sync_with_stdio(false);
+  }
 
 private:
   void reloadImplUnderLock() override { }
