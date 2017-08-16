@@ -22,11 +22,43 @@ auto makeLogger()
   return But::Log::LoggerProxy<decltype(dst)>{ std::move(dst) };
 }
 
+
+void testCout()
+{
+  for(auto i=0; i<g_logsCount; ++i)
+  {
+    std::cout << "hello, world\n";
+    //std::cout << "answer is " << 42 << "\n";
+    //std::cout << "some value = " << 4.2 << "\n";
+  }
+}
+
 template<typename Logger>
 void testSimpleString(Logger& log)
 {
   for(auto i=0; i<g_logsCount; ++i)
     log.log("hello, world");
+}
+
+template<typename Logger>
+void testStringAndInt(Logger& log)
+{
+  for(auto i=0; i<g_logsCount; ++i)
+    log.log("answer is ", 42);
+}
+
+template<typename Logger>
+void testStringAndInts(Logger& log)
+{
+  for(auto i=0; i<g_logsCount; ++i)
+    log.log("options: ", 41, 42, 43);
+}
+
+template<typename Logger>
+void testStringAndDouble(Logger& log)
+{
+  for(auto i=0; i<g_logsCount; ++i)
+    log.log("some value = ", 4.2);
 }
 
 }
@@ -47,7 +79,11 @@ int main(int argc, char** argv)
   const auto start = Clock::now();
   switch(testCaseNumber)
   {
-    case 0: testSimpleString(lp); break;
+    case 0: testCout(); break;
+    case 1: testSimpleString(lp); break;
+    case 2: testStringAndInt(lp); break;
+    case 3: testStringAndInts(lp); break;
+    case 4: testStringAndDouble(lp); break;
     default: std::cerr << argv[0] << ": unknown test case " << testCaseNumber << std::endl; return 2;
   }
   const auto stop = Clock::now();
