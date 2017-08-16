@@ -43,7 +43,7 @@ void Syslog::logImpl(Backend::Entry e)
   std::stringstream ss;
   for(auto& f: e)
   {
-    ss << Backend::trimNonPrintable( f.value() );
+    ss << Backend::trimNonPrintable( std::move(f).value() );
     if( f.type() == typeString(Field::Priority::info) )
       pri = f.value();
   }
