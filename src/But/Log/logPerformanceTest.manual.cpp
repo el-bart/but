@@ -9,6 +9,13 @@ using Clock = std::chrono::high_resolution_clock;
 namespace
 {
 
+#if 1
+constexpr auto g_logsCount = 10*1000*1000;
+#else
+constexpr auto g_logsCount = 100*1000;
+#endif
+
+
 auto makeLogger()
 {
   auto dst = But::makeUniqueNN<But::Log::Destination::Console>();
@@ -18,10 +25,8 @@ auto makeLogger()
 template<typename Logger>
 void testSimpleString(Logger& log)
 {
-  (void)log;        
-  for(auto i=0; i<10*1000*1000; ++i)
-    //log.log("hello, world");
-    std::cout << "hello, world\n";
+  for(auto i=0; i<g_logsCount; ++i)
+    log.log("hello, world");
 }
 
 }
