@@ -600,4 +600,12 @@ TEST_F(ButFormatDetailParse, MiscInvalidFormats)
   EXPECT_THROW( parse<2>("$T12"), Invalid ) << "explicit type name without brace is not possible";
 }
 
+
+TEST_F(ButFormatDetailParse, TooComplexFormatForGivenStatesCount)
+{
+  EXPECT_NO_THROW( parse<3>("$1 $2") ) << "invalid format is raisign an error";
+  EXPECT_THROW( parse<4>("$1 $2 $3"), Invalid );
+  EXPECT_THROW( parse<2>("${1}${2}${3}"), Invalid );
+}
+
 }

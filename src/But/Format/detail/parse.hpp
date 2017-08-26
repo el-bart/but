@@ -69,7 +69,7 @@ constexpr auto parseSimpleVariable(State& st, char const* fmt)
   st.end_  = fmt+1;
   while( isDigit(*st.end_) )
     ++st.end_;
-  throwOnInvalidSyntax( not isEos(*st.end_) && not isSpace(*st.end_), "variable does not end with end of data not space", st.end_ );
+  throwOnInvalidSyntax( not isEos(*st.end_) && not isSpace(*st.end_), "variable does not end with end of data or space", st.end_ );
   st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_+1, st.end_);
   return st.end_;
 }
@@ -110,6 +110,7 @@ constexpr auto parseImpl(ParserState<N>&& ps, char const* fmt)
 {
   while( not isEos(*fmt) )
   {
+    throwOnInvalidSyntax( N == ps.count_, "format too long for a declared states count - expected end", fmt );
     State st;
     if( isVariableBegin(*fmt) )
       fmt = parseVariable(st, fmt);
