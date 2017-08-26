@@ -3,6 +3,7 @@
 #include "But/NotNull.hpp"
 #include "LoggerProxy.hpp"
 #include "Destination/Console.hpp"
+#include "Destination/NaiveConsole.hpp"
 #include "Destination/ForeignAdapter.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
@@ -30,6 +31,18 @@ void testCout()
   for(auto i=0; i<g_logsCount; ++i)
   {
     std::cout << "hello, world\n";
+    //std::cout << "answer is " << 42 << "\n";
+    //std::cout << "some value = " << 4.2 << "\n";
+  }
+}
+
+void testNaiveCout()
+{
+  But::Log::Destination::NaiveConsole nc;
+  But::Log::LoggerProxy<decltype(nc)> log{ std::move(nc) };
+  for(auto i=0; i<g_logsCount; ++i)
+  {
+    log.log("hello, world");
     //std::cout << "answer is " << 42 << "\n";
     //std::cout << "some value = " << 4.2 << "\n";
   }
@@ -82,10 +95,11 @@ int main(int argc, char** argv)
   switch(testCaseNumber)
   {
     case 0: testCout(); break;
-    case 1: testSimpleString(lp); break;
-    case 2: testStringAndInt(lp); break;
-    case 3: testStringAndInts(lp); break;
-    case 4: testStringAndDouble(lp); break;
+    case 1: testNaiveCout(); break;
+    case 2: testSimpleString(lp); break;
+    case 3: testStringAndInt(lp); break;
+    case 4: testStringAndInts(lp); break;
+    case 5: testStringAndDouble(lp); break;
     default: std::cerr << argv[0] << ": unknown test case " << testCaseNumber << std::endl; return 2;
   }
   const auto stop = Clock::now();
