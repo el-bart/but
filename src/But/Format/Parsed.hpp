@@ -112,5 +112,12 @@ private:
   char const* format_;
 };
 
+
+template<unsigned N, unsigned M>
+std::string toString(Parsed<N,M> const&) = delete;
+
+template<unsigned N, unsigned M>
+std::string typeString(Parsed<N,M> const&) = delete;
+
 }
 }
