@@ -7,7 +7,7 @@ namespace Log
 namespace Destination
 {
 
-void MultiForeign::logImpl(Backend::Entry e)
+void MultiForeign::logImpl(Backend::Entry const& e)
 {
   if( dsts_.empty() )
     return;
@@ -24,7 +24,7 @@ void MultiForeign::logImpl(Backend::Entry e)
 
   try
   {
-    dsts_.back()->log( std::move(e) );
+    dsts_.back()->log(e);
   }
   catch(...)
   { /* this is logger - ignoring any errors when forwarind logs! */ }

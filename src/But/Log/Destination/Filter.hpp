@@ -29,10 +29,10 @@ public:
   }
 
 private:
-  void logImpl(Backend::Entry e) override
+  void logImpl(Backend::Entry const& e) override
   {
     if( filter_(e) )
-      destination_->log( std::move(e) );
+      destination_->log(e);
   }
   void reloadImpl() override { destination_->reload(); }
   void flushImpl() override { destination_->flush(); }

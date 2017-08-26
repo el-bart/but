@@ -15,7 +15,7 @@ namespace Destination
 class Syslog final: public Foreign
 {
 private:
-  void logImpl(Backend::Entry e) override;
+  void logImpl(Backend::Entry const& e) override;
 
   Field::Priority selectPriority(Field::Priority /*pOld*/, Field::Priority pNew) const { return pNew; }
   template<typename T>

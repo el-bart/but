@@ -17,7 +17,7 @@ public:
   auto operator->() { return this; }
 
 private:
-  void logImpl(Backend::Entry) override { }
+  void logImpl(Backend::Entry const&) override { }
   void reloadImpl() override { }
   void flushImpl() override { }
 };

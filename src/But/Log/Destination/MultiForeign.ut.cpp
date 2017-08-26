@@ -13,7 +13,7 @@ namespace
 template<int N>
 struct TestDst final: public Foreign
 {
-  void logImpl(Entry) override
+  void logImpl(Entry const&) override
   {
     ++logs_;
     if(throws_)
@@ -81,7 +81,7 @@ TEST_F(ButLogDestinationMultiForeign, PrintingGoesThroughAllDestinations)
 
 struct CopyMoveDst final: public Foreign
 {
-  void logImpl(Entry e) override
+  void logImpl(Entry const& e) override
   {
     EXPECT_EQ( 2u, e.size() );
   }

@@ -104,7 +104,7 @@ TEST_F(ButLogDestinationStream, FlushingSmokeTest)
 
 struct CustomFormatting: public StringStream
 {
-  void toStreamFormat(std::ostream& os, But::Log::Backend::Entry&& e) override { os << e.size() << "x"; }
+  void toStreamFormat(std::ostream& os, But::Log::Backend::Entry const& e) override { os << e.size() << "x"; }
 };
 
 TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)

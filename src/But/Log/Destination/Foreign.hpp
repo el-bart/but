@@ -20,15 +20,22 @@ public:
   Foreign& operator=(Foreign&&) = delete;
 
   template<typename ...Args>
+  void log(Backend::Entry& e, Args&& ...args)
+  {
+    e.clear();
+    e.reserve( sizeof...(args) );
+    append(e, std::forward<Args>(args)...);
+    logImpl(e);
+  }
+
+  template<typename ...Args>
   void log(Args&& ...args)
   {
     Backend::Entry e;
-    e.reserve( sizeof...(args) );
-    append(e, std::forward<Args>(args)...);
-    logImpl( std::move(e) );
+    log(e, std::forward<Args>(args)...);
   }
 
-  void log(Backend::Entry e) { logImpl( std::move(e) ); }
+  void log(Backend::Entry const& e) { logImpl(e); }
   void reload() { reloadImpl(); }
   void flush() { flushImpl(); }
 
@@ -43,7 +50,7 @@ private:
   }
   static void append(Backend::Entry&) { }
 
-  virtual void logImpl(Backend::Entry e) = 0;
+  virtual void logImpl(Backend::Entry const& e) = 0;
   virtual void reloadImpl() = 0;
   virtual void flushImpl() = 0;
 };

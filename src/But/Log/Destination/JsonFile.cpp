@@ -19,7 +19,7 @@ auto convert(std::string const& str)
   return boost::lexical_cast<T>(str);
 }
 
-auto createField(Backend::FieldInfo&& fi)
+auto createField(Backend::FieldInfo const& fi)
 {
   json field;
 
@@ -90,13 +90,13 @@ auto createField(Backend::FieldInfo&& fi)
 }
 }
 
-void JsonFile::toStreamFormat(std::ostream& os, Backend::Entry&& entry)
+void JsonFile::toStreamFormat(std::ostream& os, Backend::Entry const& entry)
 {
   // TODO: format field - special case
 
   auto tab = json::array();
   for(auto& e: entry)
-    tab.push_back( createField( std::move(e) ) );
+    tab.push_back( createField(e) );
   os << tab << "\n";
 }
 

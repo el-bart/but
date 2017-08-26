@@ -3,6 +3,7 @@
 #include "But/NotNull.hpp"
 #include "LoggerProxy.hpp"
 #include "Destination/Console.hpp"
+#include "Destination/ForeignAdapter.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -19,7 +20,8 @@ constexpr auto g_logsCount = 100*1000;
 auto makeLogger()
 {
   auto dst = But::makeUniqueNN<But::Log::Destination::Console>();
-  return But::Log::LoggerProxy<decltype(dst)>{ std::move(dst) };
+  auto adapter = But::Log::Destination::ForeignAdapter<decltype(dst)>{ std::move(dst) };
+  return But::Log::LoggerProxy<decltype(adapter)>{ std::move(adapter) };
 }
 
 

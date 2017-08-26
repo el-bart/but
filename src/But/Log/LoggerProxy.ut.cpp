@@ -15,7 +15,7 @@ struct TestForeignDestination final: public Foreign
 {
   explicit TestForeignDestination(std::stringstream& ss): ss_{&ss} { }
 
-  void logImpl(Entry e) override
+  void logImpl(Entry const& e) override
   {
     for(auto& f: e)
       (*ss_) << f.type() << "=" << f.value() << " ";

@@ -20,10 +20,10 @@ protected:
   explicit Stream(std::ostream& os): os_{&os} { }
 
 private:
-  void logImpl(Backend::Entry e) override final
+  void logImpl(Backend::Entry const& e) override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
-    toStreamFormat( *os_, std::move(e) );
+    toStreamFormat(*os_, e);
   }
 
   void reloadImpl() override final
@@ -40,10 +40,10 @@ private:
 
   virtual void reloadImplUnderLock() = 0;
 
-  virtual void toStreamFormat(std::ostream& os, Backend::Entry&& e)
+  virtual void toStreamFormat(std::ostream& os, Backend::Entry const& e)
   {
     for(auto& f: e)
-      os << trim_( std::move(f).value() );
+      os << trim_( f.value() );
     os << endline_;
   }
 

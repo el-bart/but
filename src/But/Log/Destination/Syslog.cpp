@@ -36,13 +36,13 @@ auto stringToPriority(std::string const& str)
 }
 }
 
-void Syslog::logImpl(Backend::Entry e)
+void Syslog::logImpl(Backend::Entry const& e)
 {
   auto pri = toString(Field::Priority::info);
   std::stringstream ss;
   for(auto& f: e)
   {
-    ss << trim_( std::move(f).value() );
+    ss << trim_( f.value() );
     if( f.type() == typeString(Field::Priority::info) )
       pri = f.value();
   }

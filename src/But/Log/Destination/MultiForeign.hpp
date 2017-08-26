@@ -22,7 +22,7 @@ public:
   explicit MultiForeign(collection_type dsts): dsts_{ std::move(dsts) } { }
 
 private:
-  void logImpl(Backend::Entry e) override;
+  void logImpl(Backend::Entry const& e) override;
   void reloadImpl() override;
   void flushImpl() override;
 
