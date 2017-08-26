@@ -16,7 +16,8 @@ public:
   explicit JsonFile(boost::filesystem::path path): TextFile{ std::move(path) } { }
 
 private:
-  void toStreamFormat(std::ostream& os, Backend::Entry const& e) override;
+  void toStreamFormat(std::ostream& os, Backend::Entry const& entry) override;
+  void toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const& entry) override;
 };
 
 }

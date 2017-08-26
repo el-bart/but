@@ -11,6 +11,7 @@ int main()
   But::Log::Destination::Console c;
   c.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "hello, world" );
   c.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "bye, world" );
+  c.log( FormattedString{"format test"}, "whatever..." );
   c.flush();
   c.reload();
 

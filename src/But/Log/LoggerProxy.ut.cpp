@@ -22,6 +22,13 @@ struct TestForeignDestination final: public Foreign
       (*ss_) << f.type() << "=" << f.value() << " ";
   }
 
+  void logImpl(FormattedString const& str, Entry const& e) override
+  {
+    (*ss_) << str.value_ << " @@ ";
+    for(auto& f: e)
+      (*ss_) << f.type() << "=" << f.value() << " ";
+  }
+
   void reloadImpl() override { }
   void flushImpl() override { }
 
@@ -87,6 +94,14 @@ TEST_F(ButLogLoggerProxy, ForeignTypeValueLogging)
   LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42, "foo", 'a');
   EXPECT_EQ( buffer_.str(), "int=42 std::string=foo char=a ");
+}
+
+
+TEST_F(ButLogLoggerProxy, ForeignFormattedLogging)
+{
+  LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  log.log( BUT_FORMAT("${0} = $1"), "answer", 42 );
+  EXPECT_EQ( buffer_.str(), "answer = 42 @@ std::string=answer int=42 ");
 }
 
 

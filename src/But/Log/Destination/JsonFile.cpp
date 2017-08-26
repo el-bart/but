@@ -88,15 +88,28 @@ auto createField(Backend::FieldInfo const& fi)
   field[ std::move(fi).type() ] = std::move(fi).value();
   return field;
 }
+
+void commonFormat(json& tab, Backend::Entry const& entry)
+{
+  for(auto& e: entry)
+    tab.push_back( createField(e) );
 }
+}
+
 
 void JsonFile::toStreamFormat(std::ostream& os, Backend::Entry const& entry)
 {
-  // TODO: format field - special case
-
   auto tab = json::array();
-  for(auto& e: entry)
-    tab.push_back( createField(e) );
+  commonFormat(tab, entry);
+  os << tab << "\n";
+}
+
+
+void JsonFile::toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const& entry)
+{
+  auto tab = json::array();
+  tab.push_back( createField( Backend::FieldInfo{str} ) );
+  commonFormat(tab, entry);
   os << tab << "\n";
 }
 

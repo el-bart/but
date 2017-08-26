@@ -51,6 +51,21 @@ void Syslog::logImpl(Backend::Entry const& e)
   syslog( slp, "%s", ss.str().c_str() );
 }
 
+
+void Syslog::logImpl(Field::FormattedString const& str, Backend::Entry const& e)
+{
+  auto pri = toString(Field::Priority::info);
+  for(auto& f: e)
+  {
+    if( f.type() == typeString(Field::Priority::info) )
+      pri = f.value();
+  }
+  const auto p = stringToPriority(pri);
+  const auto slp = toSyslogPriority(p);
+  const auto trimmed = trim_(str.value_);
+  syslog( slp, "%s", trimmed.c_str() );
+}
+
 }
 }
 }

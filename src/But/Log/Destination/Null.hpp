@@ -18,6 +18,7 @@ public:
 
 private:
   void logImpl(Backend::Entry const&) override { }
+  void logImpl(Field::FormattedString const&, Backend::Entry const&) override { }
   void reloadImpl() override { }
   void flushImpl() override { }
 };

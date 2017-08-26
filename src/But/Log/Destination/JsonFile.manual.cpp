@@ -17,6 +17,11 @@ int main()
   jf.log( Priority::warning, " this is warning");
   jf.log( Priority::error, " this is error");
 
+  jf.log( FormattedString{"foo"}, Priority::debug, " this is debug");
+  jf.log( FormattedString{"foo"}, Priority::info, " this is info");
+  jf.log( FormattedString{"foo"}, Priority::warning, " this is warning");
+  jf.log( FormattedString{"foo"}, Priority::error, " this is error");
+
   But::Log::Destination::Foreign& base = jf;
   base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "hello, foreign world" );
   base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "bye, foreign world" );

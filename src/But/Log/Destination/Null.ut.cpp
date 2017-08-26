@@ -3,6 +3,7 @@
 
 using But::Log::Destination::Null;
 using But::Log::Destination::Foreign;
+using But::Log::Field::FormattedString;
 
 namespace
 {
@@ -24,6 +25,7 @@ TEST_F(ButLogDestinationNull, SmokeTest)
   null_.reload();
   null_.flush();
   null_.log("some", "values", 42);
+  null_.log( FormattedString{"$1 $0"}, 42, "answer is" );
 }
 
 

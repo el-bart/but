@@ -34,6 +34,11 @@ private:
     if( filter_(e) )
       destination_->log(e);
   }
+  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override
+  {
+    if( filter_(e) )
+      destination_->log(str, e);
+  }
   void reloadImpl() override { destination_->reload(); }
   void flushImpl() override { destination_->flush(); }
 

@@ -17,6 +17,11 @@ int main()
   s.log( Priority::warning, " this is warning");
   s.log( Priority::error, " this is error");
 
+  s.log( FormattedString{"debug format"}, Priority::debug, "this is debug" );
+  s.log( FormattedString{"info format"}, Priority::info, "this is info" );
+  s.log( FormattedString{"warning format"}, Priority::warning, "this is warning" );
+  s.log( FormattedString{"error format"}, Priority::error, "this is error" );
+
   But::Log::Destination::Foreign& base = s;
   base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "hello, foreign world" );
   base.log( Timestamp{}, " ", Priority::info, " @ ", FileName{__FILE__}, ":", LineNumber{__LINE__}, " ", "bye, foreign world" );

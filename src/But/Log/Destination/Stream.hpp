@@ -26,6 +26,12 @@ private:
     toStreamFormat(*os_, e);
   }
 
+  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override final
+  {
+    const std::lock_guard<std::mutex> lock(mutex_);
+    toStreamFormat(*os_, str, e);
+  }
+
   void reloadImpl() override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
@@ -45,6 +51,11 @@ private:
     for(auto& f: e)
       os << trim_( f.value() );
     os << endline_;
+  }
+
+  virtual void toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const&)
+  {
+    os << trim_(str.value_) << endline_;
   }
 
   static std::string endlineType()

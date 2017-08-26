@@ -118,6 +118,17 @@ TEST_F(ButLogDestinationJsonFile, SomeLogs)
 }
 
 
+TEST_F(ButLogDestinationJsonFile, SomeFormattedLog)
+{
+  tf_.log( But::Log::Field::FormattedString{"kszy"}, "answer", 42);
+  EXPECT_EQ( 1u, countLines() );
+
+  EXPECT_EQ( R"xx([{"But::Formatted":"kszy"},{"std::string":"answer"},{"int":42}])xx"
+             "\n"
+             , readLogFile() );
+}
+
+
 TEST_F(ButLogDestinationJsonFile, NumericTypes)
 {
   EXPECT_TRUE( testType<short>("short", -42) );

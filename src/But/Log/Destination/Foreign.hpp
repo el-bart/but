@@ -1,5 +1,6 @@
 #pragma once
 #include "But/Log/Backend/Entry.hpp"
+#include "But/Log/Field/FormattedString.hpp"
 
 namespace But
 {
@@ -20,11 +21,22 @@ public:
   Foreign& operator=(Foreign&&) = delete;
 
   template<typename ...Args>
+  void log(Backend::Entry& e, Field::FormattedString&& str, Args&& ...args)
+  {
+    log( e, static_cast<Field::FormattedString const&>(str), std::forward<Args>(args)... );
+  }
+
+  template<typename ...Args>
+  void log(Backend::Entry& e, Field::FormattedString const& str, Args&& ...args)
+  {
+    fillUpEntry(e, std::forward<Args>(args)...);
+    logImpl(str, e);
+  }
+
+  template<typename ...Args>
   void log(Backend::Entry& e, Args&& ...args)
   {
-    e.clear();
-    e.reserve( sizeof...(args) );
-    append(e, std::forward<Args>(args)...);
+    fillUpEntry(e, std::forward<Args>(args)...);
     logImpl(e);
   }
 
@@ -36,6 +48,7 @@ public:
   }
 
   void log(Backend::Entry const& e) { logImpl(e); }
+  void log(Field::FormattedString const& str, Backend::Entry const& e) { logImpl(str, e); }
   void reload() { reloadImpl(); }
   void flush() { flushImpl(); }
 
@@ -50,7 +63,16 @@ private:
   }
   static void append(Backend::Entry&) { }
 
+  template<typename ...Args>
+  void fillUpEntry(Backend::Entry& e, Args&& ...args)
+  {
+    e.clear();
+    e.reserve( sizeof...(args) );
+    append(e, std::forward<Args>(args)...);
+  }
+
   virtual void logImpl(Backend::Entry const& e) = 0;
+  virtual void logImpl(Field::FormattedString const& str, Backend::Entry const& e) = 0;
   virtual void reloadImpl() = 0;
   virtual void flushImpl() = 0;
 };

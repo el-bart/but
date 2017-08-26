@@ -7,6 +7,7 @@
 using But::Log::Destination::Stream;
 using But::Log::Destination::Foreign;
 using But::Log::Field::LineNumber;
+using But::Log::Field::FormattedString;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
 namespace
@@ -104,7 +105,10 @@ TEST_F(ButLogDestinationStream, FlushingSmokeTest)
 
 struct CustomFormatting: public StringStream
 {
-  void toStreamFormat(std::ostream& os, But::Log::Backend::Entry const& e) override { os << e.size() << "x"; }
+  void toStreamFormat(std::ostream& os, But::Log::Backend::Entry const& e) override
+  { os << e.size() << "x"; }
+  void toStreamFormat(std::ostream& os, But::Log::Field::FormattedString const& str, But::Log::Backend::Entry const&) override
+  { os << str.value_.size() << "y"; }
 };
 
 TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)
@@ -112,7 +116,8 @@ TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)
   CustomFormatting cs;
   cs.log("alice", "has", "a cat");
   cs.log("so tech", "much wow");
-  EXPECT_EQ( "3x2x", cs.ss_.str() );
+  cs.log( FormattedString{"$2 / $1"}, 2, 84 );
+  EXPECT_EQ( "3x2x7y", cs.ss_.str() );
 }
 
 }

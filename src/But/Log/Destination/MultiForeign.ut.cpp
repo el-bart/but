@@ -4,6 +4,7 @@
 using But::makeSharedNN;
 using But::NotNullShared;
 using But::Log::Backend::Entry;
+using But::Log::Field::FormattedString;
 using But::Log::Destination::Foreign;
 using But::Log::Destination::MultiForeign;
 
@@ -16,6 +17,12 @@ struct TestDst final: public Foreign
   void logImpl(Entry const&) override
   {
     ++logs_;
+    if(throws_)
+      throw std::runtime_error{"throwing, as requested"};
+  }
+  void logImpl(FormattedString const&, Entry const&) override
+  {
+    ++logsFmt_;
     if(throws_)
       throw std::runtime_error{"throwing, as requested"};
   }
@@ -36,6 +43,7 @@ struct TestDst final: public Foreign
 
   bool throws_{false};
   unsigned logs_{0};
+  unsigned logsFmt_{0};
   unsigned reloads_{0};
   unsigned flushes_{0};
 };
@@ -79,23 +87,17 @@ TEST_F(ButLogDestinationMultiForeign, PrintingGoesThroughAllDestinations)
 }
 
 
-struct CopyMoveDst final: public Foreign
+TEST_F(ButLogDestinationMultiForeign, FormattedPrintingGoesThroughAllDestinations)
 {
-  void logImpl(Entry const& e) override
-  {
-    EXPECT_EQ( 2u, e.size() );
-  }
-  void reloadImpl() override { }
-  void flushImpl() override { }
-};
+  multi_.log( FormattedString{"x"}, "one" );
+  EXPECT_EQ( 1u, td1_->logsFmt_ );
+  EXPECT_EQ( 1u, td2_->logsFmt_ );
+  EXPECT_EQ( 1u, td3_->logsFmt_ );
 
-TEST_F(ButLogDestinationMultiForeign, ArgumentsAreMoveToLastDestinationOnlySmokeTest)
-{
-  auto cp1 = makeSharedNN<CopyMoveDst>();
-  auto cp2 = makeSharedNN<CopyMoveDst>();
-  auto mv  = makeSharedNN<CopyMoveDst>();
-  MultiForeign multi{ {cp1, cp2, mv} };
-  multi.log( "answer: ", 42 );
+  multi_.log( FormattedString{"y"}, "two" );
+  EXPECT_EQ( 2u, td1_->logsFmt_ );
+  EXPECT_EQ( 2u, td2_->logsFmt_ );
+  EXPECT_EQ( 2u, td3_->logsFmt_ );
 }
 
 
@@ -109,6 +111,11 @@ TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyPrinterDoesNotStopProcessing
   EXPECT_EQ( 1u, td1_->logs_ );
   EXPECT_EQ( 1u, td2_->logs_ );
   EXPECT_EQ( 1u, td3_->logs_ );
+
+  multi_.log( FormattedString{"$0"}, "one" );
+  EXPECT_EQ( 1u, td1_->logsFmt_ );
+  EXPECT_EQ( 1u, td2_->logsFmt_ );
+  EXPECT_EQ( 1u, td3_->logsFmt_ );
 }
 
 

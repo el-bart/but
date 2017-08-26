@@ -4,6 +4,7 @@
 
 using testing::_;
 using testing::StrictMock;
+using But::Log::Field::FormattedString;
 using But::Log::Backend::Entry;
 using But::Log::Destination::Filter;
 using But::Log::Destination::Foreign;
@@ -36,15 +37,19 @@ TEST_F(ButLogDestinationFilter, ForwardingFlushing)
 TEST_F(ButLogDestinationFilter, LoggingWhenConditionIsTrue)
 {
   EXPECT_CALL(*mock_, logImpl(_)).Times(1);
+  EXPECT_CALL(*mock_, logImpl(_,_)).Times(1);
   filter_.log("answer is: ", 42);
+  filter_.log( FormattedString{"xxx"}, "answer is: ", 42);
 }
 
 
 TEST_F(ButLogDestinationFilter, NotLoggingWhenConditionIsFalse)
 {
   EXPECT_CALL(*mock_, logImpl(_)).Times(0);
+  EXPECT_CALL(*mock_, logImpl(_)).Times(0);
   Filter reject{ [](Entry const&) { return false; }, mock_ };
   reject.log("answer is: ", 42);
+  reject.log( FormattedString{"xxx"}, "answer is: ", 42);
 }
 
 }

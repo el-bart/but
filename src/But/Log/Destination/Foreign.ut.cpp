@@ -7,6 +7,7 @@ using testing::_;
 using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
 using But::Log::Backend::FieldInfo;
+using But::Log::Field::FormattedString;
 
 
 namespace
@@ -34,6 +35,20 @@ TEST_F(ButLogDestinationForeign, ForwardingWithProperTypes)
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(42, "foo bar", 3.14);
+}
+
+
+TEST_F(ButLogDestinationForeign, ForwardingFormattedStringWithProperTypes)
+{
+  const std::vector<FieldInfo> expected{
+          FieldInfo{42},
+          FieldInfo{"foo bar"},
+          FieldInfo{3.14}
+        };
+  const auto fmt = FormattedString{"fmt-test"};
+  EXPECT_CALL( mock_, logImpl(fmt, expected) )
+    .Times(1);
+  mock_.log(fmt, 42, "foo bar", 3.14);
 }
 
 

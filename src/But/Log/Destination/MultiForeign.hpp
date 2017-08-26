@@ -23,6 +23,7 @@ public:
 
 private:
   void logImpl(Backend::Entry const& e) override;
+  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override;
   void reloadImpl() override;
   void flushImpl() override;
 

@@ -9,25 +9,29 @@ namespace Destination
 
 void MultiForeign::logImpl(Backend::Entry const& e)
 {
-  if( dsts_.empty() )
-    return;
-
-  for(collection_type::size_type i = 0u; i < dsts_.size() - 1u; ++i)
+  for(auto& d: dsts_)
   {
     try
     {
-      dsts_[i]->log(e);
+      d->log(e);
     }
     catch(...)
     { /* this is logger - ignoring any errors when forwarind logs! */ }
   }
+}
 
-  try
+
+void MultiForeign::logImpl(Field::FormattedString const& str, Backend::Entry const& e)
+{
+  for(auto& d: dsts_)
   {
-    dsts_.back()->log(e);
+    try
+    {
+      d->log(str, e);
+    }
+    catch(...)
+    { /* this is logger - ignoring any errors when forwarind logs! */ }
   }
-  catch(...)
-  { /* this is logger - ignoring any errors when forwarind logs! */ }
 }
 
 
