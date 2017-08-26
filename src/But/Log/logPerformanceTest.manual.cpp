@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 {
   if( argc != 1+1 )
   {
-    std::cerr << argv[0] << "<test_case_number>" << std::endl;
+    std::cerr << argv[0] << " <test_case_number>" << std::endl;
     return 1;
   }
   const auto testCaseNumber = atoi(argv[1]);
