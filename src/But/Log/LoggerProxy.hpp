@@ -1,4 +1,6 @@
 #pragma once
+#include "But/Format/format.hpp"
+#include "Field/FormattedString.hpp"
 
 namespace But
 {
@@ -35,7 +37,7 @@ class LoggerProxy final
 public:
   explicit LoggerProxy(Destination dst): dst_{ std::move(dst) } { }
 
-  /** @brief creates a single log entry, out of a given parameters and strings.
+  /** @brief creates a single log entry, out of a given parameters.
    */
   template<typename ...Args>
   void log(Args&& ...args) const
@@ -43,6 +45,20 @@ public:
     try
     {
       dst_->log( std::forward<Args>(args)... );
+    }
+    catch(...)
+    { /* this is <del>sparta</del> logger! */ }
+  }
+
+  /** @brief creates a single log entry, of a formatted-string for, out of a given parameters. tags are preserved.
+   */
+  template<unsigned N, unsigned M, typename ...Args>
+  void log(Format::Parsed<N,M>&& parsed, Args&& ...args) const
+  {
+    try
+    {
+      const auto formatted = Field::FormattedString{ parsed.format(args...) };
+      dst_->log( formatted, std::forward<Args>(args)... );
     }
     catch(...)
     { /* this is <del>sparta</del> logger! */ }

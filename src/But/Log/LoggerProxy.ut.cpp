@@ -7,6 +7,7 @@
 using But::Log::LoggerProxy;
 using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
+using But::Log::Field::FormattedString;
 
 namespace
 {
@@ -36,6 +37,7 @@ struct TestNativeDestination final
   void log(std::string const&) { *ss_ << "string|"; }
   void log(double) { *ss_ << "double|"; }
   void log(int, std::string const&, double) { *ss_ << "int,string,double|"; }
+  void log(FormattedString const& fs, std::string const&, int) { *ss_ << "[formatted:" << fs.value_ << "],string,int|"; }
 
   auto operator->() { return this; }
 
@@ -146,6 +148,14 @@ TEST_F(ButLogLoggerProxy, AllErrorsFromActualDestinationsAreIgnored)
   EXPECT_NO_THROW( log.log("hello", "john") );
   EXPECT_NO_THROW( log.reload() );
   EXPECT_NO_THROW( log.flush() );
+}
+
+
+TEST_F(ButLogLoggerProxy, ExplicitFormatting)
+{
+  LoggerProxy<std::unique_ptr<TestNativeDestination>> log{ std::make_unique<TestNativeDestination>(buffer_) };
+  log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
+  EXPECT_EQ( buffer_.str(), "[formatted:computer says 42],string,int|" );
 }
 
 }
