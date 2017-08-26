@@ -120,7 +120,8 @@ so that log rotation can be implemented.
  * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience
 wrapper for this object, adding fields to achieve required log message content.
  * `Destination` - namespace containing typical destinations, that are provided out of the box.
- * `Destination::Foregin` - base class for dynamic destinations.
+ * `Destination::Foreign` - base class for dynamic destinations.
+ * `Destination::ForeignAdapter` - adapter that provides a helper buffer for `Foreign` destinations, to avoid extra memory allocations.
 
 
 ## meta programming

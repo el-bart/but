@@ -10,6 +10,9 @@ namespace Log
 namespace Destination
 {
 
+/** @brief simples possible output, without any synchornization, buffers, optimizations, locking.
+ *         siutable for trivial use cases.
+ */
 struct NaiveConsole final
 {
   template<typename ...Args>
