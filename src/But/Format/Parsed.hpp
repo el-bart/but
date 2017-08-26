@@ -16,7 +16,6 @@ namespace Format
  *  @note format of the parameter is defined by its type, via toString() function. it
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
- *  @param N number of arguments
  */
 template<unsigned ArgumentsCount, unsigned MaxSegments>
 class Parsed final
