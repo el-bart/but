@@ -25,7 +25,7 @@ namespace Log
  *       argument (i.e. Destination::Foreign derived class) and allow to change destination, depending
  *       on eg. config file entries.
  *
- * @warning it is "destination"'s implemented responsability to handile input/output in a thread-safe manner!
+ * @warning it is "destination"'s implementer responsability to handile input/output in a thread-safe manner!
  *
  * @note all Destinations must either be (smart) pointers or provide an arrow operator.
  */
