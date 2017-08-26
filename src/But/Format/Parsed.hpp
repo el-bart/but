@@ -38,8 +38,10 @@ public:
     format_{format}
   { }
 
+  constexpr auto inputFormat() const { return format_; }
   //constexpr auto expectedArguments() const { return detail::argumentsCount(ps_); } // TODO: will not work with static_assert...
   static constexpr auto expectedArguments() { return ArgumentsCount; }
+  static constexpr auto maxSegments() { return MaxSegments; }
 
   template<typename ...Args>
   std::string format(Args const& ...args) const
@@ -51,8 +53,6 @@ public:
       formatBlock(os, ps_.segments_[i], args...);
     return os.str();
   }
-
-  constexpr auto inputFormat() const { return format_; }
 
 private:
   template<typename F>
