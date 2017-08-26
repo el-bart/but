@@ -53,6 +53,8 @@ public:
     return os.str();
   }
 
+  constexpr auto inputFormat() const { return format_; }
+
 private:
   template<typename F>
   std::string processArgument(F&& /*f*/, const unsigned /*pos*/) const

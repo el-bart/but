@@ -82,4 +82,11 @@ TEST_F(ButFormat, DenseFormats)
   }
 }
 
+
+TEST_F(ButFormat, GettingInputFormat)
+{
+  constexpr auto fmt = BUT_FORMAT("foo/bar");
+  EXPECT_EQ( std::string{"foo/bar"}, fmt.inputFormat() );
+}
+
 }
