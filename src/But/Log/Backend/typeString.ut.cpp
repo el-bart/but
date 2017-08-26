@@ -41,19 +41,21 @@ struct ButLogBackendTypeString: public testing::Test
 
 TEST_F(ButLogBackendTypeString, CheckBasicValues)
 {
-  checkNum<char>("char");
-  checkNum<short>("short");
+  checkNum<char>("int");
+  checkNum<short>("int");
   checkNum<int>("int");
-  checkNum<long>("long");
+  checkNum<long>("int");
+  checkNum<long long>("int");
 
-  checkNum<unsigned char>("unsigned char");
-  checkNum<unsigned short>("unsigned short");
+  checkNum<unsigned char>("unsigned int");
+  checkNum<unsigned short>("unsigned int");
   checkNum<unsigned int>("unsigned int");
-  checkNum<unsigned long>("unsigned long");
+  checkNum<unsigned long>("unsigned int");
+  checkNum<unsigned long long>("unsigned int");
 
-  checkNum<float>("float");
+  checkNum<float>("double");
   checkNum<double>("double");
-  checkNum<long double>("long double");
+  checkNum<long double>("double");
 }
 
 

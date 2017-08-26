@@ -131,21 +131,21 @@ TEST_F(ButLogDestinationJsonFile, SomeFormattedLog)
 
 TEST_F(ButLogDestinationJsonFile, NumericTypes)
 {
-  EXPECT_TRUE( testType<short>("short", -42) );
-  EXPECT_TRUE( testType<unsigned short>("unsigned short", 42) );
+  EXPECT_TRUE( testType<short>("int", -42) );
+  EXPECT_TRUE( testType<unsigned short>("unsigned int", 42) );
 
   EXPECT_TRUE( testType<int>("int", -42) );
   EXPECT_TRUE( testType<unsigned int>("unsigned int", 42) );
 
-  EXPECT_TRUE( testType<long>("long", -42) );
-  EXPECT_TRUE( testType<unsigned long>("unsigned long", 42) );
+  EXPECT_TRUE( testType<long>("int", -42) );
+  EXPECT_TRUE( testType<unsigned long>("unsigned int", 42) );
 
-  EXPECT_TRUE( testType<long long>("long long", -42) );
-  EXPECT_TRUE( testType<unsigned long long>("unsigned long long", 42) );
+  EXPECT_TRUE( testType<long long>("int", -42) );
+  EXPECT_TRUE( testType<unsigned long long>("unsigned int", 42) );
 
-  EXPECT_TRUE( testType<float>("float", -4.0, "-4") );
+  EXPECT_TRUE( testType<float>("double", -4.0, "-4") );
   EXPECT_TRUE( testType<double>("double", -4.2, "-4.2") );
-  EXPECT_TRUE( testType<long double>("long double", -4.2, "-4.2") );
+  EXPECT_TRUE( testType<long double>("double", -4.2, "-4.2") );
 }
 
 }

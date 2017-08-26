@@ -27,6 +27,25 @@ inline std::string typeString(char const          *) { return "std::string"; }
 inline std::string typeString(char       volatile *) { return "std::string"; }
 inline std::string typeString(char const volatile *) { return "std::string"; }
 
+// all signed numbers to be kept as just "int"
+inline std::string typeString(char)      { return "int"; }
+inline std::string typeString(short)     { return "int"; }
+inline std::string typeString(int)       { return "int"; }
+inline std::string typeString(long)      { return "int"; }
+inline std::string typeString(long long) { return "int"; }
+
+// all unsigned numbers to be kept as just "unsigned int"
+inline std::string typeString(unsigned char)      { return "unsigned int"; }
+inline std::string typeString(unsigned short)     { return "unsigned int"; }
+inline std::string typeString(unsigned int)       { return "unsigned int"; }
+inline std::string typeString(unsigned long)      { return "unsigned int"; }
+inline std::string typeString(unsigned long long) { return "unsigned int"; }
+
+// all fps are just "double"
+inline std::string typeString(float)       { return "double"; }
+inline std::string typeString(double)      { return "double"; }
+inline std::string typeString(long double) { return "double"; }
+
 }
 }
 }
