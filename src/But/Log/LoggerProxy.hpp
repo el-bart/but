@@ -1,6 +1,7 @@
 #pragma once
 #include "But/Format/format.hpp"
 #include "Field/FormattedString.hpp"
+#include "Localization/None.hpp"
 
 namespace But
 {
@@ -51,17 +52,25 @@ namespace Log
  * @warning it is "destination"'s implementer responsibility to handle input/output in a thread-safe manner!
  *
  * @note all Destinations must either be (smart) pointers or provide an arrow operator.
+ *
+ * @note class allows parametrization with "translators", for having localization support (i.e. logs in different
+ *       languages). by default no translation is being made.
+ *
+ * @note "translators" are only applicable for *formatted* logs!
  */
-template<typename Destination>
+template<typename Destination, typename Translator = Localization::None>
 class LoggerProxy final
 {
 public:
+  LoggerProxy() = default;
   explicit LoggerProxy(Destination dst): dst_{ std::move(dst) } { }
+  explicit LoggerProxy(Translator tr): translator_{ std::move(tr) } { }
+  LoggerProxy(Destination dst, Translator tr): dst_{ std::move(dst) }, translator_{ std::move(tr) } { }
 
   /** @brief creates a single log entry, out of a given parameters.
    */
   template<typename ...Args>
-  void log(Args&& ...args) const
+  void log(Args&& ...args) const noexcept
   {
     try
     {
@@ -74,11 +83,12 @@ public:
   /** @brief creates a single log entry, of a formatted-string for, out of a given parameters. tags are preserved.
    */
   template<unsigned N, unsigned M, typename ...Args>
-  void log(Format::Parsed<N,M>&& parsed, Args&& ...args) const
+  void log(Format::Parsed<N,M>&& parsed, Args&& ...args) const noexcept
   {
     try
     {
-      const auto formatted = Field::FormattedString{ parsed.format(args...) };
+      const auto translated = translate( std::move(parsed) );
+      const auto formatted = Field::FormattedString{ translated.format(args...) };
       dst_->log( formatted, std::forward<Args>(args)... );
     }
     catch(...)
@@ -88,7 +98,7 @@ public:
   /** @brief triggers destination-specific reload actions (re-open output file, reconnect
    *         network socket, etc...). typically used for implementing easy log rotation.
    */
-  void reload()
+  void reload() noexcept
   {
     try
     {
@@ -100,7 +110,7 @@ public:
 
   /** @brief forces all buffered data (if any) to be flushed to its destination. this call may block.
    */
-  void flush()
+  void flush() noexcept
   {
     try
     {
@@ -111,7 +121,23 @@ public:
   }
 
 private:
-  mutable Destination dst_;
+  template<unsigned N, unsigned M>
+  auto translate(Format::Parsed<N,M>&& parsed) const noexcept
+  {
+    return parsed;
+    try
+    {
+      auto copy = parsed;
+      return translator_->translate( std::move(copy) );
+    }
+    catch(...)
+    {
+      return parsed;
+    }
+  }
+
+  mutable Destination dst_{};
+  const Translator translator_{};
 };
 
 }

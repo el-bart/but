@@ -44,6 +44,7 @@ struct TestNativeDestination final
   void log(std::string const&) { *ss_ << "string|"; }
   void log(double) { *ss_ << "double|"; }
   void log(int, std::string const&, double) { *ss_ << "int,string,double|"; }
+  void log(FormattedString const& fs, std::string const&) { *ss_ << "[formatted:" << fs.value_ << "],string|"; }
   void log(FormattedString const& fs, std::string const&, int) { *ss_ << "[formatted:" << fs.value_ << "],string,int|"; }
 
   auto operator->() { return this; }
@@ -54,6 +55,17 @@ struct TestNativeDestination final
   std::stringstream* ss_;
   unsigned reloads_{0};
   unsigned flushes_{0};
+};
+
+
+struct DestinationStub final
+{
+  auto operator->() { return this; }
+
+  template<typename... Args>
+  void log(Args&&...) { }
+  void reload() { }
+  void flush() { }
 };
 
 
@@ -171,6 +183,70 @@ TEST_F(ButLogLoggerProxy, ExplicitFormatting)
   LoggerProxy<std::unique_ptr<TestNativeDestination>> log{ std::make_unique<TestNativeDestination>(buffer_) };
   log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
   EXPECT_EQ( buffer_.str(), "[formatted:computer says 42],string,int|" );
+}
+
+
+TEST_F(ButLogLoggerProxy, AllowDefaultConstructionWhenNoArgumentsNeeded)
+{
+  LoggerProxy<DestinationStub, But::Log::Localization::None> log;
+  log.log("foo", "bar");
+}
+
+
+struct CustomTranslator
+{
+  template<unsigned N, unsigned M>
+  auto translate(But::Format::Parsed<N,M>&& parsed) const
+  {
+    ++counter_;
+    if(throws_)
+      throw std::runtime_error{"translation error, as requested"};
+    return std::move(parsed);
+  }
+
+  bool throws_{false};
+  mutable unsigned counter_{0};
+};
+
+
+TEST_F(ButLogLoggerProxy, TranslationsAreNotAffectingNonFormattedLogs)
+{
+  CustomTranslator ct;
+  LoggerProxy<DestinationStub, CustomTranslator const*> log{&ct};
+  EXPECT_EQ(0u, ct.counter_);
+  log.log("not affected");
+  EXPECT_EQ(0u, ct.counter_);
+}
+
+
+TEST_F(ButLogLoggerProxy, BuildingWithDefaultDestinationAndCustomTranslator)
+{
+  CustomTranslator ct;
+  LoggerProxy<DestinationStub, CustomTranslator const*> log{&ct};
+  EXPECT_EQ(0u, ct.counter_);
+  log.log( BUT_FORMAT("test") );
+  EXPECT_EQ(1u, ct.counter_);
+}
+
+
+TEST_F(ButLogLoggerProxy, UsingCustomTranslator)
+{
+  CustomTranslator ct;
+  LoggerProxy<DestinationStub, CustomTranslator const*> log{ DestinationStub{}, &ct };
+  EXPECT_EQ(0u, ct.counter_);
+  log.log( BUT_FORMAT("test") );
+  EXPECT_EQ(1u, ct.counter_);
+}
+
+
+TEST_F(ButLogLoggerProxy, ExceptionsFromTranslationsAreNotPropagated)
+{
+  CustomTranslator ct{true};
+  TestNativeDestination dst{buffer_};
+  LoggerProxy<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
+  EXPECT_NO_THROW( log.log( BUT_FORMAT("test $1"), "xx" ) );
+  EXPECT_EQ( buffer_.str(), "[formatted:test xx],string|" );
+  // TODO: message should be logged anyway!
 }
 
 }
