@@ -124,7 +124,6 @@ private:
   template<unsigned N, unsigned M>
   auto translate(Format::Parsed<N,M>&& parsed) const noexcept
   {
-    return parsed;
     try
     {
       auto copy = parsed;

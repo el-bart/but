@@ -246,7 +246,6 @@ TEST_F(ButLogLoggerProxy, ExceptionsFromTranslationsAreNotPropagated)
   LoggerProxy<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
   EXPECT_NO_THROW( log.log( BUT_FORMAT("test $1"), "xx" ) );
   EXPECT_EQ( buffer_.str(), "[formatted:test xx],string|" );
-  // TODO: message should be logged anyway!
 }
 
 }
