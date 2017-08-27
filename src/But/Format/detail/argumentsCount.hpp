@@ -19,7 +19,7 @@ constexpr auto bitsCount(Container::Array<bool,N> const& tab)
 }
 
 template<unsigned N>
-constexpr auto argumentsCount(ParserState<N> const& ps)
+constexpr auto usedArgumentsMap(ParserState<N> const& ps)
 {
   Container::Array<bool,N> tab{};
   tab.fill(false);
@@ -29,6 +29,13 @@ constexpr auto argumentsCount(ParserState<N> const& ps)
     if( e.type_ == State::Type::Value || e.type_ == State::Type::TypeName )
       tab[e.referencedArgument_] = true;
   }
+  return tab;
+}
+
+template<unsigned N>
+constexpr auto argumentsCount(ParserState<N> const& ps)
+{
+  const auto tab = usedArgumentsMap(ps);
   return bitsCount(tab);
 }
 
