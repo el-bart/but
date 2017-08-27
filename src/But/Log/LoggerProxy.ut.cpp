@@ -244,7 +244,7 @@ TEST_F(ButLogLoggerProxy, ExceptionsFromTranslationsAreNotPropagated)
   CustomTranslator ct{true};
   TestNativeDestination dst{buffer_};
   LoggerProxy<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
-  EXPECT_NO_THROW( log.log( BUT_FORMAT("test $1"), "xx" ) );
+  EXPECT_NO_THROW( log.log( BUT_FORMAT("test $0"), "xx" ) );
   EXPECT_EQ( buffer_.str(), "[formatted:test xx],string|" );
 }
 
