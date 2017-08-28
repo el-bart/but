@@ -603,9 +603,9 @@ TEST_F(ButFormatDetailParse, MiscInvalidFormats)
 
 TEST_F(ButFormatDetailParse, TooComplexFormatForGivenStatesCount)
 {
-  EXPECT_NO_THROW( parse<3>("$1 $2") ) << "invalid format is raisign an error";
-  EXPECT_THROW( parse<4>("$1 $2 $3"), Invalid );
-  EXPECT_THROW( parse<2>("${1}${2}${3}"), Invalid );
+  EXPECT_NO_THROW( parse<3>("$1 $0") ) << "invalid format is raisign an error";
+  EXPECT_THROW( parse<4>("$1 $2 $0"), Invalid );
+  EXPECT_THROW( parse<2>("${1}${2}${0}"), Invalid );
 }
 
 }

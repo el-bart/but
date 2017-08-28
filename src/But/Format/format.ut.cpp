@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 #include "format.hpp"
 
+using But::Format::Invalid;
+
 namespace
 {
 
@@ -87,6 +89,13 @@ TEST_F(ButFormat, GettingInputFormat)
 {
   constexpr auto fmt = BUT_FORMAT("foo/bar");
   EXPECT_EQ( std::string{"foo/bar"}, fmt.inputFormat() );
+}
+
+
+TEST_F(ButFormat, UnusedArgumentsDetected)
+{
+  EXPECT_THROW( ( BUT_FORMAT("$1") ), Invalid ) << "all previous indexes must be used";
+  EXPECT_THROW( ( BUT_FORMAT("$2 $0") ), Invalid ) << "all previous indexes must be used";
 }
 
 }
