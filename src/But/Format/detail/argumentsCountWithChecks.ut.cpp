@@ -1,135 +1,134 @@
 #include "gtest/gtest.h"
-#include "argumentsUsageCount.hpp"
+#include "argumentsCountWithChecks.hpp"
 
 using But::Format::Invalid;
 
 namespace
 {
 
-constexpr auto argumentsUsageCount(char const* fmt) // helper for a more compact syntax
+constexpr auto argumentsCountWithChecks(char const* fmt) // helper for a more compact syntax
 {
-  return But::Format::detail::argumentsUsageCount<100>(fmt);
+  return But::Format::detail::argumentsCountWithChecks<100>(fmt);
 }
 
-struct ButFormatDetailArgumentsUsageCount: public testing::Test
+struct ButFormatDetailArgumentsCountWithChecks: public testing::Test
 { };
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, SimpleStrings)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, SimpleStrings)
 {
   {
-    constexpr auto cnt = argumentsUsageCount("");
+    constexpr auto cnt = argumentsCountWithChecks("");
     EXPECT_EQ( 0u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test");
+    constexpr auto cnt = argumentsCountWithChecks("test");
     EXPECT_EQ( 0u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("teST STRIng");
+    constexpr auto cnt = argumentsCountWithChecks("teST STRIng");
     EXPECT_EQ( 0u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("!@#%^%^*(()");
+    constexpr auto cnt = argumentsCountWithChecks("!@#%^%^*(()");
     EXPECT_EQ( 0u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test $$ data");
+    constexpr auto cnt = argumentsCountWithChecks("test $$ data");
     EXPECT_EQ( 0u, cnt );
   }
 }
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, OneArgument)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, OneArgument)
 {
   {
-    constexpr auto cnt = argumentsUsageCount("$1");
+    constexpr auto cnt = argumentsCountWithChecks("$0");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test $1 data");
+    constexpr auto cnt = argumentsCountWithChecks("test $0 data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test${1}data");
+    constexpr auto cnt = argumentsCountWithChecks("test${0}data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test ${1#ignored text} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${0#ignored text} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test ${V1} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${V0} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test ${V1#ignored text} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${V0#ignored text} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test ${T1} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${T0} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test ${T1#ignored text} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${T0#ignored text} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test $1\ndata");
+    constexpr auto cnt = argumentsCountWithChecks("test $0\ndata");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test $1\rdata");
+    constexpr auto cnt = argumentsCountWithChecks("test $0\rdata");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test $1\tdata");
+    constexpr auto cnt = argumentsCountWithChecks("test $0\tdata");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsUsageCount("test $1 data");
+    constexpr auto cnt = argumentsCountWithChecks("test $0 data");
     EXPECT_EQ( 1u, cnt );
   }
 }
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, ExceptionIsThrownOnInvalidFormat)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, ExceptionIsThrownOnInvalidFormat)
 {
-  EXPECT_THROW( argumentsUsageCount("$ 1"), Invalid ) << "missing number";
-  EXPECT_THROW( argumentsUsageCount("$1oops"), Invalid ) << "invalid number";
-  EXPECT_THROW( argumentsUsageCount("${1"), Invalid ) << "missing closing brace";
-  EXPECT_THROW( argumentsUsageCount("${1 x"), Invalid ) << "missing closing brace";
-  EXPECT_THROW( argumentsUsageCount("${1# x"), Invalid ) << "missing closing brace";
-  EXPECT_THROW( argumentsUsageCount("test$"), Invalid ) << "variable declaration too short";
-  EXPECT_THROW( argumentsUsageCount("test $1}"), Invalid ) << "invalid number";
+  EXPECT_THROW( argumentsCountWithChecks("$ 0"), Invalid ) << "missing number";
+  EXPECT_THROW( argumentsCountWithChecks("$0oops"), Invalid ) << "invalid number";
+  EXPECT_THROW( argumentsCountWithChecks("${0"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( argumentsCountWithChecks("${0 x"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( argumentsCountWithChecks("${0# x"), Invalid ) << "missing closing brace";
+  EXPECT_THROW( argumentsCountWithChecks("test$"), Invalid ) << "variable declaration too short";
+  EXPECT_THROW( argumentsCountWithChecks("test $0}"), Invalid ) << "invalid number";
 }
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, MultipleArguments)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, MultipleArguments)
 {
-  constexpr auto cnt = argumentsUsageCount("test $1 data $3\t$2\n");
+  constexpr auto cnt = argumentsCountWithChecks("test $0 data $2\t$1\n");
   EXPECT_EQ( 3u, cnt );
 }
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, MultipleArgumentsMultipleStyles)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, MultipleArgumentsMultipleStyles)
 {
-  constexpr auto cnt = argumentsUsageCount("test $1 data ${3} ${V2#xx} ${T4}");
+  constexpr auto cnt = argumentsCountWithChecks("test $0 data ${2} ${V1#xx} ${T3}");
   EXPECT_EQ( 4u, cnt );
 }
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, RepeatedArguments)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, RepeatedArguments)
 {
-  constexpr auto cnt = argumentsUsageCount("test $1 data $1\t$2\n");
+  constexpr auto cnt = argumentsCountWithChecks("test $0 data $0\t$1\n");
   EXPECT_EQ( 2u, cnt );
 }
 
 
-TEST_F(ButFormatDetailArgumentsUsageCount, NonContinuousArguments)
+TEST_F(ButFormatDetailArgumentsCountWithChecks, NonContinuousArguments)
 {
-  constexpr auto cnt = argumentsUsageCount("test $42 data $1");
-  EXPECT_EQ( 2u, cnt );
+  EXPECT_THROW( argumentsCountWithChecks("test $42 data $1"), Invalid );
 }
 
 }
