@@ -1,3 +1,5 @@
+#include <algorithm>
+#include <cassert>
 #include "Translation.hpp"
 
 namespace But
@@ -9,27 +11,38 @@ namespace Localization
 
 namespace
 {
-auto makeMap(Translation::Data&& data)
+void ensureValidity(Translation::Data const& data)
 {
-  std::unordered_map<Translation::Entry::From, Translation::Entry::To> out;
-  (void)data;       // TODO....             
-  return out;
+  (void)data;
+  //for(auto& e: data) // TODO...
+}
+
+auto sortData(Translation::Data&& data)
+{
+  ensureValidity(data);
+  std::sort( begin(data), end(data) );
+  return data;
 }
 }
 
 Translation::Translation(Data data):
-  translations_{ makeSharedNN<Translations>( makeMap( std::move(data) ) ) }
-{
-  (void)data;
-  throw 2;  // TODO...              
-}
+  data_{ makeSharedNN<const Data>( sortData( std::move(data) ) ) }
+{ }
 
 
 char const* Translation::findTranslation(char const* from) const
 {
-  (void)from;
-  throw 1;  // TODO...              
+  assert( std::is_sorted( begin(*data_), end(*data_) ) );
+  const auto it = std::lower_bound( begin(*data_), end(*data_), from );
+  if( it == end(*data_) || it->from_.format_ != from )
+    return nullptr;
+  return it->to_.format_.c_str();
 }
+
+
+bool operator<(Translation::Entry const& lhs, Translation::Entry const& rhs) { return lhs.from_.format_ < rhs.from_.format_; }
+bool operator<(char const* lhs,               Translation::Entry const& rhs) { return lhs               < rhs.from_.format_; }
+bool operator<(Translation::Entry const& lhs, char const* rhs)               { return lhs.from_.format_ < rhs; }
 
 }
 }

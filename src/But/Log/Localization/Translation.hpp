@@ -1,7 +1,8 @@
 #pragma once
+#include <string>
 #include <vector>
-#include <unordered_map>
 #include "But/NotNull.hpp"
+#include "But/Exception.hpp"
 #include "But/Format/Parsed.hpp"
 
 namespace But
@@ -17,10 +18,13 @@ namespace Localization
 class Translation final
 {
 public:
+  BUT_DEFINE_EXCEPTION(IncompatibleFormats, Exception, "incompatible formats");
+
   struct Entry final
   {
     struct From final { std::string format_; };
     struct To   final { std::string format_; };
+
     From from_;
     To   to_;
   };
@@ -42,27 +46,15 @@ public:
 private:
   char const* findTranslation(char const* from) const;
 
-  using Translations = std::unordered_map<Entry::From, Entry::To>;
-  using TranslationShPtr = But::NotNullShared<const Translations>;
-  TranslationShPtr translations_;
+  using DataShNN = But::NotNullShared<const Data>;
+  DataShNN data_;
 };
 
+
+bool operator<(Translation::Entry const& lhs, Translation::Entry const& rhs);
+bool operator<(char const* lhs,               Translation::Entry const& rhs);
+bool operator<(Translation::Entry const& lhs, char const* rhs);
+
 }
 }
-}
-
-
-namespace std
-{
-template<>
-struct hash<But::Log::Localization::Translation::Entry::From>
-{
-  auto operator()(But::Log::Localization::Translation::Entry::From const& in) const
-  {
-    return hash_(in.format_);
-  }
-
-private:
-  const std::hash<std::string> hash_;
-};
 }
