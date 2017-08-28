@@ -1,16 +1,8 @@
 version: '1.0'
 steps:
 
-  build_image:
-    type: build
-    description: BUT's SDK image
-    dockerfile: Dockerfile
-    working_directory: sdk
-    image_name: but-sdk
-    tag: ${{CF_BRANCH}}
-
   clang_Release_undefined:
-    image: ${{build_image}}
+    image: baszerr/but-sdk:latest
     working_directory: ${{main_clone}}
     commands:
       - ./ci/clang_Release_undefined --clean-build
