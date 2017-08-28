@@ -117,13 +117,6 @@ TEST_F(ButFormat, DenseFormats)
     EXPECT_EQ( 1u, fmt.expectedArguments() );
     EXPECT_EQ( "1 1 1 1 1 1 1 1", fmt.format(1) );
   }
-  /*
-  {
-    constexpr auto fmt = BUT_FORMAT("$2 $1 $0 $0 $0");
-    EXPECT_EQ( 3u, fmt.expectedArguments() );
-    EXPECT_EQ( "3 2 1 1 1", fmt.format(1,2,3) );
-  }
-  */
 }
 
 
