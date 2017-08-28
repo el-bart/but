@@ -92,10 +92,13 @@ TEST_F(ButFormat, GettingInputFormat)
 }
 
 
+/*
+// NOTE: these tests are now actually forced to take place at compile-time
 TEST_F(ButFormat, UnusedArgumentsDetected)
 {
   EXPECT_THROW( ( BUT_FORMAT("$1") ), Invalid ) << "all previous indexes must be used";
   EXPECT_THROW( ( BUT_FORMAT("$2 $0") ), Invalid ) << "all previous indexes must be used";
 }
+*/
 
 }
