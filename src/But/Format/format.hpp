@@ -1,7 +1,5 @@
 #pragma once
-#include "Parsed.hpp"
-#include "Parsed.hpp"
-#include "detail/argumentsCountWithChecks.hpp"
+#include "detail/formatImpl.hpp"
 
 namespace But
 {
@@ -12,10 +10,7 @@ namespace Format
  *  @note if format syntax will be invalid, program compilation will be stopped with an error.
  */
 #define BUT_FORMAT(fmt) \
-    ::But::Format::Parsed<\
-            ::But::Format::detail::argumentsCountWithChecks<sizeof(fmt)/2+1>(fmt), \
-            sizeof(fmt)/2+1 \
-        >{fmt}
+            BUT_FORMAT_DETAIL_FORMAT_IMPL( fmt, ((sizeof(fmt)/3+1)*2) )
 
 }
 }
