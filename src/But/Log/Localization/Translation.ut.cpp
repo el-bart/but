@@ -23,7 +23,7 @@ struct ButLogLocalizationTranslation: public testing::Test
 TEST_F(ButLogLocalizationTranslation, TranslatingDefinedFormats)
 {
   {
-    const auto local = tr_.translate( BUT_FORMAT("int1") );
+    const auto local = tr_.translate( BUT_FORMAT("in1") );
     EXPECT_EQ( 0u, local.expectedArguments() );
     EXPECT_EQ( std::string{"out1"}, local.inputFormat() );
   }
