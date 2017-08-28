@@ -65,4 +65,12 @@ TEST_F(ButFormatDetailArgumentsCount, Repeated)
   EXPECT_EQ(1u, cnt);
 }
 
+
+TEST_F(ButFormatDetailArgumentsCount, NonConsecutiveArguments)
+{
+  constexpr auto ps = parse<10>("some $5 test $1 data");
+  constexpr auto cnt = argumentsCount(ps);
+  EXPECT_EQ(2u, cnt);
+}
+
 }
