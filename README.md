@@ -70,6 +70,7 @@ download automated build of [BUT's SDK Docker image](https://hub.docker.com/r/ba
 it is very useful when type safety is a must, but underlying type is already existing and working.
 this is improved version of `struct MyIndex { unsigned value_; };` type of approach, that provides all the methods and encapsulation.
 with this class in place, code can be easily refactored later on, if needed (adding new methods, validating c-tor, etc...
+ * `BUT_ASSERT` - assert that works equally well in normal and `constexpr` functions. removed in non-debug build.
  * `Exception` - allows to both define and throw exceptions in one line of code each. automatically
 passed info like file, line and function to the message. allows to create whole tree of exceptions.
  * `NotNull` - wrapper for (smart)pointers, that ensures element held inside is not null. if user would
