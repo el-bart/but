@@ -2,6 +2,7 @@
 #include <type_traits>
 #include "gtest/gtest.h"
 #include "ArrayWithSize.hpp"
+#include "But/assert.hpp"
 
 using But::Container::ArrayWithSize;
 
@@ -416,6 +417,45 @@ TEST_F(ButContainerArrayWithSize, ComparingContainers)
   EXPECT_TRUE(  s1 >= s1 );
   EXPECT_TRUE(  s2 >= s1 );
   EXPECT_TRUE(  s5 >= s1 );
+}
+
+
+constexpr auto constexprSmokeTest()
+{
+  ArrayWithSize<int,4> tmp1;
+  ArrayWithSize<int,4> tmp2{tmp1};
+  tmp1 = tmp2;
+  tmp1 = std::move(tmp2);
+
+  {
+    ArrayWithSize<int,4> tab{1,2};
+    BUT_ASSERT( not tab.empty() );
+    BUT_ASSERT( tab.size() == 2u );
+    BUT_ASSERT( tab.max_size() == 4u );
+    tab.emplace_back(42);
+    tab.push_back(13);
+    tab.pop_back();
+    BUT_ASSERT( tab[0] == 1 );
+    auto sum = 0;
+    for(auto e: tab)
+      sum += e;
+    BUT_ASSERT( sum == 1+2+42 );
+    tab.clear();
+  }
+
+  ArrayWithSize<int,4> tab{4,2,0};
+  BUT_ASSERT( tab[1] == 2 );
+  auto sum = 0;
+  for(auto e: tab)
+    sum += e;
+  BUT_ASSERT( sum == 4+2+0 );
+  return tab;
+}
+
+TEST_F(ButContainerArrayWithSize, ConstexprSmokeTest)
+{
+  constexpr const auto seq = constexprSmokeTest();
+  EXPECT_EQ( 3, seq.size() );
 }
 
 }

@@ -1,9 +1,9 @@
 #pragma once
-#include <array>
 #include <algorithm>
 #include <initializer_list>
 #include "But/assert.hpp"
 #include "But/Mpl/SizeTypeFor.hpp"
+#include "But/Container/Array.hpp"
 
 namespace But
 {
@@ -21,7 +21,7 @@ namespace Container
 template<typename T, size_t N>
 class ArrayWithSize final
 {
-  using Container = std::array<T,N>;
+  using Container = Array<T,N>;
 
 public:
   using difference_type = typename Container::difference_type;
@@ -130,7 +130,7 @@ private:
     return true;
   }
 
-  Container c_;
+  Container c_{};
   size_type size_{0};
 };
 
