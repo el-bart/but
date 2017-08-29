@@ -443,7 +443,8 @@ constexpr auto constexprSmokeTest()
     tab.clear();
   }
 
-  ArrayWithSize<int,4> tab{4,2,0};
+  ArrayWithSize<int,4> tabObj{4,2,0};
+  const auto& tab = tabObj;
   BUT_ASSERT( tab[1] == 2 );
   auto sum = 0;
   for(auto e: tab)
