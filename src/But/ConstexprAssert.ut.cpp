@@ -18,6 +18,7 @@ TEST_F(ButConstexprAssert, RuntimeCheck)
 
 constexpr bool ensureAnswer(int n)
 {
+  (void)n;
   BUT_CONSTEXPR_ASSERT(n==42);
   return true;
 }
@@ -29,9 +30,13 @@ TEST_F(ButConstexprAssert, CompileTimeCheck)
 }
 
 
-TEST_F(ButConstexprAssert, FailedAssertionAtRuntime)
+TEST_F(ButConstexprAssert, FailedAssertionAtRuntimeInDebug)
 {
+#ifdef NDEBUG
+  ensureAnswer(13); // in non-debug modes the assertion does not work
+#else
   EXPECT_DEATH( ensureAnswer(13), "n==42" );
+#endif
 }
 
 }
