@@ -126,7 +126,7 @@ private:
       return false;
     clear();
     for(auto&& e: other)
-      push_back( std::move(e) );
+      push_back( std::move(e) );    // TODO: move vs. forward...
     return true;
   }
 
