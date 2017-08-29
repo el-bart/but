@@ -110,15 +110,14 @@ constexpr auto parseImpl(ParserState<N>&& ps, char const* fmt)
 {
   while( not isEos(*fmt) )
   {
-    throwOnInvalidSyntax( N == ps.count_, "format too long for a declared states count - expected end", fmt );
+    throwOnInvalidSyntax( N == ps.segments_.size(), "format too long for a declared states count - expected end", fmt );
     State st;
     if( isVariableBegin(*fmt) )
       fmt = parseVariable(st, fmt);
     else
       fmt = parseString(st, fmt);
 
-    ps.segments_[ps.count_] = std::move(st);
-    ++ps.count_;
+    ps.segments_.push_back( std::move(st) );
   }
   return ps;
 }

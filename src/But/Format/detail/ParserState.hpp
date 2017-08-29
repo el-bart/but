@@ -1,5 +1,5 @@
 #pragma once
-#include "But/Container/Array.hpp"
+#include "But/Container/ArrayWithSize.hpp"
 
 namespace But
 {
@@ -26,8 +26,7 @@ struct State
 template<unsigned N>
 struct ParserState final
 {
-  Container::Array<State,N> segments_;
-  unsigned count_{0};
+  Container::ArrayWithSize<State,N> segments_;
 };
 
 }

@@ -23,12 +23,9 @@ constexpr auto usedArgumentsMap(ParserState<N> const& ps)
 {
   Container::Array<bool,N> tab{};
   tab.fill(false);
-  for(auto i=0u; i<ps.count_; ++i)
-  {
-    auto& e = ps.segments_[i];
+  for(auto& e: ps.segments_)
     if( e.type_ == State::Type::Value || e.type_ == State::Type::TypeName )
       tab[e.referencedArgument_] = true;
-  }
   return tab;
 }
 
