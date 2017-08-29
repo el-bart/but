@@ -51,8 +51,8 @@ public:
     static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
     assert( expectedArguments() == detail::argumentsCount(ps_) );
     std::ostringstream os;
-    for(auto i=0u; i<ps_.count_; ++i)
-      formatBlock(os, ps_.segments_[i], args...);
+    for(auto& e: ps_.segments_)
+      formatBlock(os, e, args...);
     return os.str();
   }
 
