@@ -16,12 +16,12 @@ constexpr auto allArgumentsUsed(ParserState<N> const& ps)
   auto hasArgs = false;
   Container::Array<bool,N> used{};
   used.fill(false);
-  for(auto i=0u; i<ps.count_; ++i)
+  for(auto& e: ps.segments_)
   {
-    if( ps.segments_[i].type_ != State::Type::Value && ps.segments_[i].type_ != State::Type::TypeName )
+    if( e.type_ != State::Type::Value && e.type_ != State::Type::TypeName )
       continue;
     hasArgs = true;
-    const auto pos = ps.segments_[i].referencedArgument_;
+    const auto pos = e.referencedArgument_;
     if( pos >= N )
       return false;
     used[pos] = true;
