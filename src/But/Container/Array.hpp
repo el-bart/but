@@ -1,4 +1,5 @@
 #pragma once
+#include "But/Mpl/SizeTypeFor.hpp"
 
 namespace But
 {
@@ -11,10 +12,17 @@ namespace Container
 template<typename T, unsigned N>
 struct Array
 {
+  using difference_type = std::ptrdiff_t;
+  using size_type = typename Mpl::SizeTypeFor<N>::type;
+  using value_type = T;
+  using iterator = T*;
+  using const_iterator = T const*;
+
   constexpr auto const& operator[](unsigned i) const { return value_[i]; }
   constexpr auto& operator[](unsigned i) { return value_[i]; }
 
-  constexpr auto size() const { return N; }
+  constexpr size_type size() const { return N; }
+  constexpr size_t max_size() const { return N; }
 
   constexpr auto begin() const { return value_; }
   constexpr auto end() const { return begin() + N; }
@@ -30,6 +38,22 @@ struct Array
 
   T value_[N];
 };
+
+
+template<typename T, unsigned N>
+constexpr auto begin(Array<T,N>& tab) { return tab.begin(); }
+template<typename T, unsigned N>
+constexpr auto end(Array<T,N>& tab) { return tab.end(); }
+
+template<typename T, unsigned N>
+constexpr auto begin(Array<T,N> const& tab) { return tab.begin(); }
+template<typename T, unsigned N>
+constexpr auto end(Array<T,N> const& tab) { return tab.end(); }
+
+template<typename T, unsigned N>
+constexpr auto cbegin(Array<T,N> const& tab) { return tab.begin(); }
+template<typename T, unsigned N>
+constexpr auto cend(Array<T,N> const& tab) { return tab.end(); }
 
 }
 }
