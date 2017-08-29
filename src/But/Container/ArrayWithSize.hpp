@@ -2,7 +2,7 @@
 #include <array>
 #include <algorithm>
 #include <initializer_list>
-#include <cassert>
+#include "But/assert.hpp"
 #include "But/Mpl/SizeTypeFor.hpp"
 
 namespace But
@@ -30,97 +30,97 @@ public:
   using iterator = typename Container::iterator;
   using const_iterator = typename Container::const_iterator;
 
-  ArrayWithSize() = default;
-  ArrayWithSize(std::initializer_list<T> lst)
+  constexpr ArrayWithSize() = default;
+  constexpr ArrayWithSize(std::initializer_list<T> lst)
   {
-    assert( lst.size() <= N && "too many arguments for a given type" );
+    BUT_ASSERT( lst.size() <= N && "too many arguments for a given type" );
     for(auto& e: lst)
       push_back(e);
   }
 
-  ArrayWithSize(ArrayWithSize const& other)
+  constexpr ArrayWithSize(ArrayWithSize const& other)
   {
     for(auto const& e: other)
       push_back(e);
   }
-  ArrayWithSize& operator=(ArrayWithSize const& other)
+  constexpr ArrayWithSize& operator=(ArrayWithSize const& other)
   {
     copyOrMove(other);
     return *this;
   }
 
-  ArrayWithSize(ArrayWithSize&& other)
+  constexpr ArrayWithSize(ArrayWithSize&& other)
   {
     for(auto&& e: other)
       push_back( std::move(e) );
     other.size_ = 0u;
   }
-  ArrayWithSize& operator=(ArrayWithSize&& other)
+  constexpr ArrayWithSize& operator=(ArrayWithSize&& other)
   {
     if( copyOrMove( std::move(other) ) )
       other.size_ = 0u;
     return *this;
   }
 
-  bool empty() const { return size() == 0u; }
-  size_type size() const { return size_; }
+  constexpr bool empty() const { return size() == 0u; }
+  constexpr size_type size() const { return size_; }
   constexpr size_t max_size() const { return N; }
 
   template<typename ...Args>
-  void emplace_back(Args&&... args)
+  constexpr void emplace_back(Args&&... args)
   {
     push_back( value_type{ std::forward<Args>(args)... } );
   }
 
-  void push_back(value_type const& vt)
+  constexpr void push_back(value_type const& vt)
   {
-    assert( size() < max_size() && "overflow detected" );
+    BUT_ASSERT( size() < max_size() && "overflow detected" );
     c_[size_] = vt;
     ++size_;
   }
-  void push_back(value_type&& vt)
+  constexpr void push_back(value_type&& vt)
   {
-    assert( size() < max_size() && "overflow detected" );
+    BUT_ASSERT( size() < max_size() && "overflow detected" );
     c_[size_] = std::move(vt);
     ++size_;
   }
 
-  void pop_back()
+  constexpr void pop_back()
   {
-    assert( not empty() );
+    BUT_ASSERT( not empty() );
     --size_;
     c_[size_] = value_type{};
   }
 
-  value_type const& operator[](const size_type pos) const
+  constexpr value_type const& operator[](const size_type pos) const
   {
-    assert( pos < size() && "index out of bound" );
+    BUT_ASSERT( pos < size() && "index out of bound" );
     return c_[pos];
   }
-  value_type& operator[](const size_type pos)
+  constexpr value_type& operator[](const size_type pos)
   {
-    assert( pos < size() && "index out of bound" );
+    BUT_ASSERT( pos < size() && "index out of bound" );
     return c_[pos];
   }
 
-  void clear()
+  constexpr void clear()
   {
     while( not empty() )
       pop_back();
   }
 
-  const_iterator cbegin() const { using std::begin; return begin(c_); }
-  const_iterator cend() const { return cbegin() + size_; }
+  constexpr const_iterator cbegin() const { using std::begin; return begin(c_); }
+  constexpr const_iterator cend() const { return cbegin() + size_; }
 
-  const_iterator begin() const { return cbegin(); }
-  const_iterator end() const { return begin() + size_; }
+  constexpr const_iterator begin() const { return cbegin(); }
+  constexpr const_iterator end() const { return begin() + size_; }
 
-  iterator begin() { using std::begin; return begin(c_); }
-  iterator end() { return begin() + size_; }
+  constexpr iterator begin() { using std::begin; return begin(c_); }
+  constexpr iterator end() { return begin() + size_; }
 
 private:
   template<typename Other>
-  bool copyOrMove(Other&& other)
+  constexpr bool copyOrMove(Other&& other)
   {
     if(this==&other)
       return false;
