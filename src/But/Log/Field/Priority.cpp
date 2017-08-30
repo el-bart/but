@@ -1,6 +1,6 @@
 #include <type_traits>
 #include <stdexcept>
-#include <cassert>
+#include "But/assert.hpp"
 #include "Priority.hpp"
 
 

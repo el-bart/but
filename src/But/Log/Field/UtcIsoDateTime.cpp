@@ -1,7 +1,7 @@
 #include <ctime>
 #include <cstdio>
 #include <cstring>
-#include <cassert>
+#include "But/assert.hpp"
 #include "UtcIsoDateTime.hpp"
 
 using std::to_string;

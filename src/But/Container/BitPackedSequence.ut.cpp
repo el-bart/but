@@ -1,7 +1,7 @@
 #include <deque>
 #include <random>
 #include <type_traits>
-#include <cassert>
+#include "But/assert.hpp"
 #include "gtest/gtest.h"
 #include "BitPackedSequence.hpp"
 #include "ArrayWithSize.hpp"

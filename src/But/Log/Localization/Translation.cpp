@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <cassert>
+#include "But/assert.hpp"
 #include "Translation.hpp"
 
 namespace But

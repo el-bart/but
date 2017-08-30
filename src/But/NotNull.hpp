@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <utility>
-#include <cassert>
+#include "But/assert.hpp"
 #include <boost/operators.hpp>
 #include "Exception.hpp"
 #include "detail/getPointerValue.hpp"

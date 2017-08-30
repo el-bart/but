@@ -1,5 +1,5 @@
 #pragma once
-#include <cassert>
+#include "But/assert.hpp"
 #include <boost/iterator/iterator_facade.hpp>
 #include "detail/ConstPreservingValueType.hpp"
 

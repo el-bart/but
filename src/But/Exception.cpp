@@ -1,4 +1,4 @@
-#include <cassert>
+#include "But/assert.hpp"
 #include "Exception.hpp"
 
 namespace But

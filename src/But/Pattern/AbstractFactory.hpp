@@ -4,7 +4,7 @@
 #include <utility>
 #include <functional>
 #include <unordered_map>
-#include <cassert>
+#include "But/assert.hpp"
 #include "But/Exception.hpp"
 #include "But/Mpl/NamedVariadicTemplate.hpp"
 

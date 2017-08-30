@@ -2,7 +2,7 @@
 #include <vector>
 #include <iterator>
 #include <initializer_list>
-#include <cassert>
+#include "But/assert.hpp"
 #include "But/Mpl/FreeOperators.hpp"
 
 namespace But

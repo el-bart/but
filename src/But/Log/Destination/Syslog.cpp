@@ -1,4 +1,4 @@
-#include <cassert>
+#include "But/assert.hpp"
 #include <syslog.h>
 #include "But/Log/Backend/toString.hpp"
 #include "Syslog.hpp"

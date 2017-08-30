@@ -4,7 +4,7 @@
 #include <mutex>
 #include <utility>
 #include <condition_variable>
-#include <cassert>
+#include "But/assert.hpp"
 
 #include "But/Exception.hpp"
 #include "WaitWrapper.hpp"

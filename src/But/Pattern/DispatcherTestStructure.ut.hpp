@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <sstream>
-#include <cassert>
+#include "But/assert.hpp"
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include "gmock/gmock.h"

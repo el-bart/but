@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <sstream>
-#include <cassert>
+#include "But/assert.hpp"
 #include "detail/parse.hpp"
 #include "detail/argumentsCount.hpp"
 #include "detail/allArgumentsUsed.hpp"

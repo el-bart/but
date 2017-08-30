@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 #include <unordered_map>
-#include <cassert>
+#include "But/assert.hpp"
 #include <boost/cast.hpp>
 #include "But/Exception.hpp"
 #include "But/Mpl/NamedVariadicTemplate.hpp"
