@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * all `assert()` statements in the code are now `BUT_ASSERT()`.
   * `BUT_ASSERT` - assert that works with `constexpr` functions, too.
   * `Log::Destination::NaiveConsole` for simplest, possible logging (minimal overhead).
   * `But::Format` for doing basic, common string formatting.
