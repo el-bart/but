@@ -36,7 +36,7 @@ struct Array
       e = t;
   }
 
-  T value_[N];
+  T value_[N]{};
 };
 
 

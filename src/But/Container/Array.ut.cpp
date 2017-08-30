@@ -12,6 +12,14 @@ struct ButContainerArray: public testing::Test
 { };
 
 
+TEST_F(ButContainerArray, ConstexprDefaultCtorSmokeTest)
+{
+  constexpr Sequence s{};
+  EXPECT_EQ( 3u, s.size() );
+  EXPECT_EQ( 3u, s.max_size() );
+}
+
+
 TEST_F(ButContainerArray, ConstexprInitialization)
 {
   constexpr Sequence s{ {3,1,4} };
