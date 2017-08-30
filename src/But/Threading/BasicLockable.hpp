@@ -35,7 +35,7 @@ namespace Threading
  *  }
  *  </code>
  *
- *  @note each method of your type, should first do 'assert( locked() )', before proceeding.
+ *  @note each method of your type, should first do 'BUT_ASSERT( locked() )', before proceeding.
  *        'locked()' is only available in debug mode, but can save a lot of time when looking for sync issues.
  */
 template<typename Derived>
@@ -45,12 +45,12 @@ public:
   void lock() const
   {
     m_.lock();
-    assert( not locked(true) );
+    BUT_ASSERT( not locked(true) );
   }
 
   void unlock() const
   {
-    assert( locked(false) );
+    BUT_ASSERT( locked(false) );
     m_.unlock();
   }
 
@@ -64,7 +64,7 @@ protected:
   ~BasicLockable() = default;
 
 #ifndef NDEBUG
-  /** @brief to be used in derived classes, for checks like 'assert( locked() )' in methods.
+  /** @brief to be used in derived classes, for checks like 'BUT_ASSERT( locked() )' in methods.
    *  @note this is for debugging purposes in derived class only!
    *  @warning this method is NOT thread-safe on its own!
    *  @warning this method is available only in debug mode!

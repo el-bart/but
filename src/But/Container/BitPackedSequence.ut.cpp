@@ -26,7 +26,7 @@ std::ostream& operator<<(std::ostream& os, const Elem e)
     case Elem::Y: return os << "Elem::Y";
     case Elem::Z: return os << "Elem::Z";
   }
-  assert(!"unknown value");
+  BUT_ASSERT(!"unknown value");
   return os << "Elem::?";
 }
 
@@ -37,7 +37,7 @@ struct Packer
   static auto encode(const Elem e) { return static_cast<uint8_t>(e); }
   static auto decode(uint8_t v)
   {
-    assert( v <= 2u && "element is over Elem::Z" );
+    BUT_ASSERT( v <= 2u && "element is over Elem::Z" );
     return static_cast<Elem>(v);
   }
 };
@@ -88,7 +88,7 @@ struct ButContainerBitPackedSequence: public testing::Test
     ASSERT_EQ( d.size(), refIn.size() );
 
     const auto refNew = generateLongSequence(2666, input, 997);
-    assert( refNew.size() == refIn.size() );
+    BUT_ASSERT( refNew.size() == refIn.size() );
     for(auto i=0u; i<refNew.size(); ++i)
       d[i] = refNew[i];
 
@@ -126,7 +126,7 @@ struct ButContainerBitPackedSequence: public testing::Test
     {
       ASSERT_EQ( d.size(), ref.size() );
       pos = d.size() - 1 - ( pos % 17 );
-      assert( pos < d.size() );
+      BUT_ASSERT( pos < d.size() );
       d.erase( d.cbegin() + pos );
       ref.erase( ref.cbegin() + pos );
       ASSERT_EQ( toVector(d), ref );
@@ -589,13 +589,13 @@ struct OddPacker
   static auto encode(const OddElem e)
   {
     const auto tmp = static_cast<uint8_t>(e);
-    assert( tmp < (1<<bits_count) );
+    BUT_ASSERT( tmp < (1<<bits_count) );
     return tmp;
   }
 
   static auto decode(uint8_t v)
   {
-    assert( v <= (16u|1u) && "element is over OddElem::Q" );
+    BUT_ASSERT( v <= (16u|1u) && "element is over OddElem::Q" );
     return static_cast<OddElem>(v);
   }
 };

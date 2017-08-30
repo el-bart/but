@@ -1,5 +1,6 @@
 #pragma once
 #include "Optional.hpp"
+#include "assert.hpp"
 
 namespace But
 {

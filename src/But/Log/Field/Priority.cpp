@@ -21,7 +21,7 @@ std::string const& toString(const Priority pri)
                       "error"
                     };
   const auto num = static_cast<unsigned>(pri);
-  assert( num < std::extent<decltype(out)>::value && "unknown priority" );
+  BUT_ASSERT( num < std::extent<decltype(out)>::value && "unknown priority" );
   return out[num];
 }
 
@@ -36,7 +36,7 @@ std::string const& toStringConstLen(const Priority pri)
                       "error  "
                     };
   const auto num = static_cast<unsigned>(pri);
-  assert( num < std::extent<decltype(out)>::value && "unknown priority" );
+  BUT_ASSERT( num < std::extent<decltype(out)>::value && "unknown priority" );
   return out[num];
 }
 

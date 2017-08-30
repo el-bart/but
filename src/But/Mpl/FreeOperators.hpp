@@ -8,7 +8,7 @@
  *  // ...
  *  const MyClass x{"foo"};
  *  const MyClass y{"bar"};
- *  assert( x > y );
+ *  BUT_ASSERT( x > y );
  *  </code>
  */
 #define BUT_MPL_FREE_OPERATORS_COMPARE(Class, Extract) \
@@ -28,7 +28,7 @@
  *  // ...
  *  const MyClass<std::string> x{"foo"};
  *  const MyClass<std::string> y{"bar"};
- *  assert( x > y );
+ *  BUT_ASSERT( x > y );
  *  </code>
  *
  *  @note for class with multiple template parameters, helper macro definition is needed:
@@ -41,7 +41,7 @@
  *  // ...
  *  const MyClass<std::string,int> x{"foo"};
  *  const MyClass<std::string,int> y{"bar"};
- *  assert( x > y );
+ *  BUT_ASSERT( x > y );
  *  </code>
  */
 #define BUT_MPL_FREE_OPERATORS_TEMPLATE_COMPARE(Class, Extract, ...) \
@@ -70,7 +70,7 @@
  *  // ...
  *  const MyCollection c1{...};
  *  const MyCollection c2{...};
- *  assert( c1 > c2 );
+ *  BUT_ASSERT( c1 > c2 );
  *  </code>
  */
 #define BUT_MPL_FREE_OPERATORS_COLLECTION_COMPARE(Collection) \
@@ -116,7 +116,7 @@
  *  // ...
  *  const MyCollection<int> c1{1,2,3};
  *  const MyCollection<int> c2{2,3,4,5};
- *  assert( c1 < c2 );
+ *  BUT_ASSERT( c1 < c2 );
  *  </code>
  *
  * @note for 1-argument template, it is enough to pass the type directly (i.e. w/o a helper macro):

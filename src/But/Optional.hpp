@@ -1,5 +1,6 @@
 #pragma once
 #include <boost/optional.hpp>
+#include "assert.hpp"
 
 namespace But
 {
@@ -45,12 +46,12 @@ public:
 
   T& get()
   {
-    assert( static_cast<bool>(t_) && "optional is not set" );
+    BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
     return t_.get();
   }
   T const& get() const
   {
-    assert( static_cast<bool>(t_) && "optional is not set" );
+    BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
     return t_.get();
   }
 

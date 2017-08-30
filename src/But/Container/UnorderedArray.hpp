@@ -69,12 +69,12 @@ public:
 
   value_type& operator[](const size_type pos)
   {
-    assert( pos < size() && "index out of range" );
+    BUT_ASSERT( pos < size() && "index out of range" );
     return c_[pos];
   }
   value_type const& operator[](const size_type pos) const
   {
-    assert( pos < size() && "index out of range" );
+    BUT_ASSERT( pos < size() && "index out of range" );
     return c_[pos];
   }
 
@@ -85,7 +85,7 @@ public:
    */
   void erase(const_iterator it)
   {
-    assert( it != end() && "cannot operate on unreferenceble iterator" );
+    BUT_ASSERT( it != end() && "cannot operate on unreferenceble iterator" );
     // if last (or the only one at all), just remove it
     if( it + 1 == end() )
     {
@@ -94,7 +94,7 @@ public:
     }
     // otherwise remove by replacing element to be removed with the last one
     // and remove the last one (already-moved-from).
-    assert( c_.size() > 1u );
+    BUT_ASSERT( c_.size() > 1u );
     const auto pos = std::distance( cbegin(), it );
     c_[pos] = std::move_if_noexcept( c_.back() );
     c_.pop_back();

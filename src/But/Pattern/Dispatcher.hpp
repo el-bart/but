@@ -104,7 +104,7 @@ public:
   AutoDispatcher()
   {
     detail::Registrator<FinalType, Msgs..., void>::call(handlers_);
-    assert( sizeof...(Msgs) == handlers_.size() && "non-unique messages IDs detected" );
+    BUT_ASSERT( sizeof...(Msgs) == handlers_.size() && "non-unique messages IDs detected" );
   }
 
   virtual void dispatch(typename Policy::BinaryFormat const& bin) override final
@@ -115,7 +115,7 @@ public:
     if(it == end(handlers_))
       BUT_THROW(typename Base::UnknownMessage, id);
     const auto h = it->second;
-    assert(h && "handler is not set - implementation bug");
+    BUT_ASSERT(h && "handler is not set - implementation bug");
     (*h)( *boost::polymorphic_downcast<FinalType*>(this), bin );
   }
 

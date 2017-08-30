@@ -8,6 +8,7 @@
 
 #include "gtest/gtest.h"
 #include "Descriptor.hpp"
+#include "But/assert.hpp"
 
 namespace fs = boost::filesystem;
 using But::System::Descriptor;
@@ -35,7 +36,7 @@ struct TestDescriptor
 
   int releaseFd()
   {
-    assert( isOpen() );
+    BUT_ASSERT( isOpen() );
     auto tmp = fd_;
     fd_ = -1;
     return tmp;

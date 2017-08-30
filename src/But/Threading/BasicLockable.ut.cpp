@@ -56,12 +56,12 @@ TEST_F(ButThreadingBasicLockable, LockingWorks)
 
 TEST_F(ButThreadingBasicLockable, DerivedClassCanCheckIfLocked)
 {
-  assert( not md_.lockedFwd() );
+  BUT_ASSERT( not md_.lockedFwd() );
   {
     const std::lock_guard<MyData> lock{md_};
-    assert( md_.lockedFwd() );
+    BUT_ASSERT( md_.lockedFwd() );
   }
-  assert( not md_.lockedFwd() );
+  BUT_ASSERT( not md_.lockedFwd() );
 }
 
 
@@ -69,7 +69,7 @@ TEST_F(ButThreadingBasicLockable, LockingUnlockingAndCheckingCanBeDoneOnConstObj
 {
   const auto& md = md_;
   const std::lock_guard<const MyData> lock{md};
-  assert( md.lockedFwd() );
+  BUT_ASSERT( md.lockedFwd() );
 }
 
 }

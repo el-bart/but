@@ -40,7 +40,7 @@ public:
     }
     catch(...)
     {
-      assert(!"failed to stop thread - givin up...");
+      BUT_ASSERT(!"failed to stop thread - givin up...");
       abort();
     }
   }
@@ -80,7 +80,7 @@ private:
       }
       catch(...)
       {
-        assert(!"unexpected exception from processing thread - this should never happen");
+        BUT_ASSERT(!"unexpected exception from processing thread - this should never happen");
       }
     }
   }

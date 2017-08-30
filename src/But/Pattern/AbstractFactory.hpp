@@ -71,9 +71,9 @@ public:
     const auto it = builders_.find(name.name_);
     if(it == end(builders_))
       BUT_THROW(NoSuchBuilder, name.name_);
-    assert(it->second);
+    BUT_ASSERT(it->second);
     auto e = it->second( std::forward<Args>(args)... );
-    assert( e.get() && "builders must return non-null pointers" );
+    BUT_ASSERT( e.get() && "builders must return non-null pointers" );
     return e;
   }
 

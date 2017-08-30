@@ -71,7 +71,7 @@ struct TestPolicy
   template<typename M>
   static M deserialize(BinaryFormat const& bin)
   {
-    assert( bin.id_ == M::type() && "invalid deserializer called" );
+    BUT_ASSERT( bin.id_ == M::type() && "invalid deserializer called" );
     std::stringstream             os(bin.data_);
     boost::archive::text_iarchive ia(os);
     M m;

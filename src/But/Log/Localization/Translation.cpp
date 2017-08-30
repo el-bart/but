@@ -32,7 +32,7 @@ Translation::Translation(Data data):
 
 char const* Translation::findTranslation(char const* from) const
 {
-  assert( std::is_sorted( begin(*data_), end(*data_) ) );
+  BUT_ASSERT( std::is_sorted( begin(*data_), end(*data_) ) );
   const auto it = std::lower_bound( begin(*data_), end(*data_), from );
   if( it == end(*data_) || it->from_.format_ != from )
     return nullptr;

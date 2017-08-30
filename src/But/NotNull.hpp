@@ -31,14 +31,14 @@ public:
   NotNull(NotNull<U> const& u):
     p_{u.p_}
   {
-    assert(p_);
+    BUT_ASSERT(p_);
   }
 
   template<typename U>
   NotNull(NotNull<U>&& u):
     p_{ std::move(u.p_) }
   {
-    assert(p_);
+    BUT_ASSERT(p_);
   }
 
   NotNull<P>& operator=(P p)
@@ -56,7 +56,7 @@ public:
   NotNull<P>& operator=(NotNull<U> const& other)
   {
     p_ = other.p_;
-    assert(p_);
+    BUT_ASSERT(p_);
     return *this;
   }
 
@@ -64,24 +64,24 @@ public:
   NotNull<P>& operator=(NotNull<U>&& other)
   {
     p_ = std::move(other.p_);
-    assert(p_);
+    BUT_ASSERT(p_);
     return *this;
   }
 
-  auto get() const { assert(p_); return detail::getPointerValue(p_); }
+  auto get() const { BUT_ASSERT(p_); return detail::getPointerValue(p_); }
 #if 0
   auto operator->() const { return get(); }
 #else
   // TODO: temporary workaround for GCC bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182)
   element_type* operator->() const { return get(); }
 #endif
-  P underlyingPointer() const & { assert(p_); return p_; }
-  P underlyingPointer() &&      { assert(p_); return std::move(p_); }
+  P underlyingPointer() const & { BUT_ASSERT(p_); return p_; }
+  P underlyingPointer() &&      { BUT_ASSERT(p_); return std::move(p_); }
   [[deprecated]] P pointer() const & { return underlyingPointer(); }
   [[deprecated]] P pointer() &&      { return underlyingPointer(); }
   auto& operator*() const { return *get(); }
 
-  explicit operator bool() const { assert(p_); return true; }
+  explicit operator bool() const { BUT_ASSERT(p_); return true; }
 
   bool operator<(NotNull<P> const& other) const { return get() < other.get(); }
 

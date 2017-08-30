@@ -25,7 +25,7 @@ public:
     filter_{ std::forward<F>(f) },
     destination_{ std::move(destination) }
   {
-    assert(filter_);
+    BUT_ASSERT(filter_);
   }
 
 private:

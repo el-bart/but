@@ -350,7 +350,7 @@ struct TestAllocator
   {
     const auto tmp = reinterpret_cast<void*>(p);
     const auto it = std::find_if( std::begin(g_dataBlocks), std::end(g_dataBlocks), [tmp](auto const& e){ return tmp==e.get(); } );
-    assert( it != std::end(g_dataBlocks) );
+    BUT_ASSERT( it != std::end(g_dataBlocks) );
     g_dataBlocks.erase(it);
   }
 

@@ -49,7 +49,7 @@ public:
   std::string format(Args const& ...args) const
   {
     static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
-    assert( expectedArguments() == detail::argumentsCount(ps_) );
+    BUT_ASSERT( expectedArguments() == detail::argumentsCount(ps_) );
     std::ostringstream os;
     for(auto& e: ps_.segments_)
       formatBlock(os, e, args...);
@@ -60,14 +60,14 @@ private:
   template<typename F>
   std::string processArgument(F&& /*f*/, const unsigned /*pos*/) const
   {
-    assert(!"this overload is never really called");
+    BUT_ASSERT(!"this overload is never really called");
     std::terminate();
   }
   template<typename F, typename Head>
   std::string processArgument(F&& f, const unsigned pos, Head const& head) const
   {
     (void)pos;
-    assert( pos == 0u && "format is not alligned with arguments" );
+    BUT_ASSERT( pos == 0u && "format is not alligned with arguments" );
     return f(head);
   }
   template<typename F, typename Head, typename ...Tail>
@@ -107,7 +107,7 @@ private:
         os << getArgumentType(state.referencedArgument_, args...);
         return;
     }
-    assert(!"missing type handle");
+    BUT_ASSERT(!"missing type handle");
   }
 
   const detail::ParserState<MaxSegments> ps_;

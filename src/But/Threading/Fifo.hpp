@@ -51,14 +51,14 @@ public:
   void lock()
   {
     m_.lock();
-    assert(not locked_);
+    BUT_ASSERT(not locked_);
     locked_ = true;
     hasNewElements_ = false;
   }
 
   void unlock()
   {
-    assert(locked_);
+    BUT_ASSERT(locked_);
     locked_ = false;
     // yes, notification should be done under a lock - aaccoring to POSIX this is "the way":
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
@@ -71,67 +71,67 @@ public:
   template<typename U>
   void push(U&& u)
   {
-    assert(locked_);
+    BUT_ASSERT(locked_);
     q_.emplace_back( std::forward<U>(u) );
     hasNewElements_ = true;
   }
 
   bool empty() const
   {
-    assert(locked_);
+    BUT_ASSERT(locked_);
     return q_.empty();
   }
 
   size_type size() const
   {
-    assert(locked_);
+    BUT_ASSERT(locked_);
     return q_.size();
   }
 
   T& top()
   {
-    assert(locked_);
-    assert( not empty() );
+    BUT_ASSERT(locked_);
+    BUT_ASSERT( not empty() );
     return q_.front();
   }
 
   template<typename ...Args>
   T& top(lock_type& lock, Args&&... args)
   {
-    assert(locked_);
-    assert(lock.owns_lock());
+    BUT_ASSERT(locked_);
+    BUT_ASSERT(lock.owns_lock());
     wait(lock, std::forward<Args>(args)...);
     return q_.front();
   }
 
   T const& top() const
   {
-    assert(locked_);
-    assert( not empty() );
+    BUT_ASSERT(locked_);
+    BUT_ASSERT( not empty() );
     return q_.front();
   }
 
   template<typename ...Args>
   T const& top(lock_type& lock, Args&&... args) const
   {
-    assert(locked_);
-    assert(lock.owns_lock());
+    BUT_ASSERT(locked_);
+    BUT_ASSERT(lock.owns_lock());
     wait(lock, std::forward<Args>(args)...);
     return q_.front();
   }
 
   void pop()
   {
-    assert(locked_);
-    assert( not empty() );
+    BUT_ASSERT(locked_);
+    BUT_ASSERT( not empty() );
     q_.pop_front();
   }
 
   template<typename ...Args>
   void pop(lock_type& lock, Args&&... args)
   {
-    assert(locked_);
-    assert(lock.owns_lock());
+    BUT_ASSERT(locked_);
+    BUT_ASSERT(lock.owns_lock());
     wait(lock, std::forward<Args>(args)...);
     q_.pop_front();
   }

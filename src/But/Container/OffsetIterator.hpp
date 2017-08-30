@@ -35,7 +35,7 @@ public:
     c_{&c},
     pos_{pos}
   {
-    assert( pos_ <= c_->size() && "iterator out of bound" );  // NOTE: pos == size is end()
+    BUT_ASSERT( pos_ <= c_->size() && "iterator out of bound" );  // NOTE: pos == size is end()
   }
 
 private:
@@ -48,31 +48,31 @@ private:
   template<typename OtherCollection, typename OtherReference>
   bool equal(OffsetIterator<OtherCollection, OtherReference> const& other) const
   {
-    assert( c_ == other.c_ && "comparing iterators from different collections");
+    BUT_ASSERT( c_ == other.c_ && "comparing iterators from different collections");
     return pos_ == other.pos_;
   }
 
   void increment()
   {
     ++pos_;
-    assert( pos_ <= c_->size() );
+    BUT_ASSERT( pos_ <= c_->size() );
   }
 
   void decrement()
   {
-    assert( 0u < pos_ && "trying to decrement begin iterator - probably a bug");
+    BUT_ASSERT( 0u < pos_ && "trying to decrement begin iterator - probably a bug");
     --pos_;
   }
 
   void advance(const difference_type diff)
   {
     pos_ += diff;
-    assert( pos_ <= c_->size() && "index out of range" );
+    BUT_ASSERT( pos_ <= c_->size() && "index out of range" );
   }
 
   Reference dereference() const
   {
-    assert( pos_ <= c_->size() );
+    BUT_ASSERT( pos_ <= c_->size() );
     return (*c_)[pos_];
   }
 

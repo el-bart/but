@@ -44,7 +44,7 @@ namespace Container
  *  // usage example:
  *  BitPackedSequence<Stuff, StuffPacker> bps;
  *  bps.push_back( Stuff:B );
- *  assert( bps[0] == Stuff::B );
+ *  BUT_ASSERT( bps[0] == Stuff::B );
  *  </code>
  */
 template<typename T, typename Packer, typename Container = std::vector<uint8_t>>
@@ -71,7 +71,7 @@ public:
   public:
     value_type operator=(value_type const& other)
     {
-      assert(c_);
+      BUT_ASSERT(c_);
       c_->insertValueAtPosition(other, pos_);
       return other;
     }
@@ -83,7 +83,7 @@ public:
 
     operator const value_type() const
     {
-      assert(c_);
+      BUT_ASSERT(c_);
       return c_->readValueAtPosition(pos_);
     }
 
@@ -140,7 +140,7 @@ public:
   void push_back(const value_type v)
   {
     resizeToFitAdditional(1);
-    assert( capacity() > size() );
+    BUT_ASSERT( capacity() > size() );
     insertValueAtPosition(v, size_);
     ++size_;
   }
@@ -195,7 +195,7 @@ private:
   {
     const auto bitsAvailable = c_.size() * static_cast<unsigned>(bits_per_byte);
     const auto bitsRequired = size_ * Packer::bits_count;
-    assert( bitsRequired <= bitsAvailable );
+    BUT_ASSERT( bitsRequired <= bitsAvailable );
     if( bitsAvailable - bitsRequired >= bits_per_byte )
       c_.pop_back();
   }
@@ -207,7 +207,7 @@ private:
     const auto startByte = (pos * Packer::bits_count) / array_element_bits;
     const auto startOffset = pos * Packer::bits_count - startByte * array_element_bits;
     const auto bitsLeftInStartByte = array_element_bits - startOffset;
-    assert( bitsLeftInStartByte > 0u && "wtf?!" );
+    BUT_ASSERT( bitsLeftInStartByte > 0u && "wtf?!" );
     const auto shiftForStart = array_element_bits - bitsLeftInStartByte;
     const auto maskForStart = ~ ( element_bits_mask << shiftForStart );
     c_[startByte] &= maskForStart;
@@ -228,7 +228,7 @@ private:
     const auto startByte = (pos * Packer::bits_count) / array_element_bits;
     const auto startOffset = pos * Packer::bits_count - startByte * array_element_bits;
     const auto bitsLeftInStartByte = array_element_bits - startOffset;
-    assert( bitsLeftInStartByte > 0u && "wtf?!" );
+    BUT_ASSERT( bitsLeftInStartByte > 0u && "wtf?!" );
     const auto shiftForStart = array_element_bits - bitsLeftInStartByte;
     const auto maskForStart = element_bits_mask << shiftForStart;
     const auto firstByte = c_[startByte] & maskForStart;
@@ -238,7 +238,7 @@ private:
       if( bits_per_byte < shiftForStart + Packer::bits_count )
       {
         const auto endByte = startByte+1;
-        assert( endByte < size() );
+        BUT_ASSERT( endByte < size() );
         const auto lastByte = c_[endByte];
         const auto bitsLeft = ( shiftForStart + Packer::bits_count ) - bits_per_byte;
         const auto maskForEnd = element_bits_mask >> ( Packer::bits_count - bitsLeft );

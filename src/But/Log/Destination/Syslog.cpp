@@ -21,7 +21,7 @@ auto toSyslogPriority(const Field::Priority p)
     case Field::Priority::warning: return LOG_WARNING;
     case Field::Priority::error:   return LOG_ERR;
   }
-  assert(!"unknown priority");
+  BUT_ASSERT(!"unknown priority");
   throw std::logic_error{"unknown priority"};
 }
 
@@ -31,7 +31,7 @@ auto stringToPriority(std::string const& str)
   if( str == toString(Field::Priority::info) )    return Field::Priority::info;
   if( str == toString(Field::Priority::warning) ) return Field::Priority::warning;
   if( str == toString(Field::Priority::error) )   return Field::Priority::error;
-  assert(!"unknown priority string");
+  BUT_ASSERT(!"unknown priority string");
   throw std::logic_error{"unknown priority string: " + str};
 }
 }

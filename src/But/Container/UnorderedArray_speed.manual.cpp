@@ -114,8 +114,8 @@ auto generateUniqueValues(unsigned size)
       break;
     }
   }
-  assert( out.size() == size );
-  assert( std::is_sorted( begin(out), end(out) ) );
+  BUT_ASSERT( out.size() == size );
+  BUT_ASSERT( std::is_sorted( begin(out), end(out) ) );
 
   return randomize( std::move(out), seed+1 );
 }
@@ -132,7 +132,7 @@ void testAlgorithm(std::vector<DataField> const& values, std::vector<DataField> 
   for(const auto q: queries)
   {
     const auto it = data.find(q);
-    assert( it != end(data.c_) );
+    BUT_ASSERT( it != end(data.c_) );
     data.c_.erase(it);
   }
 }
