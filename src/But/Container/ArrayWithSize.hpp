@@ -125,14 +125,14 @@ private:
       return false;
     clear();
     for(auto&& e: other)
-      push_back( std::move(e) );    // TODO: move vs. forward...
+      push_back( std::move(e) );    // std::move() is ok, since for const-ref this will yield const-&&, this will copy, not move
     return true;
   }
 
   template<typename It>
   inline constexpr Container makeFilledByCopy(It begin, It end)
   {
-    // helper to workaround clang bug: 
+    // helper to workaround clang bug: https://bugs.llvm.org/show_bug.cgi?id=19741
     Container c{};
     auto i = size_type{0};
     for(auto it=begin; it!=end; ++it)
@@ -143,7 +143,7 @@ private:
   template<typename It>
   inline constexpr Container makeFilledByMove(It begin, It end)
   {
-    // helper to workaround clang bug: 
+    // helper to workaround clang bug: https://bugs.llvm.org/show_bug.cgi?id=19741
     Container c{};
     auto i = size_type{0};
     for(auto it=begin; it!=end; ++it)
