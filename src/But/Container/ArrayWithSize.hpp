@@ -31,29 +31,28 @@ public:
   using const_iterator = typename Container::const_iterator;
 
   constexpr ArrayWithSize() = default;
-  constexpr ArrayWithSize(std::initializer_list<T> lst)
+  constexpr ArrayWithSize(std::initializer_list<T> lst):
+    c_{ makeFilledByMove( lst.begin(), lst.end() ) },
+    size_( lst.size() )
   {
     BUT_ASSERT( lst.size() <= N && "too many arguments for a given type" );
-    for(auto& e: lst)
-      push_back(e);
   }
 
-  constexpr ArrayWithSize(ArrayWithSize const& other)
-  {
-    for(auto const& e: other)
-      push_back(e);
-  }
+  constexpr ArrayWithSize(ArrayWithSize const& other):
+    c_{ makeFilledByCopy( other.begin(), other.end() ) },
+    size_( other.size() )
+  { }
   constexpr ArrayWithSize& operator=(ArrayWithSize const& other)
   {
     copyOrMove(other);
     return *this;
   }
 
-  constexpr ArrayWithSize(ArrayWithSize&& other)
+  constexpr ArrayWithSize(ArrayWithSize&& other):
+    c_{ makeFilledByMove( other.begin(), other.end() ) },
+    size_( other.size() )
   {
-    for(auto&& e: other)
-      push_back( std::move(e) );
-    other.size_ = 0u;
+    other.size_ = 0;
   }
   constexpr ArrayWithSize& operator=(ArrayWithSize&& other)
   {
@@ -128,6 +127,28 @@ private:
     for(auto&& e: other)
       push_back( std::move(e) );    // TODO: move vs. forward...
     return true;
+  }
+
+  template<typename It>
+  inline constexpr Container makeFilledByCopy(It begin, It end)
+  {
+    // helper to workaround clang bug: 
+    Container c{};
+    auto i = size_type{0};
+    for(auto it=begin; it!=end; ++it)
+      c[i++] = *it;
+    return c;
+  }
+
+  template<typename It>
+  inline constexpr Container makeFilledByMove(It begin, It end)
+  {
+    // helper to workaround clang bug: 
+    Container c{};
+    auto i = size_type{0};
+    for(auto it=begin; it!=end; ++it)
+      c[i++] = std::move(*it);
+    return c;
   }
 
   Container c_{};
