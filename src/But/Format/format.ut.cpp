@@ -65,7 +65,7 @@ TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
   {
     constexpr auto fmt = BUT_FORMAT("${0#info} ${V0#text} ${T0#foo}");
     EXPECT_EQ( 1u, fmt.expectedArguments() );
-    EXPECT_EQ( "x x std::string", fmt.format("x") );
+    EXPECT_EQ( "x x string", fmt.format("x") );
   }
 }
 

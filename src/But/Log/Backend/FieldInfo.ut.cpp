@@ -29,7 +29,7 @@ std::string toString(MyCustomType const&) { return "custom type worked! :D"; }
 TEST_F(ButLogBackendFieldInfo, CustomizationPoints)
 {
   EXPECT_EQ( FieldInfo{ std::string{"stuff"} }.value(), "stuff" );
-  EXPECT_EQ( FieldInfo{ std::string{"stuff"} }.type(), "std::string" );
+  EXPECT_EQ( FieldInfo{ std::string{"stuff"} }.type(), "string" );
 
   EXPECT_EQ( FieldInfo{ MyCustomType{} }.type(), "foo-bar!" );
   EXPECT_EQ( FieldInfo{ MyCustomType{} }.value(), "custom type worked! :D" );

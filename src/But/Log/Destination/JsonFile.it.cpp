@@ -100,7 +100,7 @@ TEST_F(ButLogDestinationJsonFile, UsingNonprintableCharacters)
   tf_.log("A\nB\rC");
   EXPECT_EQ( 1u, countLines() );
 
-  EXPECT_EQ( "[{\"std::string\":\"A\\nB\\rC\"}]\n", readLogFile() );
+  EXPECT_EQ( "[{\"string\":\"A\\nB\\rC\"}]\n", readLogFile() );
 }
 
 
@@ -110,9 +110,9 @@ TEST_F(ButLogDestinationJsonFile, SomeLogs)
   tf_.log("foo", "bar");
   EXPECT_EQ( 2u, countLines() );
 
-  EXPECT_EQ( R"xx([{"std::string":"answer"},{"int":42}])xx"
+  EXPECT_EQ( R"xx([{"string":"answer"},{"int":42}])xx"
              "\n"
-             R"xx([{"std::string":"foo"},{"std::string":"bar"}])xx"
+             R"xx([{"string":"foo"},{"string":"bar"}])xx"
              "\n"
              , readLogFile() );
 }
@@ -123,7 +123,7 @@ TEST_F(ButLogDestinationJsonFile, SomeFormattedLog)
   tf_.log( But::Log::Field::FormattedString{"kszy"}, "answer", 42);
   EXPECT_EQ( 1u, countLines() );
 
-  EXPECT_EQ( R"xx([{"But::Formatted":"kszy"},{"std::string":"answer"},{"int":42}])xx"
+  EXPECT_EQ( R"xx([{"But::Formatted":"kszy"},{"string":"answer"},{"int":42}])xx"
              "\n"
              , readLogFile() );
 }
