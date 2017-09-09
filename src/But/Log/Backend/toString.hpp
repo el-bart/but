@@ -1,5 +1,9 @@
 /** @brief customization point for converting user-defined values to a printable string.
  *         ADL is used to search for proper overload. there is no default one, to avoid confusion.
+ *
+ *  @note while technically it could be possible to use {std,boost}::variant to keep different, possible options,
+ *        quick measurements shown that it is not that beneficial. in some cases it causes speed-ups, in some
+ *        it generates slow-downs. difference in performance is not clear thus does not justify complexity involved.
  */
 #pragma once
 #include <string>
