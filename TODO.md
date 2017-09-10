@@ -8,6 +8,7 @@
 * how about renaming `Log::LoggerProxy` to `Log::Proxy`?
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
+* add fields: `Size`, `Index`, `Address`
 * `Log::Destination::BackgroundThread{ForeginDestination}`
 * make re-throwing exceptions from logger possible (but NOT default one)
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occures, but dropping if nothing 'special' happens for some time
