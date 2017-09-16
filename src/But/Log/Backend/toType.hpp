@@ -28,7 +28,7 @@ inline std::string toType(char       volatile *) { return "string"; }
 inline std::string toType(char const volatile *) { return "string"; }
 
 // all signed numbers to be kept as just "int"
-inline std::string toType(char)      { return "int"; }
+inline std::string toType(char)      { return "string"; }
 inline std::string toType(short)     { return "int"; }
 inline std::string toType(int)       { return "int"; }
 inline std::string toType(long)      { return "int"; }

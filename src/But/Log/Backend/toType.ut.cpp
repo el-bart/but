@@ -41,7 +41,7 @@ struct ButLogBackendToType: public testing::Test
 
 TEST_F(ButLogBackendToType, CheckBasicValues)
 {
-  checkNum<char>("int");
+  checkNum<char>("string");
   checkNum<short>("int");
   checkNum<int>("int");
   checkNum<long>("int");
