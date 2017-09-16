@@ -48,8 +48,13 @@ private:
 
   virtual void toStreamFormat(std::ostream& os, Backend::Entry const& e)
   {
-    for(auto& f: e)
-      os << trim_( f.value() );
+    if( not e.empty() )
+    {
+      auto it = begin(e);
+      os << trim_( it->value() );
+      for(++it; it!=end(e); ++it)
+        os << ' ' << trim_( it->value() );
+    }
     os << endline_;
   }
 

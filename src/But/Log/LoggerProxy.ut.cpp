@@ -105,7 +105,7 @@ TEST_F(ButLogLoggerProxy, ForeignTypeValueLogging)
 {
   LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42, "foo", 'a');
-  EXPECT_EQ( buffer_.str(), "int=42 string=foo int=a ");
+  EXPECT_EQ( buffer_.str(), "int=42 string=foo string=a ");
 }
 
 

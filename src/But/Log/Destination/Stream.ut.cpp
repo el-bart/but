@@ -28,14 +28,14 @@ struct ButLogDestinationStream: public testing::Test
 
 TEST_F(ButLogDestinationStream, PrintingSampleData)
 {
-  s_.log( "line: ", LineNumber{42} );
+  s_.log( "line:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
 TEST_F(ButLogDestinationStream, CheckArrowOperator)
 {
-  s_->log( "line: ", LineNumber{42} );
+  s_->log( "line:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
@@ -43,14 +43,14 @@ TEST_F(ButLogDestinationStream, CheckArrowOperator)
 TEST_F(ButLogDestinationStream, OperatingViaBaseClass)
 {
   auto& base = static_cast<Foreign&>(s_);
-  base->log( "line: ", LineNumber{42} );
+  base->log( "line:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
 TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
 {
-  s_.log( "beep \07 / CRLF \r\n / normal: ", LineNumber{42} );
+  s_.log( "beep \07 / CRLF \r\n / normal:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "beep . / CRLF .. / normal: 42\n" );
 }
 
@@ -118,6 +118,20 @@ TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)
   cs.log("so tech", "much wow");
   cs.log( FormattedString{"$2 / $1"}, 2, 84 );
   EXPECT_EQ( "3x2x7y", cs.ss_.str() );
+}
+
+
+TEST_F(ButLogDestinationStream, SpaceIsInsertBetweenEachArgument)
+{
+  s_.log(1, "a", 'b', 42);
+  EXPECT_EQ( s_.ss_.str(), "1 a b 42\n" );
+}
+
+
+TEST_F(ButLogDestinationStream, ZeroArgumentsLogIsJustAnEmptyLine)
+{
+  s_.log();
+  EXPECT_EQ( s_.ss_.str(), "\n" );
 }
 
 }

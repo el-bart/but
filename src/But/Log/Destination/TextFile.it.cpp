@@ -42,10 +42,10 @@ TEST_F(ButLogDestinationTextFile, WritingDataToFile)
 {
   EXPECT_EQ( 0u, countLines() );
 
-  tf_.log("hello, ", "world!");
+  tf_.log("hello,", "world!");
   EXPECT_EQ( 1u, countLines() );
 
-  tf_.log("the answer is: ", 42);
+  tf_.log("the answer is:", 42);
   EXPECT_EQ( 2u, countLines() );
 
   tf_.log("non-printable\nchars\nare\nignored");

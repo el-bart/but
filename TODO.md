@@ -2,7 +2,6 @@
 
 ## logger-related things
 
-* console loggers should auto-add space between elements, to keep it all simple!
 * add dedicated Backend::Value and Backend::Type, for internal representation (for future improvements).
 * consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
 * maybe `LoggerProxy::log()` could take a parsed format as a template argument, to avoid macros? could this be used to RT-based formats, with a proxy object?
