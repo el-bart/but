@@ -22,8 +22,8 @@ private:
 };
 
 
-inline std::string typeString(Timestamp const&) { return "But::Timestamp"; }
-std::string toString(Timestamp uts);
+inline std::string toType(Timestamp const&) { return "But::Timestamp"; }
+std::string toValue(Timestamp uts);
 
 }
 }

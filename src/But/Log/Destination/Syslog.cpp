@@ -1,6 +1,6 @@
 #include "But/assert.hpp"
 #include <syslog.h>
-#include "But/Log/Backend/toString.hpp"
+#include "But/Log/Backend/toValue.hpp"
 #include "Syslog.hpp"
 
 namespace But
@@ -27,10 +27,10 @@ auto toSyslogPriority(const Field::Priority p)
 
 auto stringToPriority(std::string const& str)
 {
-  if( str == toString(Field::Priority::debug) )   return Field::Priority::debug;
-  if( str == toString(Field::Priority::info) )    return Field::Priority::info;
-  if( str == toString(Field::Priority::warning) ) return Field::Priority::warning;
-  if( str == toString(Field::Priority::error) )   return Field::Priority::error;
+  if( str == toValue(Field::Priority::debug) )   return Field::Priority::debug;
+  if( str == toValue(Field::Priority::info) )    return Field::Priority::info;
+  if( str == toValue(Field::Priority::warning) ) return Field::Priority::warning;
+  if( str == toValue(Field::Priority::error) )   return Field::Priority::error;
   BUT_ASSERT(!"unknown priority string");
   throw std::logic_error{"unknown priority string: " + str};
 }
@@ -38,12 +38,12 @@ auto stringToPriority(std::string const& str)
 
 void Syslog::logImpl(Backend::Entry const& e)
 {
-  auto pri = toString(Field::Priority::info);
+  auto pri = toValue(Field::Priority::info);
   std::stringstream ss;
   for(auto& f: e)
   {
     ss << trim_( f.value() );
-    if( f.type() == typeString(Field::Priority::info) )
+    if( f.type() == toType(Field::Priority::info) )
       pri = f.value();
   }
   const auto p = stringToPriority(pri);
@@ -54,10 +54,10 @@ void Syslog::logImpl(Backend::Entry const& e)
 
 void Syslog::logImpl(Field::FormattedString const& str, Backend::Entry const& e)
 {
-  auto pri = toString(Field::Priority::info);
+  auto pri = toValue(Field::Priority::info);
   for(auto& f: e)
   {
-    if( f.type() == typeString(Field::Priority::info) )
+    if( f.type() == toType(Field::Priority::info) )
       pri = f.value();
   }
   const auto p = stringToPriority(pri);

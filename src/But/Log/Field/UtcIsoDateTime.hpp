@@ -22,8 +22,8 @@ struct UtcIsoDateTime final
 };
 
 
-inline std::string typeString(UtcIsoDateTime const&) { return "But::UtcIsoDT"; }
-inline std::string toString(UtcIsoDateTime const& d) { return d.date() + "T" + d.time() + "Z"; }
+inline std::string toType(UtcIsoDateTime const&) { return "But::UtcIsoDT"; }
+inline std::string toValue(UtcIsoDateTime const& d) { return d.date() + "T" + d.time() + "Z"; }
 
 }
 }

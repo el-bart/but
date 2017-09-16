@@ -13,8 +13,8 @@ struct ButLogFieldFileName: public testing::Test
 
 TEST_F(ButLogFieldFileName, ConvertingToString)
 {
-  EXPECT_EQ( toString( FileName{"a/c"} ), "a/c" );
-  EXPECT_EQ( toString( FileName{"/foo/bar"} ), "/foo/bar" );
+  EXPECT_EQ( toValue( FileName{"a/c"} ), "a/c" );
+  EXPECT_EQ( toValue( FileName{"/foo/bar"} ), "/foo/bar" );
 }
 
 

@@ -14,7 +14,7 @@ struct ButLogFieldThreadNo: public testing::Test
 
 TEST_F(ButLogFieldThreadNo, ConvertingToString)
 {
-  EXPECT_GE( toString( ThreadNo{} ).length(), 1u );
+  EXPECT_GE( toValue( ThreadNo{} ).length(), 1u );
 }
 
 
@@ -23,7 +23,7 @@ TEST_F(ButLogFieldThreadNo, ConvertingToFieldInfo)
   const auto tno = ThreadNo{};
   const auto fi = But::Log::Backend::FieldInfo{tno};
   EXPECT_EQ( fi.type(), "But::ThreadNo" );
-  EXPECT_EQ( toString(tno), fi.value() );
+  EXPECT_EQ( toValue(tno), fi.value() );
 }
 
 

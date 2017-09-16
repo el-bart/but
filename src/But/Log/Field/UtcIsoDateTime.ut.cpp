@@ -13,8 +13,8 @@ struct ButLogFieldUtcIsoDateTime: public testing::Test
 
 TEST_F(ButLogFieldUtcIsoDateTime, ConvertingToString)
 {
-  EXPECT_EQ( toString( UtcIsoDateTime{1234} ), "1970-01-01T00:20:34Z" );
-  EXPECT_EQ( toString( UtcIsoDateTime{34580000} ), "1971-02-05T05:33:20Z" );
+  EXPECT_EQ( toValue( UtcIsoDateTime{1234} ), "1970-01-01T00:20:34Z" );
+  EXPECT_EQ( toValue( UtcIsoDateTime{34580000} ), "1971-02-05T05:33:20Z" );
 }
 
 

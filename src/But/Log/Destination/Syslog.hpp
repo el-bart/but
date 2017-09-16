@@ -1,6 +1,6 @@
 #pragma once
 #include <sstream>
-#include "But/Log/Backend/toString.hpp"
+#include "But/Log/Backend/toValue.hpp"
 #include "But/Log/Backend/NonPrintableTrimmer.hpp"
 #include "But/Log/Field/Priority.hpp"
 #include "Foreign.hpp"

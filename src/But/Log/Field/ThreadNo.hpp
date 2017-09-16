@@ -15,8 +15,8 @@ struct ThreadNo final
   uint64_t value_;
 };
 
-inline std::string typeString(ThreadNo const&) { return "But::ThreadNo"; }
-inline std::string toString(ThreadNo const& tno) { return std::to_string(tno.value_); }
+inline std::string toType(ThreadNo const&) { return "But::ThreadNo"; }
+inline std::string toValue(ThreadNo const& tno) { return std::to_string(tno.value_); }
 
 }
 }

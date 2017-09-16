@@ -14,8 +14,8 @@ struct ThreadId final
   std::thread::id value_{ std::this_thread::get_id() };
 };
 
-inline std::string typeString(ThreadId const&) { return "But::ThreadId"; }
-std::string toString(ThreadId const& tid);
+inline std::string toType(ThreadId const&) { return "But::ThreadId"; }
+std::string toValue(ThreadId const& tid);
 
 }
 }

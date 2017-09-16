@@ -14,8 +14,8 @@ struct ButLogFieldTimestamp: public testing::Test
 TEST_F(ButLogFieldTimestamp, ExplicitlyProvidedTimestamp)
 {
   const auto tp = Timestamp::Clock::time_point{} + std::chrono::seconds{42};
-  EXPECT_EQ( toString( Timestamp{tp} ), "42.000000000" );
-  EXPECT_EQ( toString( Timestamp{tp + std::chrono::nanoseconds{997}} ), "42.000000997" );
+  EXPECT_EQ( toValue( Timestamp{tp} ), "42.000000000" );
+  EXPECT_EQ( toValue( Timestamp{tp + std::chrono::nanoseconds{997}} ), "42.000000997" );
 }
 
 

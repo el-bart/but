@@ -8,7 +8,7 @@ namespace Log
 namespace Field
 {
 
-std::string toString(ThreadId const& tid)
+std::string toValue(ThreadId const& tid)
 {
   std::ostringstream ss;
   ss << tid.value_;

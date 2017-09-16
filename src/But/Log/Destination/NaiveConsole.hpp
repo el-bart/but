@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
 #include <iostream>
-#include "But/Log/Backend/toString.hpp"
+#include "But/Log/Backend/toValue.hpp"
 
 namespace But
 {
@@ -30,8 +30,8 @@ private:
   template<typename H, typename ...T>
   static void append(H&& head, T&& ...tail)
   {
-    using Backend::toString;
-    std::cout << toString(head);
+    using Backend::toValue;
+    std::cout << toValue(head);
     append( std::forward<T>(tail)... );
   }
   static void append() { }

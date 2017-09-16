@@ -5,8 +5,8 @@
 #include "detail/parse.hpp"
 #include "detail/argumentsCount.hpp"
 #include "detail/allArgumentsUsed.hpp"
-#include "But/Log/Backend/toString.hpp"
-#include "But/Log/Backend/typeString.hpp"
+#include "But/Log/Backend/toValue.hpp"
+#include "But/Log/Backend/toType.hpp"
 #include "Invalid.hpp"
 
 namespace But
@@ -15,7 +15,7 @@ namespace Format
 {
 
 /** @brief represents a parsed format, from a given text with. set of parameters can be applied to get a final message.
- *  @note format of the parameter is defined by its type, via toString() function. it
+ *  @note format of the parameter is defined by its type, via toValue() function. it
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
  */
@@ -28,7 +28,7 @@ public:
    *          $N - expands to N-th argument.
    *          ${N} - the same as $N.
    *          ${N#some text} - the same as $N, but allowing some textual description along (useful for translations!).
-   *          ${TN} - prints type of N-th argument, using typeString() function and ADL.
+   *          ${TN} - prints type of N-th argument, using toType() function and ADL.
    *          ${TN#some text} - the same as ${TN}, but allowing some textual description along (useful for translations!).
    *          ${VN} - the same as $N.
    *          ${VN#some text} - the same as $N, but allowing some textual description along (useful for translations!).
@@ -81,14 +81,14 @@ private:
   template<typename ...Args>
   std::string getArgumentType(const unsigned pos, Args const& ...args) const
   {
-    using Log::Backend::typeString;
-    return processArgument( [](auto& e) { return typeString(e); },  pos, args... );
+    using Log::Backend::toType;
+    return processArgument( [](auto& e) { return toType(e); },  pos, args... );
   }
   template<typename ...Args>
   std::string getArgumentValue(const unsigned pos, Args const& ...args) const
   {
-    using Log::Backend::toString;
-    return processArgument( [](auto& e) { return toString(e); },  pos, args... );
+    using Log::Backend::toValue;
+    return processArgument( [](auto& e) { return toValue(e); },  pos, args... );
   }
 
 
@@ -116,10 +116,10 @@ private:
 
 
 template<unsigned N, unsigned M>
-std::string toString(Parsed<N,M> const&) = delete;
+std::string toValue(Parsed<N,M> const&) = delete;
 
 template<unsigned N, unsigned M>
-std::string typeString(Parsed<N,M> const&) = delete;
+std::string toType(Parsed<N,M> const&) = delete;
 
 }
 }

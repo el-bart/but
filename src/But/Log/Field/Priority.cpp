@@ -11,7 +11,7 @@ namespace Log
 namespace Field
 {
 
-std::string const& toString(const Priority pri)
+std::string const& toValue(const Priority pri)
 {
   static const std::string out[] =
                     {
@@ -26,7 +26,7 @@ std::string const& toString(const Priority pri)
 }
 
 
-std::string const& toStringConstLen(const Priority pri)
+std::string const& toValueConstLen(const Priority pri)
 {
   static const std::string out[] =
                     {

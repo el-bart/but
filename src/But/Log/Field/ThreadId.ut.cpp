@@ -14,7 +14,7 @@ struct ButLogFieldThreadId: public testing::Test
 
 TEST_F(ButLogFieldThreadId, ConvertingToString)
 {
-  EXPECT_GT( toString( ThreadId{} ).length(), 4u );
+  EXPECT_GT( toValue( ThreadId{} ).length(), 4u );
 }
 
 
@@ -23,7 +23,7 @@ TEST_F(ButLogFieldThreadId, ConvertingToFieldInfo)
   const auto tid = ThreadId{};
   const auto fi = But::Log::Backend::FieldInfo{tid};
   EXPECT_EQ( fi.type(), "But::ThreadId" );
-  EXPECT_EQ( toString(tid), fi.value() );
+  EXPECT_EQ( toValue(tid), fi.value() );
 }
 
 

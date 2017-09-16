@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include "toString.hpp"
-#include "typeString.hpp"
+#include "toValue.hpp"
+#include "toType.hpp"
 
 namespace But
 {
@@ -15,12 +15,12 @@ class FieldInfo final
 public:
   template<typename T>
   explicit FieldInfo(T const& value):
-    type_{ typeString(value) },
-    value_{ toString(value) }
+    type_{ toType(value) },
+    value_{ toValue(value) }
   { }
 
   explicit FieldInfo(std::string&& value):
-    type_{ typeString(value) },
+    type_{ toType(value) },
     value_{ std::move(value) }
   { }
 

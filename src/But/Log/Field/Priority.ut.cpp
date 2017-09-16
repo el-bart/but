@@ -13,19 +13,19 @@ struct ButLogFieldPriority: public testing::Test
 
 TEST_F(ButLogFieldPriority, ConvertingToString)
 {
-  EXPECT_EQ( toString(Priority::debug),   "debug" );
-  EXPECT_EQ( toString(Priority::info),    "info" );
-  EXPECT_EQ( toString(Priority::warning), "warning" );
-  EXPECT_EQ( toString(Priority::error),   "error" );
+  EXPECT_EQ( toValue(Priority::debug),   "debug" );
+  EXPECT_EQ( toValue(Priority::info),    "info" );
+  EXPECT_EQ( toValue(Priority::warning), "warning" );
+  EXPECT_EQ( toValue(Priority::error),   "error" );
 }
 
 
 TEST_F(ButLogFieldPriority, ConvertingToStringOfConstantLength)
 {
-  EXPECT_EQ( toStringConstLen(Priority::debug),   "debug  " );
-  EXPECT_EQ( toStringConstLen(Priority::info),    "info   " );
-  EXPECT_EQ( toStringConstLen(Priority::warning), "warning" );
-  EXPECT_EQ( toStringConstLen(Priority::error),   "error  " );
+  EXPECT_EQ( toValueConstLen(Priority::debug),   "debug  " );
+  EXPECT_EQ( toValueConstLen(Priority::info),    "info   " );
+  EXPECT_EQ( toValueConstLen(Priority::warning), "warning" );
+  EXPECT_EQ( toValueConstLen(Priority::error),   "error  " );
 }
 
 

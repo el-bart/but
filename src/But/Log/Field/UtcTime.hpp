@@ -19,8 +19,8 @@ struct UtcTime final
 };
 
 
-inline std::string typeString(UtcTime const&) { return "But::UtcTime"; }
-inline std::string toString(UtcTime const& d) { return d.timestamp_.time(); }
+inline std::string toType(UtcTime const&) { return "But::UtcTime"; }
+inline std::string toValue(UtcTime const& d) { return d.timestamp_.time(); }
 
 }
 }

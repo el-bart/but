@@ -13,8 +13,8 @@ struct ButLogFieldLineNumber: public testing::Test
 
 TEST_F(ButLogFieldLineNumber, ConvertingToString)
 {
-  EXPECT_EQ( toString( LineNumber{0} ), "0" );
-  EXPECT_EQ( toString( LineNumber{42} ), "42" );
+  EXPECT_EQ( toValue( LineNumber{0} ), "0" );
+  EXPECT_EQ( toValue( LineNumber{42} ), "42" );
 }
 
 

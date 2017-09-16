@@ -1,45 +1,45 @@
 #include "gtest/gtest.h"
-#include "typeString.hpp"
+#include "toType.hpp"
 
-using But::Log::Backend::typeString;
+using But::Log::Backend::toType;
 
 namespace
 {
 
-struct ButLogBackendTypeString: public testing::Test
+struct ButLogBackendToType: public testing::Test
 {
   template<typename T>
   void checkNum(std::string const& exp)
   {
     T t{0};
-    EXPECT_EQ( typeString(t), exp );
+    EXPECT_EQ( toType(t), exp );
   }
 
   template<typename T>
   void checkCharPtr(std::string const& exp)
   {
     T t{nullptr};
-    EXPECT_EQ( typeString(t), exp );
+    EXPECT_EQ( toType(t), exp );
   }
 
   template<typename T>
   void checkCharArray(std::string const& exp)
   {
     T t[42] = "";
-    EXPECT_EQ( typeString(t), exp );
+    EXPECT_EQ( toType(t), exp );
   }
 
   template<typename T>
   void checkStr(std::string const& exp)
   {
     T t{};
-    EXPECT_EQ( typeString(t), exp );
+    EXPECT_EQ( toType(t), exp );
   }
 };
 
 
 
-TEST_F(ButLogBackendTypeString, CheckBasicValues)
+TEST_F(ButLogBackendToType, CheckBasicValues)
 {
   checkNum<char>("int");
   checkNum<short>("int");
@@ -59,7 +59,7 @@ TEST_F(ButLogBackendTypeString, CheckBasicValues)
 }
 
 
-TEST_F(ButLogBackendTypeString, AllCstringPointerTypesAreStdString)
+TEST_F(ButLogBackendToType, AllCstringPointerTypesAreStdString)
 {
   checkCharPtr<char                *               >("string");
   checkCharPtr<char const          *               >("string");
@@ -83,7 +83,7 @@ TEST_F(ButLogBackendTypeString, AllCstringPointerTypesAreStdString)
 }
 
 
-TEST_F(ButLogBackendTypeString, AllCharArrayTypesAreStdString)
+TEST_F(ButLogBackendToType, AllCharArrayTypesAreStdString)
 {
   checkCharArray<char               >("string");
   checkCharArray<char const         >("string");
@@ -92,7 +92,7 @@ TEST_F(ButLogBackendTypeString, AllCharArrayTypesAreStdString)
 }
 
 
-TEST_F(ButLogBackendTypeString, StringIsSimplified)
+TEST_F(ButLogBackendToType, StringIsSimplified)
 {
   checkStr<std::string> ("string");
   checkStr<std::wstring>("string");

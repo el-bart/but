@@ -4,8 +4,8 @@
 using But::Log::Backend::FieldInfo;
 
 struct GlobalCustomTypeForFieldTesting { };
-std::string typeString(GlobalCustomTypeForFieldTesting const&) { return "GlobalCustomTypeForFieldTesting - custom"; }
-std::string toString(GlobalCustomTypeForFieldTesting const&) { return "<empty>"; }
+std::string toType(GlobalCustomTypeForFieldTesting const&) { return "GlobalCustomTypeForFieldTesting - custom"; }
+std::string toValue(GlobalCustomTypeForFieldTesting const&) { return "<empty>"; }
 
 namespace
 {
@@ -23,8 +23,8 @@ TEST_F(ButLogBackendFieldInfo, ExplicitlyProvidedTypeName)
 
 
 struct MyCustomType { };
-std::string typeString(MyCustomType const&) { return "foo-bar!"; }
-std::string toString(MyCustomType const&) { return "custom type worked! :D"; }
+std::string toType(MyCustomType const&) { return "foo-bar!"; }
+std::string toValue(MyCustomType const&) { return "custom type worked! :D"; }
 
 TEST_F(ButLogBackendFieldInfo, CustomizationPoints)
 {
@@ -40,7 +40,7 @@ TEST_F(ButLogBackendFieldInfo, CustomizationPoints)
 
 
 struct AnotherCustomType { };
-std::string toString(AnotherCustomType const&) { return "whatever"; }
+std::string toValue(AnotherCustomType const&) { return "whatever"; }
 
 TEST_F(ButLogBackendFieldInfo, AutoGettingTypeNames)
 {

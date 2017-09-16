@@ -19,8 +19,8 @@ struct UtcDate final
 };
 
 
-inline std::string typeString(UtcDate const&) { return "But::UtcDate"; }
-inline std::string toString(UtcDate const& d) { return d.timestamp_.date(); }
+inline std::string toType(UtcDate const&) { return "But::UtcDate"; }
+inline std::string toValue(UtcDate const& d) { return d.timestamp_.date(); }
 
 }
 }

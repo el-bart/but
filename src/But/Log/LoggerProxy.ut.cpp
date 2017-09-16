@@ -118,7 +118,7 @@ TEST_F(ButLogLoggerProxy, ForeignFormattedLogging)
 
 
 struct SomeThrowingType { };
-std::string toString(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
+std::string toValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
 TEST_F(ButLogLoggerProxy, InternalExceptionsAreNotPropagatedToCaller)
 {
