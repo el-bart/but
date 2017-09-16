@@ -7,7 +7,7 @@ RUN apt-get install -y cmake
 RUN apt-get install -y make ninja-build
 
 RUN apt-get install -y g++-7
-RUN apt-get install -y clang-4.0 llvm-4.0
+RUN apt-get install -y clang-5.0 llvm-5.0
 
 RUN apt-get install -y g++
 RUN apt-get install -y clang llvm
