@@ -14,6 +14,7 @@ set(SRC_DIRS
     But/Log
     But/Log/Backend
     But/Log/Destination
+    But/Log/Destination/Common
     But/Log/Destination/detail
     But/Log/Field
     But/Log/Localization
