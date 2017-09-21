@@ -17,6 +17,9 @@ namespace Backend
 template<typename T>
 std::string toType(T const&) { return boost::typeindex::type_id<T>().pretty_name(); }
 
+// boolean
+inline std::string toType(bool const&)  { return "bool"; }
+
 // it is quite common case, yet it outputs implementation details, instead of a human-readable typedef.
 inline std::string toType(std::string const&)  { return "string"; }
 inline std::string toType(std::wstring const&) { return "string"; }

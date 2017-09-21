@@ -98,4 +98,10 @@ TEST_F(ButLogBackendToType, StringIsSimplified)
   checkStr<std::wstring>("string");
 }
 
+
+TEST_F(ButLogBackendToType, BooleanValue)
+{
+  checkStr<bool>("bool");
+}
+
 }
