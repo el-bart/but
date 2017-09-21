@@ -1,10 +1,10 @@
 #include <thread>
 #include "gtest/gtest.h"
 #include "But/Threading/JoiningThread.hpp"
-#include "Stream.hpp"
+#include "TextStream.hpp"
 #include "But/Log/Field/LineNumber.hpp"
 
-using But::Log::Destination::Stream;
+using But::Log::Destination::TextStream;
 using But::Log::Destination::Foreign;
 using But::Log::Field::LineNumber;
 using But::Log::Field::FormattedString;
@@ -13,34 +13,34 @@ using Thread = But::Threading::JoiningThread<std::thread>;
 namespace
 {
 
-struct StringStream: public Stream
+struct StringStream: public TextStream
 {
-  StringStream(): Stream{ss_} { }
+  StringStream(): TextStream{ss_} { }
   void reloadImplUnderLock() override { }
   std::stringstream ss_;
 };
 
-struct ButLogDestinationStream: public testing::Test
+struct ButLogDestinationTextStream: public testing::Test
 {
   StringStream s_;
 };
 
 
-TEST_F(ButLogDestinationStream, PrintingSampleData)
+TEST_F(ButLogDestinationTextStream, PrintingSampleData)
 {
   s_.log( "line:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
-TEST_F(ButLogDestinationStream, CheckArrowOperator)
+TEST_F(ButLogDestinationTextStream, CheckArrowOperator)
 {
   s_->log( "line:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
-TEST_F(ButLogDestinationStream, OperatingViaBaseClass)
+TEST_F(ButLogDestinationTextStream, OperatingViaBaseClass)
 {
   auto& base = static_cast<Foreign&>(s_);
   base->log( "line:", LineNumber{42} );
@@ -48,7 +48,7 @@ TEST_F(ButLogDestinationStream, OperatingViaBaseClass)
 }
 
 
-TEST_F(ButLogDestinationStream, RemovingNonPrintableCharacters)
+TEST_F(ButLogDestinationTextStream, RemovingNonPrintableCharacters)
 {
   s_.log( "beep \07 / CRLF \r\n / normal:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "beep . / CRLF .. / normal: 42\n" );
@@ -64,7 +64,7 @@ auto countLines(std::stringstream& ss)
   return lines;
 }
 
-TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutput)
+TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutput)
 {
   auto logger = std::make_shared<StringStream>();
   {
@@ -77,7 +77,7 @@ TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutput)
 }
 
 
-TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
+TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
 {
   auto loggerSS = std::make_shared<StringStream>();
   {
@@ -91,13 +91,13 @@ TEST_F(ButLogDestinationStream, MultithreadedExecutionDoesNotInterleaveOutputWhe
 }
 
 
-TEST_F(ButLogDestinationStream, ReloadingSmokeTest)
+TEST_F(ButLogDestinationTextStream, ReloadingSmokeTest)
 {
   s_.reload();
 }
 
 
-TEST_F(ButLogDestinationStream, FlushingSmokeTest)
+TEST_F(ButLogDestinationTextStream, FlushingSmokeTest)
 {
   s_.flush();
 }
@@ -111,7 +111,7 @@ struct CustomFormatting: public StringStream
   { os << str.value_.size() << "y"; }
 };
 
-TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)
+TEST_F(ButLogDestinationTextStream, ProvidingDifferentToStreamFormatting)
 {
   CustomFormatting cs;
   cs.log("alice", "has", "a cat");
@@ -121,14 +121,14 @@ TEST_F(ButLogDestinationStream, ProvidingDifferentToStreamFormatting)
 }
 
 
-TEST_F(ButLogDestinationStream, SpaceIsInsertBetweenEachArgument)
+TEST_F(ButLogDestinationTextStream, SpaceIsInsertBetweenEachArgument)
 {
   s_.log(1, "a", 'b', 42);
   EXPECT_EQ( s_.ss_.str(), "1 a b 42\n" );
 }
 
 
-TEST_F(ButLogDestinationStream, ZeroArgumentsLogIsJustAnEmptyLine)
+TEST_F(ButLogDestinationTextStream, ZeroArgumentsLogIsJustAnEmptyLine)
 {
   s_.log();
   EXPECT_EQ( s_.ss_.str(), "\n" );

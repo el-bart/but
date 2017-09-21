@@ -14,10 +14,10 @@ namespace Log
 namespace Destination
 {
 
-class Stream: public Foreign
+class TextStream: public Foreign
 {
 protected:
-  explicit Stream(std::ostream& os): os_{&os} { }
+  explicit TextStream(std::ostream& os): os_{&os} { }
 
 private:
   void logImpl(Backend::Entry const& e) override final
