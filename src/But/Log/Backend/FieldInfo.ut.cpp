@@ -41,10 +41,11 @@ TEST_F(ButLogBackendFieldInfo, CustomizationPoints)
 
 struct AnotherCustomType { };
 std::string toValue(AnotherCustomType const&) { return "whatever"; }
+std::string toType(AnotherCustomType const&) { return "blabla-type"; }
 
 TEST_F(ButLogBackendFieldInfo, AutoGettingTypeNames)
 {
-  EXPECT_EQ( FieldInfo{ AnotherCustomType{} }.type(), "(anonymous namespace)::AnotherCustomType" );
+  EXPECT_EQ( FieldInfo{ AnotherCustomType{} }.type(), "blabla-type" );
   EXPECT_EQ( FieldInfo{ AnotherCustomType{} }.value(), "whatever" );
 }
 

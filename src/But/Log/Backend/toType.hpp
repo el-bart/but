@@ -1,5 +1,5 @@
 /** @brief customization point for converting user-defined values to a printable string.
- *         ADL is used to search for proper overload. default one will print using boost's pretty-printing.
+ *         ADL is used to search for proper overload.
  */
 #pragma once
 #include <string>
@@ -11,11 +11,6 @@ namespace Log
 {
 namespace Backend
 {
-
-/** @brief by default just print using boost::type_index.
- */
-template<typename T>
-std::string toType(T const&) { return boost::typeindex::type_id<T>().pretty_name(); }
 
 // boolean
 inline std::string toType(bool const&)  { return "bool"; }
