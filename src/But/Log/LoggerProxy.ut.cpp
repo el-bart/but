@@ -7,6 +7,7 @@
 using But::Log::LoggerProxy;
 using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
+using But::Log::Backend::Value;
 using But::Log::Field::FormattedString;
 
 namespace
@@ -118,7 +119,7 @@ TEST_F(ButLogLoggerProxy, ForeignFormattedLogging)
 
 
 struct SomeThrowingType { };
-std::string toValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
+Value toValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 std::string toType(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
 TEST_F(ButLogLoggerProxy, InternalExceptionsAreNotPropagatedToCaller)

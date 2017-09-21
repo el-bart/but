@@ -8,6 +8,7 @@
 #include "But/Log/Backend/toValue.hpp"
 #include "But/Log/Backend/toType.hpp"
 #include "Invalid.hpp"
+#include "detail/StreamVisitor.hpp"
 
 namespace But
 {
@@ -58,37 +59,44 @@ public:
 
 private:
   template<typename F>
-  std::string processArgument(F&& /*f*/, const unsigned /*pos*/) const
+  void processArgument(F&& /*f*/, const unsigned /*pos*/) const
   {
-    BUT_ASSERT(!"this overload is never really called");
+    BUT_ASSERT(!"this overload should never really be called");
     std::terminate();
   }
   template<typename F, typename Head>
-  std::string processArgument(F&& f, const unsigned pos, Head const& head) const
+  void processArgument(F&& f, const unsigned pos, Head const& head) const
   {
     (void)pos;
     BUT_ASSERT( pos == 0u && "format is not alligned with arguments" );
-    return f(head);
+    f(head);
   }
   template<typename F, typename Head, typename ...Tail>
-  std::string processArgument(F&& f, const unsigned pos, Head const& head, Tail const& ...tail) const
+  void processArgument(F&& f, const unsigned pos, Head const& head, Tail const& ...tail) const
   {
     if( pos == 0u )
-      return f(head);
-    return processArgument( std::forward<F>(f), pos-1u, tail... );
+      f(head);
+    else
+      processArgument( std::forward<F>(f), pos-1u, tail... );
   }
 
   template<typename ...Args>
-  std::string getArgumentType(const unsigned pos, Args const& ...args) const
+  void streamArgumentType(std::ostream& os, const unsigned pos, Args const& ...args) const
   {
-    using Log::Backend::toType;
-    return processArgument( [](auto& e) { return toType(e); },  pos, args... );
+    auto proc = [&os](auto& e) {
+      using Log::Backend::toType;
+      os << toType(e);
+    };
+    processArgument(proc,  pos, args... );
   }
   template<typename ...Args>
-  std::string getArgumentValue(const unsigned pos, Args const& ...args) const
+  void streamArgumentValue(std::ostream& os, const unsigned pos, Args const& ...args) const
   {
-    using Log::Backend::toValue;
-    return processArgument( [](auto& e) { return toValue(e); },  pos, args... );
+    auto proc = [&os](auto& e) {
+      using Log::Backend::toValue;
+      toValue(e).visit( detail::StreamVisitor{&os} );
+    };
+    processArgument( proc,  pos, args... );
   }
 
 
@@ -101,10 +109,10 @@ private:
         os.write( state.begin_, state.end_ - state.begin_ );
         return;
       case detail::State::Type::Value:
-        os << getArgumentValue(state.referencedArgument_, args...);
+        streamArgumentValue(os, state.referencedArgument_, args...);
         return;
       case detail::State::Type::TypeName:
-        os << getArgumentType(state.referencedArgument_, args...);
+        streamArgumentType(os, state.referencedArgument_, args...);
         return;
     }
     BUT_ASSERT(!"missing type handle");
