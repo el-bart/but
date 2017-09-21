@@ -19,6 +19,15 @@ auto convert(std::string const& str)
 {
   return boost::lexical_cast<T>(str);
 }
+
+auto convertBool(std::string const& str)
+{
+  if( str == "true" )
+    return true;
+  if( str == "false" )
+    return false;
+  throw std::logic_error{"invalid bool value inside internal representation: " + str};
+}
 }
 
 
@@ -42,6 +51,12 @@ nlohmann::json toJsonField(Backend::FieldInfo const& fi)
   if( fi.type() == "double" )
   {
     field[ std::move(fi).type() ] = convert<double>( fi.value() );
+    return field;
+  }
+
+  if( fi.type() == "bool" )
+  {
+    field[ std::move(fi).type() ] = convertBool( fi.value() );
     return field;
   }
 
