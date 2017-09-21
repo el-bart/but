@@ -9,7 +9,7 @@ using But::Log::Destination::Common::toJsonStream;
 namespace
 {
 
-struct ButLogDestinationCommonToJsonSteam: public testing::Test
+struct ButLogDestinationCommonToJsonStream: public testing::Test
 {
   void addEntry(Entry&) const { }
 
@@ -50,14 +50,14 @@ struct ButLogDestinationCommonToJsonSteam: public testing::Test
 };
 
 
-TEST_F(ButLogDestinationCommonToJsonSteam, EscapingNonprintableCharacters)
+TEST_F(ButLogDestinationCommonToJsonStream, EscapingNonprintableCharacters)
 {
   toJsonStream( ss_, toEntry("A\nB\rC") );
   EXPECT_EQ( "[{\"string\":\"A\\nB\\rC\"}]", ss_.str() );
 }
 
 
-TEST_F(ButLogDestinationCommonToJsonSteam, SomeLogs)
+TEST_F(ButLogDestinationCommonToJsonStream, SomeLogs)
 {
   toJsonStream( ss_, toEntry("answer", 42) );
   toJsonStream( ss_, toEntry("foo", "bar") );
@@ -68,7 +68,7 @@ TEST_F(ButLogDestinationCommonToJsonSteam, SomeLogs)
 }
 
 
-TEST_F(ButLogDestinationCommonToJsonSteam, SomeFormattedLog)
+TEST_F(ButLogDestinationCommonToJsonStream, SomeFormattedLog)
 {
   toJsonStream( ss_, toEntry( But::Log::Field::FormattedString{"kszy"}, "answer", 42 ) );
   EXPECT_EQ( R"xx([{"But::Formatted":"kszy"},{"string":"answer"},{"int":42}])xx",
@@ -76,7 +76,7 @@ TEST_F(ButLogDestinationCommonToJsonSteam, SomeFormattedLog)
 }
 
 
-TEST_F(ButLogDestinationCommonToJsonSteam, NumericTypes)
+TEST_F(ButLogDestinationCommonToJsonStream, NumericTypes)
 {
   EXPECT_TRUE( testType<short>("int", -42) );
   EXPECT_TRUE( testType<unsigned short>("unsigned int", 42) );
