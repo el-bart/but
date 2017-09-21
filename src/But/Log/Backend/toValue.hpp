@@ -7,6 +7,7 @@
  */
 #pragma once
 #include <string>
+#include "Value.hpp"
 
 namespace But
 {
@@ -15,26 +16,26 @@ namespace Log
 namespace Backend
 {
 
-inline std::string toValue(const bool v) { return v ? "true" : "false"; }
+inline auto toValue(const bool v) { return Value{v}; }
 
-inline std::string toValue(std::string v) { return v; }
-inline std::string toValue(char const* v) { return v; }
+inline auto toValue(std::string v) { return Value{v}; }
+inline auto toValue(char const* v) { return Value{v}; }
 
-inline std::string toValue(const char v) { return std::string(1, v); }
-inline std::string toValue(const short v) { return std::to_string( int{v} ); }
-inline std::string toValue(const int v) { return std::to_string(v); }
-inline std::string toValue(const long v) { return std::to_string(v); }
-inline std::string toValue(const long long v) { return std::to_string(v); }
+inline auto toValue(const char v) { return Value{v}; }
+inline auto toValue(const short v) { return Value{v}; }
+inline auto toValue(const int v) { return Value{v}; }
+inline auto toValue(const long v) { return Value{v}; }
+inline auto toValue(const long long v) { return Value{v}; }
 
-inline std::string toValue(const unsigned char v) { return std::to_string( unsigned{v} ); }
-inline std::string toValue(const unsigned short v) { return std::to_string( unsigned{v} ); }
-inline std::string toValue(const unsigned int v) { return std::to_string(v); }
-inline std::string toValue(const unsigned long v) { return std::to_string(v); }
-inline std::string toValue(const unsigned long long v) { return std::to_string(v); }
+inline auto toValue(const unsigned char v) { return Value{v}; }
+inline auto toValue(const unsigned short v) { return Value{v}; }
+inline auto toValue(const unsigned int v) { return Value{v}; }
+inline auto toValue(const unsigned long v) { return Value{v}; }
+inline auto toValue(const unsigned long long v) { return Value{v}; }
 
-inline std::string toValue(const float v) { return std::to_string(v); }
-inline std::string toValue(const double v) { return std::to_string(v); }
-inline std::string toValue(const long double v) { return std::to_string(v); }
+inline auto toValue(const float v) { return Value{v}; }
+inline auto toValue(const double v) { return Value{v}; }
+inline auto toValue(const long double v) { return Value{v}; }
 
 }
 }

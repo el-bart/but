@@ -13,11 +13,11 @@ struct ButLogBackendToValue: public testing::Test
 
 TEST_F(ButLogBackendToValue, SignedNumericTypes)
 {
-  EXPECT_EQ( "a", toValue( char{'a'} ) );
-  EXPECT_EQ( "42", toValue( short{42} ) );
-  EXPECT_EQ( "42", toValue( int{42} ) );
-  EXPECT_EQ( "42", toValue( long{42} ) );
-  EXPECT_EQ( "42", toValue( long {42} ) );
+  EXPECT_EQ( "a", toValue( char{'a'} ).get<std::string>() );
+  EXPECT_EQ( 42, toValue( short{42} ).get<int64_t>() );
+  EXPECT_EQ( 42, toValue( int{42} ).get<int64_t>() );
+  EXPECT_EQ( 42, toValue( long{42} ).get<int64_t>() );
+  EXPECT_EQ( 42, toValue( long {42} ).get<int64_t>() );
 }
 
 
@@ -25,49 +25,49 @@ TEST_F(ButLogBackendToValue, UnsignedNumericTypes)
 {
   {
     unsigned char tmp = 42;
-    EXPECT_EQ( "42", toValue(tmp) );
+    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned short tmp = 42;
-    EXPECT_EQ( "42", toValue(tmp) );
+    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned int tmp = 42;
-    EXPECT_EQ( "42", toValue(tmp) );
+    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned long tmp = 42;
-    EXPECT_EQ( "42", toValue(tmp) );
+    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned long  tmp = 42;
-    EXPECT_EQ( "42", toValue(tmp) );
+    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
   }
 }
 
 
 TEST_F(ButLogBackendToValue, FloatingPointNumericTypes)
 {
-  EXPECT_EQ( "4.2", toValue( float{4.2} ).substr(0,3) );
-  EXPECT_EQ( "4.2", toValue( double{4.2} ).substr(0,3) );
+  EXPECT_EQ( 4.2, toValue( float{4.2} ).get<double>() );
+  EXPECT_EQ( 4.2, toValue( double{4.2} ).get<double>() );
   {
     long double tmp = 4.2;
-    EXPECT_EQ( "4.2", toValue(tmp).substr(0,3) );
+    EXPECT_EQ( 4.2, toValue(tmp).get<double>() );
   }
 }
 
 
 TEST_F(ButLogBackendToValue, StringTypes)
 {
-  EXPECT_EQ( "test", toValue("test") );
-  EXPECT_EQ( "test", toValue( std::string{"test"} ) );
+  EXPECT_EQ( "test", toValue("test").get<std::string>() );
+  EXPECT_EQ( "test", toValue( std::string{"test"} ).get<std::string>() );
 }
 
 
 TEST_F(ButLogBackendToValue, BooleanType)
 {
-  EXPECT_EQ( "true", toValue(true) );
-  EXPECT_EQ( "false", toValue(false) );
+  EXPECT_EQ( true, toValue(true).get<bool>() );
+  EXPECT_EQ( false, toValue(false).get<bool>() );
 }
 
 }
