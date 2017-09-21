@@ -2,7 +2,7 @@
 #include <iostream>
 #include "But/NotNull.hpp"
 #include "LoggerProxy.hpp"
-#include "Destination/Console.hpp"
+#include "Destination/TextConsole.hpp"
 #include "Destination/NaiveConsole.hpp"
 #include "Destination/ForeignAdapter.hpp"
 
@@ -20,7 +20,7 @@ constexpr auto g_logsCount = 100*1000;
 
 auto makeLogger()
 {
-  auto dst = But::makeUniqueNN<But::Log::Destination::Console>();
+  auto dst = But::makeUniqueNN<But::Log::Destination::TextConsole>();
   auto adapter = But::Log::Destination::ForeignAdapter<decltype(dst)>{ std::move(dst) };
   return But::Log::LoggerProxy<decltype(adapter)>{ std::move(adapter) };
 }
