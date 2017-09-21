@@ -25,34 +25,34 @@ TEST_F(ButLogBackendToValue, UnsignedNumericTypes)
 {
   {
     unsigned char tmp = 42;
-    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
+    EXPECT_EQ( 42u, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned short tmp = 42;
-    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
+    EXPECT_EQ( 42u, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned int tmp = 42;
-    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
+    EXPECT_EQ( 42u, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned long tmp = 42;
-    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
+    EXPECT_EQ( 42u, toValue(tmp).get<uint64_t>() );
   }
   {
     unsigned long  tmp = 42;
-    EXPECT_EQ( 42, toValue(tmp).get<uint64_t>() );
+    EXPECT_EQ( 42u, toValue(tmp).get<uint64_t>() );
   }
 }
 
 
 TEST_F(ButLogBackendToValue, FloatingPointNumericTypes)
 {
-  EXPECT_EQ( 4.2, toValue( float{4.2} ).get<double>() );
-  EXPECT_EQ( 4.2, toValue( double{4.2} ).get<double>() );
+  EXPECT_EQ( 10.5, toValue( float{10.5} ).get<double>() );
+  EXPECT_EQ( 10.5, toValue( double{10.5} ).get<double>() );
   {
-    long double tmp = 4.2;
-    EXPECT_EQ( 4.2, toValue(tmp).get<double>() );
+    long double tmp = 10.5;
+    EXPECT_EQ( 10.5, toValue(tmp).get<double>() );
   }
 }
 
