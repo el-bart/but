@@ -19,6 +19,8 @@ class TextStream: public Foreign
 protected:
   explicit TextStream(std::ostream& os): os_{&os} { }
 
+  std::string const& endline() const { return endline_; }
+
 private:
   void logImpl(Backend::Entry const& e) override final
   {
@@ -55,12 +57,12 @@ private:
       for(++it; it!=end(e); ++it)
         os << ' ' << trim_( it->value() );
     }
-    os << endline_;
+    os << endline();
   }
 
   virtual void toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const&)
   {
-    os << trim_(str.value_) << endline_;
+    os << trim_(str.value_) << endline();
   }
 
   static std::string endlineType()
