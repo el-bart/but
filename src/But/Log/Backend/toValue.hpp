@@ -18,7 +18,7 @@ namespace Backend
 
 inline auto toValue(const bool v) { return Value{v}; }
 
-inline auto toValue(std::string v) { return Value{v}; }
+inline auto toValue(std::string v) { return Value{ std::move(v) }; }
 inline auto toValue(char const* v) { return Value{v}; }
 
 inline auto toValue(const char v) { return Value{v}; }
