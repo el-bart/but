@@ -118,7 +118,8 @@ all destinations support `flush()` method, that forces all logs to be sent to th
 another option is `reload()`, that forces to re-establish destination (reconnect, reopen file, etc...),
 so that log rotation can be implemented.
 
- * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience
+ * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience.
+ * `LoggerProxyThrowing` - same as `LoggerProxy`, but forwarding exceptions from the implementation. useful in some unusual requirements scenario.
 wrapper for this object, adding fields to achieve required log message content.
  * `Destination` - namespace containing typical destinations, that are provided out of the box.
  * `Destination::Foreign` - base class for dynamic destinations.
