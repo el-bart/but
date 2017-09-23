@@ -18,6 +18,8 @@ namespace Destination
  *
  *  @note it is possible to have multiple destinations and foreign destinations, by creating
  *        set of destinations and one MultiForeign, that aggregates all foreign destinations, required.
+ *
+ *  @note this destination does NOT forward exceptions from any destinations it forwards log to.
  */
 template<typename ...Dsts>
 class Multi final
@@ -29,17 +31,17 @@ public:
   { }
 
   template<typename ...Args>
-  void log(Args&& ...args)
+  void log(Args&& ...args) noexcept
   {
     detail::LogForwarder<1, sizeof...(Dsts)>::pass( dsts_, std::forward<Args>(args)... );
   }
 
-  void reload()
+  void reload() noexcept
   {
     detail::ReloadForwarder<1, sizeof...(Dsts)>::pass( dsts_ );
   }
 
-  void flush()
+  void flush() noexcept
   {
     detail::FlushForwarder<1, sizeof...(Dsts)>::pass( dsts_ );
   }

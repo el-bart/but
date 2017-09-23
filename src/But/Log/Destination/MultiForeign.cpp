@@ -7,7 +7,7 @@ namespace Log
 namespace Destination
 {
 
-void MultiForeign::logImpl(Backend::Entry const& e)
+void MultiForeign::logImplNe(Backend::Entry const& e) noexcept
 {
   for(auto& d: dsts_)
   {
@@ -21,7 +21,7 @@ void MultiForeign::logImpl(Backend::Entry const& e)
 }
 
 
-void MultiForeign::logImpl(Field::FormattedString const& str, Backend::Entry const& e)
+void MultiForeign::logImplNe(Field::FormattedString const& str, Backend::Entry const& e) noexcept
 {
   for(auto& d: dsts_)
   {
@@ -35,7 +35,7 @@ void MultiForeign::logImpl(Field::FormattedString const& str, Backend::Entry con
 }
 
 
-void MultiForeign::reloadImpl()
+void MultiForeign::reloadImplNe() noexcept
 {
   for(auto& d: dsts_)
   {
@@ -49,7 +49,7 @@ void MultiForeign::reloadImpl()
 }
 
 
-void MultiForeign::flushImpl()
+void MultiForeign::flushImplNe() noexcept
 {
   for(auto& d: dsts_)
   {
