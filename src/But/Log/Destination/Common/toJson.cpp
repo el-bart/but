@@ -1,3 +1,4 @@
+#include <cassert>
 #include <boost/lexical_cast.hpp>
 #include "toJson.hpp"
 
@@ -14,53 +15,27 @@ namespace Common
 
 namespace
 {
-template<typename T>
-auto convert(std::string const& str)
+struct FieldAddVisitor final
 {
-  return boost::lexical_cast<T>(str);
-}
+  template<typename T>
+  void operator()(T const& t)
+  {
+    assert(field_);
+    assert(type_);
+    (*field_)[ type_ ] = t;
+  }
 
-auto convertBool(std::string const& str)
-{
-  if( str == "true" )
-    return true;
-  if( str == "false" )
-    return false;
-  throw std::logic_error{"invalid bool value inside internal representation: " + str};
-}
+  char const* type_;
+  json* field_;
+};
 }
 
 
 nlohmann::json toJsonField(Backend::FieldInfo const& fi)
 {
   json field;
-
-  // TODO: how about keeping value as a std::variant, instead of a string?
-
-  if( fi.type() == "int" )
-  {
-    field[ std::move(fi).type() ] = convert<int64_t>( fi.value() );
-    return field;
-  }
-  if( fi.type() == "unsigned int" )
-  {
-    field[ std::move(fi).type() ] = convert<uint64_t>( fi.value() );
-    return field;
-  }
-
-  if( fi.type() == "double" )
-  {
-    field[ std::move(fi).type() ] = convert<double>( fi.value() );
-    return field;
-  }
-
-  if( fi.type() == "bool" )
-  {
-    field[ std::move(fi).type() ] = convertBool( fi.value() );
-    return field;
-  }
-
-  field[ std::move(fi).type() ] = std::move(fi).value();
+  FieldAddVisitor fav{ fi.type().c_str(), &field };
+  fi.value().visit(fav);
   return field;
 }
 
