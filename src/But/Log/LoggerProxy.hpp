@@ -127,6 +127,7 @@ private:
     try
     {
       auto copy = parsed;
+      // TODO: log this as a warning?
       return translator_->translate( std::move(copy) );
     }
     catch(...)
