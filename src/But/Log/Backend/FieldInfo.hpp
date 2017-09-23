@@ -19,12 +19,10 @@ public:
     value_{ toValue(value) }
   { }
 
-  explicit FieldInfo(std::string&& value):
-    type_{ toType(value) },
-    value_{ std::move(value) }
-  { }
+  FieldInfo(Value const& value) = delete;
+  FieldInfo(Value&& value) = delete;
 
-  FieldInfo(std::string type, std::string value):
+  FieldInfo(std::string type, Value value):
     type_{ std::move(type) },
     value_{ std::move(value) }
   { }
@@ -41,14 +39,14 @@ public:
   }
 
   std::string const& type() const & { return type_; }
-  std::string const& value() const & { return value_; }
+  Value const& value() const & { return value_; }
 
   std::string&& type() && { return std::move(type_); }
-  std::string&& value() && { return std::move(value_); }
+  Value&& value() && { return std::move(value_); }
 
 private:
   std::string type_;
-  std::string value_;
+  Value value_;
 };
 
 }
