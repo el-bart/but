@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cctype>
 #include "But/Log/Backend/toValue.hpp"
-#include "But/Log/Backend/NonPrintableTrimmer.hpp"
+#include "detail/StreamAndTrimVisitor.hpp"
 #include "Foreign.hpp"
 
 namespace But
@@ -53,16 +53,22 @@ private:
     if( not e.empty() )
     {
       auto it = begin(e);
-      os << trim_( it->value() );
+      detail::StreamAndTrimVisitor satv{&trim_, &os};
+      it->value().visit(satv);
       for(++it; it!=end(e); ++it)
-        os << ' ' << trim_( it->value() );
+      {
+        os << ' ';
+        it->value().visit(satv);
+      }
     }
     os << endline();
   }
 
   virtual void toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const&)
   {
-    os << trim_(str.value_) << endline();
+    detail::StreamAndTrimVisitor satv{&trim_, &os};
+    satv(str.value_);
+    os << endline();
   }
 
   static std::string endlineType()
