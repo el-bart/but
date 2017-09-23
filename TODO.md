@@ -13,6 +13,7 @@
 * `Log::Destination::BackgroundThread{ForeginDestination}`
 * make re-throwing exceptions from logger possible (but NOT default one)
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occures, but dropping if nothing 'special' happens for some time
+* add LogProxyThrowing and LogProxy that will use it, so that exception-throwing wrapper can be used as well.
 
 ## improvements / new APIs
 * split build into core and dev
