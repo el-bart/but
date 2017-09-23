@@ -14,7 +14,7 @@ struct ButLogFieldThreadId: public testing::Test
 
 TEST_F(ButLogFieldThreadId, ConvertingToString)
 {
-  EXPECT_GT( toValue( ThreadId{} ).length(), 4u );
+  EXPECT_GT( toValue( ThreadId{} ).get<std::string>().length(), 4u );
 }
 
 

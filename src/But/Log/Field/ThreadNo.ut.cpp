@@ -12,9 +12,9 @@ struct ButLogFieldThreadNo: public testing::Test
 { };
 
 
-TEST_F(ButLogFieldThreadNo, ConvertingToString)
+TEST_F(ButLogFieldThreadNo, ConvertingToNumber)
 {
-  EXPECT_GE( toValue( ThreadNo{} ).length(), 1u );
+  EXPECT_GE( 1u, toValue( ThreadNo{} ).get<uint64_t>() );
 }
 
 

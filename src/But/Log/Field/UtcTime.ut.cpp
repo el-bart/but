@@ -14,8 +14,8 @@ struct ButLogFieldUtcTime: public testing::Test
 
 TEST_F(ButLogFieldUtcTime, ConvertingToString)
 {
-  EXPECT_EQ( toValue( UtcTime{1234} ), "00:20:34" );
-  EXPECT_EQ( toValue( UtcTime{34580000} ), "05:33:20" );
+  EXPECT_EQ( toValue( UtcTime{1234} ).get<std::string>(), "00:20:34" );
+  EXPECT_EQ( toValue( UtcTime{34580000} ).get<std::string>(), "05:33:20" );
 }
 
 
@@ -23,7 +23,7 @@ TEST_F(ButLogFieldUtcTime, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{ UtcTime{1234} };
   EXPECT_EQ( fi.type(), "But::UtcTime" );
-  EXPECT_EQ( fi.value(), "00:20:34" );
+  EXPECT_EQ( fi.value().get<std::string>(), "00:20:34" );
 }
 
 

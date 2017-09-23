@@ -14,8 +14,8 @@ struct ButLogFieldUtcDate: public testing::Test
 
 TEST_F(ButLogFieldUtcDate, ConvertingToString)
 {
-  EXPECT_EQ( toValue( UtcDate{1234} ), "1970-01-01" );
-  EXPECT_EQ( toValue( UtcDate{34580000} ), "1971-02-05" );
+  EXPECT_EQ( toValue( UtcDate{1234} ).get<std::string>(), "1970-01-01" );
+  EXPECT_EQ( toValue( UtcDate{34580000} ).get<std::string>(), "1971-02-05" );
 }
 
 
@@ -23,7 +23,7 @@ TEST_F(ButLogFieldUtcDate, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{ UtcDate{1234} };
   EXPECT_EQ( fi.type(), "But::UtcDate" );
-  EXPECT_EQ( fi.value(), "1970-01-01" );
+  EXPECT_EQ( fi.value().get<std::string>(), "1970-01-01" );
 }
 
 

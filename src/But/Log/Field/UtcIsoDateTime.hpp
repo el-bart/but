@@ -2,6 +2,7 @@
 #include <string>
 #include <ctime>
 #include "ConversionError.hpp"
+#include "But/Log/Backend/Value.hpp"
 
 namespace But
 {
@@ -23,7 +24,7 @@ struct UtcIsoDateTime final
 
 
 inline std::string toType(UtcIsoDateTime const&) { return "But::UtcIsoDT"; }
-inline std::string toValue(UtcIsoDateTime const& d) { return d.date() + "T" + d.time() + "Z"; }
+inline Backend::Value toValue(UtcIsoDateTime const& d) { return Backend::Value{ d.date() + "T" + d.time() + "Z" }; }
 
 }
 }

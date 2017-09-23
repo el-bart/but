@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <chrono>
+#include "But/Log/Backend/Value.hpp"
 
 namespace But
 {
@@ -23,7 +24,7 @@ private:
 
 
 inline std::string toType(Timestamp const&) { return "But::Timestamp"; }
-std::string toValue(Timestamp uts);
+Backend::Value toValue(Timestamp uts);
 
 }
 }

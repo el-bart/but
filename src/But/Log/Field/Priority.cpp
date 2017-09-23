@@ -11,14 +11,14 @@ namespace Log
 namespace Field
 {
 
-std::string const& toValue(const Priority pri)
+Backend::Value const& toValue(const Priority pri)
 {
-  static const std::string out[] =
+  static const Backend::Value out[] =
                     {
-                      "debug",
-                      "info",
-                      "warning",
-                      "error"
+                      Backend::Value{"debug"},
+                      Backend::Value{"info"},
+                      Backend::Value{"warning"},
+                      Backend::Value{"error"}
                     };
   const auto num = static_cast<unsigned>(pri);
   BUT_ASSERT( num < std::extent<decltype(out)>::value && "unknown priority" );
@@ -26,14 +26,14 @@ std::string const& toValue(const Priority pri)
 }
 
 
-std::string const& toValueConstLen(const Priority pri)
+Backend::Value const& toValueConstLen(const Priority pri)
 {
-  static const std::string out[] =
+  static const Backend::Value out[] =
                     {
-                      "debug  ",
-                      "info   ",
-                      "warning",
-                      "error  "
+                      Backend::Value{"debug  "},
+                      Backend::Value{"info   "},
+                      Backend::Value{"warning"},
+                      Backend::Value{"error  "}
                     };
   const auto num = static_cast<unsigned>(pri);
   BUT_ASSERT( num < std::extent<decltype(out)>::value && "unknown priority" );

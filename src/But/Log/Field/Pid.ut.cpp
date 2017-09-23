@@ -13,7 +13,7 @@ struct ButLogFieldPid: public testing::Test
 
 TEST_F(ButLogFieldPid, ConvertingToString)
 {
-  EXPECT_EQ( std::to_string( getpid() ), toValue( Pid{} ) );
+  EXPECT_EQ( getpid(), toValue( Pid{} ).get<int64_t>() );
 }
 
 
@@ -21,7 +21,7 @@ TEST_F(ButLogFieldPid, ConvertingToFieldInfo)
 {
   const auto pid = Pid{};
   const auto fi = But::Log::Backend::FieldInfo{pid};
-  EXPECT_EQ( fi.type(), "But::Pid" );
+  EXPECT_EQ( "But::Pid", fi.type() );
   EXPECT_EQ( toValue(pid), fi.value() );
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <thread>
+#include "But/Log/Backend/Value.hpp"
 
 namespace But
 {
@@ -16,7 +17,7 @@ struct ThreadNo final
 };
 
 inline std::string toType(ThreadNo const&) { return "But::ThreadNo"; }
-inline std::string toValue(ThreadNo const& tno) { return std::to_string(tno.value_); }
+inline Backend::Value toValue(ThreadNo const& tno) { return Backend::Value{tno.value_}; }
 
 }
 }

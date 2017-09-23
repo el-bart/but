@@ -2,6 +2,7 @@
 #include <string>
 #include <sys/types.h>
 #include <unistd.h>
+#include "But/Log/Backend/Value.hpp"
 
 namespace But
 {
@@ -16,7 +17,7 @@ struct Pid final
 };
 
 inline std::string toType(Pid const&) { return "But::Pid"; }
-inline std::string toValue(Pid const& pid) { return std::to_string(pid.value_); }
+inline Backend::Value toValue(Pid const& pid) { return Backend::Value{pid.value_}; }
 
 }
 }
