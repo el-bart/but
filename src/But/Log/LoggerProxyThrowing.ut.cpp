@@ -1,10 +1,10 @@
 #include <memory>
 #include <sstream>
 #include "gtest/gtest.h"
-#include "LoggerProxy.hpp"
+#include "LoggerProxyThrowing.hpp"
 #include "Destination/Foreign.hpp"
 
-using But::Log::LoggerProxy;
+using But::Log::LoggerProxyThrowing;
 using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
 using But::Log::Backend::Value;
@@ -70,15 +70,15 @@ struct DestinationStub final
 };
 
 
-struct ButLogLoggerProxy: public testing::Test
+struct ButLogLoggerProxyThrowing: public testing::Test
 {
   std::stringstream buffer_;
 };
 
 
-TEST_F(ButLogLoggerProxy, LoggingSimpleValuesOneAtATime)
+TEST_F(ButLogLoggerProxyThrowing, LoggingSimpleValuesOneAtATime)
 {
-  LoggerProxy<TestNativeDestination> log{ TestNativeDestination{buffer_} };
+  LoggerProxyThrowing<TestNativeDestination> log{ TestNativeDestination{buffer_} };
   log.log(42);
   log.log("foo");
   log.log(3.14);
@@ -86,33 +86,33 @@ TEST_F(ButLogLoggerProxy, LoggingSimpleValuesOneAtATime)
 }
 
 
-TEST_F(ButLogLoggerProxy, LoggingMultipleSimpleValuesAtOnce)
+TEST_F(ButLogLoggerProxyThrowing, LoggingMultipleSimpleValuesAtOnce)
 {
-  LoggerProxy<TestNativeDestination> log{ TestNativeDestination{buffer_} };
+  LoggerProxyThrowing<TestNativeDestination> log{ TestNativeDestination{buffer_} };
   log.log(42, "foo", 3.14);
   EXPECT_EQ( buffer_.str(), "int,string,double|");
 }
 
 
-TEST_F(ButLogLoggerProxy, LoggingViaSmartPointerToDestination)
+TEST_F(ButLogLoggerProxyThrowing, LoggingViaSmartPointerToDestination)
 {
-  LoggerProxy< std::shared_ptr<TestNativeDestination> > log{ std::make_shared<TestNativeDestination>(buffer_) };
+  LoggerProxyThrowing< std::shared_ptr<TestNativeDestination> > log{ std::make_shared<TestNativeDestination>(buffer_) };
   log.log(42, "foo", 3.14);
   EXPECT_EQ( buffer_.str(), "int,string,double|");
 }
 
 
-TEST_F(ButLogLoggerProxy, ForeignTypeValueLogging)
+TEST_F(ButLogLoggerProxyThrowing, ForeignTypeValueLogging)
 {
-  LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  LoggerProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42, "foo", 'a');
   EXPECT_EQ( buffer_.str(), "int=42 string=foo string=a ");
 }
 
 
-TEST_F(ButLogLoggerProxy, ForeignFormattedLogging)
+TEST_F(ButLogLoggerProxyThrowing, ForeignFormattedLogging)
 {
-  LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  LoggerProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log( BUT_FORMAT("${0} = $1"), "answer", 42 );
   EXPECT_EQ( buffer_.str(), "answer = 42 @@ string=answer int=42 ");
 }
@@ -122,41 +122,41 @@ struct SomeThrowingType { };
 Value toValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 std::string toType(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
-TEST_F(ButLogLoggerProxy, InternalExceptionsAreNotPropagatedToCaller)
+TEST_F(ButLogLoggerProxyThrowing, InternalExceptionsArePropagatedToCaller)
 {
-  LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
-  EXPECT_NO_THROW( log.log( SomeThrowingType{} ) );
+  LoggerProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  EXPECT_THROW( log.log( SomeThrowingType{} ), std::runtime_error );
 }
 
 
-TEST_F(ButLogLoggerProxy, LoggerIsConst)
+TEST_F(ButLogLoggerProxyThrowing, LoggerIsConst)
 {
-  const LoggerProxy<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  const LoggerProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42);
 }
 
 
-TEST_F(ButLogLoggerProxy, LoggerIsMovable)
+TEST_F(ButLogLoggerProxyThrowing, LoggerIsMovable)
 {
-  LoggerProxy< std::unique_ptr<TestNativeDestination> > log{ std::make_unique<TestNativeDestination>(buffer_) };
+  LoggerProxyThrowing< std::unique_ptr<TestNativeDestination> > log{ std::make_unique<TestNativeDestination>(buffer_) };
   auto other = std::move(log);
 }
 
 
-TEST_F(ButLogLoggerProxy, LogReloadingIsForwarder)
+TEST_F(ButLogLoggerProxyThrowing, LogReloadingIsForwarder)
 {
   TestNativeDestination dst{buffer_};
-  LoggerProxy<TestNativeDestination*> log{&dst};
+  LoggerProxyThrowing<TestNativeDestination*> log{&dst};
   EXPECT_EQ( 0u, dst.reloads_ );
   log.reload();
   EXPECT_EQ( 1u, dst.reloads_ );
 }
 
 
-TEST_F(ButLogLoggerProxy, LogFlushingIsForwarder)
+TEST_F(ButLogLoggerProxyThrowing, LogFlushingIsForwarder)
 {
   TestNativeDestination dst{buffer_};
-  LoggerProxy<TestNativeDestination*> log{&dst};
+  LoggerProxyThrowing<TestNativeDestination*> log{&dst};
   EXPECT_EQ( 0u, dst.flushes_ );
   log.flush();
   EXPECT_EQ( 1u, dst.flushes_ );
@@ -171,26 +171,26 @@ struct ThrowingDestination final
   auto operator->() { return this; }
 };
 
-TEST_F(ButLogLoggerProxy, AllErrorsFromActualDestinationsAreIgnored)
+TEST_F(ButLogLoggerProxyThrowing, AllErrorsFromActualDestinationsAreForwarded)
 {
-  LoggerProxy<ThrowingDestination> log{ ThrowingDestination{} };
-  EXPECT_NO_THROW( log.log("hello", "john") );
-  EXPECT_NO_THROW( log.reload() );
-  EXPECT_NO_THROW( log.flush() );
+  LoggerProxyThrowing<ThrowingDestination> log{ ThrowingDestination{} };
+  EXPECT_THROW( log.log("hello", "john"), std::runtime_error );
+  EXPECT_THROW( log.reload(), std::runtime_error  );
+  EXPECT_THROW( log.flush(), std::runtime_error  );
 }
 
 
-TEST_F(ButLogLoggerProxy, ExplicitFormatting)
+TEST_F(ButLogLoggerProxyThrowing, ExplicitFormatting)
 {
-  LoggerProxy<std::unique_ptr<TestNativeDestination>> log{ std::make_unique<TestNativeDestination>(buffer_) };
+  LoggerProxyThrowing<std::unique_ptr<TestNativeDestination>> log{ std::make_unique<TestNativeDestination>(buffer_) };
   log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
   EXPECT_EQ( buffer_.str(), "[formatted:computer says 42],string,int|" );
 }
 
 
-TEST_F(ButLogLoggerProxy, AllowDefaultConstructionWhenNoArgumentsNeeded)
+TEST_F(ButLogLoggerProxyThrowing, AllowDefaultConstructionWhenNoArgumentsNeeded)
 {
-  LoggerProxy<DestinationStub, But::Log::Localization::None> log;
+  LoggerProxyThrowing<DestinationStub, But::Log::Localization::None> log;
   log.log("foo", "bar");
 }
 
@@ -211,41 +211,41 @@ struct CustomTranslator
 };
 
 
-TEST_F(ButLogLoggerProxy, TranslationsAreNotAffectingNonFormattedLogs)
+TEST_F(ButLogLoggerProxyThrowing, TranslationsAreNotAffectingNonFormattedLogs)
 {
   CustomTranslator ct;
-  LoggerProxy<DestinationStub, CustomTranslator const*> log{&ct};
+  LoggerProxyThrowing<DestinationStub, CustomTranslator const*> log{&ct};
   EXPECT_EQ(0u, ct.counter_);
   log.log("not affected");
   EXPECT_EQ(0u, ct.counter_);
 }
 
 
-TEST_F(ButLogLoggerProxy, BuildingWithDefaultDestinationAndCustomTranslator)
+TEST_F(ButLogLoggerProxyThrowing, BuildingWithDefaultDestinationAndCustomTranslator)
 {
   CustomTranslator ct;
-  LoggerProxy<DestinationStub, CustomTranslator const*> log{&ct};
+  LoggerProxyThrowing<DestinationStub, CustomTranslator const*> log{&ct};
   EXPECT_EQ(0u, ct.counter_);
   log.log( BUT_FORMAT("test") );
   EXPECT_EQ(1u, ct.counter_);
 }
 
 
-TEST_F(ButLogLoggerProxy, UsingCustomTranslator)
+TEST_F(ButLogLoggerProxyThrowing, UsingCustomTranslator)
 {
   CustomTranslator ct;
-  LoggerProxy<DestinationStub, CustomTranslator const*> log{ DestinationStub{}, &ct };
+  LoggerProxyThrowing<DestinationStub, CustomTranslator const*> log{ DestinationStub{}, &ct };
   EXPECT_EQ(0u, ct.counter_);
   log.log( BUT_FORMAT("test") );
   EXPECT_EQ(1u, ct.counter_);
 }
 
 
-TEST_F(ButLogLoggerProxy, ExceptionsFromTranslationsAreNotPropagated)
+TEST_F(ButLogLoggerProxyThrowing, ExceptionsFromTranslationsAreNotPropagated)
 {
   CustomTranslator ct{true};
   TestNativeDestination dst{buffer_};
-  LoggerProxy<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
+  LoggerProxyThrowing<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
   EXPECT_NO_THROW( log.log( BUT_FORMAT("test $0"), "xx" ) );
   EXPECT_EQ( buffer_.str(), "[formatted:test xx],string|" );
 }
