@@ -49,9 +49,7 @@ public:
 
   // TODO: get should throw local exception type - not implementation-detail...
   template<typename T>
-  T&& get() && { return std::move( boost::get<T>(v_) ); }
-  template<typename T>
-  T& get() & { return boost::get<T>(v_); }
+  T get() && { return std::move( boost::get<T>( std::move(v_) ) ); }
   template<typename T>
   T const& get() const & { return boost::get<T>(v_); }
 
