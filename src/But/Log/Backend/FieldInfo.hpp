@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "toValue.hpp"
 #include "toType.hpp"
 
@@ -22,7 +21,7 @@ public:
   FieldInfo(Value const& value) = delete;
   FieldInfo(Value&& value) = delete;
 
-  FieldInfo(std::string type, Value value):
+  FieldInfo(Type type, Value value):
     type_{ std::move(type) },
     value_{ std::move(value) }
   { }
@@ -38,14 +37,14 @@ public:
     return type_ == other.type_ && value_ == other.value_;
   }
 
-  std::string const& type() const & { return type_; }
+  Type const& type() const & { return type_; }
   Value const& value() const & { return value_; }
 
-  std::string&& type() && { return std::move(type_); }
-  Value&& value() && { return std::move(value_); }
+  Type type() && { return std::move(type_); }
+  Value value() && { return std::move(value_); }
 
 private:
-  std::string type_;
+  Type type_;
   Value value_;
 };
 

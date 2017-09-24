@@ -20,8 +20,7 @@ public:
   Type(Type&&) = default;
   Type& operator=(Type&&) = default;
 
-  std::string&& str() && { return std::move(t_); }
-  std::string& str() & { return t_; }
+  std::string str() && { return std::move(t_); }
   std::string const& str() const & { return t_; }
 
   bool operator==(Type const& other) const { return t_ == other.t_; }
