@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "toType.hpp"
 
+using But::Log::Backend::Type;
 using But::Log::Backend::toType;
 
 namespace
@@ -12,28 +13,28 @@ struct ButLogBackendToType: public testing::Test
   void checkNum(std::string const& exp)
   {
     T t{0};
-    EXPECT_EQ( toType(t), exp );
+    EXPECT_EQ( toType(t), Type{exp} );
   }
 
   template<typename T>
   void checkCharPtr(std::string const& exp)
   {
     T t{nullptr};
-    EXPECT_EQ( toType(t), exp );
+    EXPECT_EQ( toType(t), Type{exp} );
   }
 
   template<typename T>
   void checkCharArray(std::string const& exp)
   {
     T t[42] = "";
-    EXPECT_EQ( toType(t), exp );
+    EXPECT_EQ( toType(t), Type{exp} );
   }
 
   template<typename T>
   void checkStr(std::string const& exp)
   {
     T t{};
-    EXPECT_EQ( toType(t), exp );
+    EXPECT_EQ( toType(t), Type{exp} );
   }
 };
 

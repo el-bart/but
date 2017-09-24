@@ -118,6 +118,10 @@ all destinations support `flush()` method, that forces all logs to be sent to th
 another option is `reload()`, that forces to re-establish destination (reconnect, reopen file, etc...),
 so that log rotation can be implemented.
 
+in order to add support for user's type/class `Abc`, it is enough to add `toType(Abc const&) -> Backend::Type` and
+`toValue(Abc const&) -> Backend::Value` methods to the same namespace `Abc` has been declared in.
+from this moment on, logger will be able to log your type just like any other.
+
  * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience.
  * `LoggerProxyThrowing` - same as `LoggerProxy`, but forwarding exceptions from the implementation. useful in some unusual requirements scenario.
 wrapper for this object, adding fields to achieve required log message content.

@@ -22,10 +22,10 @@ struct FieldAddVisitor final
   {
     assert(field_);
     assert(type_);
-    (*field_)[ type_ ] = t;
+    (*field_)[ type_->str() ] = t;
   }
 
-  char const* type_;
+  Backend::Type const* type_;
   json* field_;
 };
 }
@@ -34,7 +34,7 @@ struct FieldAddVisitor final
 nlohmann::json toJsonField(Backend::FieldInfo const& fi)
 {
   json field;
-  FieldAddVisitor fav{ fi.type().c_str(), &field };
+  FieldAddVisitor fav{ &fi.type(), &field };
   fi.value().visit(fav);
   return field;
 }

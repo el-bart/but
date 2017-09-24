@@ -2,6 +2,7 @@
 #include "Priority.hpp"
 #include "But/Log/Backend/FieldInfo.hpp"
 
+using But::Log::Backend::Type;
 using But::Log::Field::Priority;
 
 namespace
@@ -32,7 +33,7 @@ TEST_F(ButLogFieldPriority, ConvertingToStringOfConstantLength)
 TEST_F(ButLogFieldPriority, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{Priority::info};
-  EXPECT_EQ( fi.type(), "But::Priority" );
+  EXPECT_EQ( fi.type(), Type{"But::Priority"} );
   EXPECT_EQ( fi.value().get<std::string>(), "info" );
 }
 

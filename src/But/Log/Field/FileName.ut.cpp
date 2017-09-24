@@ -2,6 +2,7 @@
 #include "FileName.hpp"
 #include "But/Log/Backend/FieldInfo.hpp"
 
+using But::Log::Backend::Type;
 using But::Log::Field::FileName;
 
 namespace
@@ -21,7 +22,7 @@ TEST_F(ButLogFieldFileName, ConvertingToString)
 TEST_F(ButLogFieldFileName, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{ FileName{__FILE__} };
-  EXPECT_EQ( fi.type(), "But::FileName" );
+  EXPECT_EQ( fi.type(), Type{"But::FileName"} );
   EXPECT_EQ( fi.value().get<std::string>(), __FILE__ );
 }
 

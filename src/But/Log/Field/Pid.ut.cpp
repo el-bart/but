@@ -2,6 +2,7 @@
 #include "Pid.hpp"
 #include "But/Log/Backend/FieldInfo.hpp"
 
+using But::Log::Backend::Type;
 using But::Log::Field::Pid;
 
 namespace
@@ -21,7 +22,7 @@ TEST_F(ButLogFieldPid, ConvertingToFieldInfo)
 {
   const auto pid = Pid{};
   const auto fi = But::Log::Backend::FieldInfo{pid};
-  EXPECT_EQ( "But::Pid", fi.type() );
+  EXPECT_EQ( Type{"But::Pid"}, fi.type() );
   EXPECT_EQ( toValue(pid), fi.value() );
 }
 

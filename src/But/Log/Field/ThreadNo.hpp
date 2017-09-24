@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <thread>
+#include "But/Log/Backend/Type.hpp"
 #include "But/Log/Backend/Value.hpp"
 
 namespace But
@@ -16,8 +16,8 @@ struct ThreadNo final
   uint64_t value_;
 };
 
-inline std::string toType(ThreadNo const&) { return "But::ThreadNo"; }
-inline Backend::Value toValue(ThreadNo const& tno) { return Backend::Value{tno.value_}; }
+inline auto toType(ThreadNo const&) { return Backend::Type{"But::ThreadNo"}; }
+inline auto toValue(ThreadNo const& tno) { return Backend::Value{tno.value_}; }
 
 }
 }

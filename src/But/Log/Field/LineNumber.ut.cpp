@@ -2,6 +2,7 @@
 #include "LineNumber.hpp"
 #include "But/Log/Backend/FieldInfo.hpp"
 
+using But::Log::Backend::Type;
 using But::Log::Field::LineNumber;
 
 namespace
@@ -21,7 +22,7 @@ TEST_F(ButLogFieldLineNumber, ConvertingToString)
 TEST_F(ButLogFieldLineNumber, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{ LineNumber{666} };
-  EXPECT_EQ( fi.type(), "But::LineNumber" );
+  EXPECT_EQ( fi.type(), Type{"But::LineNumber"} );
   EXPECT_EQ( fi.value().get<uint64_t>(), 666u );
 }
 

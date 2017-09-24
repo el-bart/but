@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `toString()` is replaced by `toValue()` (returns `Value`) and `toTypeString()` by `toType()` (returns `Type`).
   * `Log::LoggerProxy` and `Log::LoggerProxyThrowing` that wrap all the logging with and without exceptions forwarding.
   * all `assert()` statements in the code are now `BUT_ASSERT()`.
   * `BUT_ASSERT` - assert that works with `constexpr` functions, too.
@@ -21,7 +22,7 @@ this work is available on "master" branch, but has not yet been released.
   * `NotNull::pointer` is deprecated in favor of more descriptive name `NotNull::underlyingPointer`.
   * `System::Descriptor` has not explicit `bool` conversion operator.
   * `BUT_MPL_VALUE_WRAP` macro for generating full-blown object, that's only purpose is to keep a given value inside.
-  * `toString(bool)` added for logger
+  * `toValue(bool)` added for logger
   * `NotNull<>` has now a workaround for GCC compilation bug (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81182)
   * automated docker SDK build on dockerhub: `baszerr/but-sdk`
   * `BUT_THROW()` now throws `boost::current_exception()`-compatible types (boost does not work with C++11 correctly here).

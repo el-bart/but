@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include "But/Log/Backend/Type.hpp"
 #include "But/Log/Backend/Value.hpp"
 
 namespace But
@@ -17,7 +17,7 @@ enum class Priority
   error   = 3
 };
 
-inline std::string toType(Priority const&) { return "But::Priority"; }
+inline auto toType(Priority const&) { return Backend::Type{"But::Priority"}; }
 Backend::Value const& toValue(Priority pri);
 Backend::Value const& toValueConstLen(Priority pri);
 

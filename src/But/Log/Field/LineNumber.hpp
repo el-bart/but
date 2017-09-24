@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include "But/Log/Backend/Type.hpp"
 #include "But/Log/Backend/Value.hpp"
 
 namespace But
@@ -15,8 +15,8 @@ struct LineNumber final
 };
 
 
-inline std::string toType(LineNumber const&) { return "But::LineNumber"; }
-inline Backend::Value toValue(const LineNumber ln) { return Backend::Value{ln.value_}; }
+inline auto toType(LineNumber const&) { return Backend::Type{"But::LineNumber"}; }
+inline auto toValue(const LineNumber ln) { return Backend::Value{ln.value_}; }
 
 }
 }

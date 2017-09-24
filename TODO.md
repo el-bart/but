@@ -3,7 +3,6 @@
 ## logger-related things
 
 * LogStash integration, via Json stream sending.
-* add dedicated Backend::Value and Backend::Type, for internal representation (for future improvements).
 * consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
 * maybe `LoggerProxy::log()` could take a parsed format as a template argument, to avoid macros? could this be used to RT-based formats, with a proxy object?
 * how about renaming `Log::LoggerProxy` to `Log::Proxy`?
@@ -11,7 +10,6 @@
 * add `Log::Field::ProcessName`
 * add fields: `Size`, `Index`, `Address`
 * `Log::Destination::BackgroundThread{ForeginDestination}`
-* make re-throwing exceptions from logger possible (but NOT default one)
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occures, but dropping if nothing 'special' happens for some time
 
 ## improvements / new APIs

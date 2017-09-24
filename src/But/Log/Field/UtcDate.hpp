@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include "UtcIsoDateTime.hpp"
+#include "But/Log/Backend/Type.hpp"
 #include "But/Log/Backend/Value.hpp"
 
 namespace But
@@ -20,8 +20,8 @@ struct UtcDate final
 };
 
 
-inline std::string toType(UtcDate const&) { return "But::UtcDate"; }
-inline Backend::Value toValue(UtcDate const& d) { return Backend::Value{ d.timestamp_.date() }; }
+inline auto toType(UtcDate const&) { return Backend::Type{"But::UtcDate"}; }
+inline auto toValue(UtcDate const& d) { return Backend::Value{ d.timestamp_.date() }; }
 
 }
 }

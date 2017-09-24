@@ -16,7 +16,7 @@ struct TypeVisitor final
   template<typename T>
   void operator()(T const& t) { type_ = toType(t); }
 
-  std::string type_;
+  Type type_;
 };
 
 }

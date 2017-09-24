@@ -2,6 +2,7 @@
 #include "UtcTime.hpp"
 #include "But/Log/Backend/FieldInfo.hpp"
 
+using But::Log::Backend::Type;
 using But::Log::Field::UtcTime;
 using But::Log::Field::UtcIsoDateTime;
 
@@ -22,7 +23,7 @@ TEST_F(ButLogFieldUtcTime, ConvertingToString)
 TEST_F(ButLogFieldUtcTime, ConvertingToFieldInfo)
 {
   const auto fi = But::Log::Backend::FieldInfo{ UtcTime{1234} };
-  EXPECT_EQ( fi.type(), "But::UtcTime" );
+  EXPECT_EQ( fi.type(), Type{"But::UtcTime"} );
   EXPECT_EQ( fi.value().get<std::string>(), "00:20:34" );
 }
 
