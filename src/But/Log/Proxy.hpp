@@ -1,5 +1,5 @@
 #pragma once
-#include "LoggerProxyThrowing.hpp"
+#include "ProxyThrowing.hpp"
 
 namespace But
 {
@@ -10,19 +10,19 @@ namespace Log
  *         Destination type can be anything that derives from Destination::Foreign class,
  *         or a user-provided type, that will handle all the arguments on its own.
  *
- * @warning LoggerProxy is NOT thread-safe! "destinations" however are. what it means is one can re-use
- *          shared destinations between threads, but each thread shall have own copy of LoggerProxy object to use.
+ * @warning Proxy is NOT thread-safe! "destinations" however are. what it means is one can re-use
+ *          shared destinations between threads, but each thread shall have own copy of Proxy object to use.
  *
  * @example basic, on-console output logger can be achieved like this:
  * <code>
- * using Log = LoggerProxy<Destination::Console>;
+ * using Log = But::Log::Proxy<Destination::Console>;
  * Log log;
  * log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} );
  * </code>
  *
  * @example the most trivial, near-to-zero overhead, on-console output logger can be achieved like this:
  * <code>
- * using Log = LoggerProxy<Destination::NaiveConsole>;
+ * using Log = But::Log::Proxy<Destination::NaiveConsole>;
  * Log log;
  * log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} );
  * </code>
@@ -30,9 +30,9 @@ namespace Log
  * @example multi-thread safe logging to file, with all attributes preserved, one JSON per line:
  * <code>
  * using Thread = But::JoiningThread<std::thread>;
- * using Log = LoggerProxy<But::NotNullShared<Destination::Foreign>;
+ * using Log = But::Log::Proxy<But::NotNullShared<Destination::Foreign>;
  * Log log{ But::makeSharedNN<Destination::JsonFile>("/tmp/my_program.log") };
- * // note: each thread gets its own COPY of LoggerProxy object!
+ * // note: each thread gets its own COPY of Proxy object!
  * auto action = [log]() { log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} ); };
  * Thread th1{action};
  * Thread th2{action};
@@ -57,13 +57,13 @@ namespace Log
  * @note "translators" are only applicable for *formatted* logs!
  */
 template<typename Destination, typename Translator = Localization::None>
-class LoggerProxy final
+class Proxy final
 {
 public:
-  LoggerProxy() = default;
-  explicit LoggerProxy(Destination dst): lpt_{ std::move(dst) } { }
-  explicit LoggerProxy(Translator tr): lpt_{ std::move(tr) } { }
-  LoggerProxy(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
+  Proxy() = default;
+  explicit Proxy(Destination dst): lpt_{ std::move(dst) } { }
+  explicit Proxy(Translator tr): lpt_{ std::move(tr) } { }
+  Proxy(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
 
   /** @brief creates a single log entry, out of a given parameters.
    */
@@ -117,7 +117,7 @@ public:
   }
 
 private:
-  LoggerProxyThrowing<Destination, Translator> lpt_;
+  ProxyThrowing<Destination, Translator> lpt_;
 };
 
 }

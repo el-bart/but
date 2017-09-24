@@ -5,7 +5,6 @@
 * LogStash integration, via Json stream sending.
 * consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
 * maybe `LoggerProxy::log()` could take a parsed format as a template argument, to avoid macros? could this be used to RT-based formats, with a proxy object?
-* how about renaming `Log::LoggerProxy` to `Log::Proxy`?
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
 * add fields: `Size`, `Index`, `Address`

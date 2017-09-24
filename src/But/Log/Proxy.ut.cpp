@@ -1,10 +1,10 @@
 #include <memory>
 #include <sstream>
 #include "gtest/gtest.h"
-#include "LoggerProxy.hpp"
+#include "Proxy.hpp"
 #include "Destination/Foreign.hpp"
 
-using But::Log::LoggerProxy;
+using But::Log::Proxy;
 using But::Log::Destination::Foreign;
 using But::Log::Backend::Entry;
 using But::Log::Backend::Value;
@@ -24,22 +24,22 @@ struct DestinationStub final
 };
 
 
-struct ButLogLoggerProxy: public testing::Test
+struct ButLogProxy: public testing::Test
 {
-  LoggerProxy<DestinationStub> lp_;
+  Proxy<DestinationStub> lp_;
 };
 
 
-TEST_F(ButLogLoggerProxy, LoggingApiSmokeTest)
+TEST_F(ButLogProxy, LoggingApiSmokeTest)
 {
   lp_.log("the", "answer", "is", 42);
   lp_.log( BUT_FORMAT("$0 is ok"), "pinky" );
 }
 
 
-TEST_F(ButLogLoggerProxy, LoggerIsMovable)
+TEST_F(ButLogProxy, LoggerIsMovable)
 {
-  LoggerProxy<DestinationStub> log;
+  Proxy<DestinationStub> log;
   auto other = std::move(log);
   (void)other;
 }
@@ -53,9 +53,9 @@ struct ThrowingDestination final
   auto operator->() { return this; }
 };
 
-TEST_F(ButLogLoggerProxy, AllErrorsFromActualDestinationsAreIgnored)
+TEST_F(ButLogProxy, AllErrorsFromActualDestinationsAreIgnored)
 {
-  LoggerProxy<ThrowingDestination> log{ ThrowingDestination{} };
+  Proxy<ThrowingDestination> log{ ThrowingDestination{} };
   EXPECT_NO_THROW( log.log("hello", "john") );
   EXPECT_NO_THROW( log.reload() );
   EXPECT_NO_THROW( log.flush() );
@@ -67,19 +67,19 @@ struct CustomTranslator
 };
 
 
-TEST_F(ButLogLoggerProxy, ConstructorsForDifferentObjects)
+TEST_F(ButLogProxy, ConstructorsForDifferentObjects)
 {
   {
-    LoggerProxy<DestinationStub, CustomTranslator> lp;
+    Proxy<DestinationStub, CustomTranslator> lp;
   }
   {
-    LoggerProxy<DestinationStub, CustomTranslator> lp{ DestinationStub{} };
+    Proxy<DestinationStub, CustomTranslator> lp{ DestinationStub{} };
   }
   {
-    LoggerProxy<DestinationStub, CustomTranslator> lp{ CustomTranslator{} };
+    Proxy<DestinationStub, CustomTranslator> lp{ CustomTranslator{} };
   }
   {
-    LoggerProxy<DestinationStub, CustomTranslator> lp{ DestinationStub{}, CustomTranslator{} };
+    Proxy<DestinationStub, CustomTranslator> lp{ DestinationStub{}, CustomTranslator{} };
   }
 }
 

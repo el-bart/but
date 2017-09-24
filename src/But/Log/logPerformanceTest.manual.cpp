@@ -1,7 +1,7 @@
 #include <chrono>
 #include <iostream>
 #include "But/NotNull.hpp"
-#include "LoggerProxy.hpp"
+#include "Proxy.hpp"
 #include "Destination/TextConsole.hpp"
 #include "Destination/NaiveConsole.hpp"
 #include "Destination/ForeignAdapter.hpp"
@@ -22,7 +22,7 @@ auto makeLogger()
 {
   auto dst = But::makeUniqueNN<But::Log::Destination::TextConsole>();
   auto adapter = But::Log::Destination::ForeignAdapter<decltype(dst)>{ std::move(dst) };
-  return But::Log::LoggerProxy<decltype(adapter)>{ std::move(adapter) };
+  return But::Log::Proxy<decltype(adapter)>{ std::move(adapter) };
 }
 
 
@@ -39,7 +39,7 @@ void testCout()
 void testNaiveCout()
 {
   But::Log::Destination::NaiveConsole nc;
-  But::Log::LoggerProxy<decltype(nc)> log{ std::move(nc) };
+  But::Log::Proxy<decltype(nc)> log{ std::move(nc) };
   for(auto i=0; i<g_logsCount; ++i)
   {
     log.log("hello, world");
