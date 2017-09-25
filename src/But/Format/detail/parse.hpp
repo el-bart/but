@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "ParsedFormat.hpp"
 #include "common.hpp"
 #include "But/Mpl/parse.hpp"
@@ -10,14 +11,14 @@ namespace Format
 namespace detail
 {
 
-constexpr auto skipUntilEndOfComment(char const* fmt)
+inline constexpr auto skipUntilEndOfComment(char const* fmt)
 {
   while( not isEos(*fmt) && *fmt!='}' )
     ++fmt;
   return throwOnInvalidSyntax( *fmt!='}', "variable does not end with closing brace", fmt );
 }
 
-constexpr auto parseBraceTypeName(Segment& st, char const* fmt)
+inline constexpr auto parseBraceTypeName(Segment& st, char const* fmt)
 {
   throwOnInvalidSyntax( not isDigit(*fmt), "brace type variable declaration is not complete", fmt );
   ++fmt;
@@ -34,7 +35,7 @@ constexpr auto parseBraceTypeName(Segment& st, char const* fmt)
   return st.end_;
 }
 
-constexpr auto parseBraceVariable(Segment& st, char const* fmt)
+inline constexpr auto parseBraceVariable(Segment& st, char const* fmt)
 {
   st.type_ = Segment::Type::Value;
   st.end_ = fmt;
@@ -50,7 +51,7 @@ constexpr auto parseBraceVariable(Segment& st, char const* fmt)
   return st.end_;
 }
 
-constexpr auto parseBrace(Segment& st, char const* fmt)
+inline constexpr auto parseBrace(Segment& st, char const* fmt)
 {
   throwOnInvalidSyntax( isEos(*fmt), "brace variable declaration is not complete", fmt );
   if( *fmt == 'V' )
@@ -62,7 +63,7 @@ constexpr auto parseBrace(Segment& st, char const* fmt)
   return throwOnInvalidSyntax(true, "invalid brace variable init sequence", fmt);
 }
 
-constexpr auto parseSimpleVariable(Segment& st, char const* fmt)
+inline constexpr auto parseSimpleVariable(Segment& st, char const* fmt)
 {
   throwOnInvalidSyntax( not isDigit(*fmt), "simple variable declaration is not followed by a number", fmt );
   st.type_ = Segment::Type::Value;
@@ -74,14 +75,14 @@ constexpr auto parseSimpleVariable(Segment& st, char const* fmt)
   return st.end_;
 }
 
-constexpr auto parseStringVariable(Segment& st, char const* fmt)
+inline constexpr auto parseStringVariable(Segment& st, char const* fmt)
 {
   st.type_ = Segment::Type::String;
   st.end_ = fmt;
   return fmt+1;
 }
 
-constexpr auto parseVariable(Segment& st, char const* fmt)
+inline constexpr auto parseVariable(Segment& st, char const* fmt)
 {
   st.begin_ = fmt;
   ++fmt;
@@ -94,7 +95,7 @@ constexpr auto parseVariable(Segment& st, char const* fmt)
 }
 
 
-constexpr auto parseString(Segment& st, char const* fmt)
+inline constexpr auto parseString(Segment& st, char const* fmt)
 {
   st.type_ = Segment::Type::String;
   st.begin_ = fmt;
@@ -105,8 +106,8 @@ constexpr auto parseString(Segment& st, char const* fmt)
 }
 
 
-template<unsigned N>
-constexpr auto parseImpl(ParsedFormat<N>&& ps, char const* fmt)
+template<typename T>
+constexpr auto parseImpl(T&& ps, char const* fmt)
 {
   while( not isEos(*fmt) )
   {
@@ -127,6 +128,11 @@ template<unsigned N>
 constexpr auto parse(char const* fmt)
 {
   return parseImpl( ParsedFormat<N>{}, fmt );
+}
+
+inline auto parse(char const* fmt)
+{
+  return parseImpl( ParsedFormat<0, std::vector<Segment>>{}, fmt );
 }
 
 }

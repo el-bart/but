@@ -23,10 +23,10 @@ struct Segment final
   unsigned referencedArgument_{0};  // only valid for Value and TypeName types
 };
 
-template<unsigned N>
+template<unsigned N, typename C = Container::ArrayWithSize<Segment,N>>
 struct ParsedFormat final
 {
-  Container::ArrayWithSize<Segment,N> segments_;
+  C segments_;
 };
 
 }

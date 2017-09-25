@@ -1,3 +1,4 @@
+#include <type_traits>
 #include "gtest/gtest.h"
 #include "parse.hpp"
 
@@ -606,6 +607,91 @@ TEST_F(ButFormatDetailParse, TooComplexFormatForGivenStatesCount)
   EXPECT_NO_THROW( parse<3>("$1 $0") ) << "invalid format is raisign an error";
   EXPECT_THROW( parse<4>("$1 $2 $0"), Invalid );
   EXPECT_THROW( parse<2>("${1}${2}${0}"), Invalid );
+}
+
+TEST_F(ButFormatDetailParse, RuntimeFormatParsing)
+{
+  const auto ps = parse("one ${T42#test} two ${T43} three ${V44#tag} four ${V45} five $46 six ${47}");
+  EXPECT_TRUE( ( std::is_same<decltype(ps.segments_), std::vector<Segment>>::value ) );
+  ASSERT_EQ( 12u, ps.segments_.size() );
+  // 0
+  {
+    const auto s = ps.segments_[0];
+    EXPECT_EQ( "one ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
+  }
+  // 1
+  {
+    const auto s = ps.segments_[1];
+    EXPECT_EQ( "${T42#test}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
+    EXPECT_EQ( 42u, s.referencedArgument_ );
+  }
+  // 2
+  {
+    const auto s = ps.segments_[2];
+    EXPECT_EQ( " two ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
+  }
+  // 3
+  {
+    const auto s = ps.segments_[3];
+    EXPECT_EQ( "${T43}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
+    EXPECT_EQ( 43u, s.referencedArgument_ );
+  }
+  // 4
+  {
+    const auto s = ps.segments_[4];
+    EXPECT_EQ( " three ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
+  }
+  // 5
+  {
+    const auto s = ps.segments_[5];
+    EXPECT_EQ( "${V44#tag}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
+    EXPECT_EQ( 44u, s.referencedArgument_ );
+  }
+  // 6
+  {
+    const auto s = ps.segments_[6];
+    EXPECT_EQ( " four ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
+  }
+  // 7
+  {
+    const auto s = ps.segments_[7];
+    EXPECT_EQ( "${V45}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
+    EXPECT_EQ( 45u, s.referencedArgument_ );
+  }
+  // 8
+  {
+    const auto s = ps.segments_[8];
+    EXPECT_EQ( " five ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
+  }
+  // 9
+  {
+    const auto s = ps.segments_[9];
+    EXPECT_EQ( "$46", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
+    EXPECT_EQ( 46u, s.referencedArgument_ );
+  }
+  // 10
+  {
+    const auto s = ps.segments_[10];
+    EXPECT_EQ( " six ", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
+  }
+  // 11
+  {
+    const auto s = ps.segments_[11];
+    EXPECT_EQ( "${47}", std::string(s.begin_, s.end_) );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
+    EXPECT_EQ( 47u, s.referencedArgument_ );
+  }
 }
 
 }
