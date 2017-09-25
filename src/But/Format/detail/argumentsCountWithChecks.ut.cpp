@@ -131,4 +131,22 @@ TEST_F(ButFormatDetailArgumentsCountWithChecks, NonContinuousArguments)
   EXPECT_THROW( argumentsCountWithChecks("test $42 data $1"), Invalid );
 }
 
+
+TEST_F(ButFormatDetailArgumentsCountWithChecks, RuntimeArgumentsCheck)
+{
+  {
+    const auto cnt = argumentsCountWithChecks("test $0 data $2\t$1\n");
+    EXPECT_EQ( 3u, cnt );
+  }
+  {
+    const auto cnt = argumentsCountWithChecks("test $0 data ${2} ${V1#xx} ${T3}");
+    EXPECT_EQ( 4u, cnt );
+  }
+  {
+    const auto cnt = argumentsCountWithChecks("test $0 data $0\t$1\n");
+    EXPECT_EQ( 2u, cnt );
+  }
+  EXPECT_THROW( argumentsCountWithChecks("test $42 data $1"), Invalid );
+}
+
 }

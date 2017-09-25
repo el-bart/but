@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "But/Container/ArrayWithSize.hpp"
 
 namespace But
@@ -26,8 +27,12 @@ struct Segment final
 template<unsigned N, typename C = Container::ArrayWithSize<Segment,N>>
 struct ParsedFormat final
 {
+  constexpr auto size() const { return segments_.size(); }
   C segments_;
 };
+
+
+using ParsedFormatRt = ParsedFormat<0, std::vector<Segment>>;
 
 }
 }
