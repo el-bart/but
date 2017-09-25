@@ -73,6 +73,7 @@ private:
   template<typename F, typename Head, typename ...Tail>
   void processArgument(F&& f, const unsigned pos, Head const& head, Tail const& ...tail) const
   {
+    // TODO: replace this with a compile-time-generated construct...
     if( pos == 0u )
       f(head);
     else
