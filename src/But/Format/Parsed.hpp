@@ -44,7 +44,6 @@ public:
   constexpr auto inputFormat() const { return format_; }
   //constexpr auto expectedArguments() const { return detail::argumentsCount(ps_); } // note: would not work with static_assert...
   static constexpr auto expectedArguments() { return ArgumentsCount; }
-  static constexpr auto maxSegments() { return MaxSegments; }
 
   template<typename ...Args>
   std::string format(Args const& ...args) const
