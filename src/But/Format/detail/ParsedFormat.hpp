@@ -8,7 +8,7 @@ namespace Format
 namespace detail
 {
 
-struct Segment
+struct Segment final
 {
   enum class Type
   {
