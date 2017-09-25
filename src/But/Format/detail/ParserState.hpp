@@ -8,7 +8,7 @@ namespace Format
 namespace detail
 {
 
-struct State
+struct Segment
 {
   enum class Type
   {
@@ -26,7 +26,7 @@ struct State
 template<unsigned N>
 struct ParserState final
 {
-  Container::ArrayWithSize<State,N> segments_;
+  Container::ArrayWithSize<Segment,N> segments_;
 };
 
 }

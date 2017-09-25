@@ -3,7 +3,7 @@
 
 using But::Format::Invalid;
 using But::Format::detail::parse;
-using But::Format::detail::State;
+using But::Format::detail::Segment;
 
 namespace
 {
@@ -25,7 +25,7 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     constexpr auto s = ps.segments_[0];
     EXPECT_TRUE( s.begin_ != s.end_ );
     EXPECT_EQ( "test string", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
 
   {
@@ -34,7 +34,7 @@ TEST_F(ButFormatDetailParse, UnformattedStrings)
     constexpr auto s = ps.segments_[0];
     EXPECT_TRUE( s.begin_ != s.end_ );
     EXPECT_EQ( "test\n\r\tstring", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
 }
 
@@ -47,7 +47,7 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
     constexpr auto s = ps.segments_[0];
     EXPECT_TRUE( s.begin_ != s.end_ );
     EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
 
   EXPECT_THROW( parse<10>("$"), Invalid ) << "parameter declaraion too short";
@@ -59,13 +59,13 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "at the beginning", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -76,19 +76,19 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "in the", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 2
     {
       constexpr auto s = ps.segments_[2];
       EXPECT_EQ( "middle", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -99,13 +99,13 @@ TEST_F(ButFormatDetailParse, EscapeSequence)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "at the end", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -120,7 +120,7 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -131,14 +131,14 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -149,20 +149,20 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 2
     {
       constexpr auto s = ps.segments_[2];
       EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -173,13 +173,13 @@ TEST_F(ButFormatDetailParse, SimpleArgument)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "$42", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
   }
@@ -199,7 +199,7 @@ TEST_F(ButFormatDetailParse, BraceArgument)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -210,14 +210,14 @@ TEST_F(ButFormatDetailParse, BraceArgument)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -228,20 +228,20 @@ TEST_F(ButFormatDetailParse, BraceArgument)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 2
     {
       constexpr auto s = ps.segments_[2];
       EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -252,13 +252,13 @@ TEST_F(ButFormatDetailParse, BraceArgument)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "${42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
   }
@@ -279,7 +279,7 @@ TEST_F(ButFormatDetailParse, ValueArguments)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -290,14 +290,14 @@ TEST_F(ButFormatDetailParse, ValueArguments)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -308,20 +308,20 @@ TEST_F(ButFormatDetailParse, ValueArguments)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 2
     {
       constexpr auto s = ps.segments_[2];
       EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -332,13 +332,13 @@ TEST_F(ButFormatDetailParse, ValueArguments)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "${V42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::Value, s.type_ );
+      EXPECT_EQ( Segment::Type::Value, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
   }
@@ -358,7 +358,7 @@ TEST_F(ButFormatDetailParse, TypeArguments)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -369,14 +369,14 @@ TEST_F(ButFormatDetailParse, TypeArguments)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::TypeName, s.type_ );
+      EXPECT_EQ( Segment::Type::TypeName, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( " beginning", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -387,20 +387,20 @@ TEST_F(ButFormatDetailParse, TypeArguments)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "in ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::TypeName, s.type_ );
+      EXPECT_EQ( Segment::Type::TypeName, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
     // 2
     {
       constexpr auto s = ps.segments_[2];
       EXPECT_EQ( " the middle", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
   }
 
@@ -411,13 +411,13 @@ TEST_F(ButFormatDetailParse, TypeArguments)
     {
       constexpr auto s = ps.segments_[0];
       EXPECT_EQ( "the end ", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::String, s.type_ );
+      EXPECT_EQ( Segment::Type::String, s.type_ );
     }
     // 1
     {
       constexpr auto s = ps.segments_[1];
       EXPECT_EQ( "${T42}", std::string(s.begin_, s.end_) );
-      EXPECT_EQ( State::Type::TypeName, s.type_ );
+      EXPECT_EQ( Segment::Type::TypeName, s.type_ );
       EXPECT_EQ( 42u, s.referencedArgument_ );
     }
   }
@@ -437,7 +437,7 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${42#}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -446,7 +446,7 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${T42#}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -455,7 +455,7 @@ TEST_F(ButFormatDetailParse, EmptyCommentArgument)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${V42#}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -473,7 +473,7 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${42#some comment}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -482,7 +482,7 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${T42#some comment}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -491,7 +491,7 @@ TEST_F(ButFormatDetailParse, CommentedArguments)
     ASSERT_EQ( 1u, ps.segments_.size() );
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "${V42#some comment}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
 
@@ -515,7 +515,7 @@ TEST_F(ButFormatDetailParse, BracesWithoutLeadingDolarSignHaveNoSpecialMinning)
   ASSERT_EQ( 1u, ps.segments_.size() );
   constexpr auto s = ps.segments_[0];
   EXPECT_EQ( "}foo{}bar{", std::string(s.begin_, s.end_) );
-  EXPECT_EQ( State::Type::String, s.type_ );
+  EXPECT_EQ( Segment::Type::String, s.type_ );
 }
 
 
@@ -528,66 +528,66 @@ TEST_F(ButFormatDetailParse, MixedTokens)
   {
     constexpr auto s = ps.segments_[0];
     EXPECT_EQ( "in", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
   // 1
   {
     constexpr auto s = ps.segments_[1];
     EXPECT_EQ( "${T42#test}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
     EXPECT_EQ( 42u, s.referencedArgument_ );
   }
   // 2
   {
     constexpr auto s = ps.segments_[2];
     EXPECT_EQ( "xxx", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
   // 3
   {
     constexpr auto s = ps.segments_[3];
     EXPECT_EQ( "${V69#ff}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 69u, s.referencedArgument_ );
   }
   // 4
   {
     constexpr auto s = ps.segments_[4];
     EXPECT_EQ( "${13}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 13u, s.referencedArgument_ );
   }
   // 5
   {
     constexpr auto s = ps.segments_[5];
     EXPECT_EQ( "$21", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 21u, s.referencedArgument_ );
   }
   // 6
   {
     constexpr auto s = ps.segments_[6];
     EXPECT_EQ( " ", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
   // 7
   {
     constexpr auto s = ps.segments_[7];
     EXPECT_EQ( "$", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::String, s.type_ );
+    EXPECT_EQ( Segment::Type::String, s.type_ );
   }
   // 8
   {
     constexpr auto s = ps.segments_[8];
     EXPECT_EQ( "${997#narf}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::Value, s.type_ );
+    EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 997u, s.referencedArgument_ );
   }
   // 9
   {
     constexpr auto s = ps.segments_[9];
     EXPECT_EQ( "${T666}", std::string(s.begin_, s.end_) );
-    EXPECT_EQ( State::Type::TypeName, s.type_ );
+    EXPECT_EQ( Segment::Type::TypeName, s.type_ );
     EXPECT_EQ( 666u, s.referencedArgument_ );
   }
 }

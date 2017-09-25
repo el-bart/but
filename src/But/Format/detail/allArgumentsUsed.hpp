@@ -18,7 +18,7 @@ constexpr auto allArgumentsUsed(ParserState<N> const& ps)
   used.fill(false);
   for(auto& e: ps.segments_)
   {
-    if( e.type_ != State::Type::Value && e.type_ != State::Type::TypeName )
+    if( e.type_ != Segment::Type::Value && e.type_ != Segment::Type::TypeName )
       continue;
     hasArgs = true;
     const auto pos = e.referencedArgument_;

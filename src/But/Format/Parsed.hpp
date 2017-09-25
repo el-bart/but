@@ -100,18 +100,18 @@ private:
 
 
   template<typename ...Args>
-  void formatBlock(std::ostringstream& os, detail::State const& state, Args const& ...args) const
+  void formatBlock(std::ostringstream& os, detail::Segment const& segment, Args const& ...args) const
   {
-    switch(state.type_)
+    switch(segment.type_)
     {
-      case detail::State::Type::String:
-        os.write( state.begin_, state.end_ - state.begin_ );
+      case detail::Segment::Type::String:
+        os.write( segment.begin_, segment.end_ - segment.begin_ );
         return;
-      case detail::State::Type::Value:
-        streamArgumentValue(os, state.referencedArgument_, args...);
+      case detail::Segment::Type::Value:
+        streamArgumentValue(os, segment.referencedArgument_, args...);
         return;
-      case detail::State::Type::TypeName:
-        streamArgumentType(os, state.referencedArgument_, args...);
+      case detail::Segment::Type::TypeName:
+        streamArgumentType(os, segment.referencedArgument_, args...);
         return;
     }
     BUT_ASSERT(!"missing type handle");

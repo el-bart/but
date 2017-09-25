@@ -17,11 +17,11 @@ constexpr auto skipUntilEndOfComment(char const* fmt)
   return throwOnInvalidSyntax( *fmt!='}', "variable does not end with closing brace", fmt );
 }
 
-constexpr auto parseBraceTypeName(State& st, char const* fmt)
+constexpr auto parseBraceTypeName(Segment& st, char const* fmt)
 {
   throwOnInvalidSyntax( not isDigit(*fmt), "brace type variable declaration is not complete", fmt );
   ++fmt;
-  st.type_ = State::Type::TypeName;
+  st.type_ = Segment::Type::TypeName;
   st.end_ = fmt;
   while( isDigit(*st.end_) )
     ++st.end_;
@@ -34,9 +34,9 @@ constexpr auto parseBraceTypeName(State& st, char const* fmt)
   return st.end_;
 }
 
-constexpr auto parseBraceVariable(State& st, char const* fmt)
+constexpr auto parseBraceVariable(Segment& st, char const* fmt)
 {
-  st.type_ = State::Type::Value;
+  st.type_ = Segment::Type::Value;
   st.end_ = fmt;
   while( isDigit(*st.end_) )
     ++st.end_;
@@ -50,7 +50,7 @@ constexpr auto parseBraceVariable(State& st, char const* fmt)
   return st.end_;
 }
 
-constexpr auto parseBrace(State& st, char const* fmt)
+constexpr auto parseBrace(Segment& st, char const* fmt)
 {
   throwOnInvalidSyntax( isEos(*fmt), "brace variable declaration is not complete", fmt );
   if( *fmt == 'V' )
@@ -62,10 +62,10 @@ constexpr auto parseBrace(State& st, char const* fmt)
   return throwOnInvalidSyntax(true, "invalid brace variable init sequence", fmt);
 }
 
-constexpr auto parseSimpleVariable(State& st, char const* fmt)
+constexpr auto parseSimpleVariable(Segment& st, char const* fmt)
 {
   throwOnInvalidSyntax( not isDigit(*fmt), "simple variable declaration is not followed by a number", fmt );
-  st.type_ = State::Type::Value;
+  st.type_ = Segment::Type::Value;
   st.end_  = fmt+1;
   while( isDigit(*st.end_) )
     ++st.end_;
@@ -74,14 +74,14 @@ constexpr auto parseSimpleVariable(State& st, char const* fmt)
   return st.end_;
 }
 
-constexpr auto parseStringVariable(State& st, char const* fmt)
+constexpr auto parseStringVariable(Segment& st, char const* fmt)
 {
-  st.type_ = State::Type::String;
+  st.type_ = Segment::Type::String;
   st.end_ = fmt;
   return fmt+1;
 }
 
-constexpr auto parseVariable(State& st, char const* fmt)
+constexpr auto parseVariable(Segment& st, char const* fmt)
 {
   st.begin_ = fmt;
   ++fmt;
@@ -94,9 +94,9 @@ constexpr auto parseVariable(State& st, char const* fmt)
 }
 
 
-constexpr auto parseString(State& st, char const* fmt)
+constexpr auto parseString(Segment& st, char const* fmt)
 {
-  st.type_ = State::Type::String;
+  st.type_ = Segment::Type::String;
   st.begin_ = fmt;
   st.end_  = fmt;
   while( not isEos(*st.end_) && not isVariableBegin(*st.end_) )
@@ -111,7 +111,7 @@ constexpr auto parseImpl(ParserState<N>&& ps, char const* fmt)
   while( not isEos(*fmt) )
   {
     throwOnInvalidSyntax( ps.segments_.max_size() == ps.segments_.size(), "format too long for a declared states count - expected end", fmt );
-    State st;
+    Segment st;
     if( isVariableBegin(*fmt) )
       fmt = parseVariable(st, fmt);
     else
