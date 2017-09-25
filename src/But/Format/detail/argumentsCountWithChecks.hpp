@@ -19,7 +19,7 @@ constexpr auto argumentsCountWithChecksImpl(Ps const& ps)
   return argumentsCount(ps);
 }
 
-template<unsigned N>
+template<size_t N>
 constexpr auto argumentsCountWithChecks(char const* fmt)
 {
   const auto ps = parseCt<N>(fmt);

@@ -38,8 +38,8 @@ constexpr auto allArgumentsUsedImpl(Ps const& ps, Used&& used)
 }
 
 
-template<unsigned N>
-constexpr auto allArgumentsUsed(ParsedFormat<N> const& ps)
+template<size_t N>
+constexpr auto allArgumentsUsed(ParsedFormatCt<N> const& ps)
 {
   Container::Array<bool,N> used{};
   used.fill(false);

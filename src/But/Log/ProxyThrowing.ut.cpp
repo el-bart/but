@@ -198,7 +198,7 @@ TEST_F(ButLogProxyThrowing, AllowDefaultConstructionWhenNoArgumentsNeeded)
 
 struct CustomTranslator
 {
-  template<unsigned N, unsigned M>
+  template<size_t N, size_t M>
   auto translate(But::Format::Parsed<N,M>&& parsed) const
   {
     ++counter_;

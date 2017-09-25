@@ -14,7 +14,7 @@ namespace Localization
 struct None final
 {
   auto operator->() const { return this; }
-  template<unsigned N, unsigned M>
+  template<size_t N, size_t M>
   auto translate(Format::Parsed<N,M>&& parsed) const { return std::move(parsed); }
 };
 

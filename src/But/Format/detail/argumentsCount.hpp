@@ -27,8 +27,8 @@ constexpr auto usedArgumentsMapImpl(Ps const& ps, T&& tab)
   return tab;
 }
 
-template<unsigned N>
-constexpr auto usedArgumentsMap(ParsedFormat<N> const& ps)
+template<size_t N>
+constexpr auto usedArgumentsMap(ParsedFormatCt<N> const& ps)
 {
   Container::Array<bool,N> tab{};
   tab.fill(false);
@@ -41,8 +41,8 @@ inline auto usedArgumentsMap(ParsedFormatRt const& ps)
   return usedArgumentsMapImpl(ps, tab);
 }
 
-template<unsigned N, typename C>
-constexpr auto argumentsCount(ParsedFormat<N,C> const& ps)
+template<typename C>
+constexpr auto argumentsCount(ParsedFormat<C> const& ps)
 {
   const auto tab = usedArgumentsMap(ps);
   return bitsCount(tab);

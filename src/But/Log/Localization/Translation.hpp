@@ -33,7 +33,7 @@ public:
 
   explicit Translation(Data data);
 
-  template<unsigned N, unsigned M>
+  template<size_t N, size_t M>
   auto translate(Format::Parsed<N,M>&& parsed) const
   {
     const auto translation = findTranslation( parsed.inputFormat() );

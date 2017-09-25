@@ -124,15 +124,15 @@ constexpr auto parse(Pf&& pf, char const* fmt)
 }
 
 
-template<unsigned N>
+template<size_t N>
 constexpr auto parseCt(char const* fmt)
 {
-  return parse( ParsedFormat<N>{}, fmt );
+  return parse( ParsedFormatCt<N>{}, fmt );
 }
 
 inline auto parseRt(char const* fmt)
 {
-  return parse( ParsedFormat<0, std::vector<Segment>>{}, fmt );
+  return parse( ParsedFormatRt{}, fmt );
 }
 
 }

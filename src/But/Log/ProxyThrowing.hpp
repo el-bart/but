@@ -28,7 +28,7 @@ public:
   template<typename ...Args>
   void log(Args&& ...args) const { dst_->log( std::forward<Args>(args)... ); }
 
-  template<unsigned N, unsigned M, typename ...Args>
+  template<size_t N, size_t M, typename ...Args>
   void log(Format::Parsed<N,M>&& parsed, Args&& ...args) const
   {
     const auto translated = translate( std::move(parsed) );
@@ -40,7 +40,7 @@ public:
   void flush() { dst_->flush(); }
 
 private:
-  template<unsigned N, unsigned M>
+  template<size_t N, size_t M>
   auto translate(Format::Parsed<N,M>&& parsed) const
   {
     try

@@ -20,7 +20,7 @@ namespace Format
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
  */
-template<unsigned ArgumentsCount, unsigned MaxSegments>
+template<size_t ArgumentsCount, size_t MaxSegments>
 class Parsed final
 {
 public:
@@ -58,20 +58,20 @@ public:
 
 private:
   template<typename F>
-  void processArgument(F&& /*f*/, const unsigned /*pos*/) const
+  void processArgument(F&& /*f*/, const size_t /*pos*/) const
   {
     BUT_ASSERT(!"this overload should never really be called");
     std::terminate();
   }
   template<typename F, typename Head>
-  void processArgument(F&& f, const unsigned pos, Head const& head) const
+  void processArgument(F&& f, const size_t pos, Head const& head) const
   {
     (void)pos;
     BUT_ASSERT( pos == 0u && "format is not alligned with arguments" );
     f(head);
   }
   template<typename F, typename Head, typename ...Tail>
-  void processArgument(F&& f, const unsigned pos, Head const& head, Tail const& ...tail) const
+  void processArgument(F&& f, const size_t pos, Head const& head, Tail const& ...tail) const
   {
     // TODO: replace this with a compile-time-generated construct...
     if( pos == 0u )
@@ -81,7 +81,7 @@ private:
   }
 
   template<typename ...Args>
-  void streamArgumentType(std::ostream& os, const unsigned pos, Args const& ...args) const
+  void streamArgumentType(std::ostream& os, const size_t pos, Args const& ...args) const
   {
     auto proc = [&os](auto& e) {
       using Log::Backend::toType;
@@ -90,7 +90,7 @@ private:
     processArgument(proc,  pos, args... );
   }
   template<typename ...Args>
-  void streamArgumentValue(std::ostream& os, const unsigned pos, Args const& ...args) const
+  void streamArgumentValue(std::ostream& os, const size_t pos, Args const& ...args) const
   {
     auto proc = [&os](auto& e) {
       using Log::Backend::toValue;
@@ -118,15 +118,15 @@ private:
     BUT_ASSERT(!"missing type handle");
   }
 
-  const detail::ParsedFormat<MaxSegments> ps_;
+  const detail::ParsedFormatCt<MaxSegments> ps_;
   char const* format_;
 };
 
 
-template<unsigned N, unsigned M>
+template<size_t N, size_t M>
 std::string toValue(Parsed<N,M> const&) = delete;
 
-template<unsigned N, unsigned M>
+template<size_t N, size_t M>
 std::string toType(Parsed<N,M> const&) = delete;
 
 }
