@@ -24,7 +24,7 @@ struct Segment
 };
 
 template<unsigned N>
-struct ParserState final
+struct ParsedFormat final
 {
   Container::ArrayWithSize<Segment,N> segments_;
 };

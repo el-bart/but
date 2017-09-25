@@ -1,5 +1,5 @@
 #pragma once
-#include "ParserState.hpp"
+#include "ParsedFormat.hpp"
 
 namespace But
 {
@@ -9,7 +9,7 @@ namespace detail
 {
 
 template<unsigned N>
-constexpr auto lastArgumentNumber(ParserState<N> const& ps)
+constexpr auto lastArgumentNumber(ParsedFormat<N> const& ps)
 {
   auto last = 0u;
   for(auto& e: ps.segments_)

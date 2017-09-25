@@ -19,7 +19,7 @@ constexpr auto bitsCount(Container::Array<bool,N> const& tab)
 }
 
 template<unsigned N>
-constexpr auto usedArgumentsMap(ParserState<N> const& ps)
+constexpr auto usedArgumentsMap(ParsedFormat<N> const& ps)
 {
   Container::Array<bool,N> tab{};
   tab.fill(false);
@@ -30,7 +30,7 @@ constexpr auto usedArgumentsMap(ParserState<N> const& ps)
 }
 
 template<unsigned N>
-constexpr auto argumentsCount(ParserState<N> const& ps)
+constexpr auto argumentsCount(ParsedFormat<N> const& ps)
 {
   const auto tab = usedArgumentsMap(ps);
   return bitsCount(tab);

@@ -1,5 +1,5 @@
 #pragma once
-#include "ParserState.hpp"
+#include "ParsedFormat.hpp"
 #include "common.hpp"
 #include "But/Mpl/parse.hpp"
 
@@ -106,7 +106,7 @@ constexpr auto parseString(Segment& st, char const* fmt)
 
 
 template<unsigned N>
-constexpr auto parseImpl(ParserState<N>&& ps, char const* fmt)
+constexpr auto parseImpl(ParsedFormat<N>&& ps, char const* fmt)
 {
   while( not isEos(*fmt) )
   {
@@ -126,7 +126,7 @@ constexpr auto parseImpl(ParserState<N>&& ps, char const* fmt)
 template<unsigned N>
 constexpr auto parse(char const* fmt)
 {
-  return parseImpl( ParserState<N>{}, fmt );
+  return parseImpl( ParsedFormat<N>{}, fmt );
 }
 
 }

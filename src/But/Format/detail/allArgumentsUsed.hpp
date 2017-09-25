@@ -1,6 +1,6 @@
 #pragma once
 #include "But/Container/Array.hpp"
-#include "ParserState.hpp"
+#include "ParsedFormat.hpp"
 #include "lastArgumentNumber.hpp"
 
 namespace But
@@ -11,7 +11,7 @@ namespace detail
 {
 
 template<unsigned N>
-constexpr auto allArgumentsUsed(ParserState<N> const& ps)
+constexpr auto allArgumentsUsed(ParsedFormat<N> const& ps)
 {
   auto hasArgs = false;
   Container::Array<bool,N> used{};

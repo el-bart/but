@@ -117,7 +117,7 @@ private:
     BUT_ASSERT(!"missing type handle");
   }
 
-  const detail::ParserState<MaxSegments> ps_;
+  const detail::ParsedFormat<MaxSegments> ps_;
   char const* format_;
 };
 
