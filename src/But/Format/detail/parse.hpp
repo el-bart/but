@@ -106,33 +106,33 @@ inline constexpr auto parseString(Segment& st, char const* fmt)
 }
 
 
-template<typename T>
-constexpr auto parseImpl(T&& ps, char const* fmt)
+template<typename Pf>
+constexpr auto parse(Pf&& pf, char const* fmt)
 {
   while( not isEos(*fmt) )
   {
-    throwOnInvalidSyntax( ps.segments_.max_size() == ps.segments_.size(), "format too long for a declared states count - expected end", fmt );
+    throwOnInvalidSyntax( pf.segments_.max_size() == pf.segments_.size(), "format too long for a declared states count - expected end", fmt );
     Segment st;
     if( isVariableBegin(*fmt) )
       fmt = parseVariable(st, fmt);
     else
       fmt = parseString(st, fmt);
 
-    ps.segments_.push_back( std::move(st) );
+    pf.segments_.push_back( std::move(st) );
   }
-  return ps;
+  return pf;
 }
 
 
 template<unsigned N>
-constexpr auto parse(char const* fmt)
+constexpr auto parseCt(char const* fmt)
 {
-  return parseImpl( ParsedFormat<N>{}, fmt );
+  return parse( ParsedFormat<N>{}, fmt );
 }
 
-inline auto parse(char const* fmt)
+inline auto parseRt(char const* fmt)
 {
-  return parseImpl( ParsedFormat<0, std::vector<Segment>>{}, fmt );
+  return parse( ParsedFormat<0, std::vector<Segment>>{}, fmt );
 }
 
 }

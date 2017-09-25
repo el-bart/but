@@ -22,13 +22,13 @@ constexpr auto argumentsCountWithChecksImpl(Ps const& ps)
 template<unsigned N>
 constexpr auto argumentsCountWithChecks(char const* fmt)
 {
-  const auto ps = parse<N>(fmt);
+  const auto ps = parseCt<N>(fmt);
   return argumentsCountWithChecksImpl(ps);
 }
 
 inline auto argumentsCountWithChecks(char const* fmt)
 {
-  const auto ps = parse(fmt);
+  const auto ps = parseRt(fmt);
   return argumentsCountWithChecksImpl(ps);
 }
 

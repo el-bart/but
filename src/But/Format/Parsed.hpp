@@ -37,7 +37,7 @@ public:
    *  @note all numbers are 0-based (i.e. 1st argument has index 0).
    */
   constexpr explicit Parsed(char const* format):
-    ps_{ detail::parse<MaxSegments>(format) },
+    ps_{ detail::parseCt<MaxSegments>(format) },
     format_{format}
   { }
 
