@@ -26,8 +26,8 @@ TEST_F(ButLogBackendFieldInfo, ExplicitlyProvidedTypeName)
 
 
 struct MyCustomType { };
-std::string toType(MyCustomType const&) { return "foo-bar!"; }
-std::string toValue(MyCustomType const&) { return "custom type worked! :D"; }
+auto toType(MyCustomType const&) { return Type{"foo-bar!"}; }
+auto toValue(MyCustomType const&) { return Value{"custom type worked! :D"}; }
 
 TEST_F(ButLogBackendFieldInfo, CustomizationPoints)
 {
@@ -43,8 +43,8 @@ TEST_F(ButLogBackendFieldInfo, CustomizationPoints)
 
 
 struct AnotherCustomType { };
-std::string toValue(AnotherCustomType const&) { return "whatever"; }
-std::string toType(AnotherCustomType const&) { return "blabla-type"; }
+auto toType(AnotherCustomType const&) { return Type{"blabla-type"}; }
+auto toValue(AnotherCustomType const&) { return Value{"whatever"}; }
 
 TEST_F(ButLogBackendFieldInfo, AutoGettingTypeNames)
 {
