@@ -3,7 +3,6 @@
  */
 #pragma once
 #include "Type.hpp"
-#include <boost/type_index.hpp>
 
 namespace But
 {
