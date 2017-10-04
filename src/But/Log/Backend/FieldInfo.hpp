@@ -49,6 +49,24 @@ public:
   Type type() && { return std::move(type_); }
   Value value() && { return boost::get<Value>( std::move(variant_) ); }
 
+  /** @brief visitor takes type and value parametrs, like this:
+   *  <code>
+   *    struct Visitor
+   *    {
+   *      void operator()(Type const& t, Value const& v)
+   *      {
+   *        cout << '/' << t << '=' << v;
+   *      }
+   *      void operator()(Type const& t, std::vector<FieldInfo> const& fis)
+   *      {
+   *        cout << '/' << t << "=[";
+   *        for(auto& e: fis)
+   *          e.visit(*this);
+   *        ss_ << "]";
+   *      }
+   *    };
+   *  </code>
+   */
   template<typename F>
   void visit(F&& f) { boost::apply_visitor( [&](auto& e) { f(type_, e); }, variant_ ); }
   template<typename F>
