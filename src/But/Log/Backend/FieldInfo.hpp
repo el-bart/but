@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <boost/variant.hpp>
 #include "toValue.hpp"
 #include "toType.hpp"
 
@@ -13,9 +15,9 @@ class FieldInfo final
 {
 public:
   template<typename T>
-  explicit FieldInfo(T const& value):
+  explicit FieldInfo(T&& value):
     type_{ toType(value) },
-    value_{ toValue(value) }
+    variant_{ toValue( std::forward<T>(value) ) }
   { }
 
   FieldInfo(Value const& value) = delete;
@@ -23,7 +25,11 @@ public:
 
   FieldInfo(Type type, Value value):
     type_{ std::move(type) },
-    value_{ std::move(value) }
+    variant_{ std::move(value) }
+  { }
+  FieldInfo(Type type, std::vector<FieldInfo> fi):
+    type_{ std::move(type) },
+    variant_{ std::move(fi) }
   { }
 
   FieldInfo(FieldInfo&&) = default;
@@ -34,18 +40,24 @@ public:
 
   bool operator==(FieldInfo const& other) const
   {
-    return type_ == other.type_ && value_ == other.value_;
+    return type_ == other.type_ && variant_ == other.variant_;
   }
 
   Type const& type() const & { return type_; }
-  Value const& value() const & { return value_; }
+  Value const& value() const & { return boost::get<Value>(variant_); }
 
   Type type() && { return std::move(type_); }
-  Value value() && { return std::move(value_); }
+  Value value() && { return boost::get<Value>( std::move(variant_) ); }
+
+  template<typename F>
+  void visit(F&& f) { boost::apply_visitor( [&](auto& e) { f(type_, e); }, variant_ ); }
+  template<typename F>
+  void visit(F&& f) const { boost::apply_visitor( [&](auto const& e) { f(type_, e); }, variant_ ); }
 
 private:
   Type type_;
-  Value value_;
+  // TODO: std::variant<> when C++17 is here
+  boost::variant<Value, std::vector<FieldInfo>> variant_;
 };
 
 }
