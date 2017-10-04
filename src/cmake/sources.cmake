@@ -9,16 +9,16 @@ set(SRC_DIRS
     But
     But/detail
     But/Container
-    But/Format
-    But/Format/detail
-    But/Log
+#    But/Format
+#    But/Format/detail
+#    But/Log
     But/Log/Backend
     But/Log/Backend/detail
-    But/Log/Destination
-    But/Log/Destination/Common
-    But/Log/Destination/detail
-    But/Log/Field
-    But/Log/Localization
+#    But/Log/Destination
+#    But/Log/Destination/Common
+#    But/Log/Destination/detail
+#    But/Log/Field
+#    But/Log/Localization
     But/Mpl
     But/Mpl/detail
     But/System

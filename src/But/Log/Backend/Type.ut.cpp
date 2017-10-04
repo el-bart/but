@@ -1,46 +1,45 @@
 #include "gtest/gtest.h"
-#include "toType.hpp"
+#include "Type.hpp"
 
 using But::Log::Backend::Type;
-using But::Log::Backend::toType;
 
 namespace
 {
 
-struct ButLogBackendToType: public testing::Test
+struct ButLogBackendType: public testing::Test
 {
   template<typename T>
   void checkNum(std::string const& exp)
   {
     T t{0};
-    EXPECT_EQ( toType(t), Type{exp} );
+    EXPECT_EQ( Type::of(t), Type{exp} );
   }
 
   template<typename T>
   void checkCharPtr(std::string const& exp)
   {
     T t{nullptr};
-    EXPECT_EQ( toType(t), Type{exp} );
+    EXPECT_EQ( Type::of(t), Type{exp} );
   }
 
   template<typename T>
   void checkCharArray(std::string const& exp)
   {
     T t[42] = "";
-    EXPECT_EQ( toType(t), Type{exp} );
+    EXPECT_EQ( Type::of(t), Type{exp} );
   }
 
   template<typename T>
   void checkStr(std::string const& exp)
   {
     T t{};
-    EXPECT_EQ( toType(t), Type{exp} );
+    EXPECT_EQ( Type::of(t), Type{exp} );
   }
 };
 
 
 
-TEST_F(ButLogBackendToType, CheckBasicValues)
+TEST_F(ButLogBackendType, CheckBasicValues)
 {
   checkNum<char>("string");
   checkNum<short>("int");
@@ -60,7 +59,7 @@ TEST_F(ButLogBackendToType, CheckBasicValues)
 }
 
 
-TEST_F(ButLogBackendToType, AllCstringPointerTypesAreStdString)
+TEST_F(ButLogBackendType, AllCstringPointerTypesAreStdString)
 {
   checkCharPtr<char                *               >("string");
   checkCharPtr<char const          *               >("string");
@@ -84,7 +83,7 @@ TEST_F(ButLogBackendToType, AllCstringPointerTypesAreStdString)
 }
 
 
-TEST_F(ButLogBackendToType, AllCharArrayTypesAreStdString)
+TEST_F(ButLogBackendType, AllCharArrayTypesAreStdString)
 {
   checkCharArray<char               >("string");
   checkCharArray<char const         >("string");
@@ -93,16 +92,22 @@ TEST_F(ButLogBackendToType, AllCharArrayTypesAreStdString)
 }
 
 
-TEST_F(ButLogBackendToType, StringIsSimplified)
+TEST_F(ButLogBackendType, StringIsSimplified)
 {
   checkStr<std::string> ("string");
   checkStr<std::wstring>("string");
 }
 
 
-TEST_F(ButLogBackendToType, BooleanValue)
+TEST_F(ButLogBackendType, BooleanValue)
 {
   checkStr<bool>("bool");
+}
+
+
+TEST_F(ButLogBackendType, ToString)
+{
+  EXPECT_EQ( "bool", Type::of(true).str() );
 }
 
 }

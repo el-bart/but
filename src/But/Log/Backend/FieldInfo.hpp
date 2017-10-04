@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <boost/variant.hpp>
-#include "toValue.hpp"
-#include "toType.hpp"
+#include "Type.hpp"
+#include "Value.hpp"
 
 namespace But
 {
@@ -16,8 +16,8 @@ class FieldInfo final
 public:
   template<typename T>
   explicit FieldInfo(T&& value):
-    type_{ toType(value) },
-    variant_{ toValue( std::forward<T>(value) ) }
+    type_{ Type::of(value) },
+    variant_{ Value{ std::forward<T>(value) } }
   { }
 
   FieldInfo(Value const& value) = delete;
@@ -38,16 +38,14 @@ public:
   FieldInfo(FieldInfo const&) = default;
   FieldInfo& operator=(FieldInfo const&) = default;
 
-  bool operator==(FieldInfo const& other) const
-  {
-    return type_ == other.type_ && variant_ == other.variant_;
-  }
+  bool operator==(FieldInfo const& other) const { return type_ == other.type_ && variant_ == other.variant_; }
+  bool operator!=(FieldInfo const& other) const { return not ( *this == other ); }
 
   Type const& type() const & { return type_; }
-  Value const& value() const & { return boost::get<Value>(variant_); }
+  Value const& value() const & { return boost::get<Value>(variant_); }  // TODO: to be removed...
 
   Type type() && { return std::move(type_); }
-  Value value() && { return boost::get<Value>( std::move(variant_) ); }
+  Value value() && { return boost::get<Value>( std::move(variant_) ); }  // TODO: to be removed...
 
   /** @brief visitor takes type and value parametrs, like this:
    *  <code>
