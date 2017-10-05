@@ -2,8 +2,12 @@
 #include <sstream>
 #include "gtest/gtest.h"
 #include "toJsonStream.hpp"
+#include "But/Log/Field/FormattedString.hpp"
+#include "But/Log/Backend/toFieldInfo.hpp"
 
-using But::Log::Backend::Entry;
+using But::Log::Backend::Type;
+using But::Log::Backend::FieldInfo;
+using But::Log::Backend::toFieldInfo;
 using But::Log::Destination::Common::toJsonStream;
 
 namespace
@@ -11,21 +15,12 @@ namespace
 
 struct ButLogDestinationCommonToJsonStream: public testing::Test
 {
-  void addEntry(Entry&) const { }
-
-  template<typename Head, typename ...Tail>
-  void addEntry(Entry& e, Head const& head, Tail const& ...tail) const
-  {
-    e.emplace_back(head);
-    addEntry(e, tail...);
-  }
+  void addFieldInfo(FieldInfo&) const { }
 
   template<typename ...Args>
-  auto toEntry(const Args... args) const
+  auto makeFieldInfo(const Args... args) const
   {
-    Entry e;
-    addEntry(e, args...);
-    return e;
+    return FieldInfo{ Type{"tmp"}, std::vector<FieldInfo>{ toFieldInfo(args)... } };
   }
 
 
@@ -33,7 +28,7 @@ struct ButLogDestinationCommonToJsonStream: public testing::Test
   auto testType(std::string const& typeName, const T t, std::string const& expectedValue) const
   {
     std::stringstream ss;
-    toJsonStream( ss, toEntry(t) );
+    toJsonStream( ss, toFieldInfo(t) );
     const auto expected = "[{\"" + typeName + "\":" + expectedValue + "}]";
     const auto read = ss.str();
     EXPECT_EQ(expected, read);
@@ -52,15 +47,15 @@ struct ButLogDestinationCommonToJsonStream: public testing::Test
 
 TEST_F(ButLogDestinationCommonToJsonStream, EscapingNonprintableCharacters)
 {
-  toJsonStream( ss_, toEntry("A\nB\rC") );
+  toJsonStream( ss_, toFieldInfo("A\nB\rC") );
   EXPECT_EQ( "[{\"string\":\"A\\nB\\rC\"}]", ss_.str() );
 }
 
 
 TEST_F(ButLogDestinationCommonToJsonStream, SomeLogs)
 {
-  toJsonStream( ss_, toEntry("answer", 42) );
-  toJsonStream( ss_, toEntry("foo", "bar") );
+  toJsonStream( ss_, makeFieldInfo("answer", 42) );
+  toJsonStream( ss_, makeFieldInfo("foo", "bar") );
 
   EXPECT_EQ( R"xx([{"string":"answer"},{"int":42}])xx"
              R"xx([{"string":"foo"},{"string":"bar"}])xx"
@@ -70,7 +65,7 @@ TEST_F(ButLogDestinationCommonToJsonStream, SomeLogs)
 
 TEST_F(ButLogDestinationCommonToJsonStream, SomeFormattedLog)
 {
-  toJsonStream( ss_, toEntry( But::Log::Field::FormattedString{"kszy"}, "answer", 42 ) );
+  toJsonStream( ss_, makeFieldInfo( But::Log::Field::FormattedString{"kszy"}, "answer", 42 ) );
   EXPECT_EQ( R"xx([{"But::Formatted":"kszy"},{"string":"answer"},{"int":42}])xx",
              ss_.str() );
 }

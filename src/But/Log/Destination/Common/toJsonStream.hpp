@@ -1,7 +1,6 @@
 #pragma once
 #include <iosfwd>
-#include "But/Log/Field/FormattedString.hpp"
-#include "But/Log/Backend/Entry.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -12,8 +11,7 @@ namespace Destination
 namespace Common
 {
 
-void toJsonStream(std::ostream& os, Backend::Entry const& entry);
-void toJsonStream(std::ostream& os, Field::FormattedString const& str, Backend::Entry const& entry);
+void toJsonStream(std::ostream& os, Backend::FieldInfo const& entry);
 
 }
 }
