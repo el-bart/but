@@ -1,32 +1,23 @@
 #include "gtest/gtest.h"
 #include "toJson.hpp"
+#include "But/Log/Backend/toFieldInfo.hpp"
 
 using json = nlohmann::json;
-using But::Log::Backend::Entry;
+using But::Log::Backend::Type;
+using But::Log::Backend::Value;
 using But::Log::Backend::FieldInfo;
+using But::Log::Backend::toFieldInfo;
 using But::Log::Destination::Common::toJson;
-using But::Log::Destination::Common::toJsonField;
 
 namespace
 {
 
 struct ButLogDestinationCommonToJson: public testing::Test
 {
-  void addEntry(Entry&) const { }
-
-  template<typename Head, typename ...Tail>
-  void addEntry(Entry& e, Head const& head, Tail const& ...tail) const
-  {
-    e.emplace_back(head);
-    addEntry(e, tail...);
-  }
-
   template<typename ...Args>
-  auto toEntry(const Args... args) const
+  auto makeFieldInfo(const Args... args) const
   {
-    Entry e;
-    addEntry(e, args...);
-    return e;
+    return FieldInfo{ Type{"test"}, { toFieldInfo(args)... } };
   }
 };
 
@@ -34,53 +25,74 @@ struct ButLogDestinationCommonToJson: public testing::Test
 TEST_F(ButLogDestinationCommonToJson, FromFieldInfo)
 {
   {
-    const auto f = toJsonField( FieldInfo{"text"} );
-    EXPECT_TRUE( f.is_object() );
-    EXPECT_TRUE( f["string"].is_string() );
-    EXPECT_EQ( "text", f["string"] );
+    const auto f = toJson( FieldInfo{"text"} );
+    EXPECT_TRUE( f.is_array() );
+    EXPECT_TRUE( f.at(0).at("string").is_string() );
+    EXPECT_EQ( "text", f.at(0).at("string") );
   }
   {
-    const auto f = toJsonField( FieldInfo{42} );
-    EXPECT_TRUE( f.is_object() );
-    EXPECT_TRUE( f["int"].is_number() );
-    EXPECT_EQ( 42, f["int"].get<int64_t>() );
+    const auto f = toJson( FieldInfo{42} );
+    EXPECT_TRUE( f.is_array() );
+    EXPECT_TRUE( f.at(0).at("int").is_number() );
+    EXPECT_EQ( 42, f.at(0).at("int").get<int64_t>() );
   }
   {
-    const auto f = toJsonField( FieldInfo{42u} );
-    EXPECT_TRUE( f.is_object() );
-    EXPECT_TRUE( f["unsigned int"].is_number() );
-    EXPECT_EQ( 42u, f["unsigned int"].get<uint64_t>() );
+    const auto f = toJson( FieldInfo{42u} );
+    EXPECT_TRUE( f.is_array() );
+    EXPECT_TRUE( f.at(0).at("unsigned int").is_number() );
+    EXPECT_EQ( 42u, f.at(0).at("unsigned int").get<uint64_t>() );
   }
   {
-    const auto f = toJsonField( FieldInfo{4.2} );
-    EXPECT_TRUE( f.is_object() );
-    EXPECT_TRUE( f["double"].is_number() );
-    EXPECT_EQ( 4.2, f["double"].get<double>() );
+    const auto f = toJson( FieldInfo{4.2} );
+    EXPECT_TRUE( f.is_array() );
+    EXPECT_TRUE( f.at(0).at("double").is_number() );
+    EXPECT_EQ( 4.2, f.at(0).at("double").get<double>() );
   }
   {
-    const auto f = toJsonField( FieldInfo{true} );
-    EXPECT_TRUE( f.is_object() );
-    EXPECT_TRUE( f["bool"].is_boolean() );
-    EXPECT_EQ( true, f["bool"].get<bool>() );
+    const auto f = toJson( FieldInfo{true} );
+    EXPECT_TRUE( f.is_array() );
+    EXPECT_TRUE( f.at(0).at("bool").is_boolean() );
+    EXPECT_EQ( true, f.at(0).at("bool").get<bool>() );
   }
 }
 
 
-TEST_F(ButLogDestinationCommonToJson, ExplicitOutputTypeApi)
+TEST_F(ButLogDestinationCommonToJson, CheckingNonUniqueTypes)
 {
-  auto out = nlohmann::json::array();
-  toJson( out, toEntry(42, "answer") );
-  EXPECT_EQ( 42, out.at(0)["int"].get<int>() );
-  EXPECT_EQ( "answer", out.at(1)["string"] );
+  const auto f = toJson( FieldInfo{ Type{"whatever"}, { FieldInfo{"foo"}, FieldInfo{"bar"} } } );
+  EXPECT_TRUE( f.is_array() );
+  EXPECT_EQ( "foo", f.at(0).at("string").get<std::string>() );
+  EXPECT_EQ( "bar", f.at(1).at("string").get<std::string>() );
 }
 
 
-TEST_F(ButLogDestinationCommonToJson, AutoOutputTypeApi)
+TEST_F(ButLogDestinationCommonToJson, ConvertingStructure)
 {
-  const auto out = toJson( toEntry(42, "answer") );
-  ASSERT_TRUE( out.is_array() );
-  EXPECT_EQ( 42, out.at(0)["int"].get<int>() );
-  EXPECT_EQ( "answer", out.at(1)["string"] );
+  const auto out = toJson( makeFieldInfo(42, "answer") );
+  EXPECT_EQ( 42, out.at(0).at("int").get<int64_t>() );
+  EXPECT_EQ( "answer", out.at(1).at("string") );
+}
+
+
+struct Nested
+{
+  int a_;
+  std::string b_;
+};
+
+auto toFieldInfo(Nested const& n)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Type{"Nested"}, { toFieldInfo(n.a_), toFieldInfo(n.b_) } };
+}
+
+
+TEST_F(ButLogDestinationCommonToJson, ConvertingNsetedStructure)
+{
+  const auto out = toJson( makeFieldInfo( Nested{42, "answer"} ) );
+  const auto& internal = out.at(0).at("Nested");
+  EXPECT_EQ( 42, internal.at("int").get<int64_t>() );
+  EXPECT_EQ( "answer", internal.at("string") );
 }
 
 }

@@ -11,9 +11,9 @@ namespace Destination
 namespace Common
 {
 
-nlohmann::json toJsonField(Backend::FieldInfo const& fi);
-void toJson(nlohmann::json& out, Backend::Entry const& entry);
-nlohmann::json toJson(Backend::Entry const& entry);
+/** @brief returns JSON collection of top-level elements. internal elements are kept as JSON objects.
+ */
+nlohmann::json toJson(Backend::FieldInfo const& fi);
 
 }
 }

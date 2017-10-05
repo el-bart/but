@@ -15,43 +15,68 @@ namespace Common
 
 namespace
 {
-struct FieldAddVisitor final
+struct ValueVisitor final
 {
   template<typename T>
   void operator()(T const& t)
   {
-    assert(field_);
     assert(type_);
+    assert(field_);
     (*field_)[ type_->str() ] = t;
   }
 
-  Backend::Type const* type_;
-  json* field_;
+  Backend::Type const* type_{nullptr};
+  json* field_{nullptr};
+};
+
+
+struct NestedFieldInfoVisitor final
+{
+  void operator()(Backend::Type const& t, Backend::Value const& v)
+  {
+    ValueVisitor vv{&t, &field_};
+    v.visit(vv);
+  }
+  void operator()(Backend::Type const& t, std::vector<Backend::FieldInfo>const& fis)
+  {
+    NestedFieldInfoVisitor fiv;
+    for(auto& e: fis)
+      e.visit(fiv);
+    field_[ t.str() ] = std::move(fiv.field_);
+  }
+
+  json field_;
+};
+
+struct FieldInfoVisitor final
+{
+  void operator()(Backend::Type const& t, Backend::Value const& v)
+  {
+    json tmp;
+    ValueVisitor vv{&t, &tmp};
+    v.visit(vv);
+    field_.push_back( std::move(tmp) );
+  }
+  void operator()(Backend::Type const& /*t*/, std::vector<Backend::FieldInfo>const& fis)
+  {
+    for(auto& e: fis)
+    {
+      NestedFieldInfoVisitor fiv;
+      e.visit(fiv);
+      field_.push_back( std::move(fiv.field_) );
+    }
+  }
+
+  json field_ = json::array();
 };
 }
 
 
-nlohmann::json toJsonField(Backend::FieldInfo const& fi)
+nlohmann::json toJson(Backend::FieldInfo const& fi)
 {
-  json field;
-  FieldAddVisitor fav{ &fi.type(), &field };
-  fi.value().visit(fav);
-  return field;
-}
-
-
-void toJson(json& out, Backend::Entry const& entry)
-{
-  for(auto& e: entry)
-    out.push_back( toJsonField(e) );
-}
-
-
-nlohmann::json toJson(Backend::Entry const& entry)
-{
-  auto out = nlohmann::json::array();
-  toJson(out, entry);
-  return out;
+  FieldInfoVisitor fiv;
+  fi.visit(fiv);
+  return std::move(fiv.field_);
 }
 
 }
