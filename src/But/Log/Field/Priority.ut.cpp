@@ -12,29 +12,28 @@ struct ButLogFieldPriority: public testing::Test
 { };
 
 
-TEST_F(ButLogFieldPriority, ConvertingToString)
-{
-  EXPECT_EQ( toValue(Priority::debug).get<std::string>(),   "debug" );
-  EXPECT_EQ( toValue(Priority::info).get<std::string>(),    "info" );
-  EXPECT_EQ( toValue(Priority::warning).get<std::string>(), "warning" );
-  EXPECT_EQ( toValue(Priority::error).get<std::string>(),   "error" );
-}
-
-
-TEST_F(ButLogFieldPriority, ConvertingToStringOfConstantLength)
-{
-  EXPECT_EQ( toValueConstLen(Priority::debug).get<std::string>(),   "debug  " );
-  EXPECT_EQ( toValueConstLen(Priority::info).get<std::string>(),    "info   " );
-  EXPECT_EQ( toValueConstLen(Priority::warning).get<std::string>(), "warning" );
-  EXPECT_EQ( toValueConstLen(Priority::error).get<std::string>(),   "error  " );
-}
-
-
 TEST_F(ButLogFieldPriority, ConvertingToFieldInfo)
 {
-  const auto fi = But::Log::Backend::FieldInfo{Priority::info};
-  EXPECT_EQ( fi.type(), Type{"But::Priority"} );
-  EXPECT_EQ( fi.value().get<std::string>(), "info" );
+  {
+    const auto fi = toFieldInfo(Priority::debug);
+    EXPECT_EQ( Type{"But::Priority"}, fi.type() );
+    EXPECT_EQ( "debug", fi.value().get<std::string>() );
+  }
+  {
+    const auto fi = toFieldInfo(Priority::info);
+    EXPECT_EQ( Type{"But::Priority"}, fi.type() );
+    EXPECT_EQ( "info", fi.value().get<std::string>() );
+  }
+  {
+    const auto fi = toFieldInfo(Priority::warning);
+    EXPECT_EQ( Type{"But::Priority"}, fi.type() );
+    EXPECT_EQ( "warning", fi.value().get<std::string>() );
+  }
+  {
+    const auto fi = toFieldInfo(Priority::error);
+    EXPECT_EQ( Type{"But::Priority"}, fi.type() );
+    EXPECT_EQ( "error", fi.value().get<std::string>() );
+  }
 }
 
 }

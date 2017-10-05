@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 #include "ThreadNo.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
 #include "But/Threading/JoiningThread.hpp"
 
 using But::Log::Backend::Type;
+using But::Log::Backend::Value;
 using But::Log::Field::ThreadNo;
 
 namespace
@@ -13,18 +13,12 @@ struct ButLogFieldThreadNo: public testing::Test
 { };
 
 
-TEST_F(ButLogFieldThreadNo, ConvertingToNumber)
-{
-  EXPECT_GE( 1u, toValue( ThreadNo{} ).get<uint64_t>() );
-}
-
-
 TEST_F(ButLogFieldThreadNo, ConvertingToFieldInfo)
 {
   const auto tno = ThreadNo{};
-  const auto fi = But::Log::Backend::FieldInfo{tno};
-  EXPECT_EQ( fi.type(), Type{"But::ThreadNo"} );
-  EXPECT_EQ( toValue(tno), fi.value() );
+  const auto fi = toFieldInfo(tno);
+  EXPECT_EQ( Type{"But::ThreadNo"}, fi.type() );
+  EXPECT_EQ( Value{tno.value_}, fi.value() );
 }
 
 

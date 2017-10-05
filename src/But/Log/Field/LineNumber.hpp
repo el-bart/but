@@ -1,6 +1,5 @@
 #pragma once
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -15,8 +14,7 @@ struct LineNumber final
 };
 
 
-inline auto toType(LineNumber const&) { return Backend::Type{"But::LineNumber"}; }
-inline auto toValue(const LineNumber ln) { return Backend::Value{ln.value_}; }
+inline auto toFieldInfo(const LineNumber ln) { return Backend::FieldInfo{ Backend::Type{"But::LineNumber"}, Backend::Value{ln.value_} }; }
 
 }
 }

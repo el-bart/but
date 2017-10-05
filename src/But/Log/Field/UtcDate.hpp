@@ -1,7 +1,6 @@
 #pragma once
 #include "UtcIsoDateTime.hpp"
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -20,8 +19,7 @@ struct UtcDate final
 };
 
 
-inline auto toType(UtcDate const&) { return Backend::Type{"But::UtcDate"}; }
-inline auto toValue(UtcDate const& d) { return Backend::Value{ d.timestamp_.date() }; }
+inline auto toFieldInfo(UtcDate const& d) { return Backend::FieldInfo{ Backend::Type{"But::UtcDate"}, Backend::Value{ d.timestamp_.date() } }; }
 
 }
 }

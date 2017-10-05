@@ -15,8 +15,8 @@ struct ButLogFieldTimestamp: public testing::Test
 TEST_F(ButLogFieldTimestamp, ExplicitlyProvidedTimestamp)
 {
   const auto tp = Timestamp::Clock::time_point{} + std::chrono::seconds{42};
-  EXPECT_EQ( 42.0, toValue( Timestamp{tp} ).get<double>() );
-  EXPECT_EQ( 42.000000997, toValue( Timestamp{tp + std::chrono::nanoseconds{997}} ).get<double>() );
+  EXPECT_EQ( 42.0, toFieldInfo( Timestamp{tp} ).value().get<double>() );
+  EXPECT_EQ( 42.000000997, toFieldInfo( Timestamp{tp + std::chrono::nanoseconds{997}} ).value().get<double>() );
 }
 
 
@@ -33,7 +33,7 @@ TEST_F(ButLogFieldTimestamp, AutoObtainingCurrentTimestamp)
 TEST_F(ButLogFieldTimestamp, ConvertingToFieldInfo)
 {
   const auto tp = Timestamp::Clock::time_point{} + std::chrono::seconds{666};
-  const auto fi = But::Log::Backend::FieldInfo{ Timestamp{tp} };
+  const auto fi = toFieldInfo( Timestamp{tp} );
   EXPECT_EQ( Type{"But::Timestamp"}, fi.type() );
   EXPECT_EQ( 666.0, fi.value().get<double>() );
 }

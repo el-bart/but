@@ -2,8 +2,7 @@
 #include <string>
 #include <ctime>
 #include "ConversionError.hpp"
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -24,8 +23,10 @@ struct UtcIsoDateTime final
 };
 
 
-inline auto toType(UtcIsoDateTime const&) { return Backend::Type{"But::UtcIsoDT"}; }
-inline auto toValue(UtcIsoDateTime const& d) { return Backend::Value{ d.date() + "T" + d.time() + "Z" }; }
+inline auto toFieldInfo(const UtcIsoDateTime uits)
+{
+  return Backend::FieldInfo{ Backend::Type{"But::UtcIsoDT"}, Backend::Value{ uits.date() + "T" + uits.time() + "Z" } };
+}
 
 }
 }

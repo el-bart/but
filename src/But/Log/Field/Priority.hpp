@@ -1,6 +1,5 @@
 #pragma once
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -17,9 +16,7 @@ enum class Priority
   error   = 3
 };
 
-inline auto toType(Priority const&) { return Backend::Type{"But::Priority"}; }
-Backend::Value const& toValue(Priority pri);
-Backend::Value const& toValueConstLen(Priority pri);
+Backend::FieldInfo toFieldInfo(Priority pri);
 
 }
 }

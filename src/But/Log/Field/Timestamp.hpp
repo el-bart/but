@@ -1,7 +1,6 @@
 #pragma once
 #include <chrono>
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -23,8 +22,7 @@ private:
 };
 
 
-inline auto toType(Timestamp const&) { return Backend::Type{"But::Timestamp"}; }
-Backend::Value toValue(Timestamp uts);
+Backend::FieldInfo toFieldInfo(Timestamp uts);
 
 }
 }

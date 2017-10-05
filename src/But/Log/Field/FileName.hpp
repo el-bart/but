@@ -1,7 +1,6 @@
 #pragma once
 #include <boost/filesystem/path.hpp>
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -16,8 +15,10 @@ struct FileName final
 };
 
 
-inline auto toType(FileName const&) { return Backend::Type{"But::FileName"}; }
-inline auto toValue(FileName const& fn) { return Backend::Value{ fn.value_.string() }; }
+inline auto toFieldInfo(FileName const& fn)
+{
+  return Backend::FieldInfo{ Backend::Type{"But::FileName"}, Backend::Value{ fn.value_.string() } };
+}
 
 }
 }

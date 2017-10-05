@@ -1,7 +1,6 @@
 #pragma once
 #include <thread>
-#include "But/Log/Backend/Type.hpp"
-#include "But/Log/Backend/Value.hpp"
+#include "But/Log/Backend/FieldInfo.hpp"
 
 namespace But
 {
@@ -16,8 +15,7 @@ struct ThreadNo final
   uint64_t value_;
 };
 
-inline auto toType(ThreadNo const&) { return Backend::Type{"But::ThreadNo"}; }
-inline auto toValue(ThreadNo const& tno) { return Backend::Value{tno.value_}; }
+inline auto toFieldInfo(const ThreadNo tno) { return Backend::FieldInfo{ Backend::Type{"But::ThreadNo"}, Backend::Value{tno.value_} }; }
 
 }
 }

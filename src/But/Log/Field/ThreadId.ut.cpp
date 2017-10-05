@@ -1,6 +1,6 @@
+#include <sstream>
 #include "gtest/gtest.h"
 #include "ThreadId.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
 #include "But/Threading/JoiningThread.hpp"
 
 using But::Log::Backend::Type;
@@ -13,18 +13,14 @@ struct ButLogFieldThreadId: public testing::Test
 { };
 
 
-TEST_F(ButLogFieldThreadId, ConvertingToString)
-{
-  EXPECT_GT( toValue( ThreadId{} ).get<std::string>().length(), 4u );
-}
-
-
 TEST_F(ButLogFieldThreadId, ConvertingToFieldInfo)
 {
   const auto tid = ThreadId{};
-  const auto fi = But::Log::Backend::FieldInfo{tid};
-  EXPECT_EQ( fi.type(), Type{"But::ThreadId"} );
-  EXPECT_EQ( toValue(tid), fi.value() );
+  const auto fi = toFieldInfo(tid);
+  EXPECT_EQ( Type{"But::ThreadId"}, fi.type() );
+  std::stringstream ss;
+  ss << tid.value_;
+  EXPECT_EQ( ss.str(), fi.value().get<std::string>() );
 }
 
 

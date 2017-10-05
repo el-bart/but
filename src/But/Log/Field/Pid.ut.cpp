@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "Pid.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
 
 using But::Log::Backend::Type;
 using But::Log::Field::Pid;
@@ -12,18 +11,12 @@ struct ButLogFieldPid: public testing::Test
 { };
 
 
-TEST_F(ButLogFieldPid, ConvertingToString)
-{
-  EXPECT_EQ( getpid(), toValue( Pid{} ).get<int64_t>() );
-}
-
-
 TEST_F(ButLogFieldPid, ConvertingToFieldInfo)
 {
   const auto pid = Pid{};
-  const auto fi = But::Log::Backend::FieldInfo{pid};
+  const auto fi = toFieldInfo(pid);
   EXPECT_EQ( Type{"But::Pid"}, fi.type() );
-  EXPECT_EQ( toValue(pid), fi.value() );
+  EXPECT_EQ( pid.value_, fi.value().get<int64_t>() );
 }
 
 
