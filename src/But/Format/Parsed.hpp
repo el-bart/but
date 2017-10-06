@@ -5,8 +5,6 @@
 #include "detail/parse.hpp"
 #include "detail/argumentsCount.hpp"
 #include "detail/allArgumentsUsed.hpp"
-#include "But/Log/Backend/toValue.hpp"
-#include "But/Log/Backend/toType.hpp"
 #include "Invalid.hpp"
 #include "detail/StreamVisitor.hpp"
 
@@ -16,7 +14,7 @@ namespace Format
 {
 
 /** @brief represents a parsed format, from a given text with. set of parameters can be applied to get a final message.
- *  @note format of the parameter is defined by its type, via toValue() function. it
+ *  @note format of the parameter is defined by its type, via toFieldInfo() function. it
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
  */
@@ -29,7 +27,7 @@ public:
    *          $N - expands to N-th argument.
    *          ${N} - the same as $N.
    *          ${N#some text} - the same as $N, but allowing some textual description along (useful for translations!).
-   *          ${TN} - prints type of N-th argument, using toType() function and ADL.
+   *          ${TN} - prints type of N-th argument, using toFieldInfo().type() function and ADL.
    *          ${TN#some text} - the same as ${TN}, but allowing some textual description along (useful for translations!).
    *          ${VN} - the same as $N.
    *          ${VN#some text} - the same as $N, but allowing some textual description along (useful for translations!).
@@ -81,22 +79,32 @@ private:
   }
 
   template<typename ...Args>
-  void streamArgumentType(std::ostream& os, const size_t pos, Args const& ...args) const
+  void streamArgumentType(std::ostream& os, const size_t pos, Args const& .../*args*/) const
   {
+    // TODO....
+    (void)os;
+    (void)pos;
+    /*
     auto proc = [&os](auto& e) {
       using Log::Backend::toType;
       os << toType(e);
     };
     processArgument(proc,  pos, args... );
+    */
   }
   template<typename ...Args>
-  void streamArgumentValue(std::ostream& os, const size_t pos, Args const& ...args) const
+  void streamArgumentValue(std::ostream& os, const size_t pos, Args const& .../*args*/) const
   {
+    // TODO....
+    (void)os;
+    (void)pos;
+    /*
     auto proc = [&os](auto& e) {
       using Log::Backend::toValue;
       toValue(e).visit( detail::StreamVisitor{&os} );
     };
     processArgument( proc,  pos, args... );
+    */
   }
 
 
