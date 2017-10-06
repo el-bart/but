@@ -5,10 +5,6 @@
 #include "Destination/Foreign.hpp"
 
 using But::Log::Proxy;
-using But::Log::Destination::Foreign;
-using But::Log::Backend::Entry;
-using But::Log::Backend::Value;
-using But::Log::Field::FormattedString;
 
 namespace
 {

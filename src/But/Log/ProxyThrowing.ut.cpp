@@ -6,35 +6,45 @@
 
 using But::Log::ProxyThrowing;
 using But::Log::Destination::Foreign;
-using But::Log::Backend::Entry;
-using But::Log::Backend::Value;
 using But::Log::Backend::Type;
+using But::Log::Backend::Value;
+using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
 
 namespace
 {
 
+struct VisitStream final
+{
+  template<typename T>
+  void operator()(T const& t)
+  {
+    assert(ss_);
+    (*ss_) << t;
+  }
+
+  std::stringstream* ss_{nullptr};
+};
+
 struct TestForeignDestination final: public Foreign
 {
   explicit TestForeignDestination(std::stringstream& ss): ss_{&ss} { }
 
-  void logImpl(Entry const& e) override
+  void logImpl(FieldInfo const& fi) override
   {
-    for(auto& f: e)
-      (*ss_) << f.type() << "=" << f.value() << " ";
-  }
-
-  void logImpl(FormattedString const& str, Entry const& e) override
-  {
-    (*ss_) << str.value_ << " @@ ";
-    for(auto& f: e)
-      (*ss_) << f.type() << "=" << f.value() << " ";
+    for( auto& f: fi.array() )
+    {
+      (*ss_) << f.type() << "=";
+      VisitStream vs{ss_};
+      f.value().visit(vs);
+      (*ss_) << " ";
+    }
   }
 
   void reloadImpl() override { }
   void flushImpl() override { }
 
-  std::stringstream* ss_;
+  std::stringstream* ss_{nullptr};
 };
 
 
@@ -120,8 +130,7 @@ TEST_F(ButLogProxyThrowing, ForeignFormattedLogging)
 
 
 struct SomeThrowingType { };
-Value toValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
-Type toType(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
+FieldInfo toFieldInfo(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
 TEST_F(ButLogProxyThrowing, InternalExceptionsArePropagatedToCaller)
 {

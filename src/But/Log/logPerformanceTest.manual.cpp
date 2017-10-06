@@ -3,8 +3,6 @@
 #include "But/NotNull.hpp"
 #include "Proxy.hpp"
 #include "Destination/TextConsole.hpp"
-#include "Destination/NaiveConsole.hpp"
-#include "Destination/ForeignAdapter.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -21,8 +19,7 @@ constexpr auto g_logsCount = 100*1000;
 auto makeLogger()
 {
   auto dst = But::makeUniqueNN<But::Log::Destination::TextConsole>();
-  auto adapter = But::Log::Destination::ForeignAdapter<decltype(dst)>{ std::move(dst) };
-  return But::Log::Proxy<decltype(adapter)>{ std::move(adapter) };
+  return But::Log::Proxy<decltype(dst)>{ std::move(dst) };
 }
 
 
@@ -31,18 +28,6 @@ void testCout()
   for(auto i=0; i<g_logsCount; ++i)
   {
     std::cout << "hello, world\n";
-    //std::cout << "answer is " << 42 << "\n";
-    //std::cout << "some value = " << 4.2 << "\n";
-  }
-}
-
-void testNaiveCout()
-{
-  But::Log::Destination::NaiveConsole nc;
-  But::Log::Proxy<decltype(nc)> log{ std::move(nc) };
-  for(auto i=0; i<g_logsCount; ++i)
-  {
-    log.log("hello, world");
     //std::cout << "answer is " << 42 << "\n";
     //std::cout << "some value = " << 4.2 << "\n";
   }
@@ -95,7 +80,6 @@ int main(int argc, char** argv)
   switch(testCaseNumber)
   {
     case 0: testCout(); break;
-    case 1: testNaiveCout(); break;
     case 2: testSimpleString(lp); break;
     case 3: testStringAndInt(lp); break;
     case 4: testStringAndInts(lp); break;
