@@ -3,7 +3,7 @@
 
 using But::makeSharedNN;
 using But::NotNullShared;
-using But::Log::Backend::Entry;
+using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
 using But::Log::Destination::Foreign;
 using But::Log::Destination::MultiForeign;
@@ -14,15 +14,9 @@ namespace
 template<int N>
 struct TestDst final: public Foreign
 {
-  void logImpl(Entry const&) override
+  void logImpl(FieldInfo const&) override
   {
     ++logs_;
-    if(throws_)
-      throw std::runtime_error{"throwing, as requested"};
-  }
-  void logImpl(FormattedString const&, Entry const&) override
-  {
-    ++logsFmt_;
     if(throws_)
       throw std::runtime_error{"throwing, as requested"};
   }
@@ -43,7 +37,6 @@ struct TestDst final: public Foreign
 
   bool throws_{false};
   unsigned logs_{0};
-  unsigned logsFmt_{0};
   unsigned reloads_{0};
   unsigned flushes_{0};
 };
@@ -90,14 +83,14 @@ TEST_F(ButLogDestinationMultiForeign, PrintingGoesThroughAllDestinations)
 TEST_F(ButLogDestinationMultiForeign, FormattedPrintingGoesThroughAllDestinations)
 {
   multi_.log( FormattedString{"x"}, "one" );
-  EXPECT_EQ( 1u, td1_->logsFmt_ );
-  EXPECT_EQ( 1u, td2_->logsFmt_ );
-  EXPECT_EQ( 1u, td3_->logsFmt_ );
+  EXPECT_EQ( 1u, td1_->logs_ );
+  EXPECT_EQ( 1u, td2_->logs_ );
+  EXPECT_EQ( 1u, td3_->logs_ );
 
   multi_.log( FormattedString{"y"}, "two" );
-  EXPECT_EQ( 2u, td1_->logsFmt_ );
-  EXPECT_EQ( 2u, td2_->logsFmt_ );
-  EXPECT_EQ( 2u, td3_->logsFmt_ );
+  EXPECT_EQ( 2u, td1_->logs_ );
+  EXPECT_EQ( 2u, td2_->logs_ );
+  EXPECT_EQ( 2u, td3_->logs_ );
 }
 
 
@@ -113,9 +106,9 @@ TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyPrinterDoesNotStopProcessing
   EXPECT_EQ( 1u, td3_->logs_ );
 
   multi_.log( FormattedString{"$0"}, "one" );
-  EXPECT_EQ( 1u, td1_->logsFmt_ );
-  EXPECT_EQ( 1u, td2_->logsFmt_ );
-  EXPECT_EQ( 1u, td3_->logsFmt_ );
+  EXPECT_EQ( 2u, td1_->logs_ );
+  EXPECT_EQ( 2u, td2_->logs_ );
+  EXPECT_EQ( 2u, td3_->logs_ );
 }
 
 

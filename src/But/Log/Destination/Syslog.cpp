@@ -1,6 +1,6 @@
 #include "But/assert.hpp"
 #include <syslog.h>
-#include "But/Log/Backend/toValue.hpp"
+#include "But/Log/Field/Priority.hpp"
 #include "Syslog.hpp"
 #include "detail/StreamAndTrimVisitor.hpp"
 
@@ -28,44 +28,35 @@ auto toSyslogPriority(const Field::Priority p)
 
 auto stringToPriority(std::string const& str)
 {
-  if( str == toValue(Field::Priority::debug).get<std::string>() )   return Field::Priority::debug;
-  if( str == toValue(Field::Priority::info).get<std::string>() )    return Field::Priority::info;
-  if( str == toValue(Field::Priority::warning).get<std::string>() ) return Field::Priority::warning;
-  if( str == toValue(Field::Priority::error).get<std::string>() )   return Field::Priority::error;
+  if( str == toFieldInfo(Field::Priority::debug).value().get<std::string>() )   return Field::Priority::debug;
+  if( str == toFieldInfo(Field::Priority::info).value().get<std::string>() )    return Field::Priority::info;
+  if( str == toFieldInfo(Field::Priority::warning).value().get<std::string>() ) return Field::Priority::warning;
+  if( str == toFieldInfo(Field::Priority::error).value().get<std::string>() )   return Field::Priority::error;
   BUT_ASSERT(!"unknown priority string");
   throw std::logic_error{"unknown priority string: " + str};
 }
+
+auto extractSyslogPriority(Backend::FieldInfo const& fi)
+{
+  const auto prioType = toFieldInfo(Field::Priority::info).type();
+  for( auto& f: fi.array() )
+  {
+    if( f.type() != prioType )
+      continue;
+    const auto p = stringToPriority( f.value().get<std::string>() );
+    return toSyslogPriority(p);
+  }
+  return toSyslogPriority(Field::Priority::info);
+}
 }
 
-void Syslog::logImpl(Backend::Entry const& e)
+void Syslog::logImpl(Backend::FieldInfo const& fi)
 {
-  auto pri = toValue(Field::Priority::info);
   std::stringstream ss;
   detail::StreamAndTrimVisitor satv{&trim_, &ss};
-  for(auto& f: e)
-  {
-    f.value().visit(satv);
-    if( f.type() == toType(Field::Priority::info) )
-      pri = f.value();
-  }
-  const auto p = stringToPriority( pri.get<std::string>() );
-  const auto slp = toSyslogPriority(p);
+  fi.visit(satv);
+  const auto slp = extractSyslogPriority(fi);
   syslog( slp, "%s", ss.str().c_str() );
-}
-
-
-void Syslog::logImpl(Field::FormattedString const& str, Backend::Entry const& e)
-{
-  auto pri = toValue(Field::Priority::info);
-  for(auto& f: e)
-  {
-    if( f.type() == toType(Field::Priority::info) )
-      pri = f.value();
-  }
-  const auto p = stringToPriority( pri.get<std::string>() );
-  const auto slp = toSyslogPriority(p);
-  const auto trimmed = trim_(str.value_);
-  syslog( slp, "%s", trimmed.c_str() );
 }
 
 }

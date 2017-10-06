@@ -25,13 +25,11 @@ public:
   explicit MultiForeign(collection_type dsts): dsts_{ std::move(dsts) } { }
 
 private:
-  void logImpl(Backend::Entry const& e) override { logImplNe(e); }
-  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override { logImplNe(str, e); }
+  void logImpl(Backend::FieldInfo const& fi) override { logImplNe(fi); }
   void reloadImpl() override { reloadImplNe(); }
   void flushImpl() override { flushImplNe(); }
 
-  void logImplNe(Backend::Entry const& e) noexcept;
-  void logImplNe(Field::FormattedString const& str, Backend::Entry const& e) noexcept;
+  void logImplNe(Backend::FieldInfo const& fi) noexcept;
   void reloadImplNe() noexcept;
   void flushImplNe() noexcept;
 

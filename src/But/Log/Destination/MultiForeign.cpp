@@ -7,27 +7,13 @@ namespace Log
 namespace Destination
 {
 
-void MultiForeign::logImplNe(Backend::Entry const& e) noexcept
+void MultiForeign::logImplNe(Backend::FieldInfo const& fi) noexcept
 {
   for(auto& d: dsts_)
   {
     try
     {
-      d->log(e);
-    }
-    catch(...)
-    { /* this is logger - ignoring any errors when forwarind logs! */ }
-  }
-}
-
-
-void MultiForeign::logImplNe(Field::FormattedString const& str, Backend::Entry const& e) noexcept
-{
-  for(auto& d: dsts_)
-  {
-    try
-    {
-      d->log(str, e);
+      d->log(fi);
     }
     catch(...)
     { /* this is logger - ignoring any errors when forwarind logs! */ }

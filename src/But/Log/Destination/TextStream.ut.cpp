@@ -105,10 +105,10 @@ TEST_F(ButLogDestinationTextStream, FlushingSmokeTest)
 
 struct CustomFormatting: public StringStream
 {
-  void toStreamFormat(std::ostream& os, But::Log::Backend::Entry const& e) override
-  { os << e.size() << "x"; }
-  void toStreamFormat(std::ostream& os, But::Log::Field::FormattedString const& str, But::Log::Backend::Entry const&) override
-  { os << str.value_.size() << "y"; }
+  void toStreamFormat(std::ostream& os, But::Log::Backend::FieldInfo const& fi) override
+  {
+    os << fi.array().size() << "x";
+  }
 };
 
 TEST_F(ButLogDestinationTextStream, ProvidingDifferentToStreamFormatting)
@@ -116,8 +116,8 @@ TEST_F(ButLogDestinationTextStream, ProvidingDifferentToStreamFormatting)
   CustomFormatting cs;
   cs.log("alice", "has", "a cat");
   cs.log("so tech", "much wow");
-  cs.log( FormattedString{"$2 / $1"}, 2, 84 );
-  EXPECT_EQ( "3x2x7y", cs.ss_.str() );
+  cs.log( FormattedString{"$2 / $1 / $0"}, 2, 84, 69 );
+  EXPECT_EQ( "3x2x4x", cs.ss_.str() );
 }
 
 

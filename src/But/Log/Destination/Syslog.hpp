@@ -1,8 +1,6 @@
 #pragma once
 #include <sstream>
-#include "But/Log/Backend/toValue.hpp"
 #include "But/Log/Backend/NonPrintableTrimmer.hpp"
-#include "But/Log/Field/Priority.hpp"
 #include "Foreign.hpp"
 
 namespace But
@@ -15,13 +13,7 @@ namespace Destination
 class Syslog final: public Foreign
 {
 private:
-  void logImpl(Backend::Entry const& e) override;
-  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override;
-
-  Field::Priority selectPriority(Field::Priority /*pOld*/, Field::Priority pNew) const { return pNew; }
-  template<typename T>
-  Field::Priority selectPriority(Field::Priority p, T const&) const { return p; }
-
+  void logImpl(Backend::FieldInfo const& fi) override;
   void reloadImpl() override { }
   void flushImpl() override { }
 

@@ -3,7 +3,6 @@
 #include <iosfwd>
 #include <sstream>
 #include <cctype>
-#include "But/Log/Backend/toValue.hpp"
 #include "detail/StreamAndTrimVisitor.hpp"
 #include "Foreign.hpp"
 
@@ -22,16 +21,10 @@ protected:
   std::string const& endline() const { return endline_; }
 
 private:
-  void logImpl(Backend::Entry const& e) override final
+  void logImpl(Backend::FieldInfo const& fi) override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
-    toStreamFormat(*os_, e);
-  }
-
-  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override final
-  {
-    const std::lock_guard<std::mutex> lock(mutex_);
-    toStreamFormat(*os_, str, e);
+    toStreamFormat(*os_, fi);
   }
 
   void reloadImpl() override final
@@ -48,26 +41,10 @@ private:
 
   virtual void reloadImplUnderLock() = 0;
 
-  virtual void toStreamFormat(std::ostream& os, Backend::Entry const& e)
-  {
-    if( not e.empty() )
-    {
-      auto it = begin(e);
-      detail::StreamAndTrimVisitor satv{&trim_, &os};
-      it->value().visit(satv);
-      for(++it; it!=end(e); ++it)
-      {
-        os << ' ';
-        it->value().visit(satv);
-      }
-    }
-    os << endline();
-  }
-
-  virtual void toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const&)
+  virtual void toStreamFormat(std::ostream& os, Backend::FieldInfo const& fi)
   {
     detail::StreamAndTrimVisitor satv{&trim_, &os};
-    satv(str.value_);
+    fi.visit(satv);
     os << endline();
   }
 

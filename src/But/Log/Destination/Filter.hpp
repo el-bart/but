@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include <functional>
 #include "But/NotNull.hpp"
 #include "Foreign.hpp"
@@ -29,20 +28,15 @@ public:
   }
 
 private:
-  void logImpl(Backend::Entry const& e) override
+  void logImpl(Backend::FieldInfo const& fi) override
   {
-    if( filter_(e) )
-      destination_->log(e);
-  }
-  void logImpl(Field::FormattedString const& str, Backend::Entry const& e) override
-  {
-    if( filter_(e) )
-      destination_->log(str, e);
+    if( filter_(fi) )
+      destination_->log(fi);
   }
   void reloadImpl() override { destination_->reload(); }
   void flushImpl() override { destination_->flush(); }
 
-  std::function<bool(Backend::Entry const&)> filter_;
+  std::function< bool(Backend::FieldInfo const&) > filter_;
   NotNullShared<Foreign> destination_;
 };
 

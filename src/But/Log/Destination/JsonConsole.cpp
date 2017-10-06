@@ -1,3 +1,4 @@
+#include <iostream>
 #include "JsonConsole.hpp"
 #include "Common/toJsonStream.hpp"
 
@@ -8,16 +9,15 @@ namespace Log
 namespace Destination
 {
 
-void JsonConsole::toStreamFormat(std::ostream& os, Backend::Entry const& entry)
+JsonConsole::JsonConsole(const bool syncWithStdio):
+  TextStream{std::cout}
 {
-  Common::toJsonStream(os, entry);
-  os << endline();
+  std::cout.sync_with_stdio(syncWithStdio);
 }
 
-
-void JsonConsole::toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const& entry)
+void JsonConsole::toStreamFormat(std::ostream& os, Backend::FieldInfo const& fi)
 {
-  Common::toJsonStream(os, str, entry);
+  Common::toJsonStream(os, fi);
   os << endline();
 }
 

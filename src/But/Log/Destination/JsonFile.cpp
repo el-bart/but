@@ -8,16 +8,9 @@ namespace Log
 namespace Destination
 {
 
-void JsonFile::toStreamFormat(std::ostream& os, Backend::Entry const& entry)
+void JsonFile::toStreamFormat(std::ostream& os, Backend::FieldInfo const& fi)
 {
-  Common::toJsonStream(os, entry);
-  os << endline();
-}
-
-
-void JsonFile::toStreamFormat(std::ostream& os, Field::FormattedString const& str, Backend::Entry const& entry)
-{
-  Common::toJsonStream(os, str, entry);
+  Common::toJsonStream(os, fi);
   os << endline();
 }
 

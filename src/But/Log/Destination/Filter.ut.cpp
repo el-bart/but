@@ -5,7 +5,7 @@
 using testing::_;
 using testing::StrictMock;
 using But::Log::Field::FormattedString;
-using But::Log::Backend::Entry;
+using But::Log::Backend::FieldInfo;
 using But::Log::Destination::Filter;
 using But::Log::Destination::Foreign;
 using But::Log::Destination::ForeignMock;
@@ -16,7 +16,7 @@ namespace
 struct ButLogDestinationFilter: public testing::Test
 {
   But::NotNull<std::shared_ptr<StrictMock<ForeignMock>>> mock_{ std::make_shared<StrictMock<ForeignMock>>() };
-  Filter filter_{ [](Entry const&) { return true; }, mock_ };
+  Filter filter_{ [](FieldInfo const&) { return true; }, mock_ };
 };
 
 
@@ -36,8 +36,15 @@ TEST_F(ButLogDestinationFilter, ForwardingFlushing)
 
 TEST_F(ButLogDestinationFilter, LoggingWhenConditionIsTrue)
 {
-  EXPECT_CALL(*mock_, logImpl(_)).Times(1);
-  EXPECT_CALL(*mock_, logImpl(_,_)).Times(1);
+  EXPECT_CALL(*mock_, logImpl(_)).Times(2);
+  filter_.log("answer is: ", 42);
+  filter_.log( FormattedString{"xxx"}, "answer is: ", 42);
+}
+
+
+TEST_F(ButLogDestinationFilter, FormattedLoggingWhenConditionIsTrue)
+{
+  EXPECT_CALL(*mock_, logImpl(_)).Times(2);
   filter_.log("answer is: ", 42);
   filter_.log( FormattedString{"xxx"}, "answer is: ", 42);
 }
@@ -47,7 +54,7 @@ TEST_F(ButLogDestinationFilter, NotLoggingWhenConditionIsFalse)
 {
   EXPECT_CALL(*mock_, logImpl(_)).Times(0);
   EXPECT_CALL(*mock_, logImpl(_)).Times(0);
-  Filter reject{ [](Entry const&) { return false; }, mock_ };
+  Filter reject{ [](FieldInfo const&) { return false; }, mock_ };
   reject.log("answer is: ", 42);
   reject.log( FormattedString{"xxx"}, "answer is: ", 42);
 }
