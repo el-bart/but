@@ -41,11 +41,13 @@ public:
   bool operator==(FieldInfo const& other) const { return type_ == other.type_ && variant_ == other.variant_; }
   bool operator!=(FieldInfo const& other) const { return not ( *this == other ); }
 
-  Type const& type() const & { return type_; }
-  Value const& value() const & { return boost::get<Value>(variant_); }  // TODO: to be removed...
+  auto const& type() const & { return type_; }
+  auto const& value() const & { return boost::get<Value>(variant_); }
+  auto const& array() const & { return boost::get<std::vector<FieldInfo>>(variant_); }
 
-  Type type() && { return std::move(type_); }
-  Value value() && { return boost::get<Value>( std::move(variant_) ); }  // TODO: to be removed...
+  auto&& type() && { return std::move(type_); }
+  auto&& value() && { return boost::get<Value>( std::move(variant_) ); }
+  auto&& array() && { return boost::get<std::vector<FieldInfo>>( std::move(variant_) ); }
 
   /** @brief visitor takes type and value parametrs, like this:
    *  <code>

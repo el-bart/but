@@ -83,4 +83,15 @@ TEST_F(ButLogBackendFieldInfo, Visiting)
   }
 }
 
+
+TEST_F(ButLogBackendFieldInfo, GettingFieldTypesExplicitly)
+{
+  const auto fi1 = FieldInfo{ Type{"one"}, Value{"1"} };
+  const auto fi2 = FieldInfo{ Type{"two"}, Value{"2"} };
+  const auto fi3 = FieldInfo{ Type{"three"}, { fi1, fi2 } };
+
+  EXPECT_EQ( "1", fi1.value().get<std::string>() );
+  EXPECT_EQ( "1", fi3.array().at(0).value().get<std::string>() );
+}
+
 }
