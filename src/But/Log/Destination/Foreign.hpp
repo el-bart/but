@@ -29,6 +29,7 @@ public:
     logImpl(fi);
   }
 
+  void log(Backend::FieldInfo&& fi) { logImpl(fi); }
   void log(Backend::FieldInfo const& fi) { logImpl(fi); }
   void reload() { reloadImpl(); }
   void flush() { flushImpl(); }
