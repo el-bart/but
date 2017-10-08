@@ -24,17 +24,11 @@ struct Segment final
   unsigned referencedArgument_{0};  // only valid for Value and TypeName types
 };
 
-template<typename C>
+template<size_t N>
 struct ParsedFormat final
 {
-  constexpr auto size() const { return segments_.size(); }
-  C segments_;
+  Container::ArrayWithSize<Segment, N> segments_;
 };
-
-template<size_t N>
-using ParsedFormatCt = ParsedFormat< Container::ArrayWithSize<Segment,N> >;
-
-using ParsedFormatRt = ParsedFormat< std::vector<Segment> >;
 
 }
 }

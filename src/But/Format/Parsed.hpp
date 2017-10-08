@@ -35,12 +35,11 @@ public:
    *  @note all numbers are 0-based (i.e. 1st argument has index 0).
    */
   constexpr explicit Parsed(char const* format):
-    ps_{ detail::parseCt<MaxSegments>(format) },
+    ps_{ detail::parse<MaxSegments>(format) },
     format_{format}
   { }
 
-  constexpr auto inputFormat() const { return format_; }
-  //constexpr auto expectedArguments() const { return detail::argumentsCount(ps_); } // note: would not work with static_assert...
+  auto inputFormat() const { return format_; }
   static constexpr auto expectedArguments() { return ArgumentsCount; }
 
   template<typename ...Args>
@@ -126,16 +125,9 @@ private:
     BUT_ASSERT(!"missing type handle");
   }
 
-  const detail::ParsedFormatCt<MaxSegments> ps_;
+  const detail::ParsedFormat<MaxSegments> ps_;
   char const* format_;
 };
-
-
-template<size_t N, size_t M>
-std::string toValue(Parsed<N,M> const&) = delete;
-
-template<size_t N, size_t M>
-std::string toType(Parsed<N,M> const&) = delete;
 
 }
 }

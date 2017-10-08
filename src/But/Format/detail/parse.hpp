@@ -106,9 +106,10 @@ inline constexpr auto parseString(Segment& st, char const* fmt)
 }
 
 
-template<typename Pf>
-constexpr auto parse(Pf&& pf, char const* fmt)
+template<size_t N>
+constexpr auto parse(char const* fmt)
 {
+  ParsedFormat<N> pf;
   while( not isEos(*fmt) )
   {
     throwOnInvalidSyntax( pf.segments_.max_size() == pf.segments_.size(), "format too long for a declared states count - expected end", fmt );
@@ -121,18 +122,6 @@ constexpr auto parse(Pf&& pf, char const* fmt)
     pf.segments_.push_back( std::move(st) );
   }
   return pf;
-}
-
-
-template<size_t N>
-constexpr auto parseCt(char const* fmt)
-{
-  return parse( ParsedFormatCt<N>{}, fmt );
-}
-
-inline auto parseRt(char const* fmt)
-{
-  return parse( ParsedFormatRt{}, fmt );
 }
 
 }

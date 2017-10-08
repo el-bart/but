@@ -8,8 +8,8 @@ namespace Format
 namespace detail
 {
 
-template<typename C>
-constexpr auto lastArgumentNumber(ParsedFormat<C> const& ps)
+template<size_t N>
+constexpr auto lastArgumentNumber(ParsedFormat<N> const& ps)
 {
   auto last = 0u;
   for(auto& e: ps.segments_)
