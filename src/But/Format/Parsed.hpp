@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include "But/assert.hpp"
+#include "But/NotNull.hpp"
 #include "But/Exception.hpp"
 #include "detail/parse.hpp"
 #include "Invalid.hpp"
@@ -62,14 +63,13 @@ public:
   BUT_DEFINE_EXCEPTION(ArityError, Exception, "invalid number of arguments for a format");
 
   explicit ParsedRuntime(std::string format):
-    ps_{ detail::parseRt( format.c_str() ) },
-    format_{ std::move(format) }
-  {
-    BUT_ASSERT( expectedArguments() == detail::argumentsCount(ps_) );
-  }
+    format_{ But::makeSharedNN<std::string>( std::move(format) ) },
+    ps_{ detail::parseRt( format_->c_str() ) },
+    argumentsCount_{ detail::argumentsCount(ps_) }
+  { }
 
-  auto inputFormat() const { return format_; }
-  size_t expectedArguments() const { return ps_.size(); }
+  auto& inputFormat() const { return format_; }
+  size_t expectedArguments() const { return argumentsCount_; }
   void validateArgumentsCount(const size_t arguments) const
   {
     if( arguments != expectedArguments() )
@@ -80,8 +80,9 @@ public:
   const_iterator end() const { return ps_.segments_.end(); }
 
 private:
+  const But::NotNullShared<const std::string> format_;  // NOTE: shared pointer is needed since string make use of SSO!
   const detail::ParsedFormatRt ps_;
-  std::string format_;
+  const size_t argumentsCount_;
 };
 
 }

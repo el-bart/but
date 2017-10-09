@@ -30,7 +30,7 @@ inline void formatBlock(std::ostringstream& os, detail::Segment const& segment, 
 template<typename It>
 std::string applyOnIterators(const It begin, const It end, std::vector<std::string> const& arguments)
 {
-  BUT_ASSERT( size_t( std::distance(begin, end) ) == arguments.size() );
+  BUT_ASSERT( size_t( std::distance(begin, end) ) >= arguments.size() );
   std::ostringstream os;
   for(auto it=begin; it!=end; ++it)
     formatBlock(os, *it, arguments);

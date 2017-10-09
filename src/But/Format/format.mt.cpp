@@ -122,6 +122,16 @@ TEST_F(ButFormat, DenseFormats)
 }
 
 
+#if 0
+// NOTE: these tests are now actually forced to take place at compile-time
+TEST_F(ButFormat, UnusedArgumentsDetected)
+{
+  EXPECT_THROW( ( BUT_FORMAT("$1") ), Invalid ) << "all previous indexes must be used";
+  EXPECT_THROW( ( BUT_FORMAT("$2 $0") ), Invalid ) << "all previous indexes must be used";
+}
+#endif
+
+
 TEST_F(ButFormat, GettingInputFormat)
 {
   constexpr auto fmt = BUT_FORMAT("foo/bar");
@@ -137,13 +147,11 @@ TEST_F(ButFormat, RuntimeFormat)
 }
 
 
-/*
-// NOTE: these tests are now actually forced to take place at compile-time
-TEST_F(ButFormat, UnusedArgumentsDetected)
+TEST_F(ButFormat, RuntimeFormatWithRepeatedArguments)
 {
-  EXPECT_THROW( ( BUT_FORMAT("$1") ), Invalid ) << "all previous indexes must be used";
-  EXPECT_THROW( ( BUT_FORMAT("$2 $0") ), Invalid ) << "all previous indexes must be used";
+  char rtFmt[] = "$0 has $1 $1";
+  const auto fmt = BUT_FORMAT_RUNTIME(rtFmt);
+  EXPECT_EQ( "alice has X X", apply(fmt, "alice", "X") );
 }
-*/
 
 }
