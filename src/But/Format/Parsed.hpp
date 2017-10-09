@@ -2,11 +2,10 @@
 #include <string>
 #include <sstream>
 #include "But/assert.hpp"
+#include "But/Exception.hpp"
 #include "detail/parse.hpp"
-#include "detail/argumentsCount.hpp"
-#include "detail/allArgumentsUsed.hpp"
 #include "Invalid.hpp"
-#include "detail/StreamVisitor.hpp"
+#include "detail/argumentsCount.hpp"
 
 namespace But
 {
@@ -18,9 +17,12 @@ namespace Format
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
  */
-class Parsed final
+template<size_t ArgumentsCount, size_t MaxSegments>
+class ParsedCompiletime final
 {
 public:
+  using const_iterator = typename Container::ArrayWithSize<detail::Segment, MaxSegments>::const_iterator;
+
   /** @brief parses input format and constructs the object.
    *  @param format - format is a string with positional arguments, in a form:
    *          $N - expands to N-th argument.
@@ -30,50 +32,57 @@ public:
    *  @note all numbers are 0-based (i.e. 1st argument has index 0).
    *  @note ADL-based to_string(x) free function is used to convert 'X' into a string. strings are then used to add to a stream.
    */
-  constexpr explicit Parsed(char const* format):
-    ps_{ detail::parse<MaxSegments>(format) },
+  constexpr explicit ParsedCompiletime(char const* format):
+    ps_{ detail::parseCt<MaxSegments>(format) },
     format_{format}
   { }
 
   auto inputFormat() const { return format_; }
-  static constexpr auto expectedArguments() { return ArgumentsCount; }
-
-  template<typename ...Args>
-  std::string format(Args const& ...args) const
+  constexpr auto expectedArguments() { return ArgumentsCount; }
+  constexpr void validateArgumentsCount(const size_t arguments)
   {
-    static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
+    static_assert( arguments == expectedArguments(), "invalid number of arguments for a format" );
     BUT_ASSERT( expectedArguments() == detail::argumentsCount(ps_) );
-    using std::to_string;
-    const std::vector<std::string> arguments{ to_string(args)... };
-    return formatImpl(arguments);
   }
+
+  const_iterator begin() const { return ps_.begin(); }
+  const_iterator end() const { return ps_.end(); }
 
 private:
-  std::string formatImpl(std::vector<std::string> const& args) const
-  {
-    BUT_ASSERT( expectedArguments() == args.size() );
-    std::ostringstream os;
-    for(auto& e: ps_.segments_)
-      formatBlock(os, e, arguments);
-    return os.str();
-  }
-
-  void formatBlock(std::ostringstream& os, detail::Segment const& segment, std::vector<std::string> const& arguments) const
-  {
-    switch(segment.type_)
-    {
-      case detail::Segment::Type::String:
-        os.write( segment.begin_, segment.end_ - segment.begin_ );
-        return;
-      case detail::Segment::Type::Value:
-        os << arguments[segment.referencedArgument_];
-        return;
-    }
-    BUT_ASSERT(!"missing type handle");
-  }
-
-  const detail::ParsedFormat<MaxSegments> ps_;
+  const detail::ParsedFormatCt<MaxSegments> ps_;
   char const* format_;
+};
+
+
+
+/** @brief ParsedCompiletime-equivalent, but working with runtime arguments.
+ */
+class ParsedRuntime final
+{
+public:
+  using const_iterator = std::vector<detail::Segment>::const_iterator;
+
+  BUT_DEFINE_EXCEPTION(ArityError, Exception, "invalid number of arguments for a format");
+
+  explicit ParsedRuntime(std::string format):
+    ps_{ detail::parsert( format.c_str() ) },
+    format_{ std::move(format) }
+  { }
+
+  auto inputFormat() const { return format_; }
+  auto expectedArguments() { return ps_.size(); }
+  void validateArgumentsCount(const size_t arguments)
+  {
+    if( arguments != expectedArguments() )
+      BUT_THROW(ArityError, "expected " << expectedArguments() << " arguments - got " << arguments << " instead");
+  }
+
+  const_iterator begin() const { return ps_.begin(); }
+  const_iterator end() const { return ps_.end(); }
+
+private:
+  const detail::ParsedFormatRt ps_;
+  std::string format_;
 };
 
 }
