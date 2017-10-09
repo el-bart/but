@@ -1,33 +1,27 @@
 #pragma once
-#include <string>
-#include "But/assert.hpp"
-#include "detail/parse.hpp"
-#include "detail/argumentsCount.hpp"
-#include "detail/allArgumentsUsed.hpp"
-#include "Invalid.hpp"
-#include "detail/StreamVisitor.hpp"
+#include "Parsed.hpp"
+#include "detail/applyImpl.hpp"
 
 namespace But
 {
 namespace Format
 {
 
-template<typename ...Args>
-std::string apply(ParsedCompiletime const& p, Args const& ...args)
+template<size_t ArgumentsCount, size_t MaxSegments, typename ...Args>
+std::string apply(ParsedCompiletime<ArgumentsCount, MaxSegments> const& p, Args const& ...args)
 {
-  p.validateArgumentsCount( sizeof...(args) );
-  using std::to_string;
-  const std::vector<std::string> arguments{ to_string(args)... };
-  return detail::applyImpl( p.begin(), p.end(), args... );
+  using Ct = ParsedCompiletime<ArgumentsCount, MaxSegments>;
+  static_assert( sizeof...(args) == Ct::expectedArguments(), "invalid number of arguments for a format" );
+  return detail::applyImpl(p, args...);
 }
+
 
 template<typename ...Args>
 std::string apply(ParsedRuntime const& p, Args const& ...args)
 {
-  p.validateArgumentsCount( sizeof...(args) );
-  using std::to_string;
-  const std::vector<std::string> arguments{ to_string(args)... };
-  return detail::applyImpl( p.begin(), p.end(), arguments );
+  if( sizeof...(args) != p.expectedArguments() )
+    BUT_THROW(ParsedRuntime::ArityError, "expected " << p.expectedArguments() << " arguments - got " << sizeof...(args) << " instead");
+  return detail::applyImpl(p, args...);
 }
 
 }

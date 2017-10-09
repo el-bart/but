@@ -35,18 +35,15 @@ public:
   constexpr explicit ParsedCompiletime(char const* format):
     ps_{ detail::parseCt<MaxSegments>(format) },
     format_{format}
-  { }
-
-  auto inputFormat() const { return format_; }
-  constexpr auto expectedArguments() { return ArgumentsCount; }
-  constexpr void validateArgumentsCount(const size_t arguments)
   {
-    static_assert( arguments == expectedArguments(), "invalid number of arguments for a format" );
     BUT_ASSERT( expectedArguments() == detail::argumentsCount(ps_) );
   }
 
-  const_iterator begin() const { return ps_.begin(); }
-  const_iterator end() const { return ps_.end(); }
+  auto inputFormat() const { return format_; }
+  static constexpr size_t expectedArguments() { return ArgumentsCount; }
+
+  const_iterator begin() const { return ps_.segments_.begin(); }
+  const_iterator end() const { return ps_.segments_.end(); }
 
 private:
   const detail::ParsedFormatCt<MaxSegments> ps_;
@@ -65,20 +62,22 @@ public:
   BUT_DEFINE_EXCEPTION(ArityError, Exception, "invalid number of arguments for a format");
 
   explicit ParsedRuntime(std::string format):
-    ps_{ detail::parsert( format.c_str() ) },
+    ps_{ detail::parseRt( format.c_str() ) },
     format_{ std::move(format) }
-  { }
+  {
+    BUT_ASSERT( expectedArguments() == detail::argumentsCount(ps_) );
+  }
 
   auto inputFormat() const { return format_; }
-  auto expectedArguments() { return ps_.size(); }
-  void validateArgumentsCount(const size_t arguments)
+  size_t expectedArguments() const { return ps_.size(); }
+  void validateArgumentsCount(const size_t arguments) const
   {
     if( arguments != expectedArguments() )
       BUT_THROW(ArityError, "expected " << expectedArguments() << " arguments - got " << arguments << " instead");
   }
 
-  const_iterator begin() const { return ps_.begin(); }
-  const_iterator end() const { return ps_.end(); }
+  const_iterator begin() const { return ps_.segments_.begin(); }
+  const_iterator end() const { return ps_.segments_.end(); }
 
 private:
   const detail::ParsedFormatRt ps_;
