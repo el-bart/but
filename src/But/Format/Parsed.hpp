@@ -18,7 +18,6 @@ namespace Format
  *        is not specified for a given type usage. this way formatting for a given parameters
  *        is always constant.
  */
-template<size_t ArgumentsCount, size_t MaxSegments>
 class Parsed final
 {
 public:
@@ -27,12 +26,9 @@ public:
    *          $N - expands to N-th argument.
    *          ${N} - the same as $N.
    *          ${N#some text} - the same as $N, but allowing some textual description along (useful for translations!).
-   *          ${TN} - prints type of N-th argument, using toFieldInfo().type() function and ADL.
-   *          ${TN#some text} - the same as ${TN}, but allowing some textual description along (useful for translations!).
-   *          ${VN} - the same as $N.
-   *          ${VN#some text} - the same as $N, but allowing some textual description along (useful for translations!).
    *          $$ - liternal '$' character.
    *  @note all numbers are 0-based (i.e. 1st argument has index 0).
+   *  @note ADL-based to_string(x) free function is used to convert 'X' into a string. strings are then used to add to a stream.
    */
   constexpr explicit Parsed(char const* format):
     ps_{ detail::parse<MaxSegments>(format) },
@@ -47,68 +43,22 @@ public:
   {
     static_assert( sizeof...(args) == expectedArguments(), "arity missmatch between provided format and arguments to be formated" );
     BUT_ASSERT( expectedArguments() == detail::argumentsCount(ps_) );
-    std::ostringstream os;
-    for(auto& e: ps_.segments_)
-      formatBlock(os, e, args...);
-    return os.str();
+    using std::to_string;
+    const std::vector<std::string> arguments{ to_string(args)... };
+    return formatImpl(arguments);
   }
 
 private:
-  template<typename F>
-  void processArgument(F&& /*f*/, const size_t /*pos*/) const
+  std::string formatImpl(std::vector<std::string> const& args) const
   {
-    BUT_ASSERT(!"this overload should never really be called");
-    std::terminate();
-  }
-  template<typename F, typename Head>
-  void processArgument(F&& f, const size_t pos, Head const& head) const
-  {
-    (void)pos;
-    BUT_ASSERT( pos == 0u && "format is not alligned with arguments" );
-    f(head);
-  }
-  template<typename F, typename Head, typename ...Tail>
-  void processArgument(F&& f, const size_t pos, Head const& head, Tail const& ...tail) const
-  {
-    // TODO: replace this with a compile-time-generated construct...
-    if( pos == 0u )
-      f(head);
-    else
-      processArgument( std::forward<F>(f), pos-1u, tail... );
+    BUT_ASSERT( expectedArguments() == args.size() );
+    std::ostringstream os;
+    for(auto& e: ps_.segments_)
+      formatBlock(os, e, arguments);
+    return os.str();
   }
 
-  template<typename ...Args>
-  void streamArgumentType(std::ostream& os, const size_t pos, Args const& .../*args*/) const
-  {
-    // TODO....
-    (void)os;
-    (void)pos;
-    /*
-    auto proc = [&os](auto& e) {
-      using Log::Backend::toType;
-      os << toType(e);
-    };
-    processArgument(proc,  pos, args... );
-    */
-  }
-  template<typename ...Args>
-  void streamArgumentValue(std::ostream& os, const size_t pos, Args const& .../*args*/) const
-  {
-    // TODO....
-    (void)os;
-    (void)pos;
-    /*
-    auto proc = [&os](auto& e) {
-      using Log::Backend::toValue;
-      toValue(e).visit( detail::StreamVisitor{&os} );
-    };
-    processArgument( proc,  pos, args... );
-    */
-  }
-
-
-  template<typename ...Args>
-  void formatBlock(std::ostringstream& os, detail::Segment const& segment, Args const& ...args) const
+  void formatBlock(std::ostringstream& os, detail::Segment const& segment, std::vector<std::string> const& arguments) const
   {
     switch(segment.type_)
     {
@@ -116,10 +66,7 @@ private:
         os.write( segment.begin_, segment.end_ - segment.begin_ );
         return;
       case detail::Segment::Type::Value:
-        streamArgumentValue(os, segment.referencedArgument_, args...);
-        return;
-      case detail::Segment::Type::TypeName:
-        streamArgumentType(os, segment.referencedArgument_, args...);
+        os << arguments[segment.referencedArgument_];
         return;
     }
     BUT_ASSERT(!"missing type handle");
