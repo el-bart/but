@@ -53,19 +53,19 @@ TEST_F(ButFormat, RepeatedArguments)
 TEST_F(ButFormat, MultipleArgumentsMultipleStyles)
 {
   {
-    constexpr auto fmt = BUT_FORMAT("${0} $0");
+    constexpr auto fmt = BUT_FORMAT("!$0!")
     EXPECT_EQ( 1u, fmt.expectedArguments() );
-    EXPECT_EQ( "x x", fmt.format("x") );
+    EXPECT_EQ( "!ok!", fmt.format("ok") );
   }
   {
-    constexpr auto fmt = BUT_FORMAT("${T0}=${V0}");
+    constexpr auto fmt = BUT_FORMAT("!${0}!")
     EXPECT_EQ( 1u, fmt.expectedArguments() );
-    EXPECT_EQ( "int=42", fmt.format(42) );
+    EXPECT_EQ( "!ok!", fmt.format("ok") );
   }
   {
-    constexpr auto fmt = BUT_FORMAT("${0#info} ${V0#text} ${T0#foo}");
+    constexpr auto fmt = BUT_FORMAT("!${0#info}!");
     EXPECT_EQ( 1u, fmt.expectedArguments() );
-    EXPECT_EQ( "x x string", fmt.format("x") );
+    EXPECT_EQ( "!ok!", fmt.format("ok") );
   }
 }
 
@@ -124,6 +124,14 @@ TEST_F(ButFormat, GettingInputFormat)
 {
   constexpr auto fmt = BUT_FORMAT("foo/bar");
   EXPECT_EQ( std::string{"foo/bar"}, fmt.inputFormat() );
+}
+
+
+TEST_F(ButFormat, RuntimeFormat)
+{
+  char rtFmt[] = "$0 has $1";
+  const auto fmt = BUT_FORMAT_RUNTIME(rtFmt);
+  EXPECT_EQ( "alice has a cat", fmt.format("alice", "a cat") );
 }
 
 
