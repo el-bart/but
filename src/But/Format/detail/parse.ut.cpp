@@ -611,8 +611,6 @@ TEST_F(ButFormatDetailParse, TooComplexFormatForGivenStatesCount)
 
 TEST_F(ButFormatDetailParse, RuntimeFormatParsing)
 {
-#if 0                   
-  TODO                                                              
   const auto ps = parseRt("one ${T42#test} two ${T43} three ${V44#tag} four ${V45} five $46 six ${47}");
   EXPECT_TRUE( ( std::is_same<decltype(ps.segments_), std::vector<Segment>>::value ) );
   ASSERT_EQ( 12u, ps.segments_.size() );
@@ -694,7 +692,6 @@ TEST_F(ButFormatDetailParse, RuntimeFormatParsing)
     EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 47u, s.referencedArgument_ );
   }
-#endif                                                              
 }
 
 }
