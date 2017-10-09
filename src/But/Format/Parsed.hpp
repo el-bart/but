@@ -57,32 +57,49 @@ private:
  */
 class ParsedRuntime final
 {
+private:
+  struct Data final
+  {
+    explicit Data(std::string&& format):
+      format_{ std::move(format) },
+      ps_{ detail::parseRt( format_.c_str() ) },
+      argumentsCount_{ detail::argumentsCount(ps_) }
+    { }
+
+    Data(Data const&) = delete;
+    Data& operator=(Data const&) = delete;
+
+    Data(Data&&) = delete;
+    Data& operator=(Data&&) = delete;
+
+    const std::string format_;
+    const detail::ParsedFormatRt ps_;
+    const size_t argumentsCount_;
+  };
+
 public:
   using const_iterator = std::vector<detail::Segment>::const_iterator;
 
   BUT_DEFINE_EXCEPTION(ArityError, Exception, "invalid number of arguments for a format");
 
   explicit ParsedRuntime(std::string format):
-    format_{ But::makeSharedNN<std::string>( std::move(format) ) },
-    ps_{ detail::parseRt( format_->c_str() ) },
-    argumentsCount_{ detail::argumentsCount(ps_) }
+    data_{ makeSharedNN<Data>( std::move(format) ) }
   { }
 
-  auto& inputFormat() const { return format_; }
-  size_t expectedArguments() const { return argumentsCount_; }
+  auto& inputFormat() const { return data_->format_; }
+  size_t expectedArguments() const { return data_->argumentsCount_; }
   void validateArgumentsCount(const size_t arguments) const
   {
     if( arguments != expectedArguments() )
       BUT_THROW(ArityError, "expected " << expectedArguments() << " arguments - got " << arguments << " instead");
   }
 
-  const_iterator begin() const { return ps_.segments_.begin(); }
-  const_iterator end() const { return ps_.segments_.end(); }
+  const_iterator begin() const { return data_->ps_.segments_.begin(); }
+  const_iterator end() const { return data_->ps_.segments_.end(); }
 
 private:
-  const But::NotNullShared<const std::string> format_;  // NOTE: shared pointer is needed since string make use of SSO!
-  const detail::ParsedFormatRt ps_;
-  const size_t argumentsCount_;
+  // NOTE: shared pointer is needed since string make use of SSO. therefor we can keep all the state shared, for free.
+  But::NotNullShared<const Data> data_;
 };
 
 }
