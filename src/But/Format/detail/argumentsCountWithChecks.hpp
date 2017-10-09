@@ -11,13 +11,25 @@ namespace Format
 namespace detail
 {
 
-template<size_t N>
-constexpr auto argumentsCountWithChecks(char const* fmt)
+template<typename Ps>
+constexpr auto argumentsCountWithChecksImpl(Ps const& ps)
 {
-  const auto ps = parse<N>(fmt);
   if( not allArgumentsUsed(ps) )
     throw Invalid{__FILE__, __LINE__, BOOST_CURRENT_FUNCTION, "not all arguments have been used"};
   return argumentsCount(ps);
+}
+
+template<size_t N>
+constexpr auto argumentsCountWithChecks(char const* fmt)
+{
+  const auto ps = parseCt<N>(fmt);
+  return argumentsCountWithChecksImpl(ps);
+}
+
+inline auto argumentsCountWithChecks(char const* fmt)
+{
+  const auto ps = parseRt(fmt);
+  return argumentsCountWithChecksImpl(ps);
 }
 
 }

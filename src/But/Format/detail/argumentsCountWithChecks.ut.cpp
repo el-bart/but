@@ -59,19 +59,11 @@ TEST_F(ButFormatDetailArgumentsCountWithChecks, OneArgument)
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsCountWithChecks("test ${V0} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${0} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
-    constexpr auto cnt = argumentsCountWithChecks("test ${V0#ignored text} data");
-    EXPECT_EQ( 1u, cnt );
-  }
-  {
-    constexpr auto cnt = argumentsCountWithChecks("test ${T0} data");
-    EXPECT_EQ( 1u, cnt );
-  }
-  {
-    constexpr auto cnt = argumentsCountWithChecks("test ${T0#ignored text} data");
+    constexpr auto cnt = argumentsCountWithChecks("test ${0#ignored text} data");
     EXPECT_EQ( 1u, cnt );
   }
   {
@@ -114,8 +106,8 @@ TEST_F(ButFormatDetailArgumentsCountWithChecks, MultipleArguments)
 
 TEST_F(ButFormatDetailArgumentsCountWithChecks, MultipleArgumentsMultipleStyles)
 {
-  constexpr auto cnt = argumentsCountWithChecks("test $0 data ${2} ${V1#xx} ${T3}");
-  EXPECT_EQ( 4u, cnt );
+  constexpr auto cnt = argumentsCountWithChecks("test $0 data ${2} ${1#xx}");
+  EXPECT_EQ( 3u, cnt );
 }
 
 
@@ -139,7 +131,7 @@ TEST_F(ButFormatDetailArgumentsCountWithChecks, RuntimeArgumentsCheck)
     EXPECT_EQ( 3u, cnt );
   }
   {
-    const auto cnt = argumentsCountWithChecks("test $0 data ${2} ${V1#xx} ${T3}");
+    const auto cnt = argumentsCountWithChecks("test $0 data ${2} ${1#xx} ${3}");
     EXPECT_EQ( 4u, cnt );
   }
   {

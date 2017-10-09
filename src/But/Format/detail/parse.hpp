@@ -18,23 +18,6 @@ inline constexpr auto skipUntilEndOfComment(char const* fmt)
   return throwOnInvalidSyntax( *fmt!='}', "variable does not end with closing brace", fmt );
 }
 
-inline constexpr auto parseBraceTypeName(Segment& st, char const* fmt)
-{
-  throwOnInvalidSyntax( not isDigit(*fmt), "brace type variable declaration is not complete", fmt );
-  ++fmt;
-  st.type_ = Segment::Type::TypeName;
-  st.end_ = fmt;
-  while( isDigit(*st.end_) )
-    ++st.end_;
-  const auto numberEnd = st.end_;
-  if( *st.end_ == '#' )
-    st.end_ = skipUntilEndOfComment(st.end_);
-  throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
-  ++st.end_;
-  st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + 3, numberEnd);
-  return st.end_;
-}
-
 inline constexpr auto parseBraceVariable(Segment& st, char const* fmt)
 {
   st.type_ = Segment::Type::Value;
@@ -46,7 +29,7 @@ inline constexpr auto parseBraceVariable(Segment& st, char const* fmt)
     st.end_ = skipUntilEndOfComment(st.end_);
   throwOnInvalidSyntax( *st.end_!='}', "variable does not end with closing brace", st.end_ );
   ++st.end_;
-  const auto beginOffset = st.begin_[2] == 'V' ? 3 : 2;
+  const auto beginOffset = 2;
   st.referencedArgument_ = Mpl::parseUnsigned<unsigned>(st.begin_ + beginOffset, numberEnd);
   return st.end_;
 }
@@ -58,8 +41,6 @@ inline constexpr auto parseBrace(Segment& st, char const* fmt)
     ++fmt;
   if( isDigit(*fmt) )
     return parseBraceVariable(st, fmt+1);
-  if( *fmt == 'T' )
-    return parseBraceTypeName(st, fmt+1);
   return throwOnInvalidSyntax(true, "invalid brace variable init sequence", fmt);
 }
 
@@ -106,10 +87,9 @@ inline constexpr auto parseString(Segment& st, char const* fmt)
 }
 
 
-template<size_t N>
-constexpr auto parse(char const* fmt)
+template<typename Pf>
+constexpr auto parse(Pf&& pf, char const* fmt)
 {
-  ParsedFormat<N> pf;
   while( not isEos(*fmt) )
   {
     throwOnInvalidSyntax( pf.segments_.max_size() == pf.segments_.size(), "format too long for a declared states count - expected end", fmt );
@@ -122,6 +102,18 @@ constexpr auto parse(char const* fmt)
     pf.segments_.push_back( std::move(st) );
   }
   return pf;
+}
+
+
+template<size_t N>
+constexpr auto parseCt(char const* fmt)
+{
+  return parse( ParsedFormatCt<N>{}, fmt );
+}
+
+inline auto parseRt(char const* fmt)
+{
+  return parse( ParsedFormatRt{}, fmt );
 }
 
 }

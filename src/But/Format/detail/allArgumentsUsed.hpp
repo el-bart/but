@@ -10,20 +10,17 @@ namespace Format
 namespace detail
 {
 
-template<size_t N>
-constexpr auto allArgumentsUsed(ParsedFormat<N> const& ps)
+template<typename Ps, typename Used>
+constexpr auto allArgumentsUsedImpl(Ps const& ps, Used&& used)
 {
-  Container::Array<bool,N> used{};
-  used.fill(false);
-
   auto hasArgs = false;
   for(auto& e: ps.segments_)
   {
-    if( e.type_ != Segment::Type::Value && e.type_ != Segment::Type::TypeName )
+    if( e.type_ != Segment::Type::Value )
       continue;
     hasArgs = true;
     const auto pos = e.referencedArgument_;
-    if( pos >= ps.segments_.size() )
+    if( pos >= ps.size() )
       return false;
     used[pos] = true;
   }
@@ -32,12 +29,28 @@ constexpr auto allArgumentsUsed(ParsedFormat<N> const& ps)
     return true;
 
   const auto last = lastArgumentNumber(ps);
-  if( last >= ps.segments_.size() )
+  if( last >= ps.size() )
     return false;
   for(auto i=0u; i<=last; ++i)
     if( not used[i] )
       return false;
   return true;
+}
+
+
+template<size_t N>
+constexpr auto allArgumentsUsed(ParsedFormatCt<N> const& ps)
+{
+  Container::Array<bool,N> used{};
+  used.fill(false);
+  return allArgumentsUsedImpl( ps, std::move(used) );
+}
+
+
+inline auto allArgumentsUsed(ParsedFormatRt const& ps)
+{
+  std::vector<bool> used( ps.size(), false );
+  return allArgumentsUsedImpl( ps, std::move(used) );
 }
 
 }

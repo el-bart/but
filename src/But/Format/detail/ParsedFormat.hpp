@@ -14,8 +14,7 @@ struct Segment final
   enum class Type
   {
     String,
-    Value,
-    TypeName
+    Value
   };
 
   char const* begin_{nullptr};
@@ -24,11 +23,17 @@ struct Segment final
   unsigned referencedArgument_{0};  // only valid for Value and TypeName types
 };
 
-template<size_t N>
+template<typename C>
 struct ParsedFormat final
 {
-  Container::ArrayWithSize<Segment, N> segments_;
+  constexpr auto size() const { return segments_.size(); }
+  C segments_;
 };
+
+template<size_t N>
+using ParsedFormatCt = ParsedFormat< Container::ArrayWithSize<Segment,N> >;
+
+using ParsedFormatRt = ParsedFormat< std::vector<Segment> >;
 
 }
 }
