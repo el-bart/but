@@ -1,4 +1,5 @@
 #pragma once
+#include "But/Format/apply.hpp"
 #include "But/Format/format.hpp"
 #include "Field/FormattedString.hpp"
 #include "Localization/None.hpp"
@@ -29,10 +30,10 @@ public:
   void log(Args&& ...args) const { dst_->log( std::forward<Args>(args)... ); }
 
   template<size_t N, size_t M, typename ...Args>
-  void log(Format::Parsed<N,M>&& parsed, Args&& ...args) const
+  void log(Format::ParsedCompiletime<N,M>&& parsed, Args&& ...args) const
   {
-    const auto translated = translate( std::move(parsed) );
-    const auto formatted = Field::FormattedString{ translated.format(args...) };
+    const auto translated = translator_->translate( std::move(parsed) );
+    const auto formatted = Field::FormattedString{ Format::apply(translated, args...) };
     dst_->log( formatted, std::forward<Args>(args)... );
   }
 
@@ -40,21 +41,6 @@ public:
   void flush() { dst_->flush(); }
 
 private:
-  template<size_t N, size_t M>
-  auto translate(Format::Parsed<N,M>&& parsed) const
-  {
-    try
-    {
-      auto copy = parsed;
-      // TODO: log this as a warning?
-      return translator_->translate( std::move(copy) );
-    }
-    catch(...)
-    {
-      return parsed;
-    }
-  }
-
   mutable Destination dst_{};
   const Translator translator_{};
 };

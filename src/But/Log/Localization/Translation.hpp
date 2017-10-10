@@ -39,6 +39,8 @@ public:
     return findTranslation( parsed.inputFormat() );
   }
 
+  auto& operator->() const { return *this; }
+
 private:
   using Map = std::unordered_map<std::string, Format::ParsedRuntime>;
 

@@ -81,7 +81,7 @@ public:
   /** @brief creates a single log entry, of a formatted-string for, out of a given parameters. tags are preserved.
    */
   template<size_t N, size_t M, typename ...Args>
-  void log(Format::Parsed<N,M>&& parsed, Args&& ...args) const noexcept
+  void log(Format::ParsedCompiletime<N,M>&& parsed, Args&& ...args) const noexcept
   {
     try
     {

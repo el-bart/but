@@ -34,10 +34,10 @@ struct TestForeignDestination final: public Foreign
   {
     for( auto& f: fi.array() )
     {
-      (*ss_) << f.type() << "=";
+      (*ss_) << f.type() << "='";
       VisitStream vs{ss_};
       f.value().visit(vs);
-      (*ss_) << " ";
+      (*ss_) << "' | ";
     }
   }
 
@@ -117,7 +117,7 @@ TEST_F(ButLogProxyThrowing, ForeignTypeValueLogging)
 {
   ProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log(42, "foo", 'a');
-  EXPECT_EQ( buffer_.str(), "int=42 string=foo string=a ");
+  EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | string='a' | ");
 }
 
 
@@ -125,7 +125,7 @@ TEST_F(ButLogProxyThrowing, ForeignFormattedLogging)
 {
   ProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
   log.log( BUT_FORMAT("${0} = $1"), "answer", 42 );
-  EXPECT_EQ( buffer_.str(), "answer = 42 @@ string=answer int=42 ");
+  EXPECT_EQ( buffer_.str(), "But::Formatted='answer = 42' | string='answer' | int='42' | ");
 }
 
 
@@ -208,13 +208,15 @@ TEST_F(ButLogProxyThrowing, AllowDefaultConstructionWhenNoArgumentsNeeded)
 struct CustomTranslator
 {
   template<size_t N, size_t M>
-  auto translate(But::Format::Parsed<N,M>&& parsed) const
+  auto translate(But::Format::ParsedCompiletime<N,M>&& parsed) const
   {
     ++counter_;
     if(throws_)
       throw std::runtime_error{"translation error, as requested"};
     return std::move(parsed);
   }
+
+  auto& operator->() const { return *this; }
 
   bool throws_{false};
   mutable unsigned counter_{0};
@@ -251,13 +253,12 @@ TEST_F(ButLogProxyThrowing, UsingCustomTranslator)
 }
 
 
-TEST_F(ButLogProxyThrowing, ExceptionsFromTranslationsAreNotPropagated)
+TEST_F(ButLogProxyThrowing, ExceptionsFromTranslationsArePropagated)
 {
   CustomTranslator ct{true};
   TestNativeDestination dst{buffer_};
   ProxyThrowing<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
-  EXPECT_NO_THROW( log.log( BUT_FORMAT("test $0"), "xx" ) );
-  EXPECT_EQ( buffer_.str(), "[formatted:test xx],string|" );
+  EXPECT_THROW( log.log( BUT_FORMAT("test $0"), "xx" ), std::runtime_error );
 }
 
 }

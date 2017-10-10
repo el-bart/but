@@ -59,7 +59,7 @@ TEST_F(ButLogProxy, AllErrorsFromActualDestinationsAreIgnored)
 struct CustomTranslator
 {
   template<size_t N, size_t M>
-  auto translate(But::Format::Parsed<N,M>&& parsed) const { return parsed; }
+  auto translate(But::Format::ParsedCompiletime<N,M>&& parsed) const { return parsed; }
 };
 
 
