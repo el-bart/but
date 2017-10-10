@@ -94,4 +94,13 @@ TEST_F(ButLogBackendFieldInfo, GettingFieldTypesExplicitly)
   EXPECT_EQ( "1", fi3.array().at(0).value().get<std::string>() );
 }
 
+
+TEST_F(ButLogBackendFieldInfo, RetaggingRvalue)
+{
+  const auto fi = FieldInfo{ Tag{"foo"}, Value{"1"} }.retag( Tag{"bar"} );
+
+  EXPECT_EQ( "1", fi.value().get<std::string>() );
+  EXPECT_EQ( "bar", fi.tag().str() );
+}
+
 }

@@ -72,10 +72,18 @@ public:
   template<typename F>
   void visit(F&& f) const { boost::apply_visitor( [&](auto const& e) { f(tag_, e); }, variant_ ); }
 
+  auto retag(Tag t) &&
+  {
+    tag_ = std::move(t);
+    return std::move(*this);
+  }
+
 private:
-  Tag tag_;
   // TODO: std::variant<> when C++17 is here
-  boost::variant<Value, std::vector<FieldInfo>> variant_;
+  using Variant = boost::variant<Value, std::vector<FieldInfo>>;
+
+  Tag tag_;
+  Variant variant_;
 };
 
 }
