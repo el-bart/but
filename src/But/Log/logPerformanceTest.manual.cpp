@@ -83,6 +83,26 @@ void testCustomStructure(Logger& log)
     log.log( "agregated type", Point{-i, +i} );
 }
 
+
+struct Line
+{
+  Point from_;
+  Point to_;
+};
+
+auto toFieldInfo(Line const& l)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Type{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
+}
+
+template<typename Logger>
+void testCustomNestedStructure(Logger& log)
+{
+  for(auto i=0; i<g_logsCount; ++i)
+    log.log( "nested agregated type", Line{ Point{-i, +i}, Point{1,2} } );
+}
+
 }
 
 
@@ -107,6 +127,7 @@ int main(int argc, char** argv)
     case 4: testStringAndInts(lp); break;
     case 5: testStringAndDouble(lp); break;
     case 6: testCustomStructure(lp); break;
+    case 7: testCustomNestedStructure(lp); break;
     default: std::cerr << argv[0] << ": unknown test case " << testCaseNumber << std::endl; return 2;
   }
   const auto stop = Clock::now();
