@@ -15,7 +15,7 @@ struct None final
 {
   auto operator->() const { return this; }
   template<size_t N, size_t M>
-  auto translate(Format::Parsed<N,M>&& parsed) const { return std::move(parsed); }
+  auto translate(Format::ParsedCompiletime<N,M>&& parsed) const { return std::move(parsed); }
 };
 
 }
