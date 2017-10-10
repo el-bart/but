@@ -96,19 +96,15 @@ for lack of guarantees on objects order, after addition/removal of any element.
 ## logger
 this module implements a type-safe, style-unified logger, with different output "destinations".
 note that this logger is NOT line oriented!
-instead it is entry-oriented, where entry is a sequence of `<type,value>` pairs, that can be formatted later on.
-this allows creating arbitrary filtering mechanisms and any output format, including structured ones.
+instead it is entry-oriented, where entry is a sequence of (possibly nested) `<type,value>` pairs, that can be formatted / indexed later on.
+this allows creating arbitrary filtering mechanisms and any output format, including structured ones (Json, XML, etc...).
 
-for example logger can save timestamp, thread-id and message with 2 parameters.
-this will render 5 (or more) parameters, that are named (by its type) and have value.
-it is easy to convert such a data entry to structured json, xml or even log to data base or other key-value store.
+for example logger can save timestamp, thread-id and message as 3 separate parameters.
+this will render structures, that are named ("tagger") and have value.
+it is easy to convert such a data entry to structured Json, XML or even log to data base or other key-value store.
 
-all destinations implement dual interface.
-on one hand they can support getting already-formatted sequence of type-value elements.
-on the other there is a "raw" mode, where they get all the parameters "as is", from a caller.
-this means that user can choose more abstract format, that can be changed at runtime, or static one,
-with no extra overhead, if it is known that only a certain output type is required and all the abstractions
-can be dropped.
+all destinations implement `Destination::Sink`.
+they support getting already-formatted sequence of type-value elements.
 
 loggers are designed to be passed by values, though it is also possible to make it "enterprise-style", by
 providing a global variable, used for logging from everywhere.
@@ -118,16 +114,14 @@ all destinations support `flush()` method, that forces all logs to be sent to th
 another option is `reload()`, that forces to re-establish destination (reconnect, reopen file, etc...),
 so that log rotation can be implemented.
 
-in order to add support for user's type/class `Abc`, it is enough to add `toType(Abc const&) -> Backend::Type` and
-`toValue(Abc const&) -> Backend::Value` methods to the same namespace `Abc` has been declared in.
+in order to add support for user's type/class `Abc`, it is enough to add `toFieldInfo(Abc const&) -> Backend::FieldInfo`
+free function, to the same namespace `Abc` has been declared in (for ADL - Argument Dependent Lookup).
 from this moment on, logger will be able to log your type just like any other.
 
  * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience.
- * `LoggerProxyThrowing` - same as `LoggerProxy`, but forwarding exceptions from the implementation. useful in some unusual requirements scenario.
-wrapper for this object, adding fields to achieve required log message content.
+ * `LoggerProxyThrowing` - same as `LoggerProxy`, but forwarding exceptions from the implementation. useful in some unusual requirements scenarios.
  * `Destination` - namespace containing typical destinations, that are provided out of the box.
- * `Destination::Foreign` - base class for dynamic destinations.
- * `Destination::ForeignAdapter` - adapter that provides a helper buffer for `Foreign` destinations, to avoid extra memory allocations.
+ * `Destination::Sink` - base class for dynamic destinations.
 
 
 ## meta programming
@@ -173,3 +167,4 @@ system, effectively makes low-throughput system. ;)
 
 ## Format
  * `BUT_FORMAT` - helper for generated parsed format, that can check syntax at compile time and process arguments at runtime (arity is always checked at compile time, too). since output format for each parameter is predefined, effectively all checks are done `static_assert`s.
+ * `BUT_FORMAT_RUNTIME` - variant of the `BUT_FORMAT` that performs all checks at run time.

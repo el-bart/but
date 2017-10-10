@@ -22,7 +22,7 @@ namespace Log
  *
  * @example the most trivial, near-to-zero overhead, on-console output logger can be achieved like this:
  * <code>
- * using Log = But::Log::Proxy<Destination::NaiveConsole>;
+ * using Log = But::Log::Proxy<Destination::TextConsole>;
  * Log log;
  * log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} );
  * </code>

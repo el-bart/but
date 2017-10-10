@@ -2,10 +2,8 @@
 
 ## logger-related things
 
-* add Value<vector<Value>>, so that structures can also be easily represented, and transformed into a json/xml/txt. tuple<> can be converted into it, effectively allowing nested data structures (eg. Point{x,y,z}, etc...)!!!!
 * LogStash integration, via Json stream sending.
 * consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
-* maybe `LoggerProxy::log()` could take a parsed format as a template argument, to avoid macros? could this be used to RT-based formats, with a proxy object?
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
 * add fields: `Size`, `Index`, `Address`

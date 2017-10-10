@@ -6,12 +6,19 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
-  * `toString()` is replaced by `toValue()` (returns `Value`) and `toTypeString()` by `toType()` (returns `Type`).
-  * `Log::LoggerProxy` and `Log::LoggerProxyThrowing` that wrap all the logging with and without exceptions forwarding.
+  * `toFieldInfo()` is replaced now the base interface for logging.
+  * `Log::Proxy` and `Log::ProxyThrowing` that wrap all the logging with and without exceptions forwarding.
   * all `assert()` statements in the code are now `BUT_ASSERT()`.
   * `BUT_ASSERT` - assert that works with `constexpr` functions, too.
-  * `Log::Destination::NaiveConsole` for simplest, possible logging (minimal overhead).
-  * `But::Format` for doing basic, common string formatting.
+  * `Log::Destination::TextFile` - the same as `TextConsole`, but writing lines to a file.
+  * `Log::Destination::TextConsole` - for simplest, possible logging on the screen.
+  * `Log::Destination::TextStream` - generic `Sink`, to write data (make it structured or unstructured) to a given stream.
+  * `Log::Destination::JsonFile` - same as `JsonConsole`, but writing to a file.
+  * `Log::Destination::JsonConsole` - writes logs as Json entries - one entry per line.
+  * `Log::Destination::Syslog` - logs to system `syslogd`, using linux API.
+  * `Log::Destination::MultiSink` - convenient wrapper, allowing logging to multiple `Sink`s at the same time.
+  * `Log::Destination::Null` - `Sink` that ignores all the arguments (mostly for testing).
+  * `But::Format` module for doing basic, common string formatting, both at compile-time and at run-time.
   * `Optional<T>` now supports multi-argument c-tors.
   * `Log::Field::Pid` added.
   * added GCC-7.1 and Clang-4.0 to supported toolchains (and as default ones on CI).
