@@ -44,21 +44,21 @@ template<typename Logger>
 void testStringAndInt(Logger& log)
 {
   for(auto i=0; i<g_logsCount; ++i)
-    log.log("answer is ", 42);
+    log.log("answer is", 42);
 }
 
 template<typename Logger>
 void testStringAndInts(Logger& log)
 {
   for(auto i=0; i<g_logsCount; ++i)
-    log.log("options: ", 41, 42, 43);
+    log.log("options:", 41, 42, 43);
 }
 
 template<typename Logger>
 void testStringAndDouble(Logger& log)
 {
   for(auto i=0; i<g_logsCount; ++i)
-    log.log("some value = ", 4.2);
+    log.log("some value =", 4.2);
 }
 
 }
