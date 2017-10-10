@@ -3,7 +3,6 @@
 #include "But/Format/format.hpp"
 
 using But::Log::Localization::Translation;
-using But::Format::Parsed;
 
 namespace
 {
@@ -53,13 +52,11 @@ TEST_F(ButLogLocalizationTranslation, UnefinedFormatsAreNotTranslated)
 }
 
 
-/* TODO for now...
 TEST_F(ButLogLocalizationTranslation, ErrorsOnFormatMissmatchThrow)
 {
   EXPECT_NO_THROW( Translation{data_} );
   data_.push_back( Translation::Entry{ {"sth in"}, {"other out $0"} } );
   EXPECT_THROW( Translation{data_}, Translation::IncompatibleFormats );
 }
-*/
 
 }

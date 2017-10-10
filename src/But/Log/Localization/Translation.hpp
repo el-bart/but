@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <unordered_map>
 #include "But/NotNull.hpp"
 #include "But/Exception.hpp"
 #include "But/Format/Parsed.hpp"
@@ -34,20 +34,17 @@ public:
   explicit Translation(Data data);
 
   template<size_t N, size_t M>
-  auto translate(Format::Parsed<N,M>&& parsed) const
+  auto translate(Format::ParsedCompiletime<N,M> const& parsed) const
   {
-    const auto translation = findTranslation( parsed.inputFormat() );
-    if(not translation)
-      return std::move(parsed);
-    // TODO...
-    return Format::Parsed<N,M>(translation);
+    return findTranslation( parsed.inputFormat() );
   }
 
 private:
-  char const* findTranslation(char const* from) const;
+  using Map = std::unordered_map<std::string, Format::ParsedRuntime>;
 
-  using DataShNN = But::NotNullShared<const Data>;
-  DataShNN data_;
+  Format::ParsedRuntime findTranslation(char const* from) const;
+
+  But::NotNullShared<const Map> translations_;
 };
 
 
