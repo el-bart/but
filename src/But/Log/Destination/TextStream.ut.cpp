@@ -8,6 +8,8 @@ using But::Log::Destination::TextStream;
 using But::Log::Destination::Foreign;
 using But::Log::Field::LineNumber;
 using But::Log::Field::FormattedString;
+using But::Log::Backend::Type;
+using But::Log::Backend::FieldInfo;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
 namespace
@@ -132,6 +134,46 @@ TEST_F(ButLogDestinationTextStream, ZeroArgumentsLogIsJustAnEmptyLine)
 {
   s_.log();
   EXPECT_EQ( s_.ss_.str(), "\n" );
+}
+
+
+struct Point
+{
+  int x_;
+  int y_;
+  int z_;
+};
+
+auto toFieldInfo(Point const& p)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Type{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_), toFieldInfo(p.z_) } };
+}
+
+TEST_F(ButLogDestinationTextStream, StreamingNestedStructure)
+{
+  s_.log( "location in space:", Point{13,42,69} );
+  EXPECT_EQ( s_.ss_.str(), "location in space: Point={13,42,69}\n" );
+}
+
+
+struct Line
+{
+  Point from_;
+  Point to_;
+};
+
+auto toFieldInfo(Line const& l)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Type{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
+}
+
+
+TEST_F(ButLogDestinationTextStream, StreamingDeeplyNestedStructure)
+{
+  s_.log( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } );
+  EXPECT_EQ( s_.ss_.str(), "2D: Line={Point={13,42,69},Point={9,9,7}}\n" );
 }
 
 }

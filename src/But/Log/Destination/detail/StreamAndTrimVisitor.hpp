@@ -49,31 +49,45 @@ struct StreamAndTrimVisitor final
   {
     v.visit(*this);
   }
-  void operator()(Backend::Type const&, std::vector<Backend::FieldInfo> const& fis)
+  void operator()(Backend::Type const& t, std::vector<Backend::FieldInfo> const& fis)
   {
     if( fis.empty() )
       return;
-    if( fis[0].type() == formattedStringType_ )
+
+    const auto isRoot = not rootProcessed_;
+    rootProcessed_ = true;
+
+    if( isRoot && fis[0].type() == formattedStringType_ )
     {
       assert(os_);
       (*os_) << fis[0].value().get<std::string>();
       return;
     }
 
-    auto it = begin(fis);
-    it->visit(*this);
-    ++it;
-    for(; it!=end(fis); ++it)
+    if(not isRoot)
     {
       assert(os_);
-      (*os_) << ' ';
-      it->visit(*this);
+      (*os_) << t << "={";
     }
+    {
+      auto it = begin(fis);
+      it->visit(*this);
+      ++it;
+      for(; it!=end(fis); ++it)
+      {
+        assert(os_);
+        (*os_) << (isRoot?' ':',');
+        it->visit(*this);
+      }
+    }
+    if(not isRoot)
+      (*os_) << "}";
   }
 
   Backend::NonPrintableTrimmer const* trim_{nullptr};
   std::ostream* os_{nullptr};
   const Backend::Type formattedStringType_{ toFieldInfo( Field::FormattedString{""} ).type() };
+  bool rootProcessed_{false};
 };
 
 }
