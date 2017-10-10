@@ -51,13 +51,15 @@ namespace Log
  *
  * @note "translators" are only applicable for *formatted* logs!
  */
-template<typename Destination, typename Translator = Localization::None>
+template<typename Translator = Localization::None>
 class Proxy final
 {
+  using Impl = ProxyThrowing<Translator>;
+
 public:
-  Proxy() = default;
+  using Destination = typename Impl::Destination;
+
   explicit Proxy(Destination dst): lpt_{ std::move(dst) } { }
-  explicit Proxy(Translator tr): lpt_{ std::move(tr) } { }
   Proxy(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
 
   /** @brief creates a single log entry, out of a given parameters.
@@ -112,7 +114,7 @@ public:
   }
 
 private:
-  ProxyThrowing<Destination, Translator> lpt_;
+  Impl lpt_;
 };
 
 }

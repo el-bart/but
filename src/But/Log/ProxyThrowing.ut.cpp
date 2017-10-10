@@ -26,9 +26,9 @@ struct VisitStream final
   std::stringstream* ss_{nullptr};
 };
 
-struct TestSinkDestination final: public Sink
+struct TestSink final: public Sink
 {
-  explicit TestSinkDestination(std::stringstream& ss): ss_{&ss} { }
+  explicit TestSink(std::stringstream& ss): ss_{&ss} { }
 
   void logImpl(FieldInfo const& fi) override
   {
@@ -41,43 +41,12 @@ struct TestSinkDestination final: public Sink
     }
   }
 
-  void reloadImpl() override { }
-  void flushImpl() override { }
+  void reloadImpl() override { ++reloads_; }
+  void flushImpl() override { ++flushes_; }
 
   std::stringstream* ss_{nullptr};
-};
-
-
-struct TestNativeDestination final
-{
-  explicit TestNativeDestination(std::stringstream& ss): ss_{&ss} { }
-
-  void log(int) { *ss_ << "int|"; }
-  void log(std::string const&) { *ss_ << "string|"; }
-  void log(double) { *ss_ << "double|"; }
-  void log(int, std::string const&, double) { *ss_ << "int,string,double|"; }
-  void log(FormattedString const& fs, std::string const&) { *ss_ << "[formatted:" << fs.value_ << "],string|"; }
-  void log(FormattedString const& fs, std::string const&, int) { *ss_ << "[formatted:" << fs.value_ << "],string,int|"; }
-
-  auto operator->() { return this; }
-
-  void reload() { ++reloads_; }
-  void flush() { ++flushes_; }
-
-  std::stringstream* ss_;
   unsigned reloads_{0};
   unsigned flushes_{0};
-};
-
-
-struct DestinationStub final
-{
-  auto operator->() { return this; }
-
-  template<typename... Args>
-  void log(Args&&...) { }
-  void reload() { }
-  void flush() { }
 };
 
 
@@ -89,33 +58,25 @@ struct ButLogProxyThrowing: public testing::Test
 
 TEST_F(ButLogProxyThrowing, LoggingSimpleValuesOneAtATime)
 {
-  ProxyThrowing<TestNativeDestination> log{ TestNativeDestination{buffer_} };
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log(42);
   log.log("foo");
   log.log(3.14);
-  EXPECT_EQ( buffer_.str(), "int|string|double|" );
+  EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | double='3.14' | " );
 }
 
 
 TEST_F(ButLogProxyThrowing, LoggingMultipleSimpleValuesAtOnce)
 {
-  ProxyThrowing<TestNativeDestination> log{ TestNativeDestination{buffer_} };
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log(42, "foo", 3.14);
-  EXPECT_EQ( buffer_.str(), "int,string,double|");
-}
-
-
-TEST_F(ButLogProxyThrowing, LoggingViaSmartPointerToDestination)
-{
-  ProxyThrowing< std::shared_ptr<TestNativeDestination> > log{ std::make_shared<TestNativeDestination>(buffer_) };
-  log.log(42, "foo", 3.14);
-  EXPECT_EQ( buffer_.str(), "int,string,double|");
+  EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | double='3.14' | " );
 }
 
 
 TEST_F(ButLogProxyThrowing, SinkTypeValueLogging)
 {
-  ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log(42, "foo", 'a');
   EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | string='a' | ");
 }
@@ -123,7 +84,7 @@ TEST_F(ButLogProxyThrowing, SinkTypeValueLogging)
 
 TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
 {
-  ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log( BUT_FORMAT("${0} = $1"), "answer", 42 );
   EXPECT_EQ( buffer_.str(), "But::Formatted='answer = 42' | string='answer' | int='42' | ");
 }
@@ -134,56 +95,48 @@ FieldInfo toFieldInfo(SomeThrowingType const&) { throw std::runtime_error{"this 
 
 TEST_F(ButLogProxyThrowing, InternalExceptionsArePropagatedToCaller)
 {
-  ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   EXPECT_THROW( log.log( SomeThrowingType{} ), std::runtime_error );
 }
 
 
 TEST_F(ButLogProxyThrowing, LoggerIsConst)
 {
-  const ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
+  const ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log(42);
-}
-
-
-TEST_F(ButLogProxyThrowing, LoggerIsMovable)
-{
-  ProxyThrowing< std::unique_ptr<TestNativeDestination> > log{ std::make_unique<TestNativeDestination>(buffer_) };
-  auto other = std::move(log);
 }
 
 
 TEST_F(ButLogProxyThrowing, LogReloadingIsForwarder)
 {
-  TestNativeDestination dst{buffer_};
-  ProxyThrowing<TestNativeDestination*> log{&dst};
-  EXPECT_EQ( 0u, dst.reloads_ );
+  auto dst = But::makeSharedNN<TestSink>(buffer_);
+  ProxyThrowing<> log{dst};
+  EXPECT_EQ( 0u, dst->reloads_ );
   log.reload();
-  EXPECT_EQ( 1u, dst.reloads_ );
+  EXPECT_EQ( 1u, dst->reloads_ );
 }
 
 
 TEST_F(ButLogProxyThrowing, LogFlushingIsForwarder)
 {
-  TestNativeDestination dst{buffer_};
-  ProxyThrowing<TestNativeDestination*> log{&dst};
-  EXPECT_EQ( 0u, dst.flushes_ );
+  auto dst = But::makeSharedNN<TestSink>(buffer_);
+  ProxyThrowing<> log{dst};
+  EXPECT_EQ( 0u, dst->flushes_ );
   log.flush();
-  EXPECT_EQ( 1u, dst.flushes_ );
+  EXPECT_EQ( 1u, dst->flushes_ );
 }
 
 
-struct ThrowingDestination final
+struct ThrowingDestination final: public Sink
 {
-  void log(...) { throw std::runtime_error{"ignored"}; }
-  void reload() { throw std::runtime_error{"ignored"}; }
-  void flush()  { throw std::runtime_error{"ignored"}; }
-  auto operator->() { return this; }
+  void logImpl(FieldInfo const&) { throw std::runtime_error{"ignored"}; }
+  void reloadImpl() { throw std::runtime_error{"ignored"}; }
+  void flushImpl()  { throw std::runtime_error{"ignored"}; }
 };
 
 TEST_F(ButLogProxyThrowing, AllErrorsFromActualDestinationsAreForwarded)
 {
-  ProxyThrowing<ThrowingDestination> log{ ThrowingDestination{} };
+  ProxyThrowing<> log{ But::makeSharedNN<ThrowingDestination>() };
   EXPECT_THROW( log.log("hello", "john"), std::runtime_error );
   EXPECT_THROW( log.reload(), std::runtime_error  );
   EXPECT_THROW( log.flush(), std::runtime_error  );
@@ -192,16 +145,9 @@ TEST_F(ButLogProxyThrowing, AllErrorsFromActualDestinationsAreForwarded)
 
 TEST_F(ButLogProxyThrowing, ExplicitFormatting)
 {
-  ProxyThrowing<std::unique_ptr<TestNativeDestination>> log{ std::make_unique<TestNativeDestination>(buffer_) };
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
-  EXPECT_EQ( buffer_.str(), "[formatted:computer says 42],string,int|" );
-}
-
-
-TEST_F(ButLogProxyThrowing, AllowDefaultConstructionWhenNoArgumentsNeeded)
-{
-  ProxyThrowing<DestinationStub, But::Log::Localization::None> log;
-  log.log("foo", "bar");
+  EXPECT_EQ( buffer_.str(), "But::Formatted='computer says 42' | string='computer' | int='42' | " );
 }
 
 
@@ -226,27 +172,17 @@ struct CustomTranslator
 TEST_F(ButLogProxyThrowing, TranslationsAreNotAffectingNonFormattedLogs)
 {
   CustomTranslator ct;
-  ProxyThrowing<DestinationStub, CustomTranslator const*> log{&ct};
+  ProxyThrowing<CustomTranslator const*> log{ But::makeSharedNN<TestSink>(buffer_), &ct };
   EXPECT_EQ(0u, ct.counter_);
   log.log("not affected");
   EXPECT_EQ(0u, ct.counter_);
 }
 
 
-TEST_F(ButLogProxyThrowing, BuildingWithDefaultDestinationAndCustomTranslator)
-{
-  CustomTranslator ct;
-  ProxyThrowing<DestinationStub, CustomTranslator const*> log{&ct};
-  EXPECT_EQ(0u, ct.counter_);
-  log.log( BUT_FORMAT("test") );
-  EXPECT_EQ(1u, ct.counter_);
-}
-
-
 TEST_F(ButLogProxyThrowing, UsingCustomTranslator)
 {
   CustomTranslator ct;
-  ProxyThrowing<DestinationStub, CustomTranslator const*> log{ DestinationStub{}, &ct };
+  ProxyThrowing<CustomTranslator const*> log{ But::makeSharedNN<TestSink>(buffer_), &ct };
   EXPECT_EQ(0u, ct.counter_);
   log.log( BUT_FORMAT("test") );
   EXPECT_EQ(1u, ct.counter_);
@@ -256,8 +192,7 @@ TEST_F(ButLogProxyThrowing, UsingCustomTranslator)
 TEST_F(ButLogProxyThrowing, ExceptionsFromTranslationsArePropagated)
 {
   CustomTranslator ct{true};
-  TestNativeDestination dst{buffer_};
-  ProxyThrowing<TestNativeDestination*, CustomTranslator const*> log{&dst, &ct};
+  ProxyThrowing<CustomTranslator const*> log{ But::makeSharedNN<TestSink>(buffer_), &ct };
   EXPECT_THROW( log.log( BUT_FORMAT("test $0"), "xx" ), std::runtime_error );
 }
 

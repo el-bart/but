@@ -14,12 +14,6 @@ struct ButLogDestinationNull: public testing::Test
 };
 
 
-TEST_F(ButLogDestinationNull, ArrowOperatorSmokeTest)
-{
-  null_->reload();
-}
-
-
 TEST_F(ButLogDestinationNull, SmokeTest)
 {
   null_.reload();

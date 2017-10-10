@@ -35,17 +35,10 @@ TEST_F(ButLogDestinationTextStream, PrintingSampleData)
 }
 
 
-TEST_F(ButLogDestinationTextStream, CheckArrowOperator)
-{
-  s_->log( "line:", LineNumber{42} );
-  EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
-}
-
-
 TEST_F(ButLogDestinationTextStream, OperatingViaBaseClass)
 {
   auto& base = static_cast<Sink&>(s_);
-  base->log( "line:", LineNumber{42} );
+  base.log( "line:", LineNumber{42} );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 

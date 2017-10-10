@@ -55,19 +55,11 @@ TEST_F(ButLogDestinationSink, ForwardingFormattedStringWithProperTypes)
 }
 
 
-TEST_F(ButLogDestinationSink, CheckArrowOperator)
-{
-  EXPECT_CALL( mock_, logImpl(_) )
-    .Times(1);
-  mock_->log(42, "foo bar", 3.14);
-}
-
-
 TEST_F(ButLogDestinationSink, ReloadForwardingWorks)
 {
   EXPECT_CALL( mock_, reloadImpl() )
     .Times(1);
-  mock_->reload();
+  mock_.reload();
 }
 
 

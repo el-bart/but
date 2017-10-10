@@ -34,8 +34,6 @@ public:
   void reload() { reloadImpl(); }
   void flush() { flushImpl(); }
 
-  auto operator->() { return this; }
-
 private:
   virtual void logImpl(Backend::FieldInfo const& fi) = 0;
   virtual void reloadImpl() = 0;

@@ -20,8 +20,8 @@ constexpr auto g_logsCount = 100*1000;
 
 auto makeLogger()
 {
-  auto dst = But::makeUniqueNN<But::Log::Destination::TextConsole>();
-  return But::Log::Proxy<decltype(dst)>{ std::move(dst) };
+  auto dst = But::makeSharedNN<But::Log::Destination::TextConsole>();
+  return But::Log::Proxy<>{ std::move(dst) };
 }
 
 

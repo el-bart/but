@@ -2,27 +2,25 @@
 #include <sstream>
 #include "gtest/gtest.h"
 #include "Proxy.hpp"
-#include "Destination/Sink.hpp"
 
 using But::Log::Proxy;
+using But::Log::Backend::FieldInfo;
+using But::Log::Destination::Sink;
 
 namespace
 {
 
-struct DestinationStub final
+struct DestinationStub final: Sink
 {
-  auto operator->() { return this; }
-
-  template<typename... Args>
-  void log(Args&&...) { }
-  void reload() { }
-  void flush() { }
+  void logImpl(FieldInfo const&) override { }
+  void reloadImpl() override { }
+  void flushImpl() override { }
 };
 
 
 struct ButLogProxy: public testing::Test
 {
-  Proxy<DestinationStub> lp_;
+  Proxy<> lp_{ But::makeSharedNN<DestinationStub>() };
 };
 
 
@@ -35,23 +33,21 @@ TEST_F(ButLogProxy, LoggingApiSmokeTest)
 
 TEST_F(ButLogProxy, LoggerIsMovable)
 {
-  Proxy<DestinationStub> log;
-  auto other = std::move(log);
+  auto other = std::move(lp_);
   (void)other;
 }
 
 
-struct ThrowingDestination final
+struct ThrowingDestination final: Sink
 {
-  void log(...) { throw std::runtime_error{"ignored"}; }
-  void reload() { throw std::runtime_error{"ignored"}; }
-  void flush()  { throw std::runtime_error{"ignored"}; }
-  auto operator->() { return this; }
+  void logImpl(FieldInfo const&) override { throw std::runtime_error{"ignored"}; }
+  void reloadImpl() override { throw std::runtime_error{"ignored"}; }
+  void flushImpl() override { throw std::runtime_error{"ignored"}; }
 };
 
 TEST_F(ButLogProxy, AllErrorsFromActualDestinationsAreIgnored)
 {
-  Proxy<ThrowingDestination> log{ ThrowingDestination{} };
+  Proxy<> log{ But::makeSharedNN<ThrowingDestination>() };
   EXPECT_NO_THROW( log.log("hello", "john") );
   EXPECT_NO_THROW( log.reload() );
   EXPECT_NO_THROW( log.flush() );
@@ -65,17 +61,12 @@ struct CustomTranslator
 
 TEST_F(ButLogProxy, ConstructorsForDifferentObjects)
 {
+  const auto dst = But::makeSharedNN<DestinationStub>();
   {
-    Proxy<DestinationStub, CustomTranslator> lp;
+    Proxy<CustomTranslator> lp{dst};
   }
   {
-    Proxy<DestinationStub, CustomTranslator> lp{ DestinationStub{} };
-  }
-  {
-    Proxy<DestinationStub, CustomTranslator> lp{ CustomTranslator{} };
-  }
-  {
-    Proxy<DestinationStub, CustomTranslator> lp{ DestinationStub{}, CustomTranslator{} };
+    Proxy<CustomTranslator> lp{ dst, CustomTranslator{} };
   }
 }
 
