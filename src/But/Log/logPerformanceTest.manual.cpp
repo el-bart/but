@@ -5,7 +5,7 @@
 #include "Destination/TextConsole.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
 
 namespace
@@ -73,7 +73,7 @@ struct Point
 auto toFieldInfo(Point const& p)
 {
   using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Type{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_) } };
+  return FieldInfo{ Tag{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_) } };
 }
 
 template<typename Logger>
@@ -93,7 +93,7 @@ struct Line
 auto toFieldInfo(Line const& l)
 {
   using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Type{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
+  return FieldInfo{ Tag{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
 }
 
 template<typename Logger>

@@ -15,7 +15,7 @@ struct ThreadNo final
   uint64_t value_;
 };
 
-inline auto toFieldInfo(const ThreadNo tno) { return Backend::FieldInfo{ Backend::Type{"But::ThreadNo"}, Backend::Value{tno.value_} }; }
+inline auto toFieldInfo(const ThreadNo tno) { return Backend::FieldInfo{ Backend::Tag{"But::ThreadNo"}, Backend::Value{tno.value_} }; }
 
 }
 }

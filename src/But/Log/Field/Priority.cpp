@@ -30,7 +30,7 @@ Backend::Value const& toValue(const Priority pri)
 
 Backend::FieldInfo toFieldInfo(const Priority pri)
 {
-  return Backend::FieldInfo{ Backend::Type{"But::Priority"}, toValue(pri) };
+  return Backend::FieldInfo{ Backend::Tag{"But::Priority"}, toValue(pri) };
 }
 
 }

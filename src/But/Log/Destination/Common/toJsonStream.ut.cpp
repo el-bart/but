@@ -5,7 +5,7 @@
 #include "But/Log/Field/FormattedString.hpp"
 #include "But/Log/Backend/toFieldInfo.hpp"
 
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
 using But::Log::Backend::toFieldInfo;
 using But::Log::Destination::Common::toJsonStream;
@@ -20,7 +20,7 @@ struct ButLogDestinationCommonToJsonStream: public testing::Test
   template<typename ...Args>
   auto makeFieldInfo(const Args... args) const
   {
-    return FieldInfo{ Type{"tmp"}, std::vector<FieldInfo>{ toFieldInfo(args)... } };
+    return FieldInfo{ Tag{"tmp"}, std::vector<FieldInfo>{ toFieldInfo(args)... } };
   }
 
 

@@ -15,7 +15,7 @@ struct Pid final
   pid_t value_{ getpid() };
 };
 
-inline auto toFieldInfo(const Pid pid) { return Backend::FieldInfo{ Backend::Type{"But::Pid"}, Backend::Value{pid.value_} }; }
+inline auto toFieldInfo(const Pid pid) { return Backend::FieldInfo{ Backend::Tag{"But::Pid"}, Backend::Value{pid.value_} }; }
 
 }
 }

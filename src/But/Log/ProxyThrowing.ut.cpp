@@ -6,7 +6,7 @@
 
 using But::Log::ProxyThrowing;
 using But::Log::Destination::Sink;
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::Value;
 using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;

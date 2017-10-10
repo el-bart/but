@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "Pid.hpp"
 
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Field::Pid;
 
 namespace
@@ -15,7 +15,7 @@ TEST_F(ButLogFieldPid, ConvertingToFieldInfo)
 {
   const auto pid = Pid{};
   const auto fi = toFieldInfo(pid);
-  EXPECT_EQ( Type{"But::Pid"}, fi.type() );
+  EXPECT_EQ( Tag{"But::Pid"}, fi.type() );
   EXPECT_EQ( pid.value_, fi.value().get<int64_t>() );
 }
 

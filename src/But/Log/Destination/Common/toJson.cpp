@@ -25,19 +25,19 @@ struct ValueVisitor final
     (*field_)[ type_->str() ] = t;
   }
 
-  Backend::Type const* type_{nullptr};
+  Backend::Tag const* type_{nullptr};
   json* field_{nullptr};
 };
 
 
 struct NestedFieldInfoVisitor final
 {
-  void operator()(Backend::Type const& t, Backend::Value const& v)
+  void operator()(Backend::Tag const& t, Backend::Value const& v)
   {
     ValueVisitor vv{&t, &field_};
     v.visit(vv);
   }
-  void operator()(Backend::Type const& t, std::vector<Backend::FieldInfo>const& fis)
+  void operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo>const& fis)
   {
     NestedFieldInfoVisitor fiv;
     for(auto& e: fis)
@@ -50,14 +50,14 @@ struct NestedFieldInfoVisitor final
 
 struct FieldInfoVisitor final
 {
-  void operator()(Backend::Type const& t, Backend::Value const& v)
+  void operator()(Backend::Tag const& t, Backend::Value const& v)
   {
     json tmp;
     ValueVisitor vv{&t, &tmp};
     v.visit(vv);
     field_.push_back( std::move(tmp) );
   }
-  void operator()(Backend::Type const& /*t*/, std::vector<Backend::FieldInfo>const& fis)
+  void operator()(Backend::Tag const& /*t*/, std::vector<Backend::FieldInfo>const& fis)
   {
     for(auto& e: fis)
     {

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <boost/variant.hpp>
-#include "Type.hpp"
+#include "Tag.hpp"
 #include "Value.hpp"
 
 namespace But
@@ -16,18 +16,18 @@ class FieldInfo final
 public:
   template<typename T>
   explicit FieldInfo(T&& value):
-    type_{ Type::of(value) },
+    type_{ Tag::of(value) },
     variant_{ Value{ std::forward<T>(value) } }
   { }
 
   FieldInfo(Value const& value) = delete;
   FieldInfo(Value&& value) = delete;
 
-  FieldInfo(Type type, Value value):
+  FieldInfo(Tag type, Value value):
     type_{ std::move(type) },
     variant_{ std::move(value) }
   { }
-  FieldInfo(Type type, std::vector<FieldInfo> fi):
+  FieldInfo(Tag type, std::vector<FieldInfo> fi):
     type_{ std::move(type) },
     variant_{ std::move(fi) }
   { }
@@ -53,11 +53,11 @@ public:
    *  <code>
    *    struct Visitor
    *    {
-   *      void operator()(Type const& t, Value const& v)
+   *      void operator()(Tag const& t, Value const& v)
    *      {
    *        cout << '/' << t << '=' << v;
    *      }
-   *      void operator()(Type const& t, std::vector<FieldInfo> const& fis)
+   *      void operator()(Tag const& t, std::vector<FieldInfo> const& fis)
    *      {
    *        cout << '/' << t << "=[";
    *        for(auto& e: fis)
@@ -73,7 +73,7 @@ public:
   void visit(F&& f) const { boost::apply_visitor( [&](auto const& e) { f(type_, e); }, variant_ ); }
 
 private:
-  Type type_;
+  Tag type_;
   // TODO: std::variant<> when C++17 is here
   boost::variant<Value, std::vector<FieldInfo>> variant_;
 };

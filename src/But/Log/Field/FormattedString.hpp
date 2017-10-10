@@ -16,7 +16,7 @@ struct FormattedString final
 
 inline auto toFieldInfo(FormattedString fs)
 {
-  return Backend::FieldInfo{ Backend::Type{"But::Formatted"}, Backend::Value{ std::move(fs.value_) } };
+  return Backend::FieldInfo{ Backend::Tag{"But::Formatted"}, Backend::Value{ std::move(fs.value_) } };
 }
 
 inline auto operator==(FormattedString const& lhs, FormattedString const& rhs) { return lhs.value_ == rhs.value_; }

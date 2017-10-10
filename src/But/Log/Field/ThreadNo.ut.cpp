@@ -2,7 +2,7 @@
 #include "ThreadNo.hpp"
 #include "But/Threading/JoiningThread.hpp"
 
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::Value;
 using But::Log::Field::ThreadNo;
 
@@ -17,7 +17,7 @@ TEST_F(ButLogFieldThreadNo, ConvertingToFieldInfo)
 {
   const auto tno = ThreadNo{};
   const auto fi = toFieldInfo(tno);
-  EXPECT_EQ( Type{"But::ThreadNo"}, fi.type() );
+  EXPECT_EQ( Tag{"But::ThreadNo"}, fi.type() );
   EXPECT_EQ( Value{tno.value_}, fi.value() );
 }
 

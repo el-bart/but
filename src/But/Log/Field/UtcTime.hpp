@@ -19,7 +19,7 @@ struct UtcTime final
 };
 
 
-inline auto toFieldInfo(const UtcTime uts) { return Backend::FieldInfo{ Backend::Type{"But::UtcTime"}, Backend::Value{ uts.timestamp_.time() } }; }
+inline auto toFieldInfo(const UtcTime uts) { return Backend::FieldInfo{ Backend::Tag{"But::UtcTime"}, Backend::Value{ uts.timestamp_.time() } }; }
 
 }
 }

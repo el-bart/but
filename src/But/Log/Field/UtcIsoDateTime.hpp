@@ -25,7 +25,7 @@ struct UtcIsoDateTime final
 
 inline auto toFieldInfo(const UtcIsoDateTime uits)
 {
-  return Backend::FieldInfo{ Backend::Type{"But::UtcIsoDT"}, Backend::Value{ uits.date() + "T" + uits.time() + "Z" } };
+  return Backend::FieldInfo{ Backend::Tag{"But::UtcIsoDT"}, Backend::Value{ uits.date() + "T" + uits.time() + "Z" } };
 }
 
 }

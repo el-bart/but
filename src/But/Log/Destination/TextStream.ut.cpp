@@ -8,7 +8,7 @@ using But::Log::Destination::TextStream;
 using But::Log::Destination::Sink;
 using But::Log::Field::LineNumber;
 using But::Log::Field::FormattedString;
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
@@ -147,7 +147,7 @@ struct Point
 auto toFieldInfo(Point const& p)
 {
   using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Type{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_), toFieldInfo(p.z_) } };
+  return FieldInfo{ Tag{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_), toFieldInfo(p.z_) } };
 }
 
 TEST_F(ButLogDestinationTextStream, StreamingNestedStructure)
@@ -166,7 +166,7 @@ struct Line
 auto toFieldInfo(Line const& l)
 {
   using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Type{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
+  return FieldInfo{ Tag{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
 }
 
 

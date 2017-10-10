@@ -19,7 +19,7 @@ struct UtcDate final
 };
 
 
-inline auto toFieldInfo(UtcDate const& d) { return Backend::FieldInfo{ Backend::Type{"But::UtcDate"}, Backend::Value{ d.timestamp_.date() } }; }
+inline auto toFieldInfo(UtcDate const& d) { return Backend::FieldInfo{ Backend::Tag{"But::UtcDate"}, Backend::Value{ d.timestamp_.date() } }; }
 
 }
 }

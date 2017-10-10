@@ -23,7 +23,7 @@ Backend::Value toValue(const Timestamp uts)
 
 Backend::FieldInfo toFieldInfo(const Timestamp uts)
 {
-  return Backend::FieldInfo{ Backend::Type{"But::Timestamp"}, toValue(uts) };
+  return Backend::FieldInfo{ Backend::Tag{"But::Timestamp"}, toValue(uts) };
 }
 
 }

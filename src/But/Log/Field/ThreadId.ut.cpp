@@ -3,7 +3,7 @@
 #include "ThreadId.hpp"
 #include "But/Threading/JoiningThread.hpp"
 
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Field::ThreadId;
 
 namespace
@@ -17,7 +17,7 @@ TEST_F(ButLogFieldThreadId, ConvertingToFieldInfo)
 {
   const auto tid = ThreadId{};
   const auto fi = toFieldInfo(tid);
-  EXPECT_EQ( Type{"But::ThreadId"}, fi.type() );
+  EXPECT_EQ( Tag{"But::ThreadId"}, fi.type() );
   std::stringstream ss;
   ss << tid.value_;
   EXPECT_EQ( ss.str(), fi.value().get<std::string>() );

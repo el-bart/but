@@ -20,7 +20,7 @@ Backend::Value toValue(ThreadId const& tid)
 
 Backend::FieldInfo toFieldInfo(ThreadId const& tid)
 {
-  return Backend::FieldInfo{ Backend::Type{"But::ThreadId"}, toValue(tid) };
+  return Backend::FieldInfo{ Backend::Tag{"But::ThreadId"}, toValue(tid) };
 }
 
 }

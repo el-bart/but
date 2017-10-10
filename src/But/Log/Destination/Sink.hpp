@@ -25,7 +25,7 @@ public:
   void log(Args&& ...args)
   {
     using ::But::Log::Backend::toFieldInfo;
-    const auto fi = Backend::FieldInfo{ Backend::Type{"log"}, { toFieldInfo( std::forward<Args>(args) )... } };
+    const auto fi = Backend::FieldInfo{ Backend::Tag{"log"}, { toFieldInfo( std::forward<Args>(args) )... } };
     logImpl(fi);
   }
 

@@ -17,7 +17,7 @@ struct FileName final
 
 inline auto toFieldInfo(FileName const& fn)
 {
-  return Backend::FieldInfo{ Backend::Type{"But::FileName"}, Backend::Value{ fn.value_.string() } };
+  return Backend::FieldInfo{ Backend::Tag{"But::FileName"}, Backend::Value{ fn.value_.string() } };
 }
 
 }

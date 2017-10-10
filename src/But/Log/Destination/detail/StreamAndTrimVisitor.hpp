@@ -45,11 +45,11 @@ struct StreamAndTrimVisitor final
     (*os_) << n;
   }
 
-  void operator()(Backend::Type const&, Backend::Value const& v)
+  void operator()(Backend::Tag const&, Backend::Value const& v)
   {
     v.visit(*this);
   }
-  void operator()(Backend::Type const& t, std::vector<Backend::FieldInfo> const& fis)
+  void operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo> const& fis)
   {
     if( fis.empty() )
       return;
@@ -86,7 +86,7 @@ struct StreamAndTrimVisitor final
 
   Backend::NonPrintableTrimmer const* trim_{nullptr};
   std::ostream* os_{nullptr};
-  const Backend::Type formattedStringType_{ toFieldInfo( Field::FormattedString{""} ).type() };
+  const Backend::Tag formattedStringType_{ toFieldInfo( Field::FormattedString{""} ).type() };
   bool rootProcessed_{false};
 };
 

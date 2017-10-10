@@ -5,7 +5,7 @@
 
 using testing::_;
 using But::Log::Destination::Sink;
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
 
@@ -32,7 +32,7 @@ TEST_F(ButLogDestinationSink, ForwardingWithProperTypes)
           FieldInfo{"foo bar"},
           FieldInfo{3.14}
         };
-  const auto expected = FieldInfo{ Type{"log"}, std::move(data) };
+  const auto expected = FieldInfo{ Tag{"log"}, std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(42, "foo bar", 3.14);
@@ -48,7 +48,7 @@ TEST_F(ButLogDestinationSink, ForwardingFormattedStringWithProperTypes)
           FieldInfo{"foo bar"},
           FieldInfo{3.14}
         };
-  const auto expected = FieldInfo{ Type{"log"}, std::move(data) };
+  const auto expected = FieldInfo{ Tag{"log"}, std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(fmt, 42, "foo bar", 3.14);
@@ -74,7 +74,7 @@ TEST_F(ButLogDestinationSink, ReloadForwardingWorks)
 TEST_F(ButLogDestinationSink, PassingFieldInfoTypeDirectory)
 {
   std::vector<FieldInfo> data{ FieldInfo{42}, FieldInfo{"foo bar"}, };
-  const auto expected = FieldInfo{ Type{"xx"}, std::move(data) };
+  const auto expected = FieldInfo{ Tag{"xx"}, std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(expected);

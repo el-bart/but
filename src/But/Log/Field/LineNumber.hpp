@@ -14,7 +14,7 @@ struct LineNumber final
 };
 
 
-inline auto toFieldInfo(const LineNumber ln) { return Backend::FieldInfo{ Backend::Type{"But::LineNumber"}, Backend::Value{ln.value_} }; }
+inline auto toFieldInfo(const LineNumber ln) { return Backend::FieldInfo{ Backend::Tag{"But::LineNumber"}, Backend::Value{ln.value_} }; }
 
 }
 }

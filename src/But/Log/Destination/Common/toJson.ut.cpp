@@ -3,7 +3,7 @@
 #include "But/Log/Backend/toFieldInfo.hpp"
 
 using json = nlohmann::json;
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Backend::Value;
 using But::Log::Backend::FieldInfo;
 using But::Log::Backend::toFieldInfo;
@@ -17,7 +17,7 @@ struct ButLogDestinationCommonToJson: public testing::Test
   template<typename ...Args>
   auto makeFieldInfo(const Args... args) const
   {
-    return FieldInfo{ Type{"test"}, { toFieldInfo(args)... } };
+    return FieldInfo{ Tag{"test"}, { toFieldInfo(args)... } };
   }
 };
 
@@ -59,7 +59,7 @@ TEST_F(ButLogDestinationCommonToJson, FromFieldInfo)
 
 TEST_F(ButLogDestinationCommonToJson, CheckingNonUniqueTypes)
 {
-  const auto f = toJson( FieldInfo{ Type{"whatever"}, { FieldInfo{"foo"}, FieldInfo{"bar"} } } );
+  const auto f = toJson( FieldInfo{ Tag{"whatever"}, { FieldInfo{"foo"}, FieldInfo{"bar"} } } );
   EXPECT_TRUE( f.is_array() );
   EXPECT_EQ( "foo", f.at(0).at("string").get<std::string>() );
   EXPECT_EQ( "bar", f.at(1).at("string").get<std::string>() );
@@ -83,7 +83,7 @@ struct Nested
 auto toFieldInfo(Nested const& n)
 {
   using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Type{"Nested"}, { toFieldInfo(n.a_), toFieldInfo(n.b_) } };
+  return FieldInfo{ Tag{"Nested"}, { toFieldInfo(n.a_), toFieldInfo(n.b_) } };
 }
 
 

@@ -2,7 +2,7 @@
 #include "Timestamp.hpp"
 #include "But/Log/Backend/FieldInfo.hpp"
 
-using But::Log::Backend::Type;
+using But::Log::Backend::Tag;
 using But::Log::Field::Timestamp;
 
 namespace
@@ -34,7 +34,7 @@ TEST_F(ButLogFieldTimestamp, ConvertingToFieldInfo)
 {
   const auto tp = Timestamp::Clock::time_point{} + std::chrono::seconds{666};
   const auto fi = toFieldInfo( Timestamp{tp} );
-  EXPECT_EQ( Type{"But::Timestamp"}, fi.type() );
+  EXPECT_EQ( Tag{"But::Timestamp"}, fi.type() );
   EXPECT_EQ( 666.0, fi.value().get<double>() );
 }
 
