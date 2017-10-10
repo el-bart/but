@@ -23,7 +23,7 @@ TEST_F(ButLogFieldUtcDate, ConvertingToString)
 TEST_F(ButLogFieldUtcDate, ConvertingToFieldInfo)
 {
   const auto fi = toFieldInfo( UtcDate{1234} );
-  EXPECT_EQ( fi.type(), Tag{"But::UtcDate"} );
+  EXPECT_EQ( fi.tag(), Tag{"But::UtcDate"} );
   EXPECT_EQ( fi.value().get<std::string>(), "1970-01-01" );
 }
 

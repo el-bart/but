@@ -38,10 +38,10 @@ auto stringToPriority(std::string const& str)
 
 auto extractSyslogPriority(Backend::FieldInfo const& fi)
 {
-  const auto prioType = toFieldInfo(Field::Priority::info).type();
+  const auto prioType = toFieldInfo(Field::Priority::info).tag();
   for( auto& f: fi.array() )
   {
-    if( f.type() != prioType )
+    if( f.tag() != prioType )
       continue;
     const auto p = stringToPriority( f.value().get<std::string>() );
     return toSyslogPriority(p);

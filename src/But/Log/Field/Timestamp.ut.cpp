@@ -34,7 +34,7 @@ TEST_F(ButLogFieldTimestamp, ConvertingToFieldInfo)
 {
   const auto tp = Timestamp::Clock::time_point{} + std::chrono::seconds{666};
   const auto fi = toFieldInfo( Timestamp{tp} );
-  EXPECT_EQ( Tag{"But::Timestamp"}, fi.type() );
+  EXPECT_EQ( Tag{"But::Timestamp"}, fi.tag() );
   EXPECT_EQ( 666.0, fi.value().get<double>() );
 }
 

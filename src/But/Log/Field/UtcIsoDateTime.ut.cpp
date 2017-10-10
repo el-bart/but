@@ -21,7 +21,7 @@ TEST_F(ButLogFieldUtcIsoDateTime, ConvertingToString)
 TEST_F(ButLogFieldUtcIsoDateTime, ConvertingToFieldInfo)
 {
   const auto fi = toFieldInfo( UtcIsoDateTime{1234} );
-  EXPECT_EQ( Tag{"But::UtcIsoDT"}, fi.type() );
+  EXPECT_EQ( Tag{"But::UtcIsoDT"}, fi.tag() );
   EXPECT_EQ( "1970-01-01T00:20:34Z", fi.value().get<std::string>() );
 }
 

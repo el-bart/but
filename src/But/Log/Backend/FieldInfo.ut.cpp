@@ -16,7 +16,7 @@ struct ButLogBackendFieldInfo: public testing::Test
 TEST_F(ButLogBackendFieldInfo, ImplicitSimpleType)
 {
   const auto fi = FieldInfo{42};
-  EXPECT_EQ( Tag{"int"}, fi.type() );
+  EXPECT_EQ( Tag{"int"}, fi.tag() );
   EXPECT_EQ( 42, fi.value().get<int64_t>() );
 }
 
@@ -24,7 +24,7 @@ TEST_F(ButLogBackendFieldInfo, ImplicitSimpleType)
 TEST_F(ButLogBackendFieldInfo, ExplicitlyProvidedTypeName)
 {
   const auto fi = FieldInfo{ Tag{"type"}, Value{"value"} };
-  EXPECT_EQ( fi.type(), Tag{"type"} );
+  EXPECT_EQ( fi.tag(), Tag{"type"} );
   EXPECT_EQ( fi.value().get<std::string>(), "value" );
 }
 

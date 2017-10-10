@@ -17,7 +17,7 @@ TEST_F(ButLogFieldThreadId, ConvertingToFieldInfo)
 {
   const auto tid = ThreadId{};
   const auto fi = toFieldInfo(tid);
-  EXPECT_EQ( Tag{"But::ThreadId"}, fi.type() );
+  EXPECT_EQ( Tag{"But::ThreadId"}, fi.tag() );
   std::stringstream ss;
   ss << tid.value_;
   EXPECT_EQ( ss.str(), fi.value().get<std::string>() );

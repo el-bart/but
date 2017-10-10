@@ -57,7 +57,7 @@ struct StreamAndTrimVisitor final
     const auto isRoot = not rootProcessed_;
     rootProcessed_ = true;
 
-    if( isRoot && fis[0].type() == formattedStringType_ )
+    if( isRoot && fis[0].tag() == formattedStringType_ )
     {
       assert(os_);
       (*os_) << fis[0].value().get<std::string>();
@@ -86,7 +86,7 @@ struct StreamAndTrimVisitor final
 
   Backend::NonPrintableTrimmer const* trim_{nullptr};
   std::ostream* os_{nullptr};
-  const Backend::Tag formattedStringType_{ toFieldInfo( Field::FormattedString{""} ).type() };
+  const Backend::Tag formattedStringType_{ toFieldInfo( Field::FormattedString{""} ).tag() };
   bool rootProcessed_{false};
 };
 

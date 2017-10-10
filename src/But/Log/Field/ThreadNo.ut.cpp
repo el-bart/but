@@ -17,7 +17,7 @@ TEST_F(ButLogFieldThreadNo, ConvertingToFieldInfo)
 {
   const auto tno = ThreadNo{};
   const auto fi = toFieldInfo(tno);
-  EXPECT_EQ( Tag{"But::ThreadNo"}, fi.type() );
+  EXPECT_EQ( Tag{"But::ThreadNo"}, fi.tag() );
   EXPECT_EQ( Value{tno.value_}, fi.value() );
 }
 

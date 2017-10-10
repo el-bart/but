@@ -34,7 +34,7 @@ struct TestSinkDestination final: public Sink
   {
     for( auto& f: fi.array() )
     {
-      (*ss_) << f.type() << "='";
+      (*ss_) << f.tag() << "='";
       VisitStream vs{ss_};
       f.value().visit(vs);
       (*ss_) << "' | ";

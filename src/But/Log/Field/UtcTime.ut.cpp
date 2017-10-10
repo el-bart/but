@@ -23,7 +23,7 @@ TEST_F(ButLogFieldUtcTime, ConvertingToString)
 TEST_F(ButLogFieldUtcTime, ConvertingToFieldInfo)
 {
   const auto fi = toFieldInfo( UtcTime{1234} );
-  EXPECT_EQ( Tag{"But::UtcTime"}, fi.type() );
+  EXPECT_EQ( Tag{"But::UtcTime"}, fi.tag() );
   EXPECT_EQ( "00:20:34", fi.value().get<std::string>() );
 }
 

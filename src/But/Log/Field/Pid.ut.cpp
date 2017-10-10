@@ -15,7 +15,7 @@ TEST_F(ButLogFieldPid, ConvertingToFieldInfo)
 {
   const auto pid = Pid{};
   const auto fi = toFieldInfo(pid);
-  EXPECT_EQ( Tag{"But::Pid"}, fi.type() );
+  EXPECT_EQ( Tag{"But::Pid"}, fi.tag() );
   EXPECT_EQ( pid.value_, fi.value().get<int64_t>() );
 }
 
