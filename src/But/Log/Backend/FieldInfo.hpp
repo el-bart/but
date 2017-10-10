@@ -16,19 +16,19 @@ class FieldInfo final
 public:
   template<typename T>
   explicit FieldInfo(T&& value):
-    type_{ Tag::of(value) },
+    tag_{ Tag::of(value) },
     variant_{ Value{ std::forward<T>(value) } }
   { }
 
   FieldInfo(Value const& value) = delete;
   FieldInfo(Value&& value) = delete;
 
-  FieldInfo(Tag type, Value value):
-    type_{ std::move(type) },
+  FieldInfo(Tag tag, Value value):
+    tag_{ std::move(tag) },
     variant_{ std::move(value) }
   { }
-  FieldInfo(Tag type, std::vector<FieldInfo> fi):
-    type_{ std::move(type) },
+  FieldInfo(Tag tag, std::vector<FieldInfo> fi):
+    tag_{ std::move(tag) },
     variant_{ std::move(fi) }
   { }
 
@@ -38,18 +38,18 @@ public:
   FieldInfo(FieldInfo const&) = default;
   FieldInfo& operator=(FieldInfo const&) = default;
 
-  bool operator==(FieldInfo const& other) const { return type_ == other.type_ && variant_ == other.variant_; }
+  bool operator==(FieldInfo const& other) const { return tag_ == other.tag_ && variant_ == other.variant_; }
   bool operator!=(FieldInfo const& other) const { return not ( *this == other ); }
 
-  auto const& type() const & { return type_; }
+  auto const& tag() const & { return tag_; }
   auto const& value() const & { return boost::get<Value>(variant_); }
   auto const& array() const & { return boost::get<std::vector<FieldInfo>>(variant_); }
 
-  auto&& type() && { return std::move(type_); }
+  auto&& tag() && { return std::move(tag_); }
   auto&& value() && { return boost::get<Value>( std::move(variant_) ); }
   auto&& array() && { return boost::get<std::vector<FieldInfo>>( std::move(variant_) ); }
 
-  /** @brief visitor takes type and value parametrs, like this:
+  /** @brief visitor takes tag and value parametrs, like this:
    *  <code>
    *    struct Visitor
    *    {
@@ -68,12 +68,12 @@ public:
    *  </code>
    */
   template<typename F>
-  void visit(F&& f) { boost::apply_visitor( [&](auto& e) { f(type_, e); }, variant_ ); }
+  void visit(F&& f) { boost::apply_visitor( [&](auto& e) { f(tag_, e); }, variant_ ); }
   template<typename F>
-  void visit(F&& f) const { boost::apply_visitor( [&](auto const& e) { f(type_, e); }, variant_ ); }
+  void visit(F&& f) const { boost::apply_visitor( [&](auto const& e) { f(tag_, e); }, variant_ ); }
 
 private:
-  Tag type_;
+  Tag tag_;
   // TODO: std::variant<> when C++17 is here
   boost::variant<Value, std::vector<FieldInfo>> variant_;
 };
