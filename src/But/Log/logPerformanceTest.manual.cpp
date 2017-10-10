@@ -5,6 +5,8 @@
 #include "Destination/TextConsole.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
+using But::Log::Backend::Type;
+using But::Log::Backend::FieldInfo;
 
 namespace
 {
@@ -61,6 +63,26 @@ void testStringAndDouble(Logger& log)
     log.log("some value =", 4.2);
 }
 
+
+struct Point
+{
+  int x_;
+  int y_;
+};
+
+auto toFieldInfo(Point const& p)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Type{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_) } };
+}
+
+template<typename Logger>
+void testCustomStructure(Logger& log)
+{
+  for(auto i=0; i<g_logsCount; ++i)
+    log.log( "agregated type", Point{-i, +i} );
+}
+
 }
 
 
@@ -84,6 +106,7 @@ int main(int argc, char** argv)
     case 3: testStringAndInt(lp); break;
     case 4: testStringAndInts(lp); break;
     case 5: testStringAndDouble(lp); break;
+    case 6: testCustomStructure(lp); break;
     default: std::cerr << argv[0] << ": unknown test case " << testCaseNumber << std::endl; return 2;
   }
   const auto stop = Clock::now();
