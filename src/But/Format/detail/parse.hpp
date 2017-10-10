@@ -106,15 +106,10 @@ constexpr auto parse(Pf&& pf, char const* fmt)
 
 
 template<size_t N>
-constexpr auto parseCt(char const* fmt)
-{
-  return parse( ParsedFormatCt<N>{}, fmt );
-}
+constexpr auto parseCt(char const* fmt) { return parse( ParsedFormatCt<N>{}, fmt ); }
 
-inline auto parseRt(char const* fmt)
-{
-  return parse( ParsedFormatRt{}, fmt );
-}
+inline auto parseRt(char const* fmt) { return parse( ParsedFormatRt{}, fmt ); }
+inline auto parseRt(std::string const& fmt) { return parseRt( fmt.c_str() ); }
 
 }
 }

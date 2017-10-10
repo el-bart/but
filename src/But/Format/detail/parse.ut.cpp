@@ -492,6 +492,7 @@ TEST_F(ButFormatDetailParse, TooComplexFormatForGivenStatesCount)
   EXPECT_THROW( parseCt<2>("${1}${2}${0}"), Invalid );
 }
 
+
 TEST_F(ButFormatDetailParse, RuntimeFormatParsing)
 {
   const auto ps = parseRt("one ${42#test} two ${43} three ${44#tag} four ${45} five $46 six ${47}");
@@ -575,6 +576,13 @@ TEST_F(ButFormatDetailParse, RuntimeFormatParsing)
     EXPECT_EQ( Segment::Type::Value, s.type_ );
     EXPECT_EQ( 47u, s.referencedArgument_ );
   }
+}
+
+
+TEST_F(ButFormatDetailParse, RuntimeFormatParsingFromString)
+{
+  const auto ps = parseRt( std::string{"foo $0 bar $2"} );
+  ASSERT_EQ( 4u, ps.segments_.size() );
 }
 
 }
