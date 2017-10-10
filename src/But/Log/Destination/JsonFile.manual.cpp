@@ -22,7 +22,7 @@ int main()
   jf.log( FormattedString{"foo"}, Priority::warning, "this is warning");
   jf.log( FormattedString{"foo"}, Priority::error, "this is error");
 
-  But::Log::Destination::Foreign& base = jf;
+  But::Log::Destination::Sink& base = jf;
   base.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, foreign world" );
   base.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, foreign world" );
 

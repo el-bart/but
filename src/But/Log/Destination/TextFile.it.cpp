@@ -3,7 +3,7 @@
 #include "But/System/TempFile.hpp"
 
 using But::Log::Destination::TextFile;
-using But::Log::Destination::Foreign;
+using But::Log::Destination::Sink;
 
 namespace
 {
@@ -53,9 +53,9 @@ TEST_F(ButLogDestinationTextFile, WritingDataToFile)
 }
 
 
-TEST_F(ButLogDestinationTextFile, UsingBaseForeignInterface)
+TEST_F(ButLogDestinationTextFile, UsingBaseSinkInterface)
 {
-  auto& base = static_cast<Foreign&>(tf_);
+  auto& base = static_cast<Sink&>(tf_);
 
   base.log("test", "data");
   EXPECT_EQ( 1u, countLines() );

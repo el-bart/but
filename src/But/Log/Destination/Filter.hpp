@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include "But/NotNull.hpp"
-#include "Foreign.hpp"
+#include "Sink.hpp"
 
 namespace But
 {
@@ -12,17 +12,17 @@ namespace Destination
 
 /** @brief filtering backend, that pass through only logs, that are match by a given functor.
  */
-class Filter: public Foreign
+class Filter: public Sink
 {
 public:
   /** @brief define a filter to accept logs.
    *  @param f functor, that returns true, if a given log is to be forwarded; false otherwise.
-   *  @param destination destination that shall receive matching logs.
+   *  @param sink destination that shall receive matching logs.
    */
   template<typename F>
-  explicit Filter(F&& f, NotNullShared<Foreign> destination):
+  explicit Filter(F&& f, NotNullShared<Sink> sink):
     filter_{ std::forward<F>(f) },
-    destination_{ std::move(destination) }
+    sink_{ std::move(sink) }
   {
     BUT_ASSERT(filter_);
   }
@@ -31,13 +31,13 @@ private:
   void logImpl(Backend::FieldInfo const& fi) override
   {
     if( filter_(fi) )
-      destination_->log(fi);
+      sink_->log(fi);
   }
-  void reloadImpl() override { destination_->reload(); }
-  void flushImpl() override { destination_->flush(); }
+  void reloadImpl() override { sink_->reload(); }
+  void flushImpl() override { sink_->flush(); }
 
   std::function< bool(Backend::FieldInfo const&) > filter_;
-  NotNullShared<Foreign> destination_;
+  NotNullShared<Sink> sink_;
 };
 
 }

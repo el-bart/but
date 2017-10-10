@@ -15,7 +15,7 @@ int main()
   c.flush();
   c.reload();
 
-  But::Log::Destination::Foreign& base = c;
+  But::Log::Destination::Sink& base = c;
   base.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, foreign world" );
   base.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, foreign world" );
   base.flush();

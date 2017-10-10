@@ -2,10 +2,10 @@
 #include <sstream>
 #include "gtest/gtest.h"
 #include "ProxyThrowing.hpp"
-#include "Destination/Foreign.hpp"
+#include "Destination/Sink.hpp"
 
 using But::Log::ProxyThrowing;
-using But::Log::Destination::Foreign;
+using But::Log::Destination::Sink;
 using But::Log::Backend::Type;
 using But::Log::Backend::Value;
 using But::Log::Backend::FieldInfo;
@@ -26,9 +26,9 @@ struct VisitStream final
   std::stringstream* ss_{nullptr};
 };
 
-struct TestForeignDestination final: public Foreign
+struct TestSinkDestination final: public Sink
 {
-  explicit TestForeignDestination(std::stringstream& ss): ss_{&ss} { }
+  explicit TestSinkDestination(std::stringstream& ss): ss_{&ss} { }
 
   void logImpl(FieldInfo const& fi) override
   {
@@ -113,17 +113,17 @@ TEST_F(ButLogProxyThrowing, LoggingViaSmartPointerToDestination)
 }
 
 
-TEST_F(ButLogProxyThrowing, ForeignTypeValueLogging)
+TEST_F(ButLogProxyThrowing, SinkTypeValueLogging)
 {
-  ProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
   log.log(42, "foo", 'a');
   EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | string='a' | ");
 }
 
 
-TEST_F(ButLogProxyThrowing, ForeignFormattedLogging)
+TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
 {
-  ProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
   log.log( BUT_FORMAT("${0} = $1"), "answer", 42 );
   EXPECT_EQ( buffer_.str(), "But::Formatted='answer = 42' | string='answer' | int='42' | ");
 }
@@ -134,14 +134,14 @@ FieldInfo toFieldInfo(SomeThrowingType const&) { throw std::runtime_error{"this 
 
 TEST_F(ButLogProxyThrowing, InternalExceptionsArePropagatedToCaller)
 {
-  ProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
   EXPECT_THROW( log.log( SomeThrowingType{} ), std::runtime_error );
 }
 
 
 TEST_F(ButLogProxyThrowing, LoggerIsConst)
 {
-  const ProxyThrowing<std::unique_ptr<TestForeignDestination>> log{ std::make_unique<TestForeignDestination>(buffer_) };
+  const ProxyThrowing<std::unique_ptr<TestSinkDestination>> log{ std::make_unique<TestSinkDestination>(buffer_) };
   log.log(42);
 }
 

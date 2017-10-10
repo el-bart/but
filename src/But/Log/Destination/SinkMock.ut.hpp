@@ -1,7 +1,7 @@
 #pragma once
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "Foreign.hpp"
+#include "Sink.hpp"
 
 namespace But
 {
@@ -10,7 +10,7 @@ namespace Log
 namespace Destination
 {
 
-struct ForeignMock: public Foreign
+struct SinkMock: public Sink
 {
   MOCK_METHOD1(logImpl, void(::But::Log::Backend::FieldInfo const&));
   MOCK_METHOD0(reloadImpl, void());

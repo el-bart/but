@@ -1,5 +1,5 @@
 #pragma once
-#include "Foreign.hpp"
+#include "Sink.hpp"
 
 namespace But
 {
@@ -8,7 +8,7 @@ namespace Log
 namespace Destination
 {
 
-class Null final: public Foreign
+class Null final: public Sink
 {
 private:
   void logImpl(Backend::FieldInfo const&) override { }

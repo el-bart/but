@@ -1,21 +1,21 @@
 #include "gtest/gtest.h"
 #include "Filter.hpp"
-#include "ForeignMock.ut.hpp"
+#include "SinkMock.ut.hpp"
 
 using testing::_;
 using testing::StrictMock;
 using But::Log::Field::FormattedString;
 using But::Log::Backend::FieldInfo;
 using But::Log::Destination::Filter;
-using But::Log::Destination::Foreign;
-using But::Log::Destination::ForeignMock;
+using But::Log::Destination::Sink;
+using But::Log::Destination::SinkMock;
 
 namespace
 {
 
 struct ButLogDestinationFilter: public testing::Test
 {
-  But::NotNull<std::shared_ptr<StrictMock<ForeignMock>>> mock_{ std::make_shared<StrictMock<ForeignMock>>() };
+  But::NotNull<std::shared_ptr<StrictMock<SinkMock>>> mock_{ std::make_shared<StrictMock<SinkMock>>() };
   Filter filter_{ [](FieldInfo const&) { return true; }, mock_ };
 };
 

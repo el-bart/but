@@ -2,7 +2,7 @@
 #include <fstream>
 #include <boost/filesystem/path.hpp>
 #include "TextStream.hpp"
-#include "Foreign.hpp"
+#include "Sink.hpp"
 #include "But/Exception.hpp"
 
 namespace But

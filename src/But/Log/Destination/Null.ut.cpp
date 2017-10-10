@@ -2,7 +2,7 @@
 #include "Null.hpp"
 
 using But::Log::Destination::Null;
-using But::Log::Destination::Foreign;
+using But::Log::Destination::Sink;
 using But::Log::Field::FormattedString;
 
 namespace
@@ -31,7 +31,7 @@ TEST_F(ButLogDestinationNull, SmokeTest)
 
 TEST_F(ButLogDestinationNull, BaseClassSmokeTest)
 {
-  Foreign& base_{null_};
+  Sink& base_{null_};
   base_.reload();
   base_.flush();
   base_.log("some", "values", 42);

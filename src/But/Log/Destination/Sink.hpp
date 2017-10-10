@@ -10,16 +10,16 @@ namespace Log
 namespace Destination
 {
 
-class Foreign
+class Sink
 {
 public:
-  Foreign() = default;
-  virtual ~Foreign() = default;
+  Sink() = default;
+  virtual ~Sink() = default;
 
-  Foreign(Foreign const&) = delete;
-  Foreign& operator=(Foreign const&) = delete;
-  Foreign(Foreign&&) = delete;
-  Foreign& operator=(Foreign&&) = delete;
+  Sink(Sink const&) = delete;
+  Sink& operator=(Sink const&) = delete;
+  Sink(Sink&&) = delete;
+  Sink& operator=(Sink&&) = delete;
 
   template<typename ...Args>
   void log(Args&& ...args)

@@ -2,7 +2,7 @@
 #include <sstream>
 #include "gtest/gtest.h"
 #include "Proxy.hpp"
-#include "Destination/Foreign.hpp"
+#include "Destination/Sink.hpp"
 
 using But::Log::Proxy;
 

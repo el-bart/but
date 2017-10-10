@@ -1,4 +1,4 @@
-#include "MultiForeign.hpp"
+#include "MultiSink.hpp"
 
 namespace But
 {
@@ -7,7 +7,7 @@ namespace Log
 namespace Destination
 {
 
-void MultiForeign::logImplNe(Backend::FieldInfo const& fi) noexcept
+void MultiSink::logImplNe(Backend::FieldInfo const& fi) noexcept
 {
   for(auto& d: dsts_)
   {
@@ -21,7 +21,7 @@ void MultiForeign::logImplNe(Backend::FieldInfo const& fi) noexcept
 }
 
 
-void MultiForeign::reloadImplNe() noexcept
+void MultiSink::reloadImplNe() noexcept
 {
   for(auto& d: dsts_)
   {
@@ -35,7 +35,7 @@ void MultiForeign::reloadImplNe() noexcept
 }
 
 
-void MultiForeign::flushImplNe() noexcept
+void MultiSink::flushImplNe() noexcept
 {
   for(auto& d: dsts_)
   {

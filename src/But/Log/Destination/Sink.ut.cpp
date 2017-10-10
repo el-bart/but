@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
-#include "Foreign.hpp"
-#include "ForeignMock.ut.hpp"
+#include "Sink.hpp"
+#include "SinkMock.ut.hpp"
 
 using testing::_;
-using But::Log::Destination::Foreign;
+using But::Log::Destination::Sink;
 using But::Log::Backend::Type;
 using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
@@ -13,19 +13,19 @@ using But::Log::Field::FormattedString;
 namespace
 {
 
-struct ButLogDestinationForeign: public testing::Test
+struct ButLogDestinationSink: public testing::Test
 {
-  testing::StrictMock<But::Log::Destination::ForeignMock> mock_;
+  testing::StrictMock<But::Log::Destination::SinkMock> mock_;
 };
 
 
-TEST_F(ButLogDestinationForeign, NothingIsCalledByDefault)
+TEST_F(ButLogDestinationSink, NothingIsCalledByDefault)
 {
   // no calls - no logs
 }
 
 
-TEST_F(ButLogDestinationForeign, ForwardingWithProperTypes)
+TEST_F(ButLogDestinationSink, ForwardingWithProperTypes)
 {
   std::vector<FieldInfo> data{
           FieldInfo{42},
@@ -39,7 +39,7 @@ TEST_F(ButLogDestinationForeign, ForwardingWithProperTypes)
 }
 
 
-TEST_F(ButLogDestinationForeign, ForwardingFormattedStringWithProperTypes)
+TEST_F(ButLogDestinationSink, ForwardingFormattedStringWithProperTypes)
 {
   const auto fmt = FormattedString{"fmt-test"};
   std::vector<FieldInfo> data{
@@ -55,7 +55,7 @@ TEST_F(ButLogDestinationForeign, ForwardingFormattedStringWithProperTypes)
 }
 
 
-TEST_F(ButLogDestinationForeign, CheckArrowOperator)
+TEST_F(ButLogDestinationSink, CheckArrowOperator)
 {
   EXPECT_CALL( mock_, logImpl(_) )
     .Times(1);
@@ -63,7 +63,7 @@ TEST_F(ButLogDestinationForeign, CheckArrowOperator)
 }
 
 
-TEST_F(ButLogDestinationForeign, ReloadForwardingWorks)
+TEST_F(ButLogDestinationSink, ReloadForwardingWorks)
 {
   EXPECT_CALL( mock_, reloadImpl() )
     .Times(1);
@@ -71,7 +71,7 @@ TEST_F(ButLogDestinationForeign, ReloadForwardingWorks)
 }
 
 
-TEST_F(ButLogDestinationForeign, PassingFieldInfoTypeDirectory)
+TEST_F(ButLogDestinationSink, PassingFieldInfoTypeDirectory)
 {
   std::vector<FieldInfo> data{ FieldInfo{42}, FieldInfo{"foo bar"}, };
   const auto expected = FieldInfo{ Type{"xx"}, std::move(data) };
@@ -81,7 +81,7 @@ TEST_F(ButLogDestinationForeign, PassingFieldInfoTypeDirectory)
 }
 
 
-TEST_F(ButLogDestinationForeign, FlusingIsForwarded)
+TEST_F(ButLogDestinationSink, FlusingIsForwarded)
 {
   EXPECT_CALL( mock_, flushImpl() )
     .Times(1);

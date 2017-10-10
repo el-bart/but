@@ -1,18 +1,18 @@
 #include "gtest/gtest.h"
-#include "MultiForeign.hpp"
+#include "MultiSink.hpp"
 
 using But::makeSharedNN;
 using But::NotNullShared;
 using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
-using But::Log::Destination::Foreign;
-using But::Log::Destination::MultiForeign;
+using But::Log::Destination::Sink;
+using But::Log::Destination::MultiSink;
 
 namespace
 {
 
 template<int N>
-struct TestDst final: public Foreign
+struct TestDst final: public Sink
 {
   void logImpl(FieldInfo const&) override
   {
@@ -42,31 +42,31 @@ struct TestDst final: public Foreign
 };
 
 
-struct ButLogDestinationMultiForeign: public testing::Test
+struct ButLogDestinationMultiSink: public testing::Test
 {
   NotNullShared<TestDst<1>> td1_{ makeSharedNN<TestDst<1>>() };
   NotNullShared<TestDst<2>> td2_{ makeSharedNN<TestDst<2>>() };
   NotNullShared<TestDst<3>> td3_{ makeSharedNN<TestDst<3>>() };
-  MultiForeign multi_{ {td1_, td2_, td3_} };
+  MultiSink multi_{ {td1_, td2_, td3_} };
 };
 
 
-TEST_F(ButLogDestinationMultiForeign, NoDestinationsSmokeTest)
+TEST_F(ButLogDestinationMultiSink, NoDestinationsSmokeTest)
 {
-  MultiForeign m{ {} };
+  MultiSink m{ {} };
   m.log("test");
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, SingleDestinationWorks)
+TEST_F(ButLogDestinationMultiSink, SingleDestinationWorks)
 {
-  MultiForeign m{ {td1_} };
+  MultiSink m{ {td1_} };
   m.log("test");
   EXPECT_EQ( 1u, td1_->logs_ );
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, PrintingGoesThroughAllDestinations)
+TEST_F(ButLogDestinationMultiSink, PrintingGoesThroughAllDestinations)
 {
   multi_.log("one");
   EXPECT_EQ( 1u, td1_->logs_ );
@@ -80,7 +80,7 @@ TEST_F(ButLogDestinationMultiForeign, PrintingGoesThroughAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, FormattedPrintingGoesThroughAllDestinations)
+TEST_F(ButLogDestinationMultiSink, FormattedPrintingGoesThroughAllDestinations)
 {
   multi_.log( FormattedString{"x"}, "one" );
   EXPECT_EQ( 1u, td1_->logs_ );
@@ -94,7 +94,7 @@ TEST_F(ButLogDestinationMultiForeign, FormattedPrintingGoesThroughAllDestination
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyPrinterDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiSink, ExceptionInAnyPrinterDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;
@@ -112,7 +112,7 @@ TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyPrinterDoesNotStopProcessing
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, ReloadingReloadsAllDestinations)
+TEST_F(ButLogDestinationMultiSink, ReloadingReloadsAllDestinations)
 {
   multi_.reload();
   EXPECT_EQ( 1u, td1_->reloads_ );
@@ -121,7 +121,7 @@ TEST_F(ButLogDestinationMultiForeign, ReloadingReloadsAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyReloadDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiSink, ExceptionInAnyReloadDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;
@@ -134,7 +134,7 @@ TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyReloadDoesNotStopProcessing)
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, FlusingFlushesAllDestinations)
+TEST_F(ButLogDestinationMultiSink, FlusingFlushesAllDestinations)
 {
   multi_.flush();
   EXPECT_EQ( 1u, td1_->flushes_ );
@@ -143,7 +143,7 @@ TEST_F(ButLogDestinationMultiForeign, FlusingFlushesAllDestinations)
 }
 
 
-TEST_F(ButLogDestinationMultiForeign, ExceptionInAnyFlushDoesNotStopProcessing)
+TEST_F(ButLogDestinationMultiSink, ExceptionInAnyFlushDoesNotStopProcessing)
 {
   td1_->throws_ = true;
   td2_->throws_ = true;

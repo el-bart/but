@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cctype>
 #include "detail/StreamAndTrimVisitor.hpp"
-#include "Foreign.hpp"
+#include "Sink.hpp"
 
 namespace But
 {
@@ -13,7 +13,7 @@ namespace Log
 namespace Destination
 {
 
-class TextStream: public Foreign
+class TextStream: public Sink
 {
 protected:
   explicit TextStream(std::ostream& os): os_{&os} { }
