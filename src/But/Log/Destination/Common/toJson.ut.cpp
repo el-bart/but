@@ -112,7 +112,7 @@ TEST_F(ButLogDestinationCommonToJson, RepeatedFieldsGetAutoNumbered)
 {
   const auto out = toJson( makeFieldInfo( Repeated{42, 24} ) );
   const auto& internal = out.at(0).at("Repeated");
-  EXPECT_EQ( 42, internal.at("int").get<int64_t>() );
+  EXPECT_EQ( 42, internal.at("int0").get<int64_t>() );
   EXPECT_EQ( 24, internal.at("int1").get<int64_t>() );
 }
 
@@ -135,8 +135,8 @@ TEST_F(ButLogDestinationCommonToJson, RepeatedInterleavedFieldsGetAutoNumbered)
 {
   const auto out = toJson( makeFieldInfo( RepeatedInterleaved{42, "xxx", 24, "yyy"} ) );
   const auto& internal = out.at(0).at("RepeatedInterleaved");
-  EXPECT_EQ( 42, internal.at("int").get<int64_t>() );
-  EXPECT_EQ( "xxx", internal.at("string").get<std::string>() );
+  EXPECT_EQ( 42, internal.at("int0").get<int64_t>() );
+  EXPECT_EQ( "xxx", internal.at("string0").get<std::string>() );
   EXPECT_EQ( 24, internal.at("int1").get<int64_t>() );
   EXPECT_EQ( "yyy", internal.at("string1").get<std::string>() );
 }
@@ -160,14 +160,14 @@ TEST_F(ButLogDestinationCommonToJson, NestedRepeatedFieldsGetAutoNumbered)
   const auto& internal = out.at(0).at("NestedRepeated");
   // r0
   {
-    const auto& ref = internal.at("Repeated");
-    EXPECT_EQ( 4, ref.at("int").get<int64_t>() );
+    const auto& ref = internal.at("Repeated0");
+    EXPECT_EQ( 4, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 2, ref.at("int1").get<int64_t>() );
   }
   // r1
   {
     const auto& ref = internal.at("Repeated1");
-    EXPECT_EQ( 6, ref.at("int").get<int64_t>() );
+    EXPECT_EQ( 6, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 9, ref.at("int1").get<int64_t>() );
   }
 }
@@ -193,26 +193,26 @@ TEST_F(ButLogDestinationCommonToJson, NestedRepeatedMultipleTimesFieldsGetAutoNu
   const auto& internal = out.at(0).at("NestedRepeated4");
   // r0
   {
-    const auto& ref = internal.at("Repeated");
-    EXPECT_EQ( 4, ref.at("int").get<int64_t>() );
+    const auto& ref = internal.at("Repeated0");
+    EXPECT_EQ( 4, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 2, ref.at("int1").get<int64_t>() );
   }
   // r1
   {
     const auto& ref = internal.at("Repeated1");
-    EXPECT_EQ( 6, ref.at("int").get<int64_t>() );
+    EXPECT_EQ( 6, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 9, ref.at("int1").get<int64_t>() );
   }
   // r2
   {
     const auto& ref = internal.at("Repeated2");
-    EXPECT_EQ( 1, ref.at("int").get<int64_t>() );
+    EXPECT_EQ( 1, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 3, ref.at("int1").get<int64_t>() );
   }
   // r3
   {
     const auto& ref = internal.at("Repeated3");
-    EXPECT_EQ( 5, ref.at("int").get<int64_t>() );
+    EXPECT_EQ( 5, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 1, ref.at("int1").get<int64_t>() );
   }
 }
