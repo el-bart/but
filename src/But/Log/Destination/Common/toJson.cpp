@@ -74,7 +74,6 @@ struct NestedFieldInfoVisitor final
   {
     for(auto& e: duplicates_)
       renameDuplicate(e);
-    duplicates_.clear();
   }
   void renameDuplicate(std::string const& name)
   {
@@ -98,6 +97,7 @@ struct FieldInfoVisitor final
     v.visit(vv);
     field_.push_back( std::move(tmp) );
   }
+
   void operator()(Backend::Tag const& /*t*/, std::vector<Backend::FieldInfo>const& fis)
   {
     for(auto& e: fis)
