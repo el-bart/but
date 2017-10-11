@@ -15,6 +15,19 @@ namespace Common
 
 namespace
 {
+template<typename V>
+void addUnique(json& field, Backend::Tag const& t, V&& v)
+{
+  auto counter = 0u;
+  auto name = t.str();
+  for( auto it = field.find(name);
+       it != field.end();
+       name = t.str() + std::to_string(counter), it = field.find(name) )
+    ++counter;
+  assert( field.find(name) == field.end() );
+  field[ std::move(name) ] = std::forward<V>(v);
+}
+
 struct ValueVisitor final
 {
   template<typename T>
@@ -22,7 +35,7 @@ struct ValueVisitor final
   {
     assert(type_);
     assert(field_);
-    (*field_)[ type_->str() ] = t;
+    addUnique(*field_, *type_, t);
   }
 
   Backend::Tag const* type_{nullptr};
@@ -42,7 +55,7 @@ struct NestedFieldInfoVisitor final
     NestedFieldInfoVisitor fiv;
     for(auto& e: fis)
       e.visit(fiv);
-    field_[ t.str() ] = std::move(fiv.field_);
+    addUnique( field_, t, std::move(fiv.field_) );
   }
 
   json field_;

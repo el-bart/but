@@ -12,6 +12,7 @@ namespace Common
 {
 
 /** @brief returns JSON collection of top-level elements. internal elements are kept as JSON objects.
+ *         field within a structure, with repeated names, get auto-numbered.
  */
 nlohmann::json toJson(Backend::FieldInfo const& fi);
 
