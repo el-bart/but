@@ -217,4 +217,52 @@ TEST_F(ButLogDestinationCommonToJson, NestedRepeatedMultipleTimesFieldsGetAutoNu
   }
 }
 
+
+struct NestedRepeated4WithRename
+{
+  Repeated r0_;
+  Repeated r1_;
+  Repeated r2_;
+  Repeated r3_;
+};
+
+auto toFieldInfo(NestedRepeated4WithRename const& nr4)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Tag{"NestedRepeated4WithRename"}, { toFieldInfo(nr4.r0_),
+                                                        toFieldInfo(nr4.r1_).retag( Tag{"Repeated0"} ),
+                                                        toFieldInfo(nr4.r2_),
+                                                        toFieldInfo(nr4.r3_) } };
+}
+
+TEST_F(ButLogDestinationCommonToJson, NestedRepeatedMultipleTimesWithExplicitCollisionFieldsGetAutoNumberedCorrectly)
+{
+  const auto out = toJson( makeFieldInfo( NestedRepeated4WithRename{ Repeated{4,2}, Repeated{6,9}, Repeated{1,3}, Repeated{5,1} } ) );
+  const auto& internal = out.at(0).at("NestedRepeated4WithRename");
+  // r0
+  {
+    const auto& ref = internal.at("Repeated1");
+    EXPECT_EQ( 4, ref.at("int0").get<int64_t>() );
+    EXPECT_EQ( 2, ref.at("int1").get<int64_t>() );
+  }
+  // r1
+  {
+    const auto& ref = internal.at("Repeated0");
+    EXPECT_EQ( 6, ref.at("int0").get<int64_t>() );
+    EXPECT_EQ( 9, ref.at("int1").get<int64_t>() );
+  }
+  // r2
+  {
+    const auto& ref = internal.at("Repeated2");
+    EXPECT_EQ( 1, ref.at("int0").get<int64_t>() );
+    EXPECT_EQ( 3, ref.at("int1").get<int64_t>() );
+  }
+  // r3
+  {
+    const auto& ref = internal.at("Repeated3");
+    EXPECT_EQ( 5, ref.at("int0").get<int64_t>() );
+    EXPECT_EQ( 1, ref.at("int1").get<int64_t>() );
+  }
+}
+
 }

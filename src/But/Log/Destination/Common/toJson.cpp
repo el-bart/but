@@ -16,21 +16,40 @@ namespace Common
 
 namespace
 {
+auto findFreeName(json const& field, std::string const& tag, unsigned counter)
+{
+  auto name = tag + std::to_string(counter);
+  while( field.find(name) != field.end() )
+    name = tag + std::to_string( ++counter );
+  return std::make_pair( std::move(name), counter );
+}
+
 template<typename V>
 auto addUnique(json& field, Backend::Tag const& t, V&& v)
 {
-  auto duplicates = false;
-  auto counter = 0u;
-  auto name = t.str();
-  for( auto it = field.find(name); it != field.end(); it = field.find(name) )
+  if( field.find( t.str() ) == field.end() )
   {
-    duplicates = true;
-    ++counter;
-    name = t.str() + std::to_string(counter);
+    field[ t.str() ] = std::forward<V>(v);
+    return false;
+  }
+
+  auto hasSpaceForFirst = false;
+  auto counter = 0u;
+  std::string name;
+  while(true)
+  {
+    auto free = findFreeName(field, t.str(), counter);
+    if(hasSpaceForFirst)
+    {
+      name = std::move(free.first);
+      break;
+    }
+    hasSpaceForFirst = true;
+    counter = free.second + 1u;
   }
   assert( field.find(name) == field.end() );
   field[ std::move(name) ] = std::forward<V>(v);
-  return duplicates;
+  return true;
 }
 
 struct ValueVisitor final
@@ -77,9 +96,9 @@ struct NestedFieldInfoVisitor final
   }
   void renameDuplicate(std::string const& name)
   {
+    auto newName = findFreeName(field_, name, 0u).first;
+    assert( field_.find(newName) == field_.end() );
     assert( field_.find(name) != field_.end() );
-    auto newName = name + "0";
-    //if( field_.find(newName) != field.name
     field_[ std::move(newName) ] = std::move( field_[name] );
     field_.erase(name);
   }
