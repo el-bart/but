@@ -11,7 +11,7 @@ fi
 env
 nproc
 free -m
-docker version
+( set +e ; type -p docker && docker version ; exit 0 )
 
 read PREFIX TOOLCHAIN TYPE SANITIZER <<< $(basename "$0" | tr '_' ' ')
 unset PREFIX
