@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * added `install` target, that installs lib and headers into `CMAKE_INSTALL_PREFIX` location.
   * `toFieldInfo()` is replaced now the base interface for logging.
   * `Log::Proxy` and `Log::ProxyThrowing` that wrap all the logging with and without exceptions forwarding.
   * all `assert()` statements in the code are now `BUT_ASSERT()`.
