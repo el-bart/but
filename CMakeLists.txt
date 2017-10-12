@@ -4,9 +4,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(But_dev)
 
-add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
-enable_testing()
+if(NOT BUT_DISABLE_TESTS)
+  add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
+  include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
+  enable_testing()
+endif()
 
 # NOTE: LTO is now optional, since it causes issues with GCC-7.1 and sanitizers...
 if(BUT_ENABLE_LTO)
