@@ -31,7 +31,7 @@ do
   done
 done
 
-for tc in default-gcc default-cmake
+for tc in default-gcc # default-clang
 do
   ln -s '.build' "build_${tc}_Debug_none"
 done

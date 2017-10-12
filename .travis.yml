@@ -12,7 +12,7 @@ env:
         - SCRIPT="build_clang50_Profile_none"
         - SCRIPT="build_clang50_Release_none"
         - SCRIPT="build_clang50_Relwithdebinfo_none"
-        - SCRIPT="build_default-cmake_Debug_none"
+        #- SCRIPT="build_default-clang_Debug_none"
         - SCRIPT="build_default-gcc_Debug_none"
         - SCRIPT="build_gcc6_Release_none"
         - SCRIPT="build_gcc7_Debug_address"
