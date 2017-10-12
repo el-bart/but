@@ -80,8 +80,4 @@ case "$SANITIZER" in
   ;;
 esac
 
-if ! time ctest
-then
-  time ctest -V
-  exit 2
-fi
+time ctest -V
