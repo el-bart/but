@@ -8,6 +8,10 @@ then
   exit 1
 fi
 
+env
+nproc
+free -m
+
 read PREFIX TOOLCHAIN TYPE SANITIZER <<< $(basename "$0" | tr '_' ' ')
 unset PREFIX
 
