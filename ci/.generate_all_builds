@@ -1,0 +1,35 @@
+#!/bin/bash
+set -eu -o pipefail
+
+APP_DIR=$(dirname "$(readlink -e "$0")")
+SRC_DIR=$(readlink -e "$APP_DIR/..")
+
+cd "$APP_DIR"
+
+rm -f build_*
+
+for tc in $( cd "$SRC_DIR/src/cmake/toolchains/" && ls {clang,gcc}?*.cmake | sed 's/\.cmake//g' )
+do
+  for mode in Debug Release Relwithdebinfo Profile
+  do
+    ln -s '.build' "build_${tc}_${mode}_none"
+  done
+done
+
+for tc in gcc7 clang50
+do
+  for mode in Debug Release
+  do
+    for san in address undefined thread
+    do
+      ln -s '.build' "build_${tc}_${mode}_${san}"
+    done
+  done
+done
+
+for tc in default_gcc default_cmake
+do
+  ln -s '.build' "build_${tc}_Debug_none"
+done
+
+ls build_*
