@@ -1,0 +1,6 @@
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.hpp")
+install(TARGETS but
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static)
