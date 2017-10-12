@@ -40,7 +40,7 @@ else
   SAN="-DBUT_SANITIZE=$SANITIZER"
 fi
 
-time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" -G Ninja "$SRC_DIR"
+time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" "-DBUT_ENABLE_TESTS=ON" -G Ninja "$SRC_DIR"
 time ninja all
 
 # self-test of sanitizers
