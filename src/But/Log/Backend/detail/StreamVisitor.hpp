@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <cassert>
+#include "But/assert.hpp"
 
 namespace But
 {
@@ -16,7 +16,7 @@ struct StreamVisitor final
   template<typename T>
   void operator()(T const& t) const
   {
-    assert(os_);
+    BUT_ASSERT(os_);
     (*os_) << t;
   }
 

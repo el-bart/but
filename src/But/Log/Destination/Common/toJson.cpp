@@ -1,6 +1,6 @@
 #include <set>
-#include <cassert>
 #include <boost/lexical_cast.hpp>
+#include "But/assert.hpp"
 #include "toJson.hpp"
 
 using json = nlohmann::json;
@@ -47,7 +47,7 @@ auto addUnique(json& field, Backend::Tag const& t, V&& v)
     hasSpaceForFirst = true;
     counter = free.second + 1u;
   }
-  assert( field.find(name) == field.end() );
+  BUT_ASSERT( field.find(name) == field.end() );
   field[ std::move(name) ] = std::forward<V>(v);
   return true;
 }
@@ -57,8 +57,8 @@ struct ValueVisitor final
   template<typename T>
   void operator()(T const& t)
   {
-    assert(type_);
-    assert(field_);
+    BUT_ASSERT(type_);
+    BUT_ASSERT(field_);
     duplicate_ = addUnique(*field_, *type_, t);
   }
 
@@ -97,8 +97,8 @@ struct NestedFieldInfoVisitor final
   void renameDuplicate(std::string const& name)
   {
     auto newName = findFreeName(field_, name, 0u).first;
-    assert( field_.find(newName) == field_.end() );
-    assert( field_.find(name) != field_.end() );
+    BUT_ASSERT( field_.find(newName) == field_.end() );
+    BUT_ASSERT( field_.find(name) != field_.end() );
     field_[ std::move(newName) ] = std::move( field_[name] );
     field_.erase(name);
   }

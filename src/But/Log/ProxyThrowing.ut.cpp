@@ -19,7 +19,7 @@ struct VisitStream final
   template<typename T>
   void operator()(T const& t)
   {
-    assert(ss_);
+    BUT_ASSERT(ss_);
     (*ss_) << t;
   }
 
