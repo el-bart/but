@@ -1,0 +1,47 @@
+sudo: required
+language: c++
+services:
+    - docker
+env:
+    global:
+    matrix:
+        - SCRIPT="build_clang40_Debug_none"
+        - SCRIPT="build_clang40_Profile_none"
+        - SCRIPT="build_clang40_Release_none"
+        - SCRIPT="build_clang40_Relwithdebinfo_none"
+        - SCRIPT="build_clang50_Debug_address"
+        - SCRIPT="build_clang50_Debug_none"
+        - SCRIPT="build_clang50_Debug_thread"
+        - SCRIPT="build_clang50_Debug_undefined"
+        - SCRIPT="build_clang50_Profile_none"
+        - SCRIPT="build_clang50_Release_address"
+        - SCRIPT="build_clang50_Release_none"
+        - SCRIPT="build_clang50_Release_thread"
+        - SCRIPT="build_clang50_Release_undefined"
+        - SCRIPT="build_clang50_Relwithdebinfo_none"
+        - SCRIPT="build_default_cmake_Debug_none"
+        - SCRIPT="build_default_gcc_Debug_none"
+        - SCRIPT="build_gcc6_Debug_none"
+        - SCRIPT="build_gcc6_Profile_none"
+        - SCRIPT="build_gcc6_Release_none"
+        - SCRIPT="build_gcc6_Relwithdebinfo_none"
+        - SCRIPT="build_gcc7_Debug_address"
+        - SCRIPT="build_gcc7_Debug_none"
+        - SCRIPT="build_gcc7_Debug_thread"
+        - SCRIPT="build_gcc7_Debug_undefined"
+        - SCRIPT="build_gcc7_Profile_none"
+        - SCRIPT="build_gcc7_Release_address"
+        - SCRIPT="build_gcc7_Release_none"
+        - SCRIPT="build_gcc7_Release_thread"
+        - SCRIPT="build_gcc7_Release_undefined"
+        - SCRIPT="build_gcc7_Relwithdebinfo_none"
+
+script:
+    - docker build -t but-sdk sdk/
+    - >
+        docker run
+        --rm
+        --cap-add=SYS_PTRACE
+        --volume $(pwd):/mnt
+        but-sdk
+        /mnt/ci/"${SCRIPT}"
