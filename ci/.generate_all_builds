@@ -36,4 +36,5 @@ do
   ln -s '.build' "build_${tc}_Debug_none"
 done
 
-ls build_* | cat
+
+ls build_* | cat | sed 's#\(.*\)#        - SCRIPT="\1"#'
