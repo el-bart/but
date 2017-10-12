@@ -32,4 +32,4 @@ do
   ln -s '.build' "build_${tc}_Debug_none"
 done
 
-ls build_*
+ls build_* | cat
