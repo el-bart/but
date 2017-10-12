@@ -22,7 +22,6 @@
 * `Container::CircularBuffer`
 
 ## misc ideas
-* MOVE TO TRAVIS TO HAVE MORERELIABLE BUILDS!
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
 * add value-based configuration I/O (i.e. the one that does not require default c-tors and syntax is compact, when it comes to r/w cfg from/to file)
 * `sharedString<>` - read-only data strucutre, that shares underlying data pointer between instances. convertible to `string_view`.
