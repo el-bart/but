@@ -27,6 +27,6 @@ cd "$BUILD_DIR"
 
 TCC="-DCMAKE_TOOLCHAIN_FILE=$SRC_DIR/src/cmake/toolchains/gcc.cmake"
 
-time cmake $TCC "-DCMAKE_BUILD_TYPE=Debug" -G "Unix Makefiles" "$SRC_DIR"
+time cmake $TCC "-DCMAKE_BUILD_TYPE=Debug" "-DBUT_ENABLE_TESTS=ON" -G "Unix Makefiles" "$SRC_DIR"
 time make -j$(nproc) all
-time ctest || ctest -V
+time ctest -V
