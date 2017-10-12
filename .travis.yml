@@ -23,10 +23,11 @@ env:
         - SCRIPT="build_gcc7_Relwithdebinfo_none"
 
 script:
+    - docker build -t but-sdk --cache-from baszerr/but-sdk sdk/
     - >
         docker run
         --rm
         --cap-add=SYS_PTRACE
         --volume $(pwd):/mnt
-        baszerr/but-sdk
+        but-sdk
         /mnt/ci/"${SCRIPT}"
