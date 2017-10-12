@@ -13,7 +13,7 @@ target_link_libraries(but
     pthread
 )
 
-if(NOT BUT_DISABLE_TESTS)
+if(BUT_ENABLE_TESTS)
   include(cmake/tests.cmake)
 endif()
 include(cmake/install.cmake)

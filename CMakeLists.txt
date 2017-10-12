@@ -4,7 +4,11 @@
 cmake_minimum_required(VERSION 3.0)
 project(But_dev)
 
-if(NOT BUT_DISABLE_TESTS)
+set(BUT_ENAABLE_TESTS OFF CACHE BOOL   "build tests (useful for development. to be turned off when preparing installation builds)")
+set(BUT_ENABLE_LTO    OFF CACHE BOOL   "enable Link Time Optimization")
+set(BUT_SANITIZE      ""  CACHE STRING "enabled one of the sanitizers: address, thread, undefined")
+
+if(BUT_ENABLE_TESTS)
   add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
   enable_testing()
