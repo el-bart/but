@@ -22,7 +22,7 @@ public:
 
 
   // boolean
-  static auto of(bool const&) { return Tag{"bool"}; }
+  static auto of(bool) { return Tag{"bool"}; }
 
   // it is quite common case, yet it outputs implementation details, instead of a human-readable typedef.
   static auto of(std::string const&)  { return Tag{"string"}; }
