@@ -16,7 +16,7 @@ JsonTcp::JsonTcp(std::string host, const uint16_t port):
 void JsonTcp::logImpl(Backend::FieldInfo const& fi)
 {
   const auto data = Common::toJson(fi).dump();
-  remote_.write(data + "\n");
+  remote_.write( data + "\n" );
 }
 
 

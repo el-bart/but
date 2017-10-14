@@ -36,7 +36,7 @@ struct ButLogDestinationJsonTcp: public testing::Test
   {
     Thread th{ [&] { sink_.log("test"); } };
     accept();
-    const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
+    const auto expected = std::string{R"xx({"string":"test"})xx"} + "\n";
     EXPECT_EQ( expected, read( expected.size() ) );
   }
 
@@ -50,10 +50,7 @@ struct ButLogDestinationJsonTcp: public testing::Test
 
 TEST_F(ButLogDestinationJsonTcp, SendingLogsWorks)
 {
-  Thread th{ [&] { sink_.log("test"); } };
-  accept();
-  const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
-  EXPECT_EQ( expected, read( expected.size() ) );
+  logAndRead();
 }
 
 
@@ -65,22 +62,12 @@ TEST_F(ButLogDestinationJsonTcp, FlushingIsNoOp)
 
 TEST_F(ButLogDestinationJsonTcp, ReloadingWorks)
 {
-  {
-    Thread th{ [&] { sink_.log("test"); } };
-    accept();
-    const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
-    EXPECT_EQ( expected, read( expected.size() ) );
-  }
+  logAndRead();
 
   sink_.reload();
   close();
 
-  {
-    Thread th{ [&] { sink_.log("test"); } };
-    accept();
-    const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
-    EXPECT_EQ( expected, read( expected.size() ) );
-  }
+  logAndRead();
 }
 
 }
