@@ -10,6 +10,7 @@ using But::Log::Backend::FieldInfo;
 using But::Log::Backend::toFieldInfo;
 using But::Log::Destination::Common::toJson;
 using But::Log::Destination::Common::rootElementTag;
+using But::Log::Destination::Common::RootElementMissing;
 
 namespace
 {
@@ -274,6 +275,13 @@ TEST_F(ButLogDestinationCommonToJson, JsonHasExpectedContent)
   std::stringstream ss;
   ss << out;
   EXPECT_EQ( R"xx({"int":42,"string":"answer"})xx", ss.str() );
+}
+
+
+TEST_F(ButLogDestinationCommonToJson, ConvertingNonRootElementThrows)
+{
+  using But::Log::Backend::toFieldInfo;
+  EXPECT_THROW( toJson( toFieldInfo("non-root") ), RootElementMissing );
 }
 
 }

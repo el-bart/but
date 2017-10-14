@@ -30,7 +30,7 @@ struct ButLogDestinationCommonToJsonStream: public testing::Test
   auto testType(std::string const& typeName, const T t, std::string const& expectedValue) const
   {
     std::stringstream ss;
-    toJsonStream( ss, toFieldInfo(t) );
+    toJsonStream( ss, makeFieldInfo(t) );
     const auto expected = "{\"" + typeName + "\":" + expectedValue + "}";
     const auto read = ss.str();
     EXPECT_EQ(expected, read);
@@ -49,7 +49,7 @@ struct ButLogDestinationCommonToJsonStream: public testing::Test
 
 TEST_F(ButLogDestinationCommonToJsonStream, EscapingNonprintableCharacters)
 {
-  toJsonStream( ss_, toFieldInfo("A\nB\rC") );
+  toJsonStream( ss_, makeFieldInfo("A\nB\rC") );
   EXPECT_EQ( ss_.str(), "{\"string\":\"A\\nB\\rC\"}" );
 }
 

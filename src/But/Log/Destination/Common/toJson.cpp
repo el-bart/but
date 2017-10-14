@@ -115,11 +115,9 @@ nlohmann::json toJson(Backend::FieldInfo const& fi)
   FieldInfoVisitor fiv;
   fi.visit(fiv);
   fiv.renameDuplicates();
-  const auto& rootName = Common::rootElementTag().str();
-  if( fi.tag().str() == rootName )
-    return std::move( fiv.field_[rootName] );
-  else
-    return std::move(fiv.field_);
+  if( fi.tag() != Common::rootElementTag() )
+    BUT_THROW(RootElementMissing, fi.tag() );
+  return std::move( fiv.field_[ Common::rootElementTag().str() ] );
 }
 
 }
