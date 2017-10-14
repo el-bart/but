@@ -21,6 +21,7 @@
 * `Container::LRU`
 * `Container::CircularBuffer`
 * `Net` namespace, for synchronous, non-blocking I/O.
+* remplate `Log::Dst::Common::Tcp`'s implementation with `But::Net`, once available...
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
