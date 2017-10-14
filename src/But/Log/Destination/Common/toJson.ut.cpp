@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "toJson.hpp"
 #include "But/Log/Backend/toFieldInfo.hpp"
+#include "But/Log/Destination/Common/rootElementTag.hpp"
 
 using json = nlohmann::json;
 using But::Log::Backend::Tag;
@@ -8,6 +9,7 @@ using But::Log::Backend::Value;
 using But::Log::Backend::FieldInfo;
 using But::Log::Backend::toFieldInfo;
 using But::Log::Destination::Common::toJson;
+using But::Log::Destination::Common::rootElementTag;
 
 namespace
 {
@@ -17,7 +19,7 @@ struct ButLogDestinationCommonToJson: public testing::Test
   template<typename ...Args>
   auto makeFieldInfo(const Args... args) const
   {
-    return FieldInfo{ Tag{"test"}, { toFieldInfo(args)... } };
+    return FieldInfo{ rootElementTag(), { toFieldInfo(args)... } };
   }
 };
 
@@ -25,52 +27,52 @@ struct ButLogDestinationCommonToJson: public testing::Test
 TEST_F(ButLogDestinationCommonToJson, FromFieldInfo)
 {
   {
-    const auto f = toJson( FieldInfo{"text"} );
-    EXPECT_TRUE( f.is_array() );
-    EXPECT_TRUE( f.at(0).at("string").is_string() );
-    EXPECT_EQ( "text", f.at(0).at("string") );
+    const auto f = toJson( makeFieldInfo("text") );
+    EXPECT_TRUE( f.is_object() );
+    EXPECT_TRUE( f.at("string").is_string() );
+    EXPECT_EQ( "text", f.at("string") );
   }
   {
-    const auto f = toJson( FieldInfo{42} );
-    EXPECT_TRUE( f.is_array() );
-    EXPECT_TRUE( f.at(0).at("int").is_number() );
-    EXPECT_EQ( 42, f.at(0).at("int").get<int64_t>() );
+    const auto f = toJson( makeFieldInfo(42) );
+    EXPECT_TRUE( f.is_object() );
+    EXPECT_TRUE( f.at("int").is_number() );
+    EXPECT_EQ( 42, f.at("int").get<int64_t>() );
   }
   {
-    const auto f = toJson( FieldInfo{42u} );
-    EXPECT_TRUE( f.is_array() );
-    EXPECT_TRUE( f.at(0).at("unsigned int").is_number() );
-    EXPECT_EQ( 42u, f.at(0).at("unsigned int").get<uint64_t>() );
+    const auto f = toJson( makeFieldInfo(42u) );
+    EXPECT_TRUE( f.is_object() );
+    EXPECT_TRUE( f.at("unsigned int").is_number() );
+    EXPECT_EQ( 42u, f.at("unsigned int").get<uint64_t>() );
   }
   {
-    const auto f = toJson( FieldInfo{4.2} );
-    EXPECT_TRUE( f.is_array() );
-    EXPECT_TRUE( f.at(0).at("double").is_number() );
-    EXPECT_EQ( 4.2, f.at(0).at("double").get<double>() );
+    const auto f = toJson( makeFieldInfo(4.2) );
+    EXPECT_TRUE( f.is_object() );
+    EXPECT_TRUE( f.at("double").is_number() );
+    EXPECT_EQ( 4.2, f.at("double").get<double>() );
   }
   {
-    const auto f = toJson( FieldInfo{true} );
-    EXPECT_TRUE( f.is_array() );
-    EXPECT_TRUE( f.at(0).at("bool").is_boolean() );
-    EXPECT_EQ( true, f.at(0).at("bool").get<bool>() );
+    const auto f = toJson( makeFieldInfo(true) );
+    EXPECT_TRUE( f.is_object() );
+    EXPECT_TRUE( f.at("bool").is_boolean() );
+    EXPECT_EQ( true, f.at("bool").get<bool>() );
   }
 }
 
 
 TEST_F(ButLogDestinationCommonToJson, CheckingNonUniqueTypes)
 {
-  const auto f = toJson( FieldInfo{ Tag{"whatever"}, { FieldInfo{"foo"}, FieldInfo{"bar"} } } );
-  EXPECT_TRUE( f.is_array() );
-  EXPECT_EQ( "foo", f.at(0).at("string").get<std::string>() );
-  EXPECT_EQ( "bar", f.at(1).at("string").get<std::string>() );
+  const auto f = toJson( makeFieldInfo("foo", "bar") );
+  EXPECT_TRUE( f.is_object() );
+  EXPECT_EQ( "foo", f.at("string0").get<std::string>() );
+  EXPECT_EQ( "bar", f.at("string1").get<std::string>() );
 }
 
 
 TEST_F(ButLogDestinationCommonToJson, ConvertingStructure)
 {
   const auto out = toJson( makeFieldInfo(42, "answer") );
-  EXPECT_EQ( 42, out.at(0).at("int").get<int64_t>() );
-  EXPECT_EQ( "answer", out.at(1).at("string") );
+  EXPECT_EQ( 42, out.at("int").get<int64_t>() );
+  EXPECT_EQ( "answer", out.at("string") );
 }
 
 
@@ -90,7 +92,7 @@ auto toFieldInfo(Nested const& n)
 TEST_F(ButLogDestinationCommonToJson, ConvertingNsetedStructure)
 {
   const auto out = toJson( makeFieldInfo( Nested{42, "answer"} ) );
-  const auto& internal = out.at(0).at("Nested");
+  const auto& internal = out.at("Nested");
   EXPECT_EQ( 42, internal.at("int").get<int64_t>() );
   EXPECT_EQ( "answer", internal.at("string") );
 }
@@ -111,7 +113,7 @@ auto toFieldInfo(Repeated const& r)
 TEST_F(ButLogDestinationCommonToJson, RepeatedFieldsGetAutoNumbered)
 {
   const auto out = toJson( makeFieldInfo( Repeated{42, 24} ) );
-  const auto& internal = out.at(0).at("Repeated");
+  const auto& internal = out.at("Repeated");
   EXPECT_EQ( 42, internal.at("int0").get<int64_t>() );
   EXPECT_EQ( 24, internal.at("int1").get<int64_t>() );
 }
@@ -134,7 +136,7 @@ auto toFieldInfo(RepeatedInterleaved const& ri)
 TEST_F(ButLogDestinationCommonToJson, RepeatedInterleavedFieldsGetAutoNumbered)
 {
   const auto out = toJson( makeFieldInfo( RepeatedInterleaved{42, "xxx", 24, "yyy"} ) );
-  const auto& internal = out.at(0).at("RepeatedInterleaved");
+  const auto& internal = out.at("RepeatedInterleaved");
   EXPECT_EQ( 42, internal.at("int0").get<int64_t>() );
   EXPECT_EQ( "xxx", internal.at("string0").get<std::string>() );
   EXPECT_EQ( 24, internal.at("int1").get<int64_t>() );
@@ -157,7 +159,7 @@ auto toFieldInfo(NestedRepeated const& nr)
 TEST_F(ButLogDestinationCommonToJson, NestedRepeatedFieldsGetAutoNumbered)
 {
   const auto out = toJson( makeFieldInfo( NestedRepeated{ Repeated{4,2}, Repeated{6,9} } ) );
-  const auto& internal = out.at(0).at("NestedRepeated");
+  const auto& internal = out.at("NestedRepeated");
   // r0
   {
     const auto& ref = internal.at("Repeated0");
@@ -190,7 +192,7 @@ auto toFieldInfo(NestedRepeated4 const& nr4)
 TEST_F(ButLogDestinationCommonToJson, NestedRepeatedMultipleTimesFieldsGetAutoNumbered)
 {
   const auto out = toJson( makeFieldInfo( NestedRepeated4{ Repeated{4,2}, Repeated{6,9}, Repeated{1,3}, Repeated{5,1} } ) );
-  const auto& internal = out.at(0).at("NestedRepeated4");
+  const auto& internal = out.at("NestedRepeated4");
   // r0
   {
     const auto& ref = internal.at("Repeated0");
@@ -238,7 +240,7 @@ auto toFieldInfo(NestedRepeated4WithRename const& nr4)
 TEST_F(ButLogDestinationCommonToJson, NestedRepeatedMultipleTimesWithExplicitCollisionFieldsGetAutoNumberedCorrectly)
 {
   const auto out = toJson( makeFieldInfo( NestedRepeated4WithRename{ Repeated{4,2}, Repeated{6,9}, Repeated{1,3}, Repeated{5,1} } ) );
-  const auto& internal = out.at(0).at("NestedRepeated4WithRename");
+  const auto& internal = out.at("NestedRepeated4WithRename");
   // r0
   {
     const auto& ref = internal.at("Repeated1");
@@ -263,6 +265,15 @@ TEST_F(ButLogDestinationCommonToJson, NestedRepeatedMultipleTimesWithExplicitCol
     EXPECT_EQ( 5, ref.at("int0").get<int64_t>() );
     EXPECT_EQ( 1, ref.at("int1").get<int64_t>() );
   }
+}
+
+
+TEST_F(ButLogDestinationCommonToJson, JsonHasExpectedContent)
+{
+  const auto out = toJson( makeFieldInfo(42, "answer") );
+  std::stringstream ss;
+  ss << out;
+  EXPECT_EQ( R"xx({"int":42,"string":"answer"})xx", ss.str() );
 }
 
 }

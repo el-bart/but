@@ -69,11 +69,11 @@ TEST_F(ButLogDestinationJsonFile, SomeLogs)
   tf_.log("foo", "bar");
   EXPECT_EQ( 2u, countLines() );
 
-  EXPECT_EQ( R"xx([{"string":"answer"},{"int":42}])xx"
+  EXPECT_EQ( readLogFile(),
+             R"xx({"int":42,"string":"answer"})xx"
              "\n"
-             R"xx([{"string":"foo"},{"string":"bar"}])xx"
-             "\n"
-             , readLogFile() );
+             R"xx({"string0":"foo","string1":"bar"})xx"
+             "\n" );
 }
 
 
@@ -82,9 +82,9 @@ TEST_F(ButLogDestinationJsonFile, SomeFormattedLog)
   tf_.log( But::Log::Field::FormattedString{"kszy"}, "answer", 42);
   EXPECT_EQ( 1u, countLines() );
 
-  EXPECT_EQ( R"xx([{"But::Formatted":"kszy"},{"string":"answer"},{"int":42}])xx"
-             "\n"
-             , readLogFile() );
+  EXPECT_EQ( readLogFile(),
+             R"xx({"But::Formatted":"kszy","int":42,"string":"answer"})xx"
+             "\n" );
 }
 
 }

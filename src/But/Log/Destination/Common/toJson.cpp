@@ -1,6 +1,7 @@
 #include <set>
 #include <boost/lexical_cast.hpp>
 #include "But/assert.hpp"
+#include "But/Log/Destination/Common/rootElementTag.hpp"
 #include "toJson.hpp"
 
 using json = nlohmann::json;
@@ -68,7 +69,7 @@ struct ValueVisitor final
 };
 
 
-struct NestedFieldInfoVisitor final
+struct FieldInfoVisitor final
 {
   void operator()(Backend::Tag const& t, Backend::Value const& v)
   {
@@ -80,7 +81,7 @@ struct NestedFieldInfoVisitor final
 
   void operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo>const& fis)
   {
-    NestedFieldInfoVisitor fiv;
+    FieldInfoVisitor fiv;
     for(auto& e: fis)
       e.visit(fiv);
     fiv.renameDuplicates();
@@ -106,30 +107,6 @@ struct NestedFieldInfoVisitor final
   json field_;
   std::set<std::string> duplicates_;
 };
-
-struct FieldInfoVisitor final
-{
-  void operator()(Backend::Tag const& t, Backend::Value const& v)
-  {
-    json tmp;
-    ValueVisitor vv{&t, &tmp};
-    v.visit(vv);
-    field_.push_back( std::move(tmp) );
-  }
-
-  void operator()(Backend::Tag const& /*t*/, std::vector<Backend::FieldInfo>const& fis)
-  {
-    for(auto& e: fis)
-    {
-      NestedFieldInfoVisitor fiv;
-      e.visit(fiv);
-      fiv.renameDuplicates();
-      field_.push_back( std::move(fiv.field_) );
-    }
-  }
-
-  json field_ = json::array();
-};
 }
 
 
@@ -137,7 +114,12 @@ nlohmann::json toJson(Backend::FieldInfo const& fi)
 {
   FieldInfoVisitor fiv;
   fi.visit(fiv);
-  return std::move(fiv.field_);
+  fiv.renameDuplicates();
+  const auto& rootName = Common::rootElementTag().str();
+  if( fi.tag().str() == rootName )
+    return std::move( fiv.field_[rootName] );
+  else
+    return std::move(fiv.field_);
 }
 
 }

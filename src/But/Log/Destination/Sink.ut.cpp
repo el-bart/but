@@ -1,10 +1,12 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "Sink.hpp"
+#include "Common/rootElementTag.hpp"
 #include "SinkMock.ut.hpp"
 
 using testing::_;
 using But::Log::Destination::Sink;
+using But::Log::Destination::Common::rootElementTag;
 using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
@@ -32,7 +34,7 @@ TEST_F(ButLogDestinationSink, ForwardingWithProperTypes)
           FieldInfo{"foo bar"},
           FieldInfo{3.14}
         };
-  const auto expected = FieldInfo{ Tag{"log"}, std::move(data) };
+  const auto expected = FieldInfo{ rootElementTag(), std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(42, "foo bar", 3.14);
@@ -48,7 +50,7 @@ TEST_F(ButLogDestinationSink, ForwardingFormattedStringWithProperTypes)
           FieldInfo{"foo bar"},
           FieldInfo{3.14}
         };
-  const auto expected = FieldInfo{ Tag{"log"}, std::move(data) };
+  const auto expected = FieldInfo{ rootElementTag(), std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
   mock_.log(fmt, 42, "foo bar", 3.14);
