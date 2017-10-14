@@ -20,6 +20,7 @@
 * add `System::TempDir` (alongside for temporary file creation)
 * `Container::LRU`
 * `Container::CircularBuffer`
+* `Net` namespace, for synchronous, non-blocking I/O.
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
