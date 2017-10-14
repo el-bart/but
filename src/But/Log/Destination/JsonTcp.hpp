@@ -10,10 +10,10 @@ namespace Log
 namespace Destination
 {
 
-class Tcp final: public Sink
+class JsonTcp final: public Sink
 {
-protected:
-  explicit Tcp(std::string host, uint16_t port);
+public:
+  explicit JsonTcp(std::string host, uint16_t port);
 
 private:
   void logImpl(Backend::FieldInfo const& fi) override;

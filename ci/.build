@@ -46,8 +46,10 @@ else
   SAN="-DBUT_SANITIZE=$SANITIZER"
 fi
 
-time cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" "-DBUT_ENABLE_TESTS=ON" -G Ninja "$SRC_DIR"
-time ninja all
+time timeout $((1*60)) \
+  cmake $TCC $SAN "-DCMAKE_BUILD_TYPE=$TYPE" "-DBUT_ENABLE_TESTS=ON" -G Ninja "$SRC_DIR"
+time timeout $((20*60)) \
+  ninja all
 
 # self-test of sanitizers
 case "$SANITIZER" in
@@ -81,4 +83,5 @@ case "$SANITIZER" in
   ;;
 esac
 
-time ctest -V
+time timeout $((5*60)) \
+  ctest -V

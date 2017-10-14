@@ -1,0 +1,86 @@
+#include <thread>
+#include <boost/asio.hpp>
+#include "gtest/gtest.h"
+#include "JsonTcp.hpp"
+#include "But/Threading/JoiningThread.hpp"
+
+using But::Log::Destination::JsonTcp;
+using boost::asio::ip::tcp;
+using Thread = But::Threading::JoiningThread<std::thread>;
+
+namespace
+{
+
+struct ButLogDestinationJsonTcp: public testing::Test
+{
+  void accept()
+  {
+    acceptor_.accept(socket_);
+  }
+
+  auto read(size_t len)
+  {
+    std::string data;
+    data.resize(len);
+    boost::asio::read( socket_, boost::asio::buffer(&data[0], len) );
+    return data;
+  }
+
+  void close()
+  {
+    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both);
+    socket_.close();
+  }
+
+  void logAndRead()
+  {
+    Thread th{ [&] { sink_.log("test"); } };
+    accept();
+    const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
+    EXPECT_EQ( expected, read( expected.size() ) );
+  }
+
+  boost::asio::io_service io_;
+  tcp::acceptor acceptor_{ io_, tcp::endpoint( tcp::v4(), 1230 ) };
+  tcp::socket socket_{io_};
+
+  JsonTcp sink_{"127.0.0.1", 1230};
+};
+
+
+TEST_F(ButLogDestinationJsonTcp, SendingLogsWorks)
+{
+  Thread th{ [&] { sink_.log("test"); } };
+  accept();
+  const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
+  EXPECT_EQ( expected, read( expected.size() ) );
+}
+
+
+TEST_F(ButLogDestinationJsonTcp, FlushingIsNoOp)
+{
+  sink_.flush();
+}
+
+
+TEST_F(ButLogDestinationJsonTcp, ReloadingWorks)
+{
+  {
+    Thread th{ [&] { sink_.log("test"); } };
+    accept();
+    const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
+    EXPECT_EQ( expected, read( expected.size() ) );
+  }
+
+  sink_.reload();
+  close();
+
+  {
+    Thread th{ [&] { sink_.log("test"); } };
+    accept();
+    const auto expected = std::string{R"xx({"string":"test"}\n)xx"};
+    EXPECT_EQ( expected, read( expected.size() ) );
+  }
+}
+
+}
