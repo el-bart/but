@@ -155,4 +155,30 @@ TEST_F(ButLogDestinationMultiSink, ExceptionInAnyFlushDoesNotStopProcessing)
   EXPECT_EQ( 1u, td3_->flushes_ );
 }
 
+
+TEST_F(ButLogDestinationMultiSink, ConstructingFromExplicitListOfPointersToDerivedClasses)
+{
+  MultiSink m{td1_, td2_, td3_};
+
+  m.log("first", 42);
+  EXPECT_EQ( 1u, td1_->logs_ );
+  EXPECT_EQ( 1u, td2_->logs_ );
+  EXPECT_EQ( 1u, td3_->logs_ );
+
+  m.log("second", 43);
+  EXPECT_EQ( 2u, td1_->logs_ );
+  EXPECT_EQ( 2u, td2_->logs_ );
+  EXPECT_EQ( 2u, td3_->logs_ );
+
+  multi_.flush();
+  EXPECT_EQ( 1u, td1_->flushes_ );
+  EXPECT_EQ( 1u, td2_->flushes_ );
+  EXPECT_EQ( 1u, td3_->flushes_ );
+
+  multi_.reload();
+  EXPECT_EQ( 1u, td1_->reloads_  );
+  EXPECT_EQ( 1u, td2_->reloads_  );
+  EXPECT_EQ( 1u, td3_->reloads_  );
+}
+
 }

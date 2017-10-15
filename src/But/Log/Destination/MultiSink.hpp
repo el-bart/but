@@ -21,6 +21,8 @@ public:
   using collection_type = std::vector<value_type>;
 
   explicit MultiSink(collection_type dsts): dsts_{ std::move(dsts) } { }
+  template<typename ...Args>
+  explicit MultiSink(NotNullShared<Args>... args): dsts_{ value_type{ std::move(args) }... } { }
 
 private:
   void logImpl(Backend::FieldInfo const& fi) override { logImplNe(fi); }
