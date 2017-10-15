@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.1
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:5.6.1
+    ports:
+      - '4242:4242/tcp'
+    volumes:
+      - ./logstash_pipeline/:/usr/share/logstash/pipeline/:ro
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.6.1
