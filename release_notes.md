@@ -15,6 +15,7 @@ this work is available on "master" branch, but has not yet been released.
   * `Log::Destination::TextFile` - the same as `TextConsole`, but writing lines to a file.
   * `Log::Destination::TextConsole` - for simplest, possible logging on the screen.
   * `Log::Destination::TextStream` - generic `Sink`, to write data (make it structured or unstructured) to a given stream.
+  * `Log::Destination::JsonTcp` - same as `JsonConsole`, but writing to a remote `host`:`port` endpoint (can be used to integration with LogStash!).
   * `Log::Destination::JsonFile` - same as `JsonConsole`, but writing to a file.
   * `Log::Destination::JsonConsole` - writes logs as Json entries - one entry per line.
   * `Log::Destination::Syslog` - logs to system `syslogd`, using linux API.

@@ -68,6 +68,8 @@ from this moment on, logger will be able to log your type just like any other.
  * `Destination` - namespace containing typical destinations, that are provided out of the box.
  * `Destination::Sink` - base class for dynamic destinations.
 
+ note that it is possible to integrate with LogStash, via `Destination::JsonTcp` sink.
+
 
 ## meta programming
  * `BUT_MPL_VALUE_WRAP` - macro for generating full-blown object, that's only purpose is to keep a given value inside.
