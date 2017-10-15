@@ -8,6 +8,10 @@ namespace Log
 namespace Backend
 {
 
+// identity
+inline auto  toFieldInfo(FieldInfo&& fi) { return std::move(fi); }
+inline auto& toFieldInfo(FieldInfo const& fi) { return fi; }
+
 // boolean
 inline auto toFieldInfo(bool v) { return FieldInfo{ Tag{"bool"}, Value{v} }; }
 
