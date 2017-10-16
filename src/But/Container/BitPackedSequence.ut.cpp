@@ -1,10 +1,10 @@
 #include <deque>
 #include <random>
 #include <type_traits>
-#include "But/assert.hpp"
-#include "gtest/gtest.h"
-#include "BitPackedSequence.hpp"
-#include "ArrayWithSize.hpp"
+#include <gtest/gtest.h>
+#include <But/assert.hpp>
+#include <But/Container/BitPackedSequence.hpp>
+#include <But/Container/ArrayWithSize.hpp>
 
 using But::Container::BitPackedSequence;
 

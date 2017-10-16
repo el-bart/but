@@ -1,8 +1,8 @@
-#include "JsonFile.hpp"
-#include "But/Log/Field/Timestamp.hpp"
-#include "But/Log/Field/LineNumber.hpp"
-#include "But/Log/Field/Priority.hpp"
-#include "But/Log/Field/FileName.hpp"
+#include <But/Log/Destination/JsonFile.hpp>
+#include <But/Log/Field/Timestamp.hpp>
+#include <But/Log/Field/LineNumber.hpp>
+#include <But/Log/Field/Priority.hpp>
+#include <But/Log/Field/FileName.hpp>
 
 using namespace But::Log::Field;
 

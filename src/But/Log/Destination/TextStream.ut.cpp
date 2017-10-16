@@ -1,8 +1,8 @@
 #include <thread>
-#include "gtest/gtest.h"
-#include "But/Threading/JoiningThread.hpp"
-#include "TextStream.hpp"
-#include "But/Log/Field/LineNumber.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/JoiningThread.hpp>
+#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Field/LineNumber.hpp>
 
 using But::Log::Destination::TextStream;
 using But::Log::Destination::Sink;

@@ -1,7 +1,7 @@
 #pragma once
 #include <mutex>
 #include <type_traits>
-#include "But/assert.hpp"
+#include <But/assert.hpp>
 
 namespace But
 {

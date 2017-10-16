@@ -1,6 +1,6 @@
 #pragma once
 #include <boost/optional.hpp>
-#include "assert.hpp"
+#include <But/assert.hpp>
 
 namespace But
 {

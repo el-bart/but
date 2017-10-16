@@ -1,6 +1,6 @@
 #pragma once
-#include "gmock/gmock.h"
-#include "detail/DispatcherMockImpl.hpp"
+#include <gmock/gmock.h>
+#include <But/Pattern/detail/DispatcherMockImpl.hpp>
 
 namespace But
 {

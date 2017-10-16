@@ -1,7 +1,7 @@
 #pragma once
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
-#include "Sink.hpp"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <But/Log/Destination/Sink.hpp>
 
 namespace But
 {

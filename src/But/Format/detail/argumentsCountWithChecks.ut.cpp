@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "argumentsCountWithChecks.hpp"
+#include <gtest/gtest.h>
+#include <But/Format/detail/argumentsCountWithChecks.hpp>
 
 using But::Format::Invalid;
 

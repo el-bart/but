@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "UtcTime.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Field/UtcTime.hpp>
+#include <But/Log/Backend/FieldInfo.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Field::UtcTime;

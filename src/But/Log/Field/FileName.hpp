@@ -1,6 +1,6 @@
 #pragma once
 #include <boost/filesystem/path.hpp>
-#include "But/Log/Backend/FieldInfo.hpp"
+#include <But/Log/Backend/FieldInfo.hpp>
 
 namespace But
 {

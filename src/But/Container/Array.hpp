@@ -1,5 +1,5 @@
 #pragma once
-#include "But/Mpl/SizeTypeFor.hpp"
+#include <But/Mpl/SizeTypeFor.hpp>
 
 namespace But
 {

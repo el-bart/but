@@ -2,8 +2,8 @@
 #include <atomic>
 #include <chrono>
 
-#include "gtest/gtest.h"
-#include "JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/JoiningThread.hpp>
 
 namespace
 {

@@ -1,8 +1,8 @@
 #include <chrono>
 #include <iostream>
-#include "But/NotNull.hpp"
-#include "Proxy.hpp"
-#include "Destination/TextConsole.hpp"
+#include <But/NotNull.hpp>
+#include <But/Log/Proxy.hpp>
+#include <But/Log/Destination/TextConsole.hpp>
 
 using Clock = std::chrono::high_resolution_clock;
 using But::Log::Backend::Tag;

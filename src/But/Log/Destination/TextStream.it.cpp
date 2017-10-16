@@ -1,7 +1,7 @@
 #include <fstream>
-#include "gtest/gtest.h"
-#include "TextStream.hpp"
-#include "But/System/TempFile.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/TextStream.hpp>
+#include <But/System/TempFile.hpp>
 
 using But::Log::Destination::TextStream;
 

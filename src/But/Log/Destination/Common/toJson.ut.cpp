@@ -1,7 +1,7 @@
-#include "gtest/gtest.h"
-#include "toJson.hpp"
-#include "But/Log/Backend/toFieldInfo.hpp"
-#include "But/Log/Destination/Common/rootElementTag.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/Common/toJson.hpp>
+#include <But/Log/Backend/toFieldInfo.hpp>
+#include <But/Log/Destination/Common/rootElementTag.hpp>
 
 using json = nlohmann::json;
 using But::Log::Backend::Tag;

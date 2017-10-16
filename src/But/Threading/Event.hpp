@@ -1,8 +1,8 @@
 #pragma once
 #include <mutex>
 #include <condition_variable>
-#include "But/Exception.hpp"
-#include "WaitWrapper.hpp"
+#include <But/Exception.hpp>
+#include <But/Threading/WaitWrapper.hpp>
 
 namespace But
 {

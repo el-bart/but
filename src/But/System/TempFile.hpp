@@ -1,7 +1,7 @@
 #pragma once
 #include <boost/filesystem/path.hpp>
-#include "Descriptor.hpp"
-#include "FsError.hpp"
+#include <But/System/Descriptor.hpp>
+#include <But/System/FsError.hpp>
 
 namespace But
 {

@@ -2,8 +2,8 @@
 #include <vector>
 #include <iterator>
 #include <initializer_list>
-#include "But/assert.hpp"
-#include "But/Mpl/FreeOperators.hpp"
+#include <But/assert.hpp>
+#include <But/Mpl/FreeOperators.hpp>
 
 namespace But
 {

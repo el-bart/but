@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "Array.hpp"
+#include <gtest/gtest.h>
+#include <But/Container/Array.hpp>
 
 using But::Container::Array;
 

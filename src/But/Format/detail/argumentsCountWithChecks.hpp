@@ -1,8 +1,8 @@
 #pragma once
-#include "But/Format/Invalid.hpp"
-#include "parse.hpp"
-#include "argumentsCount.hpp"
-#include "allArgumentsUsed.hpp"
+#include <But/Format/Invalid.hpp>
+#include <But/Format/detail/parse.hpp>
+#include <But/Format/detail/argumentsCount.hpp>
+#include <But/Format/detail/allArgumentsUsed.hpp>
 
 namespace But
 {

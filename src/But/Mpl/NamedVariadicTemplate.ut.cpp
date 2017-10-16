@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "NamedVariadicTemplate.hpp"
+#include <gtest/gtest.h>
+#include <But/Mpl/NamedVariadicTemplate.hpp>
 
 using But::Mpl::NamedVariadicTemplate;
 

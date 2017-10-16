@@ -1,7 +1,7 @@
 #include <sstream>
-#include "gtest/gtest.h"
-#include "ThreadId.hpp"
-#include "But/Threading/JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Field/ThreadId.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Field::ThreadId;

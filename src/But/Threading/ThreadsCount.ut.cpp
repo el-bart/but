@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "ThreadsCount.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/ThreadsCount.hpp>
 
 using But::Threading::ThreadsCount;
 

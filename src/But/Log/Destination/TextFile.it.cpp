@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "TextFile.hpp"
-#include "But/System/TempFile.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/TextFile.hpp>
+#include <But/System/TempFile.hpp>
 
 using But::Log::Destination::TextFile;
 using But::Log::Destination::Sink;

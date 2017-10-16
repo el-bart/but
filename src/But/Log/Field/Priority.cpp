@@ -1,7 +1,7 @@
 #include <type_traits>
 #include <stdexcept>
-#include "But/assert.hpp"
-#include "Priority.hpp"
+#include <But/assert.hpp>
+#include <But/Log/Field/Priority.hpp>
 
 
 namespace But

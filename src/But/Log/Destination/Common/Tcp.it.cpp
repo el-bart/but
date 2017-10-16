@@ -1,8 +1,8 @@
 #include <thread>
 #include <boost/asio.hpp>
-#include "gtest/gtest.h"
-#include "Tcp.hpp"
-#include "But/Threading/JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/Common/Tcp.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Log::Destination::Common::Tcp;
 using boost::asio::ip::tcp;

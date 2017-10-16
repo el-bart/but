@@ -1,5 +1,5 @@
 #pragma once
-#include "TextStream.hpp"
+#include <But/Log/Destination/TextStream.hpp>
 
 namespace But
 {

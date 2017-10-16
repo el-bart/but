@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <unordered_map>
-#include "But/NotNull.hpp"
-#include "But/Exception.hpp"
-#include "But/Format/Parsed.hpp"
+#include <But/NotNull.hpp>
+#include <But/Exception.hpp>
+#include <But/Format/Parsed.hpp>
 
 namespace But
 {

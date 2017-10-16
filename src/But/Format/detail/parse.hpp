@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include "ParsedFormat.hpp"
-#include "common.hpp"
-#include "But/Mpl/parse.hpp"
+#include <But/Format/detail/ParsedFormat.hpp>
+#include <But/Format/detail/common.hpp>
+#include <But/Mpl/parse.hpp>
 
 namespace But
 {

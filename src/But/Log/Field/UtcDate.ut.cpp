@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "UtcDate.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Field/UtcDate.hpp>
+#include <But/Log/Backend/FieldInfo.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Field::UtcDate;

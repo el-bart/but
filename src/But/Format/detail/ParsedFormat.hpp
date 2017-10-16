@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "But/Container/ArrayWithSize.hpp"
+#include <But/Container/ArrayWithSize.hpp>
 
 namespace But
 {

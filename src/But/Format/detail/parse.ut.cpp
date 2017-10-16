@@ -1,6 +1,6 @@
 #include <type_traits>
-#include "gtest/gtest.h"
-#include "parse.hpp"
+#include <gtest/gtest.h>
+#include <But/Format/detail/parse.hpp>
 
 using But::Format::Invalid;
 using But::Format::detail::parse;

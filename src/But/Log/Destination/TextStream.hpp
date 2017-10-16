@@ -3,8 +3,8 @@
 #include <iosfwd>
 #include <sstream>
 #include <cctype>
-#include "detail/StreamAndTrimVisitor.hpp"
-#include "Sink.hpp"
+#include <But/Log/Destination/detail/StreamAndTrimVisitor.hpp>
+#include <But/Log/Destination/Sink.hpp>
 
 namespace But
 {

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <json.hpp>
-#include "toJson.hpp"
-#include "toJsonStream.hpp"
+#include <But/Log/Destination/Common/toJson.hpp>
+#include <But/Log/Destination/Common/toJsonStream.hpp>
 
 namespace But
 {

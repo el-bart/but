@@ -1,8 +1,8 @@
 #include <thread>
 #include <boost/asio.hpp>
-#include "gtest/gtest.h"
-#include "JsonTcp.hpp"
-#include "But/Threading/JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/JsonTcp.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Log::Destination::JsonTcp;
 using boost::asio::ip::tcp;

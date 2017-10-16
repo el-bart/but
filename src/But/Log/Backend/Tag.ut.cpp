@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "Tag.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Backend/Tag.hpp>
 
 using But::Log::Backend::Tag;
 

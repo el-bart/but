@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 #include <sstream>
-#include "But/assert.hpp"
+#include <But/assert.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include "gmock/gmock.h"
-#include "Dispatcher.hpp"
+#include <gmock/gmock.h>
+#include <But/Pattern/Dispatcher.hpp>
 
 namespace
 {

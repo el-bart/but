@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <boost/variant.hpp>
-#include "Tag.hpp"
-#include "Value.hpp"
+#include <But/Log/Backend/Tag.hpp>
+#include <But/Log/Backend/Value.hpp>
 
 namespace But
 {

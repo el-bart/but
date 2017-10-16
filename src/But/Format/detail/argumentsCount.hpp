@@ -1,6 +1,6 @@
 #pragma once
-#include "But/Container/Array.hpp"
-#include "lastArgumentNumber.hpp"
+#include <But/Container/Array.hpp>
+#include <But/Format/detail/lastArgumentNumber.hpp>
 
 namespace But
 {

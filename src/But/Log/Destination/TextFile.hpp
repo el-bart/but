@@ -1,9 +1,9 @@
 #pragma once
 #include <fstream>
 #include <boost/filesystem/path.hpp>
-#include "TextStream.hpp"
-#include "Sink.hpp"
-#include "But/Exception.hpp"
+#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Destination/Sink.hpp>
+#include <But/Exception.hpp>
 
 namespace But
 {

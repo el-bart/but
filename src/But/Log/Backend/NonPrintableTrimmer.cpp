@@ -1,4 +1,4 @@
-#include "NonPrintableTrimmer.hpp"
+#include <But/Log/Backend/NonPrintableTrimmer.hpp>
 
 namespace But
 {

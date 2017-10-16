@@ -1,6 +1,6 @@
 #include <limits>
-#include "gtest/gtest.h"
-#include "SizeTypeFor.hpp"
+#include <gtest/gtest.h>
+#include <But/Mpl/SizeTypeFor.hpp>
 
 using But::Mpl::SizeTypeFor;
 

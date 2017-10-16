@@ -1,6 +1,6 @@
 #pragma once
-#include "Sink.hpp"
-#include "But/Thrading/Fifo.hpp"
+#include <But/Log/Destination/Sink.hpp>
+#include <But/Thrading/Fifo.hpp>
 
 namespace But
 {

@@ -1,5 +1,5 @@
-#include "But/Format/format.hpp"
-#include "Translation.hpp"
+#include <But/Format/format.hpp>
+#include <But/Log/Localization/Translation.hpp>
 
 namespace But
 {

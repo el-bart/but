@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
-#include "But/NotNull.hpp"
-#include "Sink.hpp"
+#include <But/NotNull.hpp>
+#include <But/Log/Destination/Sink.hpp>
 
 namespace But
 {

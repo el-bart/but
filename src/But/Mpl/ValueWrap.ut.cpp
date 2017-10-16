@@ -1,8 +1,8 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "gtest/gtest.h"
-#include "ValueWrap.hpp"
+#include <gtest/gtest.h>
+#include <But/Mpl/ValueWrap.hpp>
 
 namespace
 {

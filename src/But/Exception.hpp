@@ -2,7 +2,7 @@
 #include <sstream>
 #include <utility>
 #include <stdexcept>
-#include "detail/Exception.hpp"
+#include <But/detail/Exception.hpp>
 
 namespace But
 {

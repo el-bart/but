@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "BasicLockable.hpp"
-#include "LockProxyProvider.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/BasicLockable.hpp>
+#include <But/Threading/LockProxyProvider.hpp>
 
 using But::Threading::BasicLockable;
 using But::Threading::LockProxyProvider;

@@ -1,8 +1,8 @@
 #include <thread>
 #include <string>
-#include "gtest/gtest.h"
-#include "BasicLockable.hpp"
-#include "JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/BasicLockable.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Threading::BasicLockable;
 

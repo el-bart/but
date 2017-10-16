@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "CacheLine.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/CacheLine.hpp>
 
 using But::Threading::CacheLine;
 

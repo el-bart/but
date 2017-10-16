@@ -2,9 +2,8 @@
 #include <string>
 #include <type_traits>
 #include <boost/shared_ptr.hpp>
-
-#include "gtest/gtest.h"
-#include "NotNull.hpp"
+#include <gtest/gtest.h>
+#include <But/NotNull.hpp>
 
 struct Data
 {

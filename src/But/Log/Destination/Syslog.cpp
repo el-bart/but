@@ -1,8 +1,8 @@
-#include "But/assert.hpp"
+#include <But/assert.hpp>
 #include <syslog.h>
-#include "But/Log/Field/Priority.hpp"
-#include "Syslog.hpp"
-#include "detail/StreamAndTrimVisitor.hpp"
+#include <But/Log/Field/Priority.hpp>
+#include <But/Log/Destination/Syslog.hpp>
+#include <But/Log/Destination/detail/StreamAndTrimVisitor.hpp>
 
 namespace But
 {

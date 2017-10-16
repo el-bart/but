@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include "But/assert.hpp"
+#include <But/assert.hpp>
 
 namespace But
 {

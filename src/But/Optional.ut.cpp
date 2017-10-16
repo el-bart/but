@@ -1,8 +1,8 @@
 #include <memory>
 #include <string>
 #include <type_traits>
-#include "gtest/gtest.h"
-#include "Optional.hpp"
+#include <gtest/gtest.h>
+#include <But/Optional.hpp>
 
 using But::Optional;
 using But::makeOptional;

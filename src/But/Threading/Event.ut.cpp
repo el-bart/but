@@ -1,7 +1,7 @@
 #include <thread>
-#include "gtest/gtest.h"
-#include "Event.hpp"
-#include "JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/Event.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Threading::Event;
 

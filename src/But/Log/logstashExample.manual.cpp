@@ -3,14 +3,14 @@
 #include <random>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
-#include "Destination/JsonTcp.hpp"
-#include "Destination/MultiSink.hpp"
-#include "Destination/TextConsole.hpp"
-#include "But/Log/Proxy.hpp"
-#include "But/Log/Field/Timestamp.hpp"
-#include "But/Log/Field/LineNumber.hpp"
-#include "But/Log/Field/Priority.hpp"
-#include "But/Log/Field/FileName.hpp"
+#include <But/Log/Destination/JsonTcp.hpp>
+#include <But/Log/Destination/MultiSink.hpp>
+#include <But/Log/Destination/TextConsole.hpp>
+#include <But/Log/Proxy.hpp>
+#include <But/Log/Field/Timestamp.hpp>
+#include <But/Log/Field/LineNumber.hpp>
+#include <But/Log/Field/Priority.hpp>
+#include <But/Log/Field/FileName.hpp>
 
 using namespace But::Log::Field;
 using But::Log::Backend::Tag;

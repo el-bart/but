@@ -4,9 +4,9 @@
 #include <utility>
 #include <functional>
 #include <unordered_map>
-#include "But/assert.hpp"
-#include "But/Exception.hpp"
-#include "But/Mpl/NamedVariadicTemplate.hpp"
+#include <But/assert.hpp>
+#include <But/Exception.hpp>
+#include <But/Mpl/NamedVariadicTemplate.hpp>
 
 namespace But
 {

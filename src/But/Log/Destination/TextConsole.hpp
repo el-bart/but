@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "TextStream.hpp"
-#include "Sink.hpp"
+#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Destination/Sink.hpp>
 
 namespace But
 {

@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "lastArgumentNumber.hpp"
-#include "parse.hpp"
+#include <gtest/gtest.h>
+#include <But/Format/detail/lastArgumentNumber.hpp>
+#include <But/Format/detail/parse.hpp>
 
 using But::Format::detail::parseCt;
 using But::Format::detail::lastArgumentNumber;

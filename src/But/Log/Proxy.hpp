@@ -1,5 +1,5 @@
 #pragma once
-#include "ProxyThrowing.hpp"
+#include <But/Log/ProxyThrowing.hpp>
 
 namespace But
 {

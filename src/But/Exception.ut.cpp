@@ -3,8 +3,8 @@
 #include <type_traits>
 #include <boost/exception/all.hpp>
 
-#include "gtest/gtest.h"
-#include "Exception.hpp"
+#include <gtest/gtest.h>
+#include <But/Exception.hpp>
 
 using But::Exception;
 

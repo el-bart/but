@@ -2,10 +2,10 @@
 #include <vector>
 #include <memory>
 #include <atomic>
-#include "Fifo.hpp"
-#include "ThreadsCount.hpp"
-#include "JoiningThread.hpp"
-#include "detail/Command.hpp"
+#include <But/Threading/Fifo.hpp>
+#include <But/Threading/ThreadsCount.hpp>
+#include <But/Threading/JoiningThread.hpp>
+#include <But/Threading/detail/Command.hpp>
 
 namespace But
 {

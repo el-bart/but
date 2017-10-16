@@ -1,7 +1,7 @@
 #include <functional>
 #include <type_traits>
-#include "gtest/gtest.h"
-#include "Guard.hpp"
+#include <gtest/gtest.h>
+#include <But/Guard.hpp>
 
 using But::Guard;
 using But::makeGuard;

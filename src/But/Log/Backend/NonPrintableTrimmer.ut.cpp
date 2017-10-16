@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "NonPrintableTrimmer.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Backend/NonPrintableTrimmer.hpp>
 
 using But::Log::Backend::NonPrintableTrimmer;
 

@@ -1,7 +1,7 @@
 #pragma once
-#include "But/Container/Array.hpp"
-#include "ParsedFormat.hpp"
-#include "lastArgumentNumber.hpp"
+#include <But/Container/Array.hpp>
+#include <But/Format/detail/ParsedFormat.hpp>
+#include <But/Format/detail/lastArgumentNumber.hpp>
 
 namespace But
 {

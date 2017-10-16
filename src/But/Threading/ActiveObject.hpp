@@ -1,5 +1,5 @@
 #pragma once
-#include "ThreadPool.hpp"
+#include <But/Threading/ThreadPool.hpp>
 
 namespace But
 {

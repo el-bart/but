@@ -1,5 +1,5 @@
-#include "JsonTcp.hpp"
-#include "Common/toJson.hpp"
+#include <But/Log/Destination/JsonTcp.hpp>
+#include <But/Log/Destination/Common/toJson.hpp>
 
 namespace But
 {

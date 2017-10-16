@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "allArgumentsUsed.hpp"
-#include "parse.hpp"
+#include <gtest/gtest.h>
+#include <But/Format/detail/allArgumentsUsed.hpp>
+#include <But/Format/detail/parse.hpp>
 
 using But::Format::Invalid;
 using But::Format::detail::parseCt;

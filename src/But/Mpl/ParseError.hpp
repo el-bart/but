@@ -1,5 +1,5 @@
 #pragma once
-#include "But/Exception.hpp"
+#include <But/Exception.hpp>
 
 namespace But
 {

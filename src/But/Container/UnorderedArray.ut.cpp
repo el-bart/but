@@ -4,9 +4,8 @@
 #include <string>
 #include <algorithm>
 #include <type_traits>
-
-#include "gtest/gtest.h"
-#include "UnorderedArray.hpp"
+#include <gtest/gtest.h>
+#include <But/Container/UnorderedArray.hpp>
 
 using But::Container::UnorderedArray;
 

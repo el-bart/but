@@ -1,9 +1,9 @@
 #pragma once
 #include <algorithm>
 #include <initializer_list>
-#include "But/assert.hpp"
-#include "But/Mpl/SizeTypeFor.hpp"
-#include "But/Container/Array.hpp"
+#include <But/assert.hpp>
+#include <But/Mpl/SizeTypeFor.hpp>
+#include <But/Container/Array.hpp>
 
 namespace But
 {

@@ -5,10 +5,9 @@
 #include <fcntl.h>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
-
-#include "gtest/gtest.h"
-#include "Descriptor.hpp"
-#include "But/assert.hpp"
+#include <gtest/gtest.h>
+#include <But/System/Descriptor.hpp>
+#include <But/assert.hpp>
 
 namespace fs = boost::filesystem;
 using But::System::Descriptor;

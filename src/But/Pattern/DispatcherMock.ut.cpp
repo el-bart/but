@@ -1,6 +1,6 @@
-#include "gmock/gmock.h"
-#include "DispatcherMock.hpp"
-#include "DispatcherTestStructure.ut.hpp"
+#include <gmock/gmock.h>
+#include <But/Pattern/DispatcherMock.hpp>
+#include <But/Pattern/DispatcherTestStructure.ut.hpp>
 
 using But::Pattern::AutoDispatcher;
 using namespace testing;

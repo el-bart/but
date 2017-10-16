@@ -1,6 +1,6 @@
 #include <typeinfo>
-#include "gmock/gmock.h"
-#include "AbstractFactory.hpp"
+#include <gmock/gmock.h>
+#include <But/Pattern/AbstractFactory.hpp>
 
 using But::Pattern::AbstractFactory;
 

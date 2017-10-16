@@ -3,9 +3,9 @@
 #include <mutex>
 #include <utility>
 #include <condition_variable>
-#include "But/assert.hpp"
-#include "But/Exception.hpp"
-#include "WaitWrapper.hpp"
+#include <But/assert.hpp>
+#include <But/Exception.hpp>
+#include <But/Threading/WaitWrapper.hpp>
 
 namespace But
 {

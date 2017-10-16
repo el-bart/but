@@ -1,9 +1,9 @@
 #pragma once
-#include "But/NotNull.hpp"
-#include "But/Format/apply.hpp"
-#include "But/Format/format.hpp"
-#include "Destination/Sink.hpp"
-#include "Localization/None.hpp"
+#include <But/NotNull.hpp>
+#include <But/Format/apply.hpp>
+#include <But/Format/format.hpp>
+#include <But/Log/Destination/Sink.hpp>
+#include <But/Log/Localization/None.hpp>
 
 namespace But
 {

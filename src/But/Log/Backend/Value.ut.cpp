@@ -1,6 +1,6 @@
 #include <boost/type_index.hpp>
-#include "gtest/gtest.h"
-#include "Value.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Backend/Value.hpp>
 
 using But::Log::Backend::Value;
 

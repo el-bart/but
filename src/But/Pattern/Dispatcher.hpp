@@ -1,11 +1,11 @@
 #pragma once
 #include <type_traits>
 #include <unordered_map>
-#include "But/assert.hpp"
+#include <But/assert.hpp>
 #include <boost/cast.hpp>
-#include "But/Exception.hpp"
-#include "But/Mpl/NamedVariadicTemplate.hpp"
-#include "detail/Registrator.hpp"
+#include <But/Exception.hpp>
+#include <But/Mpl/NamedVariadicTemplate.hpp>
+#include <But/Pattern/detail/Registrator.hpp>
 
 namespace But
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "But/Mpl/ParseError.hpp"
+#include <But/Mpl/ParseError.hpp>
 
 namespace But
 {

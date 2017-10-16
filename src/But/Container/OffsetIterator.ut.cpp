@@ -2,8 +2,8 @@
 #include <string>
 #include <sstream>
 #include <type_traits>
-#include "gtest/gtest.h"
-#include "OffsetIterator.hpp"
+#include <gtest/gtest.h>
+#include <But/Container/OffsetIterator.hpp>
 
 using But::Container::OffsetIterator;
 

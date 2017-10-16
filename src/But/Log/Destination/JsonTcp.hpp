@@ -1,7 +1,7 @@
 #pragma once
 #include <mutex>
-#include "Sink.hpp"
-#include "Common/Tcp.hpp"
+#include <But/Log/Destination/Sink.hpp>
+#include <But/Log/Destination/Common/Tcp.hpp>
 
 namespace But
 {

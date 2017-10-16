@@ -1,5 +1,5 @@
 #include <boost/filesystem/operations.hpp>
-#include "TextFile.hpp"
+#include <But/Log/Destination/TextFile.hpp>
 
 namespace But
 {

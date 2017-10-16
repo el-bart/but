@@ -1,5 +1,5 @@
-#include "But/assert.hpp"
-#include "Exception.hpp"
+#include <But/assert.hpp>
+#include <But/Exception.hpp>
 
 namespace But
 {

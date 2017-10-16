@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
-#include "But/Log/Backend/NonPrintableTrimmer.hpp"
-#include "Sink.hpp"
+#include <But/Log/Backend/NonPrintableTrimmer.hpp>
+#include <But/Log/Destination/Sink.hpp>
 
 namespace But
 {

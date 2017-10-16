@@ -1,8 +1,8 @@
 #include <memory>
 #include <type_traits>
-#include "gtest/gtest.h"
-#include "ArrayWithSize.hpp"
-#include "But/assert.hpp"
+#include <gtest/gtest.h>
+#include <But/Container/ArrayWithSize.hpp>
+#include <But/assert.hpp>
 
 using But::Container::ArrayWithSize;
 

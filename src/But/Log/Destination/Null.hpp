@@ -1,5 +1,5 @@
 #pragma once
-#include "Sink.hpp"
+#include <But/Log/Destination/Sink.hpp>
 
 namespace But
 {

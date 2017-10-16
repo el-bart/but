@@ -1,8 +1,8 @@
 #include <memory>
 #include <sstream>
-#include "gtest/gtest.h"
-#include "ProxyThrowing.hpp"
-#include "Destination/Sink.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/ProxyThrowing.hpp>
+#include <But/Log/Destination/Sink.hpp>
 
 using But::Log::ProxyThrowing;
 using But::Log::Destination::Sink;

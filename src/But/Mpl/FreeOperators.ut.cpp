@@ -1,6 +1,6 @@
 #include <initializer_list>
-#include "gtest/gtest.h"
-#include "FreeOperators.hpp"
+#include <gtest/gtest.h>
+#include <But/Mpl/FreeOperators.hpp>
 
 namespace
 {

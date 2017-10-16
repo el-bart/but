@@ -1,7 +1,7 @@
 #pragma once
-#include "But/Exception.hpp"
-#include "ParseError.hpp"
-#include "detail/parse.hpp"
+#include <But/Exception.hpp>
+#include <But/Mpl/ParseError.hpp>
+#include <But/Mpl/detail/parse.hpp>
 
 namespace But
 {

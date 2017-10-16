@@ -2,9 +2,9 @@
 #include <atomic>
 #include <memory>
 #include <thread>
-#include "gtest/gtest.h"
-#include "Fifo.hpp"
-#include "JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/Fifo.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Threading::Fifo;
 using Thread = But::Threading::JoiningThread<std::thread>;

@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <ctime>
-#include "ConversionError.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
+#include <But/Log/Field/ConversionError.hpp>
+#include <But/Log/Backend/FieldInfo.hpp>
 
 namespace But
 {

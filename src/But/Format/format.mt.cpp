@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "format.hpp"
-#include "apply.hpp"
+#include <gtest/gtest.h>
+#include <But/Format/format.hpp>
+#include <But/Format/apply.hpp>
 
 using But::Format::apply;
 using But::Format::Invalid;

@@ -2,9 +2,9 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include "But/assert.hpp"
-#include "But/Format/Parsed.hpp"
-#include "But/Format/toString.hpp"
+#include <But/assert.hpp>
+#include <But/Format/Parsed.hpp>
+#include <But/Format/toString.hpp>
 
 namespace But
 {

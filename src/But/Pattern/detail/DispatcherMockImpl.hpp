@@ -1,7 +1,7 @@
 #pragma once
-#include "gmock/gmock.h"
-#include "But/Pattern/Dispatcher.hpp"
-#include "But/Mpl/NamedVariadicTemplate.hpp"
+#include <gmock/gmock.h>
+#include <But/Pattern/Dispatcher.hpp>
+#include <But/Mpl/NamedVariadicTemplate.hpp>
 
 namespace But
 {

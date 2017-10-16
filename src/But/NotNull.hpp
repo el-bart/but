@@ -1,11 +1,11 @@
 #pragma once
 #include <memory>
 #include <utility>
-#include "But/assert.hpp"
+#include <But/assert.hpp>
 #include <boost/operators.hpp>
-#include "Exception.hpp"
-#include "detail/getPointerValue.hpp"
-#include "detail/TypesResolver.hpp"
+#include <But/Exception.hpp>
+#include <But/detail/getPointerValue.hpp>
+#include <But/detail/TypesResolver.hpp>
 
 namespace But
 {

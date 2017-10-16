@@ -1,9 +1,9 @@
 #include <string>
 #include <vector>
 #include <json.hpp>
-#include "gtest/gtest.h"
-#include "JsonFile.hpp"
-#include "But/System/TempFile.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/JsonFile.hpp>
+#include <But/System/TempFile.hpp>
 
 using But::Log::Destination::JsonFile;
 using json = nlohmann::json;

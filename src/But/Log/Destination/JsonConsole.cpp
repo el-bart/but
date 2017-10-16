@@ -1,6 +1,6 @@
 #include <iostream>
-#include "JsonConsole.hpp"
-#include "Common/toJsonStream.hpp"
+#include <But/Log/Destination/JsonConsole.hpp>
+#include <But/Log/Destination/Common/toJsonStream.hpp>
 
 namespace But
 {

@@ -2,7 +2,7 @@
 #include <string>
 #include <cinttypes>
 #include <boost/variant.hpp>
-#include "detail/StreamVisitor.hpp"
+#include <But/Log/Backend/detail/StreamVisitor.hpp>
 
 namespace But
 {

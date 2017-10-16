@@ -1,5 +1,5 @@
-#include "JsonFile.hpp"
-#include "Common/toJsonStream.hpp"
+#include <But/Log/Destination/JsonFile.hpp>
+#include <But/Log/Destination/Common/toJsonStream.hpp>
 
 namespace But
 {

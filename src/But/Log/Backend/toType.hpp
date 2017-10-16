@@ -2,7 +2,7 @@
  *         ADL is used to search for proper overload.
  */
 #pragma once
-#include "Tag.hpp"
+#include <But/Log/Backend/Tag.hpp>
 
 namespace But
 {

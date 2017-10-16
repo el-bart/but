@@ -1,6 +1,6 @@
 #pragma once
 #include <type_traits>
-#include "detail/LockProxy.hpp"
+#include <But/Threading/detail/LockProxy.hpp>
 
 namespace But
 {

@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "parse.hpp"
+#include <gtest/gtest.h>
+#include <But/Mpl/parse.hpp>
 
 using But::Mpl::parseSigned;
 using But::Mpl::parseUnsigned;

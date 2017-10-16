@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "argumentsCount.hpp"
-#include "parse.hpp"
+#include <gtest/gtest.h>
+#include <But/Format/detail/argumentsCount.hpp>
+#include <But/Format/detail/parse.hpp>
 
 using But::Format::detail::parseCt;
 using But::Format::detail::argumentsCount;

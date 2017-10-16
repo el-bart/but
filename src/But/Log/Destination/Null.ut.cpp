@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "Null.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/Null.hpp>
 
 using But::Log::Destination::Null;
 using But::Log::Destination::Sink;

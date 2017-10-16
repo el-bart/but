@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "UtcIsoDateTime.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Field/UtcIsoDateTime.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Field::UtcIsoDateTime;

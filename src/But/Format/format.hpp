@@ -1,5 +1,5 @@
 #pragma once
-#include "detail/formatImpl.hpp"
+#include <But/Format/detail/formatImpl.hpp>
 
 namespace But
 {

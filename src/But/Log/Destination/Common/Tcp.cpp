@@ -1,5 +1,5 @@
 #include <boost/asio.hpp>
-#include "Tcp.hpp"
+#include <But/Log/Destination/Common/Tcp.hpp>
 
 using boost::asio::ip::tcp;
 

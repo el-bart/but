@@ -1,4 +1,4 @@
-#include "MultiSink.hpp"
+#include <But/Log/Destination/MultiSink.hpp>
 
 namespace But
 {

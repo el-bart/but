@@ -2,10 +2,10 @@
 #include <limits>
 #include <iomanip>
 #include <iostream>
-#include "But/assert.hpp"
-#include "But/Log/Backend/FieldInfo.hpp"
-#include "But/Log/Backend/NonPrintableTrimmer.hpp"
-#include "But/Log/Field/FormattedString.hpp"
+#include <But/assert.hpp>
+#include <But/Log/Backend/FieldInfo.hpp>
+#include <But/Log/Backend/NonPrintableTrimmer.hpp>
+#include <But/Log/Field/FormattedString.hpp>
 
 namespace But
 {

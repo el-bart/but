@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "ThreadNo.hpp"
-#include "But/Threading/JoiningThread.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Field/ThreadNo.hpp>
+#include <But/Threading/JoiningThread.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Backend::Value;

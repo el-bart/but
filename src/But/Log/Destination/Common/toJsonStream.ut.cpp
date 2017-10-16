@@ -1,10 +1,10 @@
 #include <vector>
 #include <sstream>
-#include "gtest/gtest.h"
-#include "toJsonStream.hpp"
-#include "But/Log/Field/FormattedString.hpp"
-#include "But/Log/Backend/toFieldInfo.hpp"
-#include "But/Log/Destination/Common/rootElementTag.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/Common/toJsonStream.hpp>
+#include <But/Log/Field/FormattedString.hpp>
+#include <But/Log/Backend/toFieldInfo.hpp>
+#include <But/Log/Destination/Common/rootElementTag.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;

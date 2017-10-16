@@ -1,6 +1,6 @@
 #pragma once
-#include "Parsed.hpp"
-#include "detail/applyImpl.hpp"
+#include <But/Format/Parsed.hpp>
+#include <But/Format/detail/applyImpl.hpp>
 
 namespace But
 {

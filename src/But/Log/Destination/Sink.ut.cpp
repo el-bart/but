@@ -1,8 +1,8 @@
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
-#include "Sink.hpp"
-#include "Common/rootElementTag.hpp"
-#include "SinkMock.ut.hpp"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <But/Log/Destination/Sink.hpp>
+#include <But/Log/Destination/Common/rootElementTag.hpp>
+#include <But/Log/Destination/SinkMock.ut.hpp>
 
 using testing::_;
 using But::Log::Destination::Sink;

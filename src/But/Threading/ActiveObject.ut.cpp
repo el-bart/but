@@ -1,10 +1,10 @@
 #include <string>
 #include <chrono>
-#include "gtest/gtest.h"
-#include "ActiveObject.hpp"
-#include "Policy/Std.hpp"
-#include "Policy/Boost.hpp"
-#include "detail/waitForFuture.ut.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/ActiveObject.hpp>
+#include <But/Threading/Policy/Std.hpp>
+#include <But/Threading/Policy/Boost.hpp>
+#include <But/Threading/detail/waitForFuture.ut.hpp>
 
 using But::Threading::detail::waitForFuture;
 

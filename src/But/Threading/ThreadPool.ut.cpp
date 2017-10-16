@@ -1,11 +1,11 @@
 #include <string>
 #include <chrono>
-#include "gtest/gtest.h"
-#include "Event.hpp"
-#include "ThreadPool.hpp"
-#include "Policy/Std.hpp"
-#include "Policy/Boost.hpp"
-#include "detail/waitForFuture.ut.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/Event.hpp>
+#include <But/Threading/ThreadPool.hpp>
+#include <But/Threading/Policy/Std.hpp>
+#include <But/Threading/Policy/Boost.hpp>
+#include <But/Threading/detail/waitForFuture.ut.hpp>
 
 using But::Threading::ThreadsCount;
 using But::Threading::detail::waitForFuture;

@@ -1,9 +1,9 @@
-#include "JsonTcp.hpp"
-#include "But/Log/Proxy.hpp"
-#include "But/Log/Field/Timestamp.hpp"
-#include "But/Log/Field/LineNumber.hpp"
-#include "But/Log/Field/Priority.hpp"
-#include "But/Log/Field/FileName.hpp"
+#include <But/Log/Destination/JsonTcp.hpp>
+#include <But/Log/Proxy.hpp>
+#include <But/Log/Field/Timestamp.hpp>
+#include <But/Log/Field/LineNumber.hpp>
+#include <But/Log/Field/Priority.hpp>
+#include <But/Log/Field/FileName.hpp>
 
 using namespace But::Log::Field;
 using But::Log::Backend::Tag;

@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
-#include "Translation.hpp"
-#include "But/Format/format.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Localization/Translation.hpp>
+#include <But/Format/format.hpp>
 
 using But::Log::Localization::Translation;
 

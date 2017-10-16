@@ -1,6 +1,6 @@
 #include <type_traits>
-#include "gtest/gtest.h"
-#include "LockProxyProvider.hpp"
+#include <gtest/gtest.h>
+#include <But/Threading/LockProxyProvider.hpp>
 
 using But::Threading::LockProxyProvider;
 using But::Threading::detail::LockProxy;

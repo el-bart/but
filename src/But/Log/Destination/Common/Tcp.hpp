@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <cctype>
-#include "But/Exception.hpp"
+#include <But/Exception.hpp>
 
 namespace But
 {

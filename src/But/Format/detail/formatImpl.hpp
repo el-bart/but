@@ -1,6 +1,6 @@
 #pragma once
-#include "But/Format/Parsed.hpp"
-#include "argumentsCountWithChecks.hpp"
+#include <But/Format/Parsed.hpp>
+#include <But/Format/detail/argumentsCountWithChecks.hpp>
 
 namespace But
 {

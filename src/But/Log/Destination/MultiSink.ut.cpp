@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
-#include "MultiSink.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Destination/MultiSink.hpp>
 
 using But::makeSharedNN;
 using But::NotNullShared;

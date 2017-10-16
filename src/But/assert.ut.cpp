@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "assert.hpp"
+#include <But/assert.hpp>
 
 namespace
 {

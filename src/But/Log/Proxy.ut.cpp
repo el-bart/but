@@ -1,7 +1,7 @@
 #include <memory>
 #include <sstream>
-#include "gtest/gtest.h"
-#include "Proxy.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Proxy.hpp>
 
 using But::Log::Proxy;
 using But::Log::Backend::FieldInfo;

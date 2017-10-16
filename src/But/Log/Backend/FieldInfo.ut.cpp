@@ -1,6 +1,6 @@
 #include <sstream>
-#include "gtest/gtest.h"
-#include "FieldInfo.hpp"
+#include <gtest/gtest.h>
+#include <But/Log/Backend/FieldInfo.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Backend::Value;

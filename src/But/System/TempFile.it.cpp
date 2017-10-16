@@ -1,6 +1,6 @@
 #include <boost/filesystem/operations.hpp>
-#include "gtest/gtest.h"
-#include "TempFile.hpp"
+#include <gtest/gtest.h>
+#include <But/System/TempFile.hpp>
 
 namespace fs = boost::filesystem;
 using But::System::TempFile;

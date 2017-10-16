@@ -11,8 +11,8 @@
 #include <algorithm>
 #include <unordered_set>
 #include <cinttypes>
-#include "But/assert.hpp"
-#include "UnorderedArray.hpp"
+#include <But/assert.hpp>
+#include <But/Container/UnorderedArray.hpp>
 
 using std::cout;
 using std::cerr;
