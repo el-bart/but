@@ -63,6 +63,7 @@ private:
   auto getCommand()
   {
     Queue::lock_type lock{q_};
+    q_.waitForNonEmpty(lock);
     auto cmd = std::move( q_.top() );
     q_.pop();
     return cmd;
