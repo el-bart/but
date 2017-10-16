@@ -1,7 +1,7 @@
 #include <string>
+#include <atomic>
 #include <memory>
 #include <thread>
-
 #include "gtest/gtest.h"
 #include "Fifo.hpp"
 #include "JoiningThread.hpp"
@@ -14,7 +14,7 @@ namespace
 
 using Q = Fifo<std::string>;
 
-struct ThreadingFifo: public testing::Test
+struct ButThreadingFifo: public testing::Test
 {
   Q                                     q_;
   std::chrono::seconds                  timeout_{5};
@@ -22,12 +22,12 @@ struct ThreadingFifo: public testing::Test
 };
 
 
-TEST_F(ThreadingFifo, DoNothing)
+TEST_F(ButThreadingFifo, DoNothing)
 {
 }
 
 
-TEST_F(ThreadingFifo, PushPopOne)
+TEST_F(ButThreadingFifo, PushPopOne)
 {
   Q::lock_type lock{q_};
   EXPECT_TRUE(q_.empty());
@@ -43,7 +43,7 @@ TEST_F(ThreadingFifo, PushPopOne)
 }
 
 
-TEST_F(ThreadingFifo, Order)
+TEST_F(ButThreadingFifo, Order)
 {
   Q::lock_type lock{q_};
   EXPECT_TRUE(q_.empty());
@@ -69,7 +69,7 @@ TEST_F(ThreadingFifo, Order)
 }
 
 
-TEST_F(ThreadingFifo, TopConst)
+TEST_F(ButThreadingFifo, TopConst)
 {
   Q::lock_type lock{q_};
   EXPECT_TRUE(q_.empty());
@@ -80,7 +80,7 @@ TEST_F(ThreadingFifo, TopConst)
 }
 
 
-TEST_F(ThreadingFifo, MovableOnlyObjects)
+TEST_F(ButThreadingFifo, MovableOnlyObjects)
 {
   Fifo<std::unique_ptr<int>> q;
   decltype(q)::lock_type lock{q};
@@ -99,7 +99,7 @@ TEST_F(ThreadingFifo, MovableOnlyObjects)
 }
 
 
-TEST_F(ThreadingFifo, TopWaitForElementToTop)
+TEST_F(ButThreadingFifo, TopWaitForElementToTop)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
@@ -107,7 +107,7 @@ TEST_F(ThreadingFifo, TopWaitForElementToTop)
 }
 
 
-TEST_F(ThreadingFifo, TopWaitForElementToTopConst)
+TEST_F(ButThreadingFifo, TopWaitForElementToTopConst)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
@@ -115,7 +115,7 @@ TEST_F(ThreadingFifo, TopWaitForElementToTopConst)
 }
 
 
-TEST_F(ThreadingFifo, TopWaitForElementToPop)
+TEST_F(ButThreadingFifo, TopWaitForElementToPop)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
@@ -123,7 +123,7 @@ TEST_F(ThreadingFifo, TopWaitForElementToPop)
 }
 
 
-TEST_F(ThreadingFifo, TopWithTimeoutWhenElementIsPresent)
+TEST_F(ButThreadingFifo, TopWithTimeoutWhenElementIsPresent)
 {
   Q::lock_type lock{q_};
   q_.push("test");
@@ -135,7 +135,7 @@ TEST_F(ThreadingFifo, TopWithTimeoutWhenElementIsPresent)
 }
 
 
-TEST_F(ThreadingFifo, TopTimeout)
+TEST_F(ButThreadingFifo, TopTimeout)
 {
   Q::lock_type lock{q_};
   timeout_  = std::chrono::seconds{0};
@@ -147,7 +147,7 @@ TEST_F(ThreadingFifo, TopTimeout)
 }
 
 
-TEST_F(ThreadingFifo, PopWithTimeoutWhenElementIsPresent)
+TEST_F(ButThreadingFifo, PopWithTimeoutWhenElementIsPresent)
 {
   Q::lock_type lock{q_};
   q_.push("test");
@@ -160,7 +160,7 @@ TEST_F(ThreadingFifo, PopWithTimeoutWhenElementIsPresent)
 }
 
 
-TEST_F(ThreadingFifo, PopTimeout)
+TEST_F(ButThreadingFifo, PopTimeout)
 {
   Q::lock_type lock{q_};
   timeout_  = std::chrono::seconds{0};
@@ -170,7 +170,7 @@ TEST_F(ThreadingFifo, PopTimeout)
 }
 
 
-TEST_F(ThreadingFifo, ProducerConsumer)
+TEST_F(ButThreadingFifo, ProducerConsumer)
 {
   const auto count = 1000;
   Thread th{ [&]{ for(int i=0; i<count; ++i) { Q::lock_type lock{q_}; q_.push("foo/bar"); std::this_thread::yield(); } } };
@@ -182,6 +182,41 @@ TEST_F(ThreadingFifo, ProducerConsumer)
     q_.pop();
     std::this_thread::yield();
   }
+}
+
+
+TEST_F(ButThreadingFifo, ExplicitWaitingForAddition)
+{
+  std::atomic<bool> finished{false};
+  Thread th{ [&] {
+                   Q::lock_type lock{q_};
+                   ASSERT_TRUE( q_.waitForAddition(lock) );
+                   finished = true;
+                 } };
+
+  Q::lock_type lock{q_};
+  q_.push("sth");
+}
+
+
+TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeout)
+{
+  std::atomic<bool> finished{false};
+  Thread th{ [&] {
+                   Q::lock_type lock{q_};
+                   ASSERT_TRUE( q_.waitForAddition( lock, std::chrono::minutes{1} ) );
+                   finished = true;
+                 } };
+
+  Q::lock_type lock{q_};
+  q_.push("sth");
+}
+
+
+TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeoutFailsWithFalse)
+{
+  Q::lock_type lock{q_};
+  EXPECT_FALSE( q_.waitForAddition( lock, std::chrono::seconds{0} ) );
 }
 
 }
