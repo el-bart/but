@@ -63,7 +63,7 @@ private:
   auto getCommand()
   {
     Queue::lock_type lock{q_};
-    auto cmd = std::move( q_.top(lock) );
+    auto cmd = std::move( q_.top() );
     q_.pop();
     return cmd;
   }
