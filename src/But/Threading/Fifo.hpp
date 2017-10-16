@@ -1,11 +1,9 @@
 #pragma once
-
 #include <deque>
 #include <mutex>
 #include <utility>
 #include <condition_variable>
 #include "But/assert.hpp"
-
 #include "But/Exception.hpp"
 #include "WaitWrapper.hpp"
 
@@ -40,12 +38,14 @@ class Fifo final
   using Queue = std::deque<T>;
 
 public:
-  BUT_DEFINE_EXCEPTION(Timeout, Exception, "timeout while wating for data");
-
   using value_type = T;
   using size_type  = typename Queue::size_type;
   using lock_type  = std::unique_lock<Fifo<T>>;
 
+private:
+  using WaitHelper = WaitWrapper<std::condition_variable_any, lock_type>;
+
+public:
   Fifo() = default;
 
   void lock()
@@ -53,7 +53,8 @@ public:
     m_.lock();
     BUT_ASSERT(not locked_);
     locked_ = true;
-    hasNewElements_ = false;
+    pushed_ = false;
+    poped_ = false;
   }
 
   void unlock()
@@ -63,8 +64,10 @@ public:
     // yes, notification should be done under a lock - aaccoring to POSIX this is "the way":
     // http://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html
     // on linux it is aboud 15% faster than first unlocking an then notifying and it's 2x that fast on windows.
-    if(hasNewElements_)
-      nonEmpty_.notify_all();
+    if(pushed_)
+      elementsPushed_.notify_all();
+    if(poped_)
+      elementsPoped_.notify_all();
     m_.unlock();
   }
 
@@ -73,7 +76,7 @@ public:
   {
     BUT_ASSERT(locked_);
     q_.emplace_back( std::forward<U>(u) );
-    hasNewElements_ = true;
+    pushed_ = true;
   }
 
   bool empty() const
@@ -95,28 +98,10 @@ public:
     return q_.front();
   }
 
-  template<typename ...Args>
-  T& top(lock_type& lock, Args&&... args)
-  {
-    BUT_ASSERT(locked_);
-    BUT_ASSERT(lock.owns_lock());
-    wait(lock, std::forward<Args>(args)...);
-    return q_.front();
-  }
-
   T const& top() const
   {
     BUT_ASSERT(locked_);
     BUT_ASSERT( not empty() );
-    return q_.front();
-  }
-
-  template<typename ...Args>
-  T const& top(lock_type& lock, Args&&... args) const
-  {
-    BUT_ASSERT(locked_);
-    BUT_ASSERT(lock.owns_lock());
-    wait(lock, std::forward<Args>(args)...);
     return q_.front();
   }
 
@@ -125,30 +110,36 @@ public:
     BUT_ASSERT(locked_);
     BUT_ASSERT( not empty() );
     q_.pop_front();
+    poped_ = true;
   }
 
   template<typename ...Args>
-  void pop(lock_type& lock, Args&&... args)
+  bool waitForNonEmpty(lock_type& lock, Args&& ...args) const
   {
     BUT_ASSERT(locked_);
     BUT_ASSERT(lock.owns_lock());
-    wait(lock, std::forward<Args>(args)...);
-    q_.pop_front();
+    return WaitHelper::wait(elementsPushed_, lock, [&]{ return not empty(); }, std::forward<Args>(args)...);
+  }
+
+  template<typename ...Args>
+  bool waitForSizeBelow(const size_type limit, lock_type& lock, Args&& ...args) const
+  {
+    BUT_ASSERT(locked_);
+    BUT_ASSERT(lock.owns_lock());
+    if(limit == 0u)
+      return true;
+    return WaitHelper::wait(elementsPoped_, lock, [&]{ return size() < limit; }, std::forward<Args>(args)...);
   }
 
 private:
-  template<typename ...Args>
-  void wait(lock_type& lock, Args&& ...args) const
-  {
-    using WaitHelper = WaitWrapper<Timeout, std::condition_variable_any, lock_type>;
-    WaitHelper::wait(nonEmpty_, lock, [&]{ return not empty(); }, std::forward<Args>(args)...);
-  }
 
   Queue                               q_;
   std::mutex                          m_;
   bool                                locked_{false};
-  mutable std::condition_variable_any nonEmpty_;
-  bool                                hasNewElements_{false};
+  mutable std::condition_variable_any elementsPushed_;
+  bool                                pushed_ = false;
+  mutable std::condition_variable_any elementsPoped_;
+  bool                                poped_= false;
 };
 
 }

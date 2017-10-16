@@ -99,74 +99,69 @@ TEST_F(ButThreadingFifo, MovableOnlyObjects)
 }
 
 
-TEST_F(ButThreadingFifo, TopWaitForElementToTop)
+TEST_F(ButThreadingFifo, WaitForElementAdditionWithTimeout)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
-  EXPECT_EQ( q_.top(lock), "narf" );
+  ASSERT_TRUE( q_.waitForNonEmpty(lock, timeout_) );
+  EXPECT_EQ( "narf", q_.top() );
 }
 
 
-TEST_F(ButThreadingFifo, TopWaitForElementToTopConst)
+TEST_F(ButThreadingFifo, WaitForElementAddition)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
-  EXPECT_EQ( static_cast<Q const&>(q_).top(lock), "narf" );
+  ASSERT_TRUE( q_.waitForNonEmpty(lock) );
+  EXPECT_EQ( "narf", q_.top() );
 }
 
 
-TEST_F(ButThreadingFifo, TopWaitForElementToPop)
+TEST_F(ButThreadingFifo, WaitForElementRemovalWithTimeout)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
   Q::lock_type lock{q_};
-  q_.pop(lock);
+  ASSERT_TRUE( q_.waitForNonEmpty(lock, timeout_) );
+  q_.pop();
 }
 
 
-TEST_F(ButThreadingFifo, TopWithTimeoutWhenElementIsPresent)
+TEST_F(ButThreadingFifo, WaitForElementRemoval)
+{
+  Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
+  Q::lock_type lock{q_};
+  ASSERT_TRUE( q_.waitForNonEmpty(lock) );
+  q_.pop();
+}
+
+
+TEST_F(ButThreadingFifo, NonEmptyNoTimeoutWhenElementIsPresent)
 {
   Q::lock_type lock{q_};
   q_.push("test");
   ASSERT_EQ(q_.size(), 1u);
-  EXPECT_EQ( q_.top(lock, timeout_), "test");
-  EXPECT_EQ( q_.top(lock, deadline_), "test");
-  EXPECT_EQ( static_cast<Q const&>(q_).top(lock, timeout_), "test");
-  EXPECT_EQ( static_cast<Q const&>(q_).top(lock, deadline_), "test");
+
+  EXPECT_TRUE( q_.waitForNonEmpty(lock, timeout_) );
+  EXPECT_TRUE( q_.waitForNonEmpty(lock, deadline_) );
+
+  auto const& cq = q_;
+  EXPECT_TRUE( cq.waitForNonEmpty(lock, timeout_) );
+  EXPECT_TRUE( cq.waitForNonEmpty(lock, deadline_) );
 }
 
-
-TEST_F(ButThreadingFifo, TopTimeout)
+TEST_F(ButThreadingFifo, NonEmptyTimeoutWhenElementIsNotPresent)
 {
   Q::lock_type lock{q_};
-  timeout_  = std::chrono::seconds{0};
-  deadline_ = std::chrono::steady_clock::now();
-  EXPECT_THROW( q_.top(lock, timeout_),  Q::Timeout );
-  EXPECT_THROW( q_.top(lock, deadline_), Q::Timeout );
-  EXPECT_THROW( static_cast<Q const&>(q_).top(lock, timeout_),  Q::Timeout );
-  EXPECT_THROW( static_cast<Q const&>(q_).top(lock, deadline_), Q::Timeout );
-}
+  ASSERT_TRUE( q_.empty() );
+  const auto timeout = std::chrono::seconds{0};
+  const auto deadline = std::chrono::steady_clock::now();
 
+  EXPECT_FALSE( q_.waitForNonEmpty(lock, timeout) );
+  EXPECT_FALSE( q_.waitForNonEmpty(lock, deadline) );
 
-TEST_F(ButThreadingFifo, PopWithTimeoutWhenElementIsPresent)
-{
-  Q::lock_type lock{q_};
-  q_.push("test");
-  q_.push("test");
-  ASSERT_EQ(q_.size(), 2u);
-  q_.pop(lock, timeout_);
-  ASSERT_EQ(q_.size(), 1u);
-  q_.pop(lock, deadline_);
-  ASSERT_EQ(q_.size(), 0u);
-}
-
-
-TEST_F(ButThreadingFifo, PopTimeout)
-{
-  Q::lock_type lock{q_};
-  timeout_  = std::chrono::seconds{0};
-  deadline_ = std::chrono::steady_clock::now();
-  EXPECT_THROW( q_.pop(lock, timeout_),  Q::Timeout );
-  EXPECT_THROW( q_.pop(lock, deadline_), Q::Timeout );
+  auto const& cq = q_;
+  EXPECT_FALSE( cq.waitForNonEmpty(lock, timeout) );
+  EXPECT_FALSE( cq.waitForNonEmpty(lock, deadline) );
 }
 
 
@@ -178,7 +173,8 @@ TEST_F(ButThreadingFifo, ProducerConsumer)
   for(int i=0; i<count; ++i)
   {
     Q::lock_type lock{q_};
-    EXPECT_EQ( q_.top(lock, deadline), "foo/bar" );
+    ASSERT_TRUE( q_.waitForNonEmpty(lock, deadline) );
+    EXPECT_EQ( q_.top(), "foo/bar" );
     q_.pop();
     std::this_thread::yield();
   }
@@ -190,11 +186,12 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForAddition)
   std::atomic<bool> finished{false};
   Thread th{ [&] {
                    Q::lock_type lock{q_};
-                   ASSERT_TRUE( q_.waitForAddition(lock) );
+                   ASSERT_TRUE( q_.waitForNonEmpty(lock) );
                    finished = true;
                  } };
 
   Q::lock_type lock{q_};
+  EXPECT_FALSE(finished);
   q_.push("sth");
 }
 
@@ -204,7 +201,7 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeout)
   std::atomic<bool> finished{false};
   Thread th{ [&] {
                    Q::lock_type lock{q_};
-                   ASSERT_TRUE( q_.waitForAddition( lock, std::chrono::minutes{1} ) );
+                   ASSERT_TRUE( q_.waitForNonEmpty(lock, timeout_) );
                    finished = true;
                  } };
 
@@ -213,10 +210,28 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeout)
 }
 
 
-TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeoutFailsWithFalse)
+TEST_F(ButThreadingFifo, ExplicitWaitingForRemoval)
+{
+  {
+    Q::lock_type lock{q_};
+    q_.push("1");
+    q_.push("2");
+  }
+
+  Thread th{ [&] { Q::lock_type lock{q_}; q_.pop(); } };
+
+  Q::lock_type lock{q_};
+  EXPECT_TRUE( q_.waitForSizeBelow(2, lock, timeout_) );
+  EXPECT_EQ( 1u, q_.size() );
+}
+
+
+TEST_F(ButThreadingFifo, ExplicitWaitingForRemovalWithZeroSizeAlwaysSucceeds)
 {
   Q::lock_type lock{q_};
-  EXPECT_FALSE( q_.waitForAddition( lock, std::chrono::seconds{0} ) );
+  EXPECT_EQ( 0u, q_.size() );
+  EXPECT_TRUE( q_.waitForSizeBelow(0, lock, timeout_) );
+  EXPECT_EQ( 0u, q_.size() );
 }
 
 }
