@@ -1,8 +1,6 @@
 #pragma once
-
 #include <mutex>
 #include <condition_variable>
-
 #include "But/Exception.hpp"
 #include "WaitWrapper.hpp"
 
@@ -16,8 +14,6 @@ namespace Threading
 class Event final
 {
 public:
-  BUT_DEFINE_EXCEPTION(Timeout, Exception, "timeout while waiting for event");
-
   Event():
     blocked_{true}
   { }
@@ -39,15 +35,15 @@ public:
    * timeout (ex. std::chrono::seconds) or deadline (ex. std::chrono::steady_clock::timepoint).
    */
   template<typename ...Args>
-  void wait(Args&& ...args) const
+  bool wait(Args&& ...args) const
   {
     Lock lock{m_};
-    WaitHelper::wait(unblocked_, lock, [&]{ return not blocked_; }, std::forward<Args>(args)...);
+    return WaitHelper::wait(unblocked_, lock, [&]{ return not blocked_; }, std::forward<Args>(args)...);
   }
 
 private:
   using Lock = std::unique_lock<std::mutex>;
-  using WaitHelper = WaitWrapper<Timeout, std::condition_variable, Lock>;
+  using WaitHelper = WaitWrapper<std::condition_variable, Lock>;
 
   bool                            blocked_;
   mutable std::mutex              m_;

@@ -1,5 +1,4 @@
 #include <thread>
-
 #include "gtest/gtest.h"
 #include "Event.hpp"
 #include "JoiningThread.hpp"
@@ -20,14 +19,15 @@ struct ButThreadingEvent: public ::testing::Test
 TEST_F(ButThreadingEvent, SetUnblocks)
 {
   e_.set();
-  e_.wait();    // does not block
+  EXPECT_TRUE( e_.wait() );     // does not block
 }
 
 
 TEST_F(ButThreadingEvent, WaitIsConst)
 {
   e_.set();
-  static_cast<Event const&>(e_).wait();
+  auto const& ce = e_;
+  EXPECT_TRUE( ce.wait() );
 }
 
 
@@ -35,7 +35,7 @@ TEST_F(ButThreadingEvent, BlockedByDefault)
 {
   std::string v{"whatever"};
   Thread th{ [&]{ v = "ok"; e_.set(); } };
-  e_.wait();
+  ASSERT_TRUE( e_.wait() );
   EXPECT_EQ(v, "ok");
 }
 
@@ -44,7 +44,7 @@ TEST_F(ButThreadingEvent, BlockedWithTimeout)
 {
   std::string v{"whatever"};
   Thread th{ [&]{ v = "ok"; e_.set(); } };
-  e_.wait(std::chrono::seconds{5});
+  ASSERT_TRUE( e_.wait( std::chrono::seconds{5} ) );
   EXPECT_EQ(v, "ok");
 }
 
@@ -53,7 +53,7 @@ TEST_F(ButThreadingEvent, BlockedWithDeadline)
 {
   std::string v{"whatever"};
   Thread th{ [&]{ v = "ok"; e_.set(); } };
-  e_.wait(std::chrono::steady_clock::now() + std::chrono::seconds{5});
+  ASSERT_TRUE( e_.wait( std::chrono::steady_clock::now() + std::chrono::seconds{5} ) );
   EXPECT_EQ(v, "ok");
 }
 
@@ -65,15 +65,15 @@ TEST_F(ButThreadingEvent, UnblockedCanBeBlockedAgain)
   e_.clear();
   std::string v{"whatever"};
   Thread th{ [&]{ v = "ok"; e_.set(); } };
-  e_.wait(std::chrono::seconds{5});
+  ASSERT_TRUE( e_.wait( std::chrono::seconds{5} ) );
   EXPECT_EQ(v, "ok");
 }
 
 
 TEST_F(ButThreadingEvent, TimeoutOnBlocking)
 {
-  EXPECT_THROW( e_.wait(std::chrono::steady_clock::now() + std::chrono::seconds{0}), Event::Timeout );
-  EXPECT_THROW( e_.wait(std::chrono::seconds{0}), Event::Timeout );
+  EXPECT_FALSE( e_.wait( std::chrono::steady_clock::now() + std::chrono::seconds{0} ) );
+  EXPECT_FALSE( e_.wait( std::chrono::seconds{0} ) );
 }
 
 }
