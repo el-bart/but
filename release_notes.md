@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * all `BUT`'s includes are now in a form `<include>` instead of `"include"`, to better suite installation purposes.
   * `Threading::Fifo`, `Threading::Event` and `Threading::WaitWrapper` no longer throw exceptions on timeout - `true`/`false` is returned instead.
   * CI moved from codefresh to travis.
   * added `install` target, that installs lib and headers into `CMAKE_INSTALL_PREFIX` location.
