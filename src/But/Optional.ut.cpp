@@ -33,6 +33,14 @@ TEST_F(ButOptional, ConstCorrectness)
 }
 
 
+TEST_F(ButOptional, GettingRvalueFromTemporaryObject)
+{
+  Optional<std::string> tmp{"test"};
+  std::string&& s = std::move(tmp).get();
+  EXPECT_EQ("test", s);
+}
+
+
 TEST_F(ButOptional, DefaultConstructor)
 {
   const Optional<int> opt{};

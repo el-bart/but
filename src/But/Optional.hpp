@@ -44,12 +44,17 @@ public:
 
   explicit operator bool() const { return static_cast<bool>(t_); }
 
-  T& get()
+  T&& get() &&
+  {
+    BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
+    return std::move( t_.get() );
+  }
+  T& get() &
   {
     BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
     return t_.get();
   }
-  T const& get() const
+  T const& get() const &
   {
     BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
     return t_.get();
