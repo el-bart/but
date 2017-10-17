@@ -21,7 +21,10 @@ namespace Destination
 class BackgroundThread final: public Sink
 {
 public:
-  BackgroundThread(But::NotNullShared<Sink> chained);
+  /** @param chained sink to forward logs to in a background thread.
+   *  @param maximumQueueSize number of elements that can wait in a queue. 0 means no limit.
+   */
+  BackgroundThread(But::NotNullShared<Sink> chained, size_t maximumQueueSize);
   ~BackgroundThread();
 
 private:
@@ -33,6 +36,7 @@ private:
 
   using Queue = But::Threading::Fifo< But::Optional<Backend::FieldInfo> >;
 
+  const size_t maximumQueueSize_;
   But::NotNullShared<Sink> chained_;
   Queue queue_;
   But::Threading::JoiningThread<std::thread> thread_;

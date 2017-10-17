@@ -8,7 +8,8 @@ namespace Log
 namespace Destination
 {
 
-BackgroundThread::BackgroundThread(But::NotNullShared<Sink> chained):
+BackgroundThread::BackgroundThread(But::NotNullShared<Sink> chained, size_t maximumQueueSize):
+  maximumQueueSize_{maximumQueueSize},
   chained_{ std::move(chained) },
   thread_{ [this]{ this->threadLoop(); } }
 { }
@@ -24,6 +25,11 @@ void BackgroundThread::logImpl(Backend::FieldInfo const& fi)
 {
   auto copy = fi;
   Queue::lock_type lock{queue_};
+  if(maximumQueueSize_)
+  {
+    queue_.waitForSizeBelow(maximumQueueSize_, lock);
+    BUT_ASSERT( queue_.size() < maximumQueueSize_ );
+  }
   queue_.push( std::move(copy) );
 }
 

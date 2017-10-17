@@ -1,8 +1,10 @@
+#include <chrono>
 #include <thread>
 #include <atomic>
 #include <gtest/gtest.h>
 #include <But/Log/Destination/BackgroundThread.hpp>
 #include <But/Log/Destination/SinkMock.ut.hpp>
+#include <But/Threading/Event.hpp>
 #include <But/Threading/JoiningThread.hpp>
 
 using testing::_;
@@ -19,7 +21,7 @@ namespace
 struct ButLogDestinationBackgroundThread: public testing::Test
 {
   But::NotNullShared<SinkMock> mock_{ But::makeSharedNN<SinkMock>() };
-  BackgroundThread sink_{mock_};
+  BackgroundThread sink_{mock_, 1000*1000};
 };
 
 
@@ -43,7 +45,7 @@ TEST_F(ButLogDestinationBackgroundThread, LoggingIsDoneInSeparateThrad)
 {
   auto idLogSink = But::makeSharedNN<IdLoggingSink>();
   {
-    BackgroundThread sink{idLogSink};
+    BackgroundThread sink{idLogSink, 1000*1000};
     sink.log("whatever");
   }
   EXPECT_NE( std::thread::id{}, idLogSink->logThreadId_ );
@@ -106,6 +108,49 @@ TEST_F(ButLogDestinationBackgroundThread, ExceptionsFromChainedFlushAndReloadAre
 
   EXPECT_THROW( sink_.reload(), TestError );
   EXPECT_THROW( sink_.flush(), TestError );
+}
+
+
+TEST_F(ButLogDestinationBackgroundThread, QueuesSizeIsObeyed)
+{
+  using Clock = std::chrono::high_resolution_clock;
+  Clock::time_point loggedAt;
+  Clock::time_point unblockedAt;
+
+  EXPECT_CALL( (*mock_), logImpl(_) ).Times( testing::AtLeast(1) );
+
+  But::Threading::Event e;
+  auto block = [&](FieldInfo const&) { EXPECT_TRUE( e.wait() ); };
+  EXPECT_CALL( (*mock_), logImpl(_) )
+    .WillOnce( testing::Invoke(block) )
+    .RetiresOnSaturation();
+
+  BackgroundThread sink{mock_, 2};
+  sink.log("x");
+  sink.log("x");
+  sink.log("x");
+
+  {
+    Thread th1{ [&] {
+      sink.log("x");
+      loggedAt = Clock::now();
+    } };
+    Thread th2{ [&] {
+      unblockedAt = Clock::now();
+      e.set();
+    } };
+  }
+
+  EXPECT_LE( unblockedAt, loggedAt );
+}
+
+
+TEST_F(ButLogDestinationBackgroundThread, SizeOfZeroMeansNoLimit)
+{
+  EXPECT_CALL( (*mock_), logImpl(_) ).Times( testing::AtLeast(1) );
+  BackgroundThread sink{mock_, 0};
+  for(auto i=0; i<100; ++i)
+    sink.log("x");
 }
 
 }
