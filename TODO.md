@@ -6,7 +6,6 @@
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
 * add fields: `Size`, `Index`, `Address`
-* `Log::Destination::BackgroundThread{ForeginDestination}`
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occurs, but dropping if nothing 'special' happens for some time
 * add support for correlation chains (UUIDs/GUIDs).
 
