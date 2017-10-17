@@ -16,7 +16,7 @@ namespace Destination
 class TextStream: public Sink
 {
 protected:
-  explicit TextStream(std::ostream& os): os_{&os} { }
+  explicit TextStream(std::ostream& os): os_{os} { }
 
   std::string const& endline() const { return endline_; }
 
@@ -24,7 +24,7 @@ private:
   void logImpl(Backend::FieldInfo const& fi) override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
-    toStreamFormat(*os_, fi);
+    toStreamFormat(os_, fi);
   }
 
   void reloadImpl() override final
@@ -36,7 +36,7 @@ private:
   void flushImpl() override final
   {
     const std::lock_guard<std::mutex> lock(mutex_);
-    (*os_) << std::flush;
+    os_ << std::flush;
   }
 
   virtual void reloadImplUnderLock() = 0;
@@ -56,7 +56,7 @@ private:
   }
 
   std::mutex mutex_;
-  std::ostream* os_;
+  std::ostream& os_;
   const std::string endline_{ endlineType() };
   const Backend::NonPrintableTrimmer trim_;
 };
