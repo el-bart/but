@@ -6,6 +6,7 @@
 #include <But/Log/Destination/JsonTcp.hpp>
 #include <But/Log/Destination/MultiSink.hpp>
 #include <But/Log/Destination/TextConsole.hpp>
+#include <But/Log/Destination/BackgroundThread.hpp>
 #include <But/Log/Proxy.hpp>
 #include <But/Log/Field/Timestamp.hpp>
 #include <But/Log/Field/LineNumber.hpp>
@@ -59,7 +60,8 @@ auto makeLogger(std::string host, const uint16_t port)
   auto tcp = But::makeSharedNN<But::Log::Destination::JsonTcp>( std::move(host), port );
   auto console = But::makeSharedNN<But::Log::Destination::TextConsole>();
   auto multi = But::makeSharedNN<But::Log::Destination::MultiSink>( std::move(console), std::move(tcp) );
-  But::Log::Proxy<> p{ std::move(multi) };
+  auto bgThread = But::makeSharedNN<But::Log::Destination::BackgroundThread>( std::move(multi), 50*1000 );
+  But::Log::Proxy<> p{ std::move(bgThread) };
   return p;
 }
 
