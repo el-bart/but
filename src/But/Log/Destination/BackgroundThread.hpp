@@ -28,7 +28,7 @@ public:
   ~BackgroundThread();
 
 private:
-  void logImpl(Backend::FieldInfo const& fi);
+  void logImpl(Backend::FieldInfo const& fi) override;
   void reloadImpl() override { chained_->reload(); }
   void flushImpl() override;
 
