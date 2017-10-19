@@ -98,6 +98,20 @@ TEST_F(ButLogDestinationTextStream, FlushingSmokeTest)
 }
 
 
+TEST_F(ButLogDestinationTextStream, ExplicitFormatAtTheBeginning)
+{
+  s_.log( FormattedString{"my format"}, 2, 84, 69 );
+  EXPECT_EQ( "my format\n", s_.ss_.str() );
+}
+
+
+TEST_F(ButLogDestinationTextStream, ExplicitFormatInTheMiddle)
+{
+  s_.log( 42, FormattedString{"my format"}, 2, 84, 69 );
+  EXPECT_EQ( "42 my format\n", s_.ss_.str() );
+}
+
+
 struct CustomFormatting: public StringStream
 {
   void toStreamFormat(std::ostream& os, But::Log::Backend::FieldInfo const& fi) override

@@ -57,29 +57,28 @@ struct StreamAndTrimVisitor final
     const auto isRoot = not rootProcessed_;
     rootProcessed_ = true;
 
-    if( isRoot && fis[0].tag() == formattedStringType_ )
-    {
-      BUT_ASSERT(os_);
-      (*os_) << fis[0].value().get<std::string>();
-      return;
-    }
-
     if(not isRoot)
     {
       BUT_ASSERT(os_);
       (*os_) << t << "={";
     }
+
+    auto it = begin(fis);
+    do
     {
-      auto it = begin(fis);
+      BUT_ASSERT(os_);
+      if( it != begin(fis) )
+        (*os_) << (isRoot?' ':',');
+      if( it->tag() == formattedStringType_ )
+      {
+        (*os_) << it->value().get<std::string>();
+        return;
+      }
       it->visit(*this);
       ++it;
-      for(; it!=end(fis); ++it)
-      {
-        BUT_ASSERT(os_);
-        (*os_) << (isRoot?' ':',');
-        it->visit(*this);
-      }
     }
+    while( it != end(fis) );
+
     if(not isRoot)
       (*os_) << "}";
   }
