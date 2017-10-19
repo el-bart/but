@@ -75,19 +75,6 @@ public:
     { /* this is <del>sparta</del> logger! */ }
   }
 
-  /** @brief creates a single log entry, of a formatted-string for, out of a given parameters. tags are preserved.
-   */
-  template<size_t N, size_t M, typename ...Args>
-  void log(Format::ParsedCompiletime<N,M>&& parsed, Args&& ...args) const noexcept
-  {
-    try
-    {
-      lpt_.log( std::move(parsed), std::forward<Args>(args)... );
-    }
-    catch(...)
-    { /* this is <del>sparta</del> logger! */ }
-  }
-
   /** @brief triggers sink-specific reload actions (re-open output file, reconnect
    *         network socket, etc...). typically used for implementing easy log rotation.
    */
