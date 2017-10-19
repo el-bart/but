@@ -3,10 +3,12 @@
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Destination/Common/rootElementTag.hpp>
 #include <But/Log/Destination/SinkMock.ut.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 using testing::_;
 using But::Log::Destination::Sink;
 using But::Log::Destination::Common::rootElementTag;
+using But::Log::Destination::detail::args2FieldInfo;
 using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
 using But::Log::Field::FormattedString;
@@ -37,7 +39,7 @@ TEST_F(ButLogDestinationSink, ForwardingWithProperTypes)
   const auto expected = FieldInfo{ rootElementTag(), std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
-  mock_.log(42, "foo bar", 3.14);
+  mock_.log( args2FieldInfo( 42, "foo bar", 3.14 ) );
 }
 
 
@@ -53,7 +55,7 @@ TEST_F(ButLogDestinationSink, ForwardingFormattedStringWithProperTypes)
   const auto expected = FieldInfo{ rootElementTag(), std::move(data) };
   EXPECT_CALL( mock_, logImpl(expected) )
     .Times(1);
-  mock_.log(fmt, 42, "foo bar", 3.14);
+  mock_.log( args2FieldInfo(fmt, 42, "foo bar", 3.14) );
 }
 
 

@@ -3,7 +3,9 @@
 #include <But/Threading/JoiningThread.hpp>
 #include <But/Log/Destination/TextStream.hpp>
 #include <But/Log/Field/LineNumber.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
+using But::Log::Destination::detail::args2FieldInfo;
 using But::Log::Destination::TextStream;
 using But::Log::Destination::Sink;
 using But::Log::Field::LineNumber;
@@ -30,7 +32,7 @@ struct ButLogDestinationTextStream: public testing::Test
 
 TEST_F(ButLogDestinationTextStream, PrintingSampleData)
 {
-  s_.log( "line:", LineNumber{42} );
+  s_.log( args2FieldInfo( "line:", LineNumber{42} ) );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
@@ -38,14 +40,14 @@ TEST_F(ButLogDestinationTextStream, PrintingSampleData)
 TEST_F(ButLogDestinationTextStream, OperatingViaBaseClass)
 {
   auto& base = static_cast<Sink&>(s_);
-  base.log( "line:", LineNumber{42} );
+  base.log( args2FieldInfo( "line:", LineNumber{42} ) );
   EXPECT_EQ( s_.ss_.str(), "line: 42\n" );
 }
 
 
 TEST_F(ButLogDestinationTextStream, RemovingNonPrintableCharacters)
 {
-  s_.log( "beep \07 / CRLF \r\n / normal:", LineNumber{42} );
+  s_.log( args2FieldInfo( "beep \07 / CRLF \r\n / normal:", LineNumber{42} ) );
   EXPECT_EQ( s_.ss_.str(), "beep . / CRLF .. / normal: 42\n" );
 }
 
@@ -63,7 +65,7 @@ TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutpu
 {
   auto logger = std::make_shared<StringStream>();
   {
-    auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
+    auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log( args2FieldInfo("new input: ", i, " - in progress") ); };
     Thread th1(multiLog);
     Thread th2(multiLog);
     Thread th3(multiLog);
@@ -77,7 +79,7 @@ TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutpu
   auto loggerSS = std::make_shared<StringStream>();
   {
     std::shared_ptr<Sink> logger = loggerSS;
-    auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log("new input: ", i, " - in progress"); };
+    auto multiLog = [logger]() { for(auto i=0; i<100; ++i) logger->log( args2FieldInfo("new input: ", i, " - in progress") ); };
     Thread th1(multiLog);
     Thread th2(multiLog);
     Thread th3(multiLog);
@@ -100,14 +102,14 @@ TEST_F(ButLogDestinationTextStream, FlushingSmokeTest)
 
 TEST_F(ButLogDestinationTextStream, ExplicitFormatAtTheBeginning)
 {
-  s_.log( FormattedString{"my format"}, 2, 84, 69 );
+  s_.log( args2FieldInfo( FormattedString{"my format"}, 2, 84, 69 ) );
   EXPECT_EQ( "my format\n", s_.ss_.str() );
 }
 
 
 TEST_F(ButLogDestinationTextStream, ExplicitFormatInTheMiddle)
 {
-  s_.log( 42, FormattedString{"my format"}, 2, 84, 69 );
+  s_.log( args2FieldInfo( 42, FormattedString{"my format"}, 2, 84, 69 ) );
   EXPECT_EQ( "42 my format\n", s_.ss_.str() );
 }
 
@@ -123,23 +125,23 @@ struct CustomFormatting: public StringStream
 TEST_F(ButLogDestinationTextStream, ProvidingDifferentToStreamFormatting)
 {
   CustomFormatting cs;
-  cs.log("alice", "has", "a cat");
-  cs.log("so tech", "much wow");
-  cs.log( FormattedString{"$2 / $1 / $0"}, 2, 84, 69 );
+  cs.log( args2FieldInfo("alice", "has", "a cat") );
+  cs.log( args2FieldInfo("so tech", "much wow") );
+  cs.log( args2FieldInfo( FormattedString{"$2 / $1 / $0"}, 2, 84, 69 ) );
   EXPECT_EQ( "3x2x4x", cs.ss_.str() );
 }
 
 
 TEST_F(ButLogDestinationTextStream, SpaceIsInsertBetweenEachArgument)
 {
-  s_.log(1, "a", 'b', 42);
+  s_.log( args2FieldInfo(1, "a", 'b', 42) );
   EXPECT_EQ( s_.ss_.str(), "1 a b 42\n" );
 }
 
 
 TEST_F(ButLogDestinationTextStream, ZeroArgumentsLogIsJustAnEmptyLine)
 {
-  s_.log();
+  s_.log( args2FieldInfo() );
   EXPECT_EQ( s_.ss_.str(), "\n" );
 }
 
@@ -159,7 +161,7 @@ auto toFieldInfo(Point const& p)
 
 TEST_F(ButLogDestinationTextStream, StreamingNestedStructure)
 {
-  s_.log( "location in space:", Point{13,42,69} );
+  s_.log( args2FieldInfo( "location in space:", Point{13,42,69} ) );
   EXPECT_EQ( s_.ss_.str(), "location in space: Point={13,42,69}\n" );
 }
 
@@ -179,7 +181,7 @@ auto toFieldInfo(Line const& l)
 
 TEST_F(ButLogDestinationTextStream, StreamingDeeplyNestedStructure)
 {
-  s_.log( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } );
+  s_.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
   EXPECT_EQ( s_.ss_.str(), "2D: Line={Point={13,42,69},Point={9,9,7}}\n" );
 }
 

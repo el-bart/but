@@ -4,6 +4,9 @@
 #include <gtest/gtest.h>
 #include <But/Log/Destination/JsonFile.hpp>
 #include <But/System/TempFile.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
+
+using But::Log::Destination::detail::args2FieldInfo;
 
 using But::Log::Destination::JsonFile;
 using json = nlohmann::json;
@@ -56,17 +59,17 @@ TEST_F(ButLogDestinationJsonFile, LinesAreBeingWritten)
 {
   EXPECT_EQ( 0u, countLines() );
 
-  tf_.log("hello, ", "world!");
+  tf_.log( args2FieldInfo( "hello, ", "world!" ) );
   EXPECT_EQ( 1u, countLines() );
 
-  tf_.log("the answer is: ", 42);
+  tf_.log( args2FieldInfo( "the answer is: ", 42 ));
   EXPECT_EQ( 2u, countLines() );
 }
 
 TEST_F(ButLogDestinationJsonFile, SomeLogs)
 {
-  tf_.log("answer", 42);
-  tf_.log("foo", "bar");
+  tf_.log( args2FieldInfo( "answer", 42 ) );
+  tf_.log( args2FieldInfo( "foo", "bar" ) );
   EXPECT_EQ( 2u, countLines() );
 
   EXPECT_EQ( readLogFile(),
@@ -79,7 +82,7 @@ TEST_F(ButLogDestinationJsonFile, SomeLogs)
 
 TEST_F(ButLogDestinationJsonFile, SomeFormattedLog)
 {
-  tf_.log( But::Log::Field::FormattedString{"kszy"}, "answer", 42);
+  tf_.log( args2FieldInfo( But::Log::Field::FormattedString{"kszy"}, "answer", 42) );
   EXPECT_EQ( 1u, countLines() );
 
   EXPECT_EQ( readLogFile(),

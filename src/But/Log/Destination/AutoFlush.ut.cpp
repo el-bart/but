@@ -1,12 +1,14 @@
 #include <gtest/gtest.h>
 #include <But/Log/Destination/AutoFlush.hpp>
 #include <But/Log/Destination/SinkMock.ut.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 using testing::_;
 using testing::Throw;
 using But::Log::Backend::FieldInfo;
 using But::Log::Destination::SinkMock;
 using But::Log::Destination::AutoFlush;
+using But::Log::Destination::detail::args2FieldInfo;
 
 namespace
 {
@@ -23,7 +25,7 @@ TEST_F(ButLogDestinationAutoFlush, LoggingCausesFlushing)
   testing::Sequence seq;
   EXPECT_CALL((*mock_), logImpl(_) ).Times(1).InSequence(seq);
   EXPECT_CALL((*mock_), flushImpl() ).Times(1).InSequence(seq);
-  sink_.log("foo-bar");
+  sink_.log( args2FieldInfo("foo-bar") );
 }
 
 
@@ -45,7 +47,7 @@ TEST_F(ButLogDestinationAutoFlush, ExceptionFromLogGetsForwarded)
 {
   struct Dummy { };
   EXPECT_CALL((*mock_), logImpl(_) ).WillOnce( testing::Throw(Dummy{}) );
-  EXPECT_THROW( sink_.log("kaboom!"), Dummy );
+  EXPECT_THROW( sink_.log( args2FieldInfo("kaboom!") ), Dummy );
 }
 
 

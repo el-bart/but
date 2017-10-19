@@ -3,6 +3,9 @@
 #include <gtest/gtest.h>
 #include <But/Log/Destination/JsonTcp.hpp>
 #include <But/Threading/JoiningThread.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
+
+using But::Log::Destination::detail::args2FieldInfo;
 
 using But::Log::Destination::JsonTcp;
 using boost::asio::ip::tcp;
@@ -34,7 +37,7 @@ struct ButLogDestinationJsonTcp: public testing::Test
 
   void logAndRead()
   {
-    Thread th{ [&] { sink_.log("test"); } };
+    Thread th{ [&] { sink_.log( args2FieldInfo("test" ) ); } };
     accept();
     const auto expected = std::string{R"xx({"string":"test"})xx"} + "\n";
     EXPECT_EQ( expected, read( expected.size() ) );

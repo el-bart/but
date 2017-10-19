@@ -4,10 +4,12 @@
 #include <But/Log/Field/LineNumber.hpp>
 #include <But/Log/Field/Priority.hpp>
 #include <But/Log/Field/FileName.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 using namespace But::Log::Field;
 using But::Log::Backend::Tag;
 using But::Log::Backend::FieldInfo;
+using But::Log::Destination::detail::args2FieldInfo;
 
 
 struct Point
@@ -38,15 +40,15 @@ auto toFieldInfo(Line const& l)
 int main()
 {
   auto tcp = But::makeSharedNN<But::Log::Destination::JsonTcp>("127.0.0.1", 4242);
-  tcp->log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, world" );
-  tcp->log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, world" );
-  tcp->log( FormattedString{"format test"}, "whatever..." );
+  tcp->log( args2FieldInfo( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, world" ) );
+  tcp->log( args2FieldInfo( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, world" ) );
+  tcp->log( args2FieldInfo( FormattedString{"format test"}, "whatever..." ) );
   tcp->flush();
   tcp->reload();
 
   But::NotNullShared<But::Log::Destination::Sink> base{tcp};
-  base->log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, foreign world" );
-  base->log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, foreign world" );
+  base->log( args2FieldInfo( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, foreign world" ) );
+  base->log( args2FieldInfo( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, foreign world" ) );
   base->flush();
   base->reload();
 

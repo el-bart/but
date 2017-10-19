@@ -2,7 +2,9 @@
 #include <gtest/gtest.h>
 #include <But/Log/Destination/TextStream.hpp>
 #include <But/System/TempFile.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
+using But::Log::Destination::detail::args2FieldInfo;
 using But::Log::Destination::TextStream;
 
 namespace
@@ -47,7 +49,7 @@ struct ButLogDestinationTextStream: public testing::Test
 TEST_F(ButLogDestinationTextStream, FlushingWorks)
 {
   EXPECT_EQ( 0u, countLines() );
-  s_.log("test");
+  s_.log( args2FieldInfo("test") );
   EXPECT_EQ( 0u, countLines() );
 
   s_.flush();

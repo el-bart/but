@@ -12,6 +12,9 @@
 #include <But/Log/Field/LineNumber.hpp>
 #include <But/Log/Field/Priority.hpp>
 #include <But/Log/Field/FileName.hpp>
+#include <But/Log/Destination/detail/args2FieldInfo.hpp>
+
+using But::Log::Destination::detail::args2FieldInfo;
 
 using namespace But::Log::Field;
 using But::Log::Backend::Tag;
@@ -96,16 +99,16 @@ int main(int argc, char** argv)
     switch( prng() )
     {
       case 0:
-        p.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, Component{"zerowy"}, "hello, world" );
+        p.log( args2FieldInfo( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, Component{"zerowy"}, "hello, world" ) );
         break;
       case 1:
-        p.log( Timestamp{}, Priority::debug, Component{"point-hair boss"}, Point{13, 42} );
+        p.log( args2FieldInfo( Timestamp{}, Priority::debug, Component{"point-hair boss"}, Point{13, 42} ) );
         break;
       case 2:
-        p.log( Timestamp{}, Priority::debug, Component{"multi-point"}, Point{69, 997}, Point{13, 42} );
+        p.log( args2FieldInfo( Timestamp{}, Priority::debug, Component{"multi-point"}, Point{69, 997}, Point{13, 42} ) );
         break;
       case 3:
-        p.log( Priority::warning, Component{"line man"}, Line{ Point{1, 2}, Point{3, 4} } );
+        p.log( args2FieldInfo( Priority::warning, Component{"line man"}, Line{ Point{1, 2}, Point{3, 4} } ) );
         break;
     }
 

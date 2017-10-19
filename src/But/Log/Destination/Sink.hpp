@@ -1,6 +1,5 @@
 #pragma once
 #include <But/Log/Backend/FieldInfo.hpp>
-#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 namespace But
 {
@@ -19,14 +18,6 @@ public:
   Sink& operator=(Sink const&) = delete;
   Sink(Sink&&) = delete;
   Sink& operator=(Sink&&) = delete;
-
-  // TODO: temporary helper - to be removed!
-  template<typename ...Args>
-  void log(Args&& ...args)
-  {
-    auto fi = detail::args2FieldInfo( std::forward<Args>(args)... );
-    logImpl( std::move(fi) );
-  }
 
   void log(Backend::FieldInfo&& fi) { logImpl(fi); }
   void log(Backend::FieldInfo const& fi) { logImpl(fi); }
