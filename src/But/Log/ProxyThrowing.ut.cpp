@@ -56,6 +56,14 @@ struct ButLogProxyThrowing: public testing::Test
 };
 
 
+TEST_F(ButLogProxyThrowing, NoArgumentsToLog)
+{
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
+  log.log();
+  EXPECT_EQ( buffer_.str(), "" );
+}
+
+
 TEST_F(ButLogProxyThrowing, LoggingSimpleValuesOneAtATime)
 {
   ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
@@ -148,6 +156,14 @@ TEST_F(ButLogProxyThrowing, ExplicitFormatting)
   ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
   EXPECT_EQ( buffer_.str(), "But::Formatted='computer says 42' | string='computer' | int='42' | " );
+}
+
+
+TEST_F(ButLogProxyThrowing, ExplicitFormattingInTheMiddleOfArgumentsList)
+{
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
+  log.log( "gues", "what!", BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
+  EXPECT_EQ( buffer_.str(), "string='gues' | string='what!' | But::Formatted='computer says 42' | string='computer' | int='42' | " );
 }
 
 
