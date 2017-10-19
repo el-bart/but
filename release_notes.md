@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * added `Log::Destination::AutoFlush`, that forwards all logs to a `Sink` and automatically flushes, after each call.
   * added `Log::Destination::BackgroundThread`, that forwards all logs to a `Sink`, in a separate thread.
   * disabled tests for `ThreadPool`, using `boost` backend - GCC's thread sanitizer detects data races in boost...
   * all `BUT`'s includes are now in a form `<include>` instead of `"include"`, to better suite installation purposes.
