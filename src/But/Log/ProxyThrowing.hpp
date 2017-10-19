@@ -2,6 +2,9 @@
 #include <But/NotNull.hpp>
 #include <But/Format/apply.hpp>
 #include <But/Format/format.hpp>
+#include <But/Log/Backend/FieldInfo.hpp>
+#include <But/Log/Backend/toFieldInfo.hpp>
+#include <But/Log/Field/FormattedString.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Destination/Common/rootElementTag.hpp>
 #include <But/Log/Localization/None.hpp>
