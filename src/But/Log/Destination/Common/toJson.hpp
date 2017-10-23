@@ -1,7 +1,7 @@
 #pragma once
 #include <json.hpp>
 #include <But/Exception.hpp>
-#include <But/Log/Backend/Entry.hpp>
+#include <But/Log/Backend/FieldInfo.hpp>
 
 namespace But
 {
