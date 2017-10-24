@@ -32,7 +32,7 @@ void StreamVisitor::operator()(const double fp)
 void StreamVisitor::operator()(std::string const& str)
 {
   BUT_ASSERT(os_);
-  (*os_) << str;
+  (*os_) << '"' << str << '"';
 }
 
 
@@ -50,8 +50,10 @@ void StreamVisitor::operator()(const uint64_t n)
 }
 
 
-void StreamVisitor::operator()(Backend::Tag const&, Backend::Value const& v)
+void StreamVisitor::operator()(Backend::Tag const& t, Backend::Value const& v)
 {
+  BUT_ASSERT(os_);
+  (*os_) << t << '=';
   v.visit(*this);
 }
 
@@ -61,28 +63,22 @@ void StreamVisitor::operator()(Backend::Tag const& t, std::vector<Backend::Field
   if( fis.empty() )
     return;
 
-  const auto isRoot = not rootProcessed_;
-  rootProcessed_ = true;
+  BUT_ASSERT(os_);
 
-  if(not isRoot)
-  {
-    BUT_ASSERT(os_);
-    (*os_) << t << "={";
-  }
+  (*os_) << t << "={";
 
   auto it = begin(fis);
   do
   {
     BUT_ASSERT(os_);
     if( it != begin(fis) )
-      (*os_) << (isRoot?' ':',');
+      (*os_) << ',';
     it->visit(*this);
     ++it;
   }
   while( it != end(fis) );
 
-  if(not isRoot)
-    (*os_) << "}";
+  (*os_) << "}";
 }
 
 }

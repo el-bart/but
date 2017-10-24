@@ -30,7 +30,6 @@ struct StreamVisitor final
   void operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo> const& fis);
 
   std::ostream* os_{nullptr};
-  bool rootProcessed_{false};
 };
 
 }

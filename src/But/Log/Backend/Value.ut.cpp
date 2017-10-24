@@ -223,12 +223,12 @@ TEST_F(ButLogBackendValue, Streamming)
   {
     std::stringstream ss;
     ss << Value{'x'};
-    EXPECT_EQ( "x", ss.str() );
+    EXPECT_EQ( "\"x\"", ss.str() );
   }
   {
     std::stringstream ss;
     ss << Value{"foo"};
-    EXPECT_EQ( "foo", ss.str() );
+    EXPECT_EQ( "\"foo\"", ss.str() );
   }
 }
 

@@ -1,6 +1,7 @@
 #include <sstream>
 #include <gtest/gtest.h>
 #include <But/Log/Backend/FieldInfo.hpp>
+#include <But/Log/Backend/toFieldInfo.hpp>
 
 using But::Log::Backend::Tag;
 using But::Log::Backend::Value;
@@ -69,17 +70,17 @@ TEST_F(ButLogBackendFieldInfo, Visiting)
   {
     Visitor v;
     fi1.visit(v);
-    EXPECT_EQ( ">one:1", v.ss_.str() );
+    EXPECT_EQ( ">one:\"1\"", v.ss_.str() );
   }
   {
     Visitor v;
     fi3.visit(v);
-    EXPECT_EQ( ">three:[>one:1,>two:2,]", v.ss_.str() );
+    EXPECT_EQ( ">three:[>one:\"1\",>two:\"2\",]", v.ss_.str() );
   }
   {
     Visitor v;
     fi4.visit(v);
-    EXPECT_EQ( ">four:[>one:1,>three:[>one:1,>two:2,],]", v.ss_.str() );
+    EXPECT_EQ( ">four:[>one:\"1\",>three:[>one:\"1\",>two:\"2\",],]", v.ss_.str() );
   }
 }
 
@@ -101,6 +102,47 @@ TEST_F(ButLogBackendFieldInfo, RetaggingRvalue)
 
   EXPECT_EQ( "1", fi.value().get<std::string>() );
   EXPECT_EQ( "bar", fi.tag().str() );
+}
+
+
+struct Foo final
+{
+  std::string bar_{"bar"};
+};
+
+inline FieldInfo toFieldInfo(Foo foo)
+{
+  using But::Log::Backend::toFieldInfo;
+  return toFieldInfo( std::move(foo.bar_) ).retag( Tag{"Foo"} );
+}
+
+TEST_F(ButLogBackendFieldInfo, StreammingOutSimpleDataStructure)
+{
+  const auto fi = toFieldInfo( Foo{} );
+  std::stringstream ss;
+  ss << fi;
+  EXPECT_EQ( "Foo=\"bar\"", ss.str() );
+}
+
+
+struct Nested final
+{
+  int answer_{42};
+  Foo foo_;
+};
+
+inline auto toFieldInfo(Nested n)
+{
+  using But::Log::Backend::toFieldInfo;
+  return FieldInfo{ Tag{"Nested"}, { toFieldInfo(n.answer_).retag(Tag{"Answer"}), toFieldInfo( std::move(n.foo_) ) } };
+}
+
+TEST_F(ButLogBackendFieldInfo, StreammingOutNestedStructure)
+{
+  const auto fi = toFieldInfo( Nested{} );
+  std::stringstream ss;
+  ss << fi;
+  EXPECT_EQ( "Nested={Answer=42,Foo=\"bar\"}", ss.str() );
 }
 
 }
