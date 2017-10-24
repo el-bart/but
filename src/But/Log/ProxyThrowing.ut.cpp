@@ -170,6 +170,30 @@ TEST_F(ButLogProxyThrowing, FormattingNonStandardTypes)
 }
 
 
+struct Misc
+{
+  int value_{42};
+};
+
+inline auto toFieldInfo(const Misc m)
+{
+  using But::Log::Backend::toFieldInfo;
+  return toFieldInfo(m.value_).retag(Tag{"Misc"});
+}
+
+inline auto toString(const Misc m)
+{
+  return std::to_string(m.value_);
+}
+
+TEST_F(ButLogProxyThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
+{
+  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
+  log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, Misc{} );
+  EXPECT_EQ( buffer_.str(), "But::Formatted='computer says 42' | string='computer' | Misc='42' | " );
+}
+
+
 TEST_F(ButLogProxyThrowing, FormattingInTheMiddleOfArgumentsList)
 {
   ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
