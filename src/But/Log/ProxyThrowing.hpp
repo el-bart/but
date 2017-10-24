@@ -8,6 +8,7 @@
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Destination/Common/rootElementTag.hpp>
 #include <But/Log/Localization/None.hpp>
+#include <But/Log/detail/simplifyRepresentation.hpp>
 
 namespace But
 {
@@ -36,7 +37,7 @@ public:
   {
     Data tmp;
     tmp.reserve( sizeof...(args) );
-    convertArgs( tmp, std::forward<Args>(args)... );
+    convertArgs( tmp, detail::simplifyRepresentation( std::forward<Args>(args) )... );
     Backend::FieldInfo fi{ Log::Destination::Common::rootElementTag(), std::move(tmp) };
     dst_->log( std::move(fi) );
   }

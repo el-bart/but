@@ -12,6 +12,7 @@ set(SRC_DIRS
     But/Format
     But/Format/detail
     But/Log
+    But/Log/detail
     But/Log/Backend
     But/Log/Backend/detail
     But/Log/Destination

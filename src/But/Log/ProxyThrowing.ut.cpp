@@ -151,15 +151,26 @@ TEST_F(ButLogProxyThrowing, AllErrorsFromActualDestinationsAreForwarded)
 }
 
 
-TEST_F(ButLogProxyThrowing, ExplicitFormatting)
+struct Answer
+{
+  int value_{42};
+};
+
+inline auto toFieldInfo(const Answer a)
+{
+  using But::Log::Backend::toFieldInfo;
+  return toFieldInfo(a.value_).retag(Tag{"Answer"});
+}
+
+TEST_F(ButLogProxyThrowing, FormattingNonStandardTypes)
 {
   ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
-  EXPECT_EQ( buffer_.str(), "But::Formatted='computer says 42' | string='computer' | int='42' | " );
+  log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, Answer{} );
+  EXPECT_EQ( buffer_.str(), "But::Formatted='computer says Answer=42' | string='computer' | Answer='42' | " );
 }
 
 
-TEST_F(ButLogProxyThrowing, ExplicitFormattingInTheMiddleOfArgumentsList)
+TEST_F(ButLogProxyThrowing, FormattingInTheMiddleOfArgumentsList)
 {
   ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
   log.log( "gues", "what!", BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
