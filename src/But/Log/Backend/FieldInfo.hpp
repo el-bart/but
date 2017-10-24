@@ -3,7 +3,6 @@
 #include <boost/variant.hpp>
 #include <But/Log/Backend/Tag.hpp>
 #include <But/Log/Backend/Value.hpp>
-#include <But/Log/Backend/detail/StreamVisitor.hpp>
 
 namespace But
 {
@@ -88,12 +87,9 @@ private:
 };
 
 
-inline auto& operator<<(std::ostream& os, FieldInfo const& fi)
-{
-  detail::StreamVisitor sv{&os};
-  fi.visit(sv);
-  return os;
-}
+std::ostream& operator<<(std::ostream& os, FieldInfo const& fi);
+
+std::string toString(FieldInfo const& fi);
 
 }
 }

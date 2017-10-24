@@ -145,4 +145,11 @@ TEST_F(ButLogBackendFieldInfo, StreammingOutNestedStructure)
   EXPECT_EQ( "Nested={Answer=42,Foo=\"bar\"}", ss.str() );
 }
 
+
+TEST_F(ButLogBackendFieldInfo, ToStringConversion)
+{
+  const auto fi = toFieldInfo( Nested{} );
+  EXPECT_EQ( "Nested={Answer=42,Foo=\"bar\"}", toString(fi) );
+}
+
 }
