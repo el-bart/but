@@ -1,6 +1,8 @@
 #pragma once
-#include <iostream>
-#include <But/assert.hpp>
+#include <string>
+#include <vector>
+#include <iosfwd>
+#include <cinttypes>
 
 namespace But
 {
@@ -8,19 +10,27 @@ namespace Log
 {
 namespace Backend
 {
+
+class Tag;
+class Value;
+class FieldInfo;
+
 namespace detail
 {
 
 struct StreamVisitor final
 {
-  template<typename T>
-  void operator()(T const& t) const
-  {
-    BUT_ASSERT(os_);
-    (*os_) << t;
-  }
+  void operator()(bool b);
+  void operator()(double fp);
+  void operator()(std::string const& str);
+  void operator()(int64_t n);
+  void operator()(uint64_t n);
 
-  std::ostream* os_;
+  void operator()(Backend::Tag const&, Backend::Value const& v);
+  void operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo> const& fis);
+
+  std::ostream* os_{nullptr};
+  bool rootProcessed_{false};
 };
 
 }

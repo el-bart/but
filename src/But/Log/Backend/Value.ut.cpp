@@ -218,7 +218,7 @@ TEST_F(ButLogBackendValue, Streamming)
   {
     std::stringstream ss;
     ss << Value{4.2};
-    EXPECT_EQ( "4.2", ss.str() );
+    EXPECT_EQ( "4.200", ss.str().substr(0,5) );
   }
   {
     std::stringstream ss;

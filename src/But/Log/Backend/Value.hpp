@@ -78,7 +78,8 @@ private:
 
 inline std::ostream& operator<<(std::ostream& os, Value const& value)
 {
-  value.visit( detail::StreamVisitor{&os} );
+  detail::StreamVisitor sv{&os};
+  value.visit(sv);
   return os;
 }
 
