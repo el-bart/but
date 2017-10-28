@@ -9,6 +9,7 @@
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occurs, but dropping if nothing 'special' happens for some time
 * add support for correlation chains (UUIDs/GUIDs).
 * retry-sink, that will try to send log, in case of errors, multiple times.
+* `Log::Dst::BackgroundThread` - add overflow policy (drop oldest, drop new, block).
 
 ## improvements / new APIs
 * split build into core and dev
