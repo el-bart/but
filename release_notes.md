@@ -6,6 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * conditional build with sanitizers with `BUT_SANITIZE` option.
+  * conditional build of with link-time-optimization (LTO) with `BUT_ENABLE_LTO` option.
+  * conditional build of place-independent-code with `BUT_ENABLE_PIC` option.
+  * conditional build of tests with `BUT_ENABLE_TESTS` option.
   * arguments before `BUT_FORMAT` are now allowed as well (these do not participate in formatting).
   * added `Log::Destination::AutoFlush`, that forwards all logs to a `Sink` and automatically flushes, after each call.
   * added `Log::Destination::BackgroundThread`, that forwards all logs to a `Sink`, in a separate thread.
