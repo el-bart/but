@@ -9,7 +9,7 @@ cd "$APP_DIR"
 ERRORS=0
 RUNS=0
 FAILED=""
-for bs in build_* gnu_make
+for bs in build_* gnu_make pic
 do
   ((++RUNS))
   time "./$bs" "$@" || { ((++ERRORS)) ; FAILED+=" $bs" ; }
