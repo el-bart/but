@@ -21,6 +21,8 @@ env:
         - SCRIPT="build_gcc7_Profile_none"
         - SCRIPT="build_gcc7_Release_none"
         - SCRIPT="build_gcc7_Relwithdebinfo_none"
+        - SCRIPT="gnu_make"
+        - SCRIPT="pic"
 
 script:
     - docker build -t but-sdk --cache-from baszerr/but-sdk sdk/
