@@ -1,4 +1,5 @@
 #pragma once
+#include <But/assert.hpp>
 
 namespace But
 {
@@ -39,7 +40,11 @@ public:
     return *this;
   }
 
-  T* operator->() { return t_; }
+  T* operator->()
+  {
+    BUT_ASSERT(t_);
+    return t_;
+  }
 
 private:
   inline void releaseIfOwned()
