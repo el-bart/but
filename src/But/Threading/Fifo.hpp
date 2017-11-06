@@ -6,6 +6,7 @@
 #include <But/assert.hpp>
 #include <But/Exception.hpp>
 #include <But/Threading/WaitWrapper.hpp>
+#include <But/Threading/LockProxyProvider.hpp>
 
 namespace But
 {
@@ -33,7 +34,7 @@ namespace Threading
  * thrown.
  */
 template<typename T>
-class Fifo final
+class Fifo final: public LockProxyProvider<Fifo<T>>
 {
   using Queue = std::deque<T>;
 

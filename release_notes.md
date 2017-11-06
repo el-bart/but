@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Threading::Fifo` now provides `withLock()` convenience helper, that returnes proxy, holding a lock.
   * conditional build with sanitizers with `BUT_SANITIZE` option.
   * conditional build of with link-time-optimization (LTO) with `BUT_ENABLE_LTO` option.
   * conditional build of place-independent-code with `BUT_ENABLE_PIC` option.

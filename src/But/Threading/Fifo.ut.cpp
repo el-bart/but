@@ -234,4 +234,13 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForRemovalWithZeroSizeAlwaysSucceeds)
   EXPECT_EQ( 0u, q_.size() );
 }
 
+
+TEST_F(ButThreadingFifo, WithLockProxy)
+{
+  EXPECT_TRUE( q_.withLock()->empty() );
+  auto qwl = q_.withLock();
+  qwl->push("1");
+  EXPECT_FALSE( qwl->empty() );
+}
+
 }
