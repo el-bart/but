@@ -6,6 +6,11 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+## v1.0.0 (2017-12-12)
+new logger concept, based on a structure logging idea (https://www.baszerr.eu/lib/exe/fetch.php/docs/structured_logging.pdf).
+build system updated and simplified.
+countless small fixes and improvements - see the list below for the full overview.
+
   * `Log::Proxy` and `Log::ProxyThrowing` are now copy-and-move assignable.
   * `Threading::Fifo` now provides `withLock()` convenience helper, that returnes proxy, holding a lock.
   * conditional build with sanitizers with `BUT_SANITIZE` option.
@@ -20,7 +25,7 @@ this work is available on "master" branch, but has not yet been released.
   * `Threading::Fifo`, `Threading::Event` and `Threading::WaitWrapper` no longer throw exceptions on timeout - `true`/`false` is returned instead.
   * CI moved from codefresh to travis.
   * added `install` target, that installs lib and headers into `CMAKE_INSTALL_PREFIX` location.
-  * `toFieldInfo()` is replaced now the base interface for logging.
+  * `toFieldInfo()` is now the base interface for logging.
   * `Log::Proxy` and `Log::ProxyThrowing` that wrap all the logging with and without exceptions forwarding.
   * all `assert()` statements in the code are now `BUT_ASSERT()`.
   * `BUT_ASSERT` - assert that works with `constexpr` functions, too.
