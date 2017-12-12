@@ -247,4 +247,16 @@ TEST_F(ButLogProxyThrowing, ExceptionsFromTranslationsArePropagated)
   EXPECT_THROW( log.log( BUT_FORMAT("test $0"), "xx" ), std::runtime_error );
 }
 
+
+TEST_F(ButLogProxyThrowing, CopyableAndMovable)
+{
+  using Logger = ProxyThrowing<>;
+
+  EXPECT_TRUE( std::is_copy_constructible<Logger>::value );
+  EXPECT_TRUE( std::is_copy_assignable<Logger>::value );
+
+  EXPECT_TRUE( std::is_move_constructible<Logger>::value );
+  EXPECT_TRUE( std::is_move_assignable<Logger>::value );
+}
+
 }

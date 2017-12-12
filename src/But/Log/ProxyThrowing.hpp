@@ -67,7 +67,7 @@ private:
   }
 
   mutable Destination dst_;
-  const Translator translator_{};
+  Translator translator_{};
 };
 
 }
