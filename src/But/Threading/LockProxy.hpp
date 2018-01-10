@@ -44,6 +44,12 @@ public:
     return t_;
   }
 
+  T const* operator->() const
+  {
+    BUT_ASSERT(t_);
+    return t_;
+  }
+
 private:
   inline void releaseIfOwned()
   {
