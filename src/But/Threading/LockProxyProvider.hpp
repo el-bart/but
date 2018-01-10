@@ -1,6 +1,6 @@
 #pragma once
 #include <type_traits>
-#include <But/Threading/detail/LockProxy.hpp>
+#include <But/Threading/LockProxy.hpp>
 
 namespace But
 {
@@ -35,11 +35,11 @@ class LockProxyProvider
 public:
   auto withLock()
   {
-    return detail::LockProxy<Derived>{ static_cast<Derived&>(*this) };
+    return LockProxy<Derived>{ static_cast<Derived&>(*this) };
   }
   auto withLock() const
   {
-    return detail::LockProxy<const Derived>{ static_cast<Derived const&>(*this) };
+    return LockProxy<const Derived>{ static_cast<Derived const&>(*this) };
   }
 
 protected:

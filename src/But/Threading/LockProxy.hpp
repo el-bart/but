@@ -5,8 +5,6 @@ namespace But
 {
 namespace Threading
 {
-namespace detail
-{
 
 template<typename T>
 class LockProxy final
@@ -58,6 +56,5 @@ private:
   T* t_;
 };
 
-}
 }
 }

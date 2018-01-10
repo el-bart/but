@@ -3,7 +3,7 @@
 #include <But/Threading/LockProxyProvider.hpp>
 
 using But::Threading::LockProxyProvider;
-using But::Threading::detail::LockProxy;
+using But::Threading::LockProxy;
 
 namespace
 {
