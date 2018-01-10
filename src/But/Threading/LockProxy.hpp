@@ -38,28 +38,22 @@ public:
     return *this;
   }
 
-  T* operator->()
+  auto operator->() { return get(); }
+  auto operator->() const { return get(); }
+
+  auto& operator*() { return *get(); }
+  auto& operator*() const { return *get(); };
+
+  T* get()
   {
     BUT_ASSERT(t_);
     return t_;
   }
 
-  T const* operator->() const
+  T const* get() const
   {
     BUT_ASSERT(t_);
     return t_;
-  }
-
-  T& operator*()
-  {
-    BUT_ASSERT(t_);
-    return *t_;
-  }
-
-  T const& operator*() const
-  {
-    BUT_ASSERT(t_);
-    return *t_;
   }
 
 private:

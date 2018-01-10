@@ -56,6 +56,16 @@ TEST_F(ButThreadingLockProxy, ArrowOperatorEnsureConstness)
 }
 
 
+TEST_F(ButThreadingLockProxy, GetMemberFunctionEnsureConstness)
+{
+  Proxy lp{md_};
+  lp.get()->nonConstFoo();
+
+  const LockProxy<const MyData> clp{md_};
+  clp.get()->constFoo();
+}
+
+
 TEST_F(ButThreadingLockProxy, DereferenceOperatorOnProxyForwardsToActualClass)
 {
   EXPECT_EQ(md_.locks_, 0);
