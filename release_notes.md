@@ -6,6 +6,9 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Threading::LockProxy` is no longer implementation detail.
+  * `Threading::LockProxy` provides `operator*()` and a member function `get()`, for convenience.
+
 ## v1.0.0 (2017-12-12)
 new logger concept, based on a structure logging idea (https://www.baszerr.eu/lib/exe/fetch.php/docs/structured_logging.pdf).
 build system updated and simplified.
