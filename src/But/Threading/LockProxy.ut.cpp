@@ -56,6 +56,24 @@ TEST_F(ButThreadingLockProxy, ArrowOperatorEnsureConstness)
 }
 
 
+TEST_F(ButThreadingLockProxy, DereferenceOperatorOnProxyForwardsToActualClass)
+{
+  EXPECT_EQ(md_.locks_, 0);
+  Proxy lp{md_};
+  EXPECT_EQ( 1, (*lp).locks() );
+}
+
+
+TEST_F(ButThreadingLockProxy, DereferenceOperatorEnsureConstness)
+{
+  Proxy lp{md_};
+  (*lp).nonConstFoo();
+
+  const LockProxy<const MyData> clp{md_};
+  (*clp).constFoo();
+}
+
+
 TEST_F(ButThreadingLockProxy, ProxyIsMovable)
 {
   EXPECT_TRUE( std::is_move_constructible<Proxy>::value );

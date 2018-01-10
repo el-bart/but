@@ -50,6 +50,18 @@ public:
     return t_;
   }
 
+  T& operator*()
+  {
+    BUT_ASSERT(t_);
+    return *t_;
+  }
+
+  T const& operator*() const
+  {
+    BUT_ASSERT(t_);
+    return *t_;
+  }
+
 private:
   inline void releaseIfOwned()
   {
