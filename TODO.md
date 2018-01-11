@@ -10,6 +10,7 @@
 * add support for correlation chains (UUIDs/GUIDs).
 * retry-sink, that will try to send log, in case of errors, multiple times.
 * `Log::Dst::BackgroundThread` - add overflow policy (drop oldest, drop new, block).
+* sub-second accuracy timestamp field.
 
 ## improvements / new APIs
 * split build into core and dev
