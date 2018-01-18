@@ -1,5 +1,6 @@
 #pragma once
 #include <But/Mpl/SizeTypeFor.hpp>
+#include <But/assert.hpp>
 
 namespace But
 {
@@ -18,8 +19,16 @@ struct Array
   using iterator = T*;
   using const_iterator = T const*;
 
-  constexpr auto const& operator[](size_type i) const { return value_[i]; }
-  constexpr auto& operator[](size_type i) { return value_[i]; }
+  constexpr auto const& operator[](const size_type i) const
+  {
+    BUT_ASSERT( i < size() && "index out of range" );
+    return value_[i];
+  }
+  constexpr auto& operator[](const size_type i)
+  {
+    BUT_ASSERT( i < size() && "index out of range" );
+    return value_[i];
+  }
 
   constexpr size_type size() const { return N; }
   constexpr size_type max_size() const { return N; }
