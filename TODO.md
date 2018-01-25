@@ -26,6 +26,7 @@
 * remove exception-throwing wait wrapper...
 * Mpl::HasFreeFunction<>
 * But::System::Timer
+* Container::BitPacked - change base element size.
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
@@ -42,3 +43,4 @@
 * is it possible to evaluate `CONSTEXPR_ASSERT` in compile-time only, when doing non-debug build?
 * `Struct::PackedPointerVector<T>`, where pointers to over-1B-aligned types are bit packed (based on `BitPackedSequence`)
 * add test-covereage measuring build
+* BUT_ASSERT_{EQ,LT,etc...} for more readable assert error messages.
