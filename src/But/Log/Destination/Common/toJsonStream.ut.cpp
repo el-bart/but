@@ -86,7 +86,7 @@ TEST_F(ButLogDestinationCommonToJsonStream, NumericTypes)
   EXPECT_TRUE( testType<long long>("int", -42) );
   EXPECT_TRUE( testType<unsigned long long>("unsigned int", 42) );
 
-  EXPECT_TRUE( testType<float>("double", -4.0, "-4") );
+  EXPECT_TRUE( testType<float>("double", -4.5, "-4.5") );
   EXPECT_TRUE( testType<double>("double", -4.2, "-4.2") );
   EXPECT_TRUE( testType<long double>("double", -4.2, "-4.2") );
 }
