@@ -13,6 +13,7 @@
 * sub-second accuracy timestamp field.
 * add `destination` that would retry sending logs, according to a given setup (retry count, max wait time, etc...).
 * make `std::exception` and `But::Exception` loggable directly, via toFieldInfo specialization.
+* macros for logging: BUT_LOG_FILE/LINE/FUNCTION
 
 ## improvements / new APIs
 * split build into core and dev
@@ -31,6 +32,7 @@
 * Container::BitPacked - change base element size.
 * BUT_ASSERT_{EQ,LT,etc...} for more readable assert error messages.
 * BUT_THROW and adding optional parameters, that can be later on extracted from the client. consider using FieldInfo, for logger support.
+* maybe NullPtr for `unique_ptr` could offer `operator[]`, for convenience
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
