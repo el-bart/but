@@ -14,6 +14,7 @@
 * add `destination` that would retry sending logs, according to a given setup (retry count, max wait time, etc...).
 * make `std::exception` and `But::Exception` loggable directly, via toFieldInfo specialization.
 * macros for logging: BUT_LOG_FILE/LINE/FUNCTION
+* consider removing a restriction that `Log::Proxy` is not thread-safe.
 
 ## improvements / new APIs
 * split build into core and dev
