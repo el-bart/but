@@ -15,6 +15,7 @@
 * make `std::exception` and `But::Exception` loggable directly, via toFieldInfo specialization.
 * macros for logging: BUT_LOG_FILE/LINE/FUNCTION
 * consider removing a restriction that `Log::Proxy` is not thread-safe.
+* add a proxy, that would auto add params, on demand (i.e. withParams(a,b,c) -> Logger that will always add (a,b,c) to logs content.
 
 ## improvements / new APIs
 * split build into core and dev
