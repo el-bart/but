@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Log::Backend::FieldInfo` now supports `vector<T>` as a collection type.
   * `Threading::LockProxy` is no longer implementation detail.
   * `Threading::LockProxy` provides `operator*()` and a member function `get()`, for convenience.
 
