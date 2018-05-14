@@ -152,4 +152,12 @@ TEST_F(ButLogBackendFieldInfo, ToStringConversion)
   EXPECT_EQ( "Nested={Answer=42,Foo=\"bar\"}", toString(fi) );
 }
 
+
+TEST_F(ButLogBackendFieldInfo, COnvertingVectorOfExplicitValues)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto fi = toFieldInfo( std::vector<int>{1,2,3} );
+  EXPECT_EQ( "sequence={int=1,int=2,int=3}", toString(fi) );
+}
+
 }
