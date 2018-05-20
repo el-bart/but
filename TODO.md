@@ -16,6 +16,7 @@
 * macros for logging: BUT_LOG_FILE/LINE/FUNCTION
 * consider removing a restriction that `Log::Proxy` is not thread-safe.
 * add a proxy, that would auto add params, on demand (i.e. withParams(a,b,c) -> Logger that will always add (a,b,c) to logs content.
+* update format, so that it does not need to be a first argument of the log.
 
 ## improvements / new APIs
 * split build into core and dev
