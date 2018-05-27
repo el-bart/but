@@ -17,6 +17,7 @@
 * consider removing a restriction that `Log::Proxy` is not thread-safe.
 * add a proxy, that would auto add params, on demand (i.e. withParams(a,b,c) -> Logger that will always add (a,b,c) to logs content.
 * update format, so that it does not need to be a first argument of the log.
+* compact text console output, that do print tags, but does not go below depth N (parameter), to keep it still readable.
 
 ## improvements / new APIs
 * split build into core and dev
@@ -36,6 +37,7 @@
 * BUT_ASSERT_{EQ,LT,etc...} for more readable assert error messages.
 * BUT_THROW and adding optional parameters, that can be later on extracted from the client. consider using FieldInfo, for logger support.
 * maybe NullPtr for `unique_ptr` could offer `operator[]`, for convenience
+* exception could hold tuple<args>, that would then be queryble (to keep exact values, that caused an error, etc...) and (optionally) loggable. `toString` vs `toFieldInfo` vs both? or storage by value and query by derived class only?
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
