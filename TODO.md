@@ -38,6 +38,8 @@
 * BUT_THROW and adding optional parameters, that can be later on extracted from the client. consider using FieldInfo, for logger support.
 * maybe NullPtr for `unique_ptr` could offer `operator[]`, for convenience
 * exception could hold tuple<args>, that would then be queryble (to keep exact values, that caused an error, etc...) and (optionally) loggable. `toString` vs `toFieldInfo` vs both? or storage by value and query by derived class only?
+* build support for Clang 6.0.
+* build support for GCC 8.0.
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
