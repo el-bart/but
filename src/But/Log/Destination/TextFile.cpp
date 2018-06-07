@@ -9,7 +9,7 @@ namespace Destination
 {
 
 TextFile::TextFile(boost::filesystem::path path):
-  TextStream{file_},                // NOTE: not really used until the object is fully-constructed
+  Common::TextStream{file_},        // NOTE: not really used until the object is fully-constructed
   path_{ std::move(path) }
 {
   TextFile::reloadImplUnderLock();

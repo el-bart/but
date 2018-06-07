@@ -1,7 +1,7 @@
 #pragma once
 #include <fstream>
 #include <boost/filesystem/path.hpp>
-#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Destination/Common/TextStream.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Exception.hpp>
 
@@ -14,7 +14,7 @@ namespace Destination
 
 /** @brief typical output - text file, with one log per line.
  */
-class TextFile: public TextStream
+class TextFile: public Common::TextStream
 {
 public:
   BUT_DEFINE_EXCEPTION(OpeningLogFileFailed, Exception, "opening log file failed");

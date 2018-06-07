@@ -1,12 +1,12 @@
 #include <thread>
 #include <gtest/gtest.h>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Destination/Common/TextStream.hpp>
 #include <But/Log/Field/LineNumber.hpp>
 #include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 using But::Log::Destination::detail::args2FieldInfo;
-using But::Log::Destination::TextStream;
+using But::Log::Destination::Common::TextStream;
 using But::Log::Destination::Sink;
 using But::Log::Field::LineNumber;
 using But::Log::Field::FormattedString;

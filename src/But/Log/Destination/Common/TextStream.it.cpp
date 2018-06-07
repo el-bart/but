@@ -1,11 +1,11 @@
 #include <fstream>
 #include <gtest/gtest.h>
-#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Destination/Common/TextStream.hpp>
 #include <But/System/TempFile.hpp>
 #include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 using But::Log::Destination::detail::args2FieldInfo;
-using But::Log::Destination::TextStream;
+using But::Log::Destination::Common::TextStream;
 
 namespace
 {

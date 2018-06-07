@@ -1,5 +1,5 @@
 #pragma once
-#include <But/Log/Destination/TextStream.hpp>
+#include <But/Log/Destination/Common/TextStream.hpp>
 
 namespace But
 {
@@ -8,7 +8,7 @@ namespace Log
 namespace Destination
 {
 
-class JsonConsole: public TextStream
+class JsonConsole: public Common::TextStream
 {
 public:
   /** @brief initializes cout.

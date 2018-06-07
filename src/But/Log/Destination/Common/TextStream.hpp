@@ -12,6 +12,8 @@ namespace Log
 {
 namespace Destination
 {
+namespace Common
+{
 
 class TextStream: public Sink
 {
@@ -61,6 +63,7 @@ private:
   const Backend::NonPrintableTrimmer trim_;
 };
 
+}
 }
 }
 }

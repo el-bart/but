@@ -10,7 +10,7 @@ namespace Destination
 {
 
 JsonConsole::JsonConsole(const bool syncWithStdio):
-  TextStream{std::cout}
+  Common::TextStream{std::cout}
 {
   std::cout.sync_with_stdio(syncWithStdio);
 }
