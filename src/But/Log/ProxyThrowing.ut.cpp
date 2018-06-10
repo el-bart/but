@@ -259,4 +259,16 @@ TEST_F(ButLogProxyThrowing, CopyableAndMovable)
   EXPECT_TRUE( std::is_move_assignable<Logger>::value );
 }
 
+
+TEST_F(ButLogProxyThrowing, ProxyWithDefaultFields)
+{
+  const auto log = ProxyThrowing<>{ But::makeSharedNN<TestSink>(buffer_) };
+  const auto proxy = log.withFields("foo", 42);
+  proxy.log("narf");
+  EXPECT_EQ( buffer_.str(), "string='foo' | int='42' | string='narf' | " );
+  proxy.log("yay!!!");
+  EXPECT_EQ( buffer_.str(), "string='foo' | int='42' | string='narf' | "
+                            "string='foo' | int='42' | string='yay!!!' | " );
+}
+
 }

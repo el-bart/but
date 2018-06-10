@@ -29,17 +29,26 @@ class ProxyThrowing final
 public:
   using Destination = But::NotNullShared<Destination::Sink>;
 
-  explicit ProxyThrowing(Destination dst): dst_{ std::move(dst) } { }
-  ProxyThrowing(Destination dst, Translator tr): dst_{ std::move(dst) }, translator_{ std::move(tr) } { }
+  explicit ProxyThrowing(Destination dst):
+    ProxyThrowing{ std::move(dst), Translator{} }
+  { }
+  ProxyThrowing(Destination dst, Translator tr):
+    ProxyThrowing{ std::move(dst), std::move(tr), makeSharedNN<Data>() }
+  { }
 
   template<typename ...Args>
   void log(Args&& ...args) const
   {
-    Data tmp;
-    tmp.reserve( sizeof...(args) );
-    convertArgs( tmp, detail::simplifyRepresentation( std::forward<Args>(args) )... );
+    auto tmp = convertSimplifiedArgs( std::forward<Args>(args)... );
     Backend::FieldInfo fi{ Log::Destination::Common::rootElementTag(), std::move(tmp) };
     dst_->log( std::move(fi) );
+  }
+
+  template<typename ...Args>
+  auto withFields(Args&& ...args) const
+  {
+    auto tmp = convertSimplifiedArgs( std::forward<Args>(args)... );
+    return ProxyThrowing{ dst_, translator_, makeSharedNN<Data>( std::move(tmp) ) };
   }
 
   void reload() { dst_->reload(); }
@@ -47,6 +56,21 @@ public:
 
 private:
   using Data = std::vector<Backend::FieldInfo>;
+
+  ProxyThrowing(Destination dst, Translator tr, NotNullShared<Data> commonFields):
+    dst_{ std::move(dst) },
+    translator_{ std::move(tr) },
+    commonFields_{ std::move(commonFields) }
+  { }
+
+  template<typename ...Args>
+  auto convertSimplifiedArgs(Args&& ...args) const
+  {
+    auto tmp = *commonFields_;
+    tmp.reserve( tmp.size() + sizeof...(args) );
+    convertArgs( tmp, detail::simplifyRepresentation( std::forward<Args>(args) )... );
+    return tmp;
+  }
 
   void convertArgs(Data&) const { }
 
@@ -68,6 +92,7 @@ private:
 
   mutable Destination dst_;
   Translator translator_{};
+  NotNullShared<Data> commonFields_;
 };
 
 }
