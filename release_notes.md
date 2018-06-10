@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Log::Destination::Verbose*` family of text-type outputs, that keep tag info in a human-readable format and with depth-limiting factor.
   * `Log::Proxy*::withFields()` API for easy creating correlation chains.
   * `Log::Backend::FieldInfo` now supports `vector<T>` as a collection type.
   * `Threading::LockProxy` is no longer implementation detail.

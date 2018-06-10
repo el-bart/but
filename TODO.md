@@ -16,7 +16,7 @@
 * macros for logging: BUT_LOG_FILE/LINE/FUNCTION
 * consider removing a restriction that `Log::Proxy` is not thread-safe.
 * update format, so that it does not need to be a first argument of the log.
-* compact text console output, that do print tags, but does not go below depth N (parameter), to keep it still readable.
+* cleanup Verbose* and Text* types of outputs, so that there is no code duplication and yet all combinations are covered.
 
 ## improvements / new APIs
 * split build into core and dev
