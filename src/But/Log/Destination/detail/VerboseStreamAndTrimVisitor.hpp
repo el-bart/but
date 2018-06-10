@@ -21,7 +21,7 @@ struct VerboseStreamAndTrimVisitor final
 {
   struct DepthGuard
   {
-    DepthGuard(bool isRoot, size_t depth):
+    DepthGuard(bool isRoot, size_t& depth):
       isRoot_{isRoot},
       depth_{depth}
     {
@@ -86,6 +86,7 @@ struct VerboseStreamAndTrimVisitor final
       (*os_) << t << "={ ";
     }
 
+    const auto guard = DepthGuard{isRoot, currentDepth_};
     if( currentDepth_ <= maxDepth_ )
       processAllNodes(isRoot, fis);
     else
@@ -97,7 +98,6 @@ struct VerboseStreamAndTrimVisitor final
 
   void processAllNodes(const bool isRoot, std::vector<Backend::FieldInfo> const& fis)
   {
-    const auto guard = DepthGuard{isRoot, currentDepth_};
     auto it = begin(fis);
     do
     {

@@ -129,22 +129,25 @@ TEST_F(ButLogDestinationVerboseTextStream, StreamingDeeplyNestedStructure)
 
 TEST_F(ButLogDestinationVerboseTextStream, TruncatinAtDepth0)
 {
-  s_.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
-  EXPECT_EQ( s_.ss_.str(), "2D: Line={ ... }\n" );
+  StringStream s{0};
+  s.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
+  EXPECT_EQ( s.ss_.str(), "2D: Line={ ... }\n" );
 }
 
 
 TEST_F(ButLogDestinationVerboseTextStream, TruncatinAtDepth1)
 {
-  s_.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
-  EXPECT_EQ( s_.ss_.str(), "2D: Line={ Point={ ... } Point={ ... } }\n" );
+  StringStream s{1};
+  s.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
+  EXPECT_EQ( s.ss_.str(), "2D: Line={ Point={ ... } Point={ ... } }\n" );
 }
 
 
 TEST_F(ButLogDestinationVerboseTextStream, TruncatinAtDepth2When2IsMax)
 {
-  s_.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
-  EXPECT_EQ( s_.ss_.str(), "2D: Line={ Point={ int=13 int=42 int=69 } Point={ int=9 int=9 int=7 } }\n" );
+  StringStream s{2};
+  s.log( args2FieldInfo( "2D:", Line{ Point{13,42,69}, Point{9,9,7} } ) );
+  EXPECT_EQ( s.ss_.str(), "2D: Line={ Point={ int=13 int=42 int=69 } Point={ int=9 int=9 int=7 } }\n" );
 }
 
 }
