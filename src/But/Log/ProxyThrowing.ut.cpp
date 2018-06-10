@@ -271,4 +271,24 @@ TEST_F(ButLogProxyThrowing, ProxyWithDefaultFields)
                             "string='foo' | int='42' | string='yay!!!' | " );
 }
 
+
+TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerived)
+{
+  const auto log = ProxyThrowing<>{ But::makeSharedNN<TestSink>(buffer_) };
+  const auto tmp = log.withFields("foo");
+  const auto proxy = tmp.withFields(42);
+  proxy.log("narf");
+  EXPECT_EQ( buffer_.str(), "string='foo' | int='42' | string='narf' | " );
+}
+
+
+TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBase)
+{
+  const auto log = ProxyThrowing<>{ But::makeSharedNN<TestSink>(buffer_) };
+  const auto proxy= log.withFields("foo");
+  const auto other= proxy.withFields(42);
+  proxy.log("narf");
+  EXPECT_EQ( buffer_.str(), "string='foo' | string='narf' | " );
+}
+
 }
