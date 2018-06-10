@@ -63,6 +63,9 @@ in order to add support for user's type/class `Abc`, it is enough to add `toFiel
 free function, to the same namespace `Abc` has been declared in (for ADL - Argument Dependent Lookup).
 from this moment on, logger will be able to log your type just like any other.
 
+logger object also supports `withFields(...)` member function, that creates a new logger, that will always append given values to each log it logs.
+this way it is extremely easy to create correlation chains - just pass on "extended" loggers down the call chain, as the data gets processed.
+
  * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience.
  * `LoggerProxyThrowing` - same as `LoggerProxy`, but forwarding exceptions from the implementation. useful in some unusual requirements scenarios.
  * `Destination` - namespace containing typical destinations, that are provided out of the box.
