@@ -115,6 +115,7 @@ struct NonTrivialCtor
 TEST_F(ButThreadingCacheLine, NonTrivialConstructor)
 {
   CacheLine<NonTrivialCtor> ntc;
+  (void)ntc;
 }
 
 }

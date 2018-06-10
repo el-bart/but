@@ -239,7 +239,9 @@ TEST_F(ButContainerUnorderedArray, NeededTypedefs)
   EXPECT_TRUE( (std::is_same<DataArray::allocator_type, std::allocator<Data>>()) );
   EXPECT_TRUE( std::is_unsigned<DataArray::size_type>() );
   DataArray::iterator it;
+  (void)it;
   DataArray::const_iterator itc;
+  (void)itc;
 }
 
 

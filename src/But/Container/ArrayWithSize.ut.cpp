@@ -389,7 +389,6 @@ TEST_F(ButContainerArrayWithSize, ComparingContainers)
   const Seq s1{1, 2, 3};
   const Seq s2{1, 2, 3, 4};
   const Seq s3{1, 4, 3};
-  const Seq s4{3, 4, 1};
   const Seq s5{1, 2, 9};
 
   EXPECT_TRUE(  s1 == s1 );
