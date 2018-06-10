@@ -21,6 +21,7 @@ protected:
   explicit TextStream(std::ostream& os): os_{os} { }
 
   std::string const& endline() const { return endline_; }
+  auto const& trim() const { return trim_; }
 
 private:
   void logImpl(Backend::FieldInfo const& fi) override final
