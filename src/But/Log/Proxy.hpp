@@ -100,6 +100,16 @@ public:
     { /* this is <del>sparta</del> logger! */ }
   }
 
+  /** @brief returns a proxy pobject, that will always add a given set of fields (i.e. exact values!) into each log.
+   *  @warning this creates new object, that allocates memory. it may throw!
+   */
+  template<typename ...Args>
+  auto withFields(Args&& ...args) const
+  {
+    return lpt_.withFields( std::forward<Args>(args)... );
+  }
+
+
 private:
   Impl lpt_;
 };

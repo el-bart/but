@@ -52,12 +52,13 @@ TEST_F(ButLogProxy, AllErrorsFromActualDestinationsAreIgnored)
   EXPECT_NO_THROW( log.reload() );
   EXPECT_NO_THROW( log.flush() );
 }
+
+
 struct CustomTranslator
 {
   template<size_t N, size_t M>
   auto translate(But::Format::ParsedCompiletime<N,M>&& parsed) const { return parsed; }
 };
-
 
 TEST_F(ButLogProxy, ConstructorsForDifferentObjects)
 {
@@ -68,6 +69,13 @@ TEST_F(ButLogProxy, ConstructorsForDifferentObjects)
   {
     Proxy<CustomTranslator> lp{ dst, CustomTranslator{} };
   }
+}
+
+
+TEST_F(ButLogProxy, ProxyWithDefaultFieldsSmokeTest)
+{
+  auto proxy = lp_.withFields("foo", "bar");
+  proxy.log(42);
 }
 
 }
