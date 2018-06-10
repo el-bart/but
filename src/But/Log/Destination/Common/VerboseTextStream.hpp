@@ -13,12 +13,13 @@ namespace Common
 
 class VerboseTextStream: public TextStream
 {
-protected:
+public:
   struct Depth
   {
     size_t value_;
   };
 
+protected:
   VerboseTextStream(std::ostream& os, Depth depth): TextStream{os}, depth_{depth} { }
 
 private:
