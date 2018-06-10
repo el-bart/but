@@ -28,7 +28,7 @@ auto convert(time_t timestamp)
 std::string UtcIsoDateTime::date() const
 {
   const auto tmp = convert(timestamp_);
-  char out[1+2 + 1+2 + 1];
+  char out[64];     // kept big, to silence GCC's 8 warning...
   BUT_ASSERT( tmp.tm_mon+1 <= 12 );
   BUT_ASSERT( tmp.tm_mday  <= 31 );
   sprintf(out, "-%02d-%02d", 1+tmp.tm_mon, tmp.tm_mday);
@@ -39,7 +39,7 @@ std::string UtcIsoDateTime::date() const
 std::string UtcIsoDateTime::time() const
 {
   const auto tmp = convert(timestamp_);
-  char out[2+1 + 2+1 + 2 + 1];
+  char out[64];     // kept big, to silence GCC's 8 warning...
   BUT_ASSERT( tmp.tm_hour < 24 );
   BUT_ASSERT( tmp.tm_min  < 60 );
   BUT_ASSERT( tmp.tm_sec  < 60 );
