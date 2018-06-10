@@ -71,7 +71,8 @@ struct StreamAndTrimVisitor final
         (*os_) << (isRoot?' ':',');
       if( it->tag() == formattedStringType_ )
       {
-        (*os_) << it->value().get<std::string>();
+        BUT_ASSERT(trim_);
+        (*os_) << (*trim_)( it->value().get<std::string>() );
         return;
       }
       it->visit(*this);
