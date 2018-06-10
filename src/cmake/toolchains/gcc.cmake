@@ -1,1 +1,1 @@
-gcc7.cmake
+gcc8.cmake

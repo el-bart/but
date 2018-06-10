@@ -1,1 +1,1 @@
-clang50.cmake
+clang6.cmake
