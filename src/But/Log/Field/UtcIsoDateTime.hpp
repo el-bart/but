@@ -1,8 +1,8 @@
 #pragma once
 #include <string>
 #include <ctime>
-#include <But/Log/Field/ConversionError.hpp>
 #include <But/Log/Backend/FieldInfo.hpp>
+#include <But/Log/Field/detail/date2str.hpp>
 
 namespace But
 {
@@ -16,8 +16,8 @@ struct UtcIsoDateTime final
   UtcIsoDateTime(): timestamp_{ ::time(nullptr) } { }
   explicit UtcIsoDateTime(time_t ts): timestamp_{ts} { }
 
-  std::string date() const;
-  std::string time() const;
+  std::string date() const { return detail::date2str(timestamp_); }
+  std::string time() const { return detail::time2str(timestamp_); }
 
   time_t timestamp_;
 };

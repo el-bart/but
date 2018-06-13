@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 #include <But/assert.hpp>
-#include <But/Log/Field/UtcIsoDateTime.hpp>
+#include <But/Log/Field/detail/date2str.hpp>
 
 using std::to_string;
 
@@ -12,10 +12,12 @@ namespace Log
 {
 namespace Field
 {
+namespace detail
+{
 
 namespace
 {
-auto convert(time_t timestamp)
+auto convert(const time_t timestamp)
 {
   struct tm out;
   if( not gmtime_r(&timestamp, &out) )
@@ -25,9 +27,9 @@ auto convert(time_t timestamp)
 }
 
 
-std::string UtcIsoDateTime::date() const
+std::string date2str(const time_t timestamp)
 {
-  const auto tmp = convert(timestamp_);
+  const auto tmp = convert(timestamp);
   char out[64];     // kept big, to silence GCC's 8 warning...
   BUT_ASSERT( tmp.tm_mon+1 <= 12 );
   BUT_ASSERT( tmp.tm_mday  <= 31 );
@@ -36,9 +38,9 @@ std::string UtcIsoDateTime::date() const
 }
 
 
-std::string UtcIsoDateTime::time() const
+std::string time2str(const time_t timestamp)
 {
-  const auto tmp = convert(timestamp_);
+  const auto tmp = convert(timestamp);
   char out[64];     // kept big, to silence GCC's 8 warning...
   BUT_ASSERT( tmp.tm_hour < 24 );
   BUT_ASSERT( tmp.tm_min  < 60 );
@@ -47,6 +49,7 @@ std::string UtcIsoDateTime::time() const
   return out;
 }
 
+}
 }
 }
 }
