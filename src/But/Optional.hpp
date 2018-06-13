@@ -42,6 +42,12 @@ public:
     return *this;
   }
 
+  template<typename ...Args>
+  void emplace(Args&&... args)
+  {
+    t_.emplace( std::forward<Args>(args)... );
+  }
+
   explicit operator bool() const { return static_cast<bool>(t_); }
 
   T&& get() &&

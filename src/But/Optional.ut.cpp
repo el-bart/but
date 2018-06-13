@@ -1,3 +1,4 @@
+#include <mutex>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -206,6 +207,33 @@ TEST_F(ButOptional, ImplicitConstructionFromUnderlyingRvalueType)
   auto in = str;
   auto test = [](Optional<std::string> os) { return *os; };
   EXPECT_EQ( str, test( std::move(in) ) );
+}
+
+
+TEST_F(ButOptional, EmplacingElement)
+{
+  Optional<std::mutex> opt;
+  EXPECT_FALSE(opt);
+  opt.emplace();
+  EXPECT_TRUE(opt);
+}
+
+
+TEST_F(ButOptional, EmplacingElementWithArgumentForCtor)
+{
+  Optional<std::string> opt;
+  opt.emplace("test");
+  ASSERT_TRUE(opt);
+  EXPECT_EQ("test", *opt);
+}
+
+
+TEST_F(ButOptional, EmplacingElementWithMultipleArgumentsForCtor)
+{
+  Optional<std::string> opt;
+  opt.emplace(3, 'x');
+  ASSERT_TRUE(opt);
+  EXPECT_EQ("xxx", *opt);
 }
 
 }
