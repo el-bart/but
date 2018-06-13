@@ -49,6 +49,18 @@ std::string time2str(const time_t timestamp)
   return out;
 }
 
+
+std::string nanosec2str(const long nsec)
+{
+  if( nsec < 0)
+    BUT_THROW(ConversionError, "got negative nanoseconds value: " << nsec);
+  if( nsec > 999999999l )
+    BUT_THROW(ConversionError, "got too big nanoseconds value: " << nsec);
+  char out[64];     // kept big, to silence GCC's 8 warning...
+  sprintf(out, "%09ld", nsec);
+  return out;
+}
+
 }
 }
 }
