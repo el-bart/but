@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Log::Field::PreciseDT` for nanosecond-precision timestamps in logs.
   * `Optional::emplace(...)` can now be used to conveniently create objects in place, including those that are non-copyable and non-movable.
   * added support for GCC-8 and Clang-6.
   * `Log::Destination::Verbose*` family of text-type outputs, that keep tag info in a human-readable format and with depth-limiting factor.
