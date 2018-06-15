@@ -72,6 +72,13 @@ public:
   auto operator->() { return &get(); }
   auto operator->() const { return &get(); }
 
+  auto operator==(Optional const& rhs) const { return t_ == rhs.t_; }
+  auto operator!=(Optional const& rhs) const { return t_ != rhs.t_; }
+  auto operator< (Optional const& rhs) const { return t_ <  rhs.t_; }
+  auto operator> (Optional const& rhs) const { return t_ >  rhs.t_; }
+  auto operator<=(Optional const& rhs) const { return t_ <= rhs.t_; }
+  auto operator>=(Optional const& rhs) const { return t_ >= rhs.t_; }
+
   void reset() { t_.reset(); }
 
 private:

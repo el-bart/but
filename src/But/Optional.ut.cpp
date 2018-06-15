@@ -236,4 +236,56 @@ TEST_F(ButOptional, EmplacingElementWithMultipleArgumentsForCtor)
   EXPECT_EQ("xxx", *opt);
 }
 
+
+TEST_F(ButOptional, RelationOperators)
+{
+  Optional<std::string> unset;
+  Optional<std::string> a{"a"};
+  Optional<std::string> b{"b"};
+
+  EXPECT_TRUE( unset == unset );
+  EXPECT_TRUE( a == a );
+
+  EXPECT_FALSE( a == b );
+  EXPECT_FALSE( a == unset );
+  EXPECT_FALSE( unset == a );
+
+  EXPECT_FALSE( unset != unset );
+  EXPECT_FALSE( a != a );
+
+  EXPECT_TRUE( a != b );
+  EXPECT_TRUE( a != unset );
+  EXPECT_TRUE( unset != a );
+
+  EXPECT_TRUE( a < b );
+  EXPECT_TRUE( unset < a );
+
+  EXPECT_FALSE( b < a );
+  EXPECT_FALSE( a < unset );
+  EXPECT_FALSE( unset < unset );
+
+  EXPECT_TRUE( b > a );
+  EXPECT_TRUE( a > unset );
+
+  EXPECT_FALSE( a > b );
+  EXPECT_FALSE( unset > a );
+  EXPECT_FALSE( unset > unset );
+
+  EXPECT_TRUE( a >= a );
+  EXPECT_TRUE( b >= a );
+  EXPECT_TRUE( a >= unset );
+  EXPECT_TRUE( unset >= unset );
+
+  EXPECT_FALSE( a >= b );
+  EXPECT_FALSE( unset >= a );
+
+  EXPECT_TRUE( a <= a );
+  EXPECT_TRUE( a <= b );
+  EXPECT_TRUE( unset <= a );
+  EXPECT_TRUE( unset <= unset );
+
+  EXPECT_FALSE( a >= b );
+  EXPECT_FALSE( unset >= a );
+}
+
 }
