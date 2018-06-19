@@ -44,6 +44,8 @@ inline auto toFieldInfo(float v)       { return FieldInfo{ Tag{"double"}, Value{
 inline auto toFieldInfo(double v)      { return FieldInfo{ Tag{"double"}, Value{v} }; }
 inline auto toFieldInfo(long double v) { return FieldInfo{ Tag{"double"}, Value{v} }; }
 
+FieldInfo toFieldInfo(std::exception const& ex);
+
 template<typename T>
 inline auto toFieldInfo(std::vector<T> v)
 {

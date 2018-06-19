@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `toFieldInfo` is now able to pretty-convert `std::exception`-derived classes.
   * `But::Optional` now has relational operators defined.
   * `Log::Field::PreciseDT` for nanosecond-precision timestamps in logs.
   * `Optional::emplace(...)` can now be used to conveniently create objects in place, including those that are non-copyable and non-movable.
