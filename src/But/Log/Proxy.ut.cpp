@@ -78,4 +78,12 @@ TEST_F(ButLogProxy, ProxyWithDefaultFieldsSmokeTest)
   proxy.log(42);
 }
 
+
+TEST_F(ButLogProxy, ProxyWithDefaultFieldsDoesNotThrow)
+{
+  Proxy<> log{ But::makeSharedNN<ThrowingDestination>() };
+  auto proxy = log.withFields("foo", "bar");
+  EXPECT_NO_THROW( proxy.log("hello", "john") );
+}
+
 }

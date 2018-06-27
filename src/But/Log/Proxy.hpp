@@ -54,10 +54,9 @@ namespace Log
 template<typename Translator = Localization::None>
 class Proxy final
 {
-  using Impl = ProxyThrowing<Translator>;
-
 public:
-  using Destination = typename Impl::Destination;
+  using Backend = ProxyThrowing<Translator>;
+  using Destination = typename Backend::Destination;
 
   explicit Proxy(Destination dst): lpt_{ std::move(dst) } { }
   Proxy(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
@@ -106,12 +105,13 @@ public:
   template<typename ...Args>
   auto withFields(Args&& ...args) const
   {
-    return lpt_.withFields( std::forward<Args>(args)... );
+    return Proxy<Translator>{ lpt_.withFields( std::forward<Args>(args)... ) };
   }
 
 
 private:
-  Impl lpt_;
+  explicit Proxy(Backend backend): lpt_{ std::move(backend) } { }
+  Backend lpt_;
 };
 
 }
