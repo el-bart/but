@@ -16,6 +16,8 @@
 * consider removing a restriction that `Log::Proxy` is not thread-safe.
 * update format, so that it does not need to be a first argument of the log.
 * cleanup Verbose* and Text* types of outputs, so that there is no code duplication and yet all combinations are covered.
+* `LogProxy::withFields()` vs. lazy evaluation of the fields?
+* `Optional::get_value_or()`
 
 ## improvements / new APIs
 * split build into core and dev
