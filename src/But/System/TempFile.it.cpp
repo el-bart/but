@@ -51,8 +51,8 @@ TEST_F(ButSystemTempFile, PathMathesTemplate)
   fs::remove( tmp.path() );
 
   auto p = tmp.path().string();
-  ASSERT_EQ( nameTemplate_.string().size() + 1 + 9, p.size() );
-  p = p.substr( 0, p.size()-10 );
+  ASSERT_EQ( nameTemplate_.string().size() + 1 + 6, p.size() );
+  p = p.substr( 0, p.size()-1-6 );
   EXPECT_EQ( nameTemplate_.string(), p );
 }
 
