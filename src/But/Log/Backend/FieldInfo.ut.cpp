@@ -164,8 +164,14 @@ TEST_F(ButLogBackendFieldInfo, ConvertingVectorOfExplicitValues)
 TEST_F(ButLogBackendFieldInfo, ExceptionsToFieldInfo)
 {
   using But::Log::Backend::toFieldInfo;
-  const auto fi = toFieldInfo( static_cast<std::exception const&>( std::runtime_error{"testing..."} ) );
-  EXPECT_EQ( "Exception={Type=\"std::runtime_error\",Message=\"testing...\"}", toString(fi) );
+  {
+    const auto fi = toFieldInfo( static_cast<std::exception const&>( std::runtime_error{"testing..."} ) );
+    EXPECT_EQ( "Exception={Type=\"std::runtime_error\",Message=\"testing...\"}", toString(fi) );
+  }
+  {
+    const auto fi = toFieldInfo( std::runtime_error{"testing..."} );
+    EXPECT_EQ( "Exception={Type=\"std::runtime_error\",Message=\"testing...\"}", toString(fi) );
+  }
 }
 
 }
