@@ -18,6 +18,8 @@
 * cleanup Verbose* and Text* types of outputs, so that there is no code duplication and yet all combinations are covered.
 * `LogProxy::withFields()` vs. lazy evaluation of the fields?
 * `Optional::get_value_or()`
+* `toFieldInfo(type_index)`
+* `toFieldInfo(type_info)`
 
 ## improvements / new APIs
 * split build into core and dev
