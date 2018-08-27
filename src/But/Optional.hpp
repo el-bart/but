@@ -26,6 +26,8 @@ public:
 
   Optional(Optional const&) = default;
   Optional& operator=(Optional const&) = default;
+  Optional(Optional&) = default;
+  Optional& operator=(Optional&) = default;
 
   Optional(Optional&& other):
     t_{ std::move(other.t_) }

@@ -53,8 +53,21 @@ TEST_F(ButOptional, Copyable)
 {
   Optional<std::string> o1{"one"};
   Optional<std::string> o2 = o1;
+  Optional<std::string> o3{o1};
   EXPECT_EQ( "one", o1.get() );
   EXPECT_EQ( "one", o2.get() );
+  EXPECT_EQ( "one", o3.get() );
+}
+
+
+TEST_F(ButOptional, CopyableWhenUnset)
+{
+  Optional<std::string> o1;
+  Optional<std::string> o2 = o1;
+  Optional<std::string> o3{o1};
+  EXPECT_FALSE(o1);
+  EXPECT_FALSE(o2);
+  EXPECT_FALSE(o3);
 }
 
 
@@ -67,7 +80,25 @@ TEST_F(ButOptional, MoveConstructible)
   Optional<Ptr> p2{ std::move(p1) };
   EXPECT_FALSE(p1);
   ASSERT_TRUE(p2);
-  EXPECT_EQ( "ok", *p2.get() );
+  Optional<Ptr> p3 = std::move(p2);
+  EXPECT_FALSE(p1);
+  EXPECT_FALSE(p2);
+  ASSERT_TRUE(p3);
+  EXPECT_EQ( "ok", *p3.get() );
+}
+
+
+TEST_F(ButOptional, MoveConstructibleWhenUnset)
+{
+  Optional<Ptr> p1;
+  EXPECT_FALSE(p1);
+  Optional<Ptr> p2{ std::move(p1) };
+  EXPECT_FALSE(p1);
+  EXPECT_FALSE(p2);
+  Optional<Ptr> p3 = std::move(p2);
+  EXPECT_FALSE(p1);
+  EXPECT_FALSE(p2);
+  EXPECT_FALSE(p3);
 }
 
 

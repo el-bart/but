@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Optional` now compiles correctly with copy-initialization from a non-const `Optional`.
   * `System::TempFile` now do not leave `XXX` artifact in file name.
   * `toFieldInfo` is now able to pretty-convert `std::exception`-derived classes.
   * `But::Optional` now has relational operators defined.
