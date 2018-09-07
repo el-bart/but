@@ -10,7 +10,6 @@ RUN apt-get install -y g++-6
 RUN apt-get install -y g++-7
 RUN apt-get install -y g++-8
 
-RUN apt-get install -y clang-4.0 llvm-4.0
 RUN apt-get install -y clang-5.0 llvm-5.0
 RUN apt-get install -y clang-6.0 llvm-6.0
 
