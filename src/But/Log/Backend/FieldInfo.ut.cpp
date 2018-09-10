@@ -179,7 +179,7 @@ TEST_F(ButLogBackendFieldInfo, PairToFieldInfo)
 {
   using But::Log::Backend::toFieldInfo;
   const auto fi = toFieldInfo( std::make_pair(42, false) );
-  EXPECT_EQ( "pair={int=42,bool=false}", toString(fi) );
+  EXPECT_EQ( "tuple={int=42,bool=false}", toString(fi) );
 }
 
 
@@ -188,6 +188,15 @@ TEST_F(ButLogBackendFieldInfo, TupleToFieldInfo)
   using But::Log::Backend::toFieldInfo;
   const auto fi = toFieldInfo( std::make_tuple(42, "foo-bar", true) );
   EXPECT_EQ( "tuple={int=42,string=\"foo-bar\",bool=true}", toString(fi) );
+}
+
+
+TEST_F(ButLogBackendFieldInfo, MixingTemplateToFieldInfos)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto t = std::make_tuple( std::make_pair(13, false) );
+  const auto fi = toFieldInfo( std::vector<std::remove_cv_t<decltype(t)>>{t, t} );
+  EXPECT_EQ( "sequence={tuple={tuple={int=13,bool=false}},tuple={tuple={int=13,bool=false}}}", toString(fi) );
 }
 
 }
