@@ -174,4 +174,20 @@ TEST_F(ButLogBackendFieldInfo, ExceptionsToFieldInfo)
   }
 }
 
+
+TEST_F(ButLogBackendFieldInfo, PairToFieldInfo)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto fi = toFieldInfo( std::make_pair(42, false) );
+  EXPECT_EQ( "pair={int=42,bool=false}", toString(fi) );
+}
+
+
+TEST_F(ButLogBackendFieldInfo, TupleToFieldInfo)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto fi = toFieldInfo( std::make_tuple(42, "foo-bar", true) );
+  EXPECT_EQ( "tuple={int=42,string=\"foo-bar\",bool=true}", toString(fi) );
+}
+
 }
