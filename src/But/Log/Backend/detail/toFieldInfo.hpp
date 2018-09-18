@@ -35,6 +35,7 @@ namespace detail
 template<typename ...Args, std::size_t ...Index>
 inline auto tuple2Vector(std::tuple<Args...> t, std::index_sequence<Index...>)
 {
+  (void)t;  // woraround for GCC 8.0 invalid warning about unused paramter, when sizeof...(Args)==0
   std::vector<FieldInfo> out{ toFieldInfo( std::get<Index>(t) )... };
   return out;
 }
