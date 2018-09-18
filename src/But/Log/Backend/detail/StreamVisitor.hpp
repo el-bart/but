@@ -28,6 +28,7 @@ struct StreamVisitor final
 
   void operator()(Backend::Tag const&, Backend::Value const& v);
   void operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo> const& fis);
+  void operator()(std::vector<Backend::FieldInfo> const& fis);
 
   std::ostream* os_{nullptr};
 };

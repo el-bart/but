@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * fixed logging of empty collections - now tag remains, but the content is empty.
   * dropped support for clang 4.0 (packages also removed from latest Debian).
   * `Optional` now compiles correctly with copy-initialization from a non-const `Optional`.
   * `System::TempFile` now do not leave `XXX` artifact in file name.

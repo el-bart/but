@@ -153,6 +153,14 @@ TEST_F(ButLogBackendFieldInfo, ToStringConversion)
 }
 
 
+TEST_F(ButLogBackendFieldInfo, EMptyVectorLogsTag)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto fi = toFieldInfo( std::vector<int>{} );
+  EXPECT_EQ( "sequence={}", toString(fi) );
+}
+
+
 TEST_F(ButLogBackendFieldInfo, ConvertingVectorOfExplicitValues)
 {
   using But::Log::Backend::toFieldInfo;
@@ -180,6 +188,14 @@ TEST_F(ButLogBackendFieldInfo, PairToFieldInfo)
   using But::Log::Backend::toFieldInfo;
   const auto fi = toFieldInfo( std::make_pair(42, false) );
   EXPECT_EQ( "tuple={int=42,bool=false}", toString(fi) );
+}
+
+
+TEST_F(ButLogBackendFieldInfo, EmptyTupleToFieldInfo)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto fi = toFieldInfo( std::make_tuple() );
+  EXPECT_EQ( "tuple={}", toString(fi) );
 }
 
 

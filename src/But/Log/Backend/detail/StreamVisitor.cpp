@@ -60,12 +60,18 @@ void StreamVisitor::operator()(Backend::Tag const& t, Backend::Value const& v)
 
 void StreamVisitor::operator()(Backend::Tag const& t, std::vector<Backend::FieldInfo> const& fis)
 {
-  if( fis.empty() )
-    return;
-
   BUT_ASSERT(os_);
 
   (*os_) << t << "={";
+  (*this)(fis);
+  (*os_) << "}";
+}
+
+
+void StreamVisitor::operator()(std::vector<Backend::FieldInfo> const& fis)
+{
+  if( fis.empty() )
+    return;
 
   auto it = begin(fis);
   do
@@ -77,8 +83,6 @@ void StreamVisitor::operator()(Backend::Tag const& t, std::vector<Backend::Field
     ++it;
   }
   while( it != end(fis) );
-
-  (*os_) << "}";
 }
 
 }
