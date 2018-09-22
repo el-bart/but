@@ -10,7 +10,7 @@ this work is available on "master" branch, but has not yet been released.
   * dropped support for clang 4.0 (packages also removed from latest Debian).
   * `Optional` now compiles correctly with copy-initialization from a non-const `Optional`.
   * `System::TempFile` now do not leave `XXX` artifact in file name.
-  * `toFieldInfo` is now able to pretty-convert `std::exception`-derived classes, `std::pair`, `std::vector` and `std::tuple`.
+  * `toFieldInfo` is now able to pretty-convert `std::exception`-derived classes, `std::pair`, `std::vector`, `std::tuple` and `std::chrono` time units.
   * `But::Optional` now has relational operators defined.
   * `Log::Field::PreciseDT` for nanosecond-precision timestamps in logs.
   * `Optional::emplace(...)` can now be used to conveniently create objects in place, including those that are non-copyable and non-movable.

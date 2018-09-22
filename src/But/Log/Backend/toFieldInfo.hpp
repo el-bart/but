@@ -1,5 +1,6 @@
 #pragma once
 #include <tuple>
+#include <chrono>
 #include <vector>
 #include <utility>
 #include <But/Log/Backend/FieldInfo.hpp>
@@ -46,6 +47,19 @@ inline auto toFieldInfo(unsigned long long v) { return FieldInfo{ Tag{"unsigned 
 inline auto toFieldInfo(float v)       { return FieldInfo{ Tag{"double"}, Value{v} }; }
 inline auto toFieldInfo(double v)      { return FieldInfo{ Tag{"double"}, Value{v} }; }
 inline auto toFieldInfo(long double v) { return FieldInfo{ Tag{"double"}, Value{v} }; }
+
+// time units
+inline auto toFieldInfo(std::chrono::nanoseconds v) { return FieldInfo{ Tag{"time [ns]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::microseconds v) { return FieldInfo{ Tag{"time [us]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::milliseconds v) { return FieldInfo{ Tag{"time [ms]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::seconds v) { return FieldInfo{ Tag{"time [s]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::minutes v) { return FieldInfo{ Tag{"time [min]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::hours v) { return FieldInfo{ Tag{"time [h]"}, Value{v.count()} }; }
+/* TODO: waiting for C++20...
+inline auto toFieldInfo(std::chrono::days v) { return FieldInfo{ Tag{"time [d]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::mounts v) { return FieldInfo{ Tag{"time [mon]"}, Value{v.count()} }; }
+inline auto toFieldInfo(std::chrono::years v) { return FieldInfo{ Tag{"time [y]"}, Value{v.count()} }; }
+*/
 
 FieldInfo toFieldInfo(std::exception const& ex);
 

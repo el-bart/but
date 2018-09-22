@@ -215,4 +215,28 @@ TEST_F(ButLogBackendFieldInfo, MixingTemplateToFieldInfos)
   EXPECT_EQ( "sequence={tuple={tuple={int=13,bool=false}},tuple={tuple={int=13,bool=false}}}", toString(fi) );
 }
 
+
+template<typename T>
+void testTimeUnit(T time, std::string const& unit)
+{
+  using But::Log::Backend::toFieldInfo;
+  const auto fi = toFieldInfo(time);
+  EXPECT_EQ( "time [" + unit + "]=42", toString(fi) );
+}
+
+TEST_F(ButLogBackendFieldInfo, ToFieldInfoNanoseconds)
+{
+  testTimeUnit( std::chrono::nanoseconds{42}, "ns" );
+  testTimeUnit( std::chrono::microseconds{42}, "us" );
+  testTimeUnit( std::chrono::milliseconds{42}, "ms" );
+  testTimeUnit( std::chrono::seconds{42}, "s" );
+  testTimeUnit( std::chrono::minutes{42}, "min" );
+  testTimeUnit( std::chrono::hours{42}, "h" );
+  /* TODO: waiting for C++20...
+  testTimeUnit( std::chrono::days{42}, "d" );
+  testTimeUnit( std::chrono::months{42}, "mon" );
+  testTimeUnit( std::chrono::years{42}, "y" );
+  */
+}
+
 }
