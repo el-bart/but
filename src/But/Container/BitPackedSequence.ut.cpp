@@ -937,4 +937,54 @@ TEST_F(ButContainerBitPackedSequence, ComparingContainers)
   EXPECT_TRUE(  s1 >= s2 );
 }
 
+
+TEST_F(ButContainerBitPackedSequence, ResizingWithExplicitValue)
+{
+  BitPackedSequence<Elem, Packer> s;
+  EXPECT_TRUE( s.empty() );
+  const auto e = Elem::Z;
+  ASSERT_NE( static_cast<int>(e), 0 );
+
+  s.resize(2, e);
+  ASSERT_EQ( s.size(), 2u );
+  EXPECT_EQ( s[0], e );
+  EXPECT_EQ( s[1], e );
+
+  s.resize(3, e);
+  ASSERT_EQ( s.size(), 3u );
+  EXPECT_EQ( s[0], e );
+  EXPECT_EQ( s[1], e );
+  EXPECT_EQ( s[2], e );
+
+  s.resize(1, e);
+  ASSERT_EQ( s.size(), 1u );
+  EXPECT_EQ( s[0], e );
+  EXPECT_GE( s.capacity(), 3u );
+}
+
+
+TEST_F(ButContainerBitPackedSequence, ResizingWithDefaultValue)
+{
+  BitPackedSequence<Elem, Packer> s;
+  EXPECT_TRUE( s.empty() );
+  const auto e = Elem::X;
+  ASSERT_EQ( static_cast<int>(e), 0 );
+
+  s.resize(2);
+  ASSERT_EQ( s.size(), 2u );
+  EXPECT_EQ( s[0], e );
+  EXPECT_EQ( s[1], e );
+
+  s.resize(3);
+  ASSERT_EQ( s.size(), 3u );
+  EXPECT_EQ( s[0], e );
+  EXPECT_EQ( s[1], e );
+  EXPECT_EQ( s[2], e );
+
+  s.resize(1);
+  ASSERT_EQ( s.size(), 1u );
+  EXPECT_EQ( s[0], e );
+  EXPECT_GE( s.capacity(), 3u );
+}
+
 }

@@ -121,6 +121,16 @@ public:
   void reserve(const size_type size) { c_.reserve( ( size * Packer::bits_count ) / bits_per_byte + 1 ); }
   void shrink_to_fit() { c_.shrink_to_fit(); }
 
+  void resize(const size_type newSize) { resize(newSize, value_type{}); }
+  void resize(const size_type newSize, const value_type newValue)
+  {
+    reserve(newSize);
+    while( size() > newSize )
+      pop_back();
+    while( size() < newSize )
+      push_back(newValue);
+  }
+
   auto begin() { return iterator{*this, 0}; }
   auto end()   { return iterator{*this, size()}; }
 
