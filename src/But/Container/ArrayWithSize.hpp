@@ -71,6 +71,30 @@ public:
     push_back( value_type{ std::forward<Args>(args)... } );
   }
 
+  constexpr value_type& back()
+  {
+    BUT_ASSERT( not empty() );
+    return c_[size_-1];
+  }
+
+  constexpr value_type const& back() const
+  {
+    BUT_ASSERT( not empty() );
+    return c_[size_-1];
+  }
+
+  constexpr value_type& front()
+  {
+    BUT_ASSERT( not empty() );
+    return c_[0];
+  }
+
+  constexpr value_type const& front() const
+  {
+    BUT_ASSERT( not empty() );
+    return c_[0];
+  }
+
   constexpr void push_back(value_type const& vt)
   {
     BUT_ASSERT( size() < max_size() && "overflow detected" );

@@ -458,4 +458,82 @@ TEST_F(ButContainerArrayWithSize, ConstexprSmokeTest)
   EXPECT_EQ( 3, seq.size() );
 }
 
+
+TEST_F(ButContainerArrayWithSize, GettingFrontElement)
+{
+  ArrayWithSize<int,4> aws;
+  auto const& caws = aws;
+
+  aws.push_back(42);
+  EXPECT_EQ( 42, caws.front() );
+
+  aws.push_back(13);
+  EXPECT_EQ( 42, caws.front() );
+
+  aws.front() = 997;
+  EXPECT_EQ( 997, caws.front() );
+}
+
+
+constexpr auto constexprFrontTest()
+{
+  ArrayWithSize<int,4> aws;
+  aws.push_back(40);
+  aws.push_back(41);
+  aws.front() = 42;
+  return aws;
+}
+
+TEST_F(ButContainerArrayWithSize, GettingFrontElementConstexpr)
+{
+  constexpr auto aws = constexprFrontTest();
+  EXPECT_EQ( 42, aws.front() );
+
+  ASSERT_EQ( 2u, aws.size() );
+  EXPECT_EQ( 42, aws[0] );
+  EXPECT_EQ( 41, aws[1] );
+}
+
+
+TEST_F(ButContainerArrayWithSize, GettingBackElement)
+{
+  ArrayWithSize<int,4> aws;
+  auto const& caws = aws;
+
+  aws.push_back(42);
+  EXPECT_EQ( 42, caws.back() );
+
+  aws.push_back(13);
+  EXPECT_EQ( 13, caws.back() );
+
+  aws.push_back(666);
+  EXPECT_EQ( 666, caws.back() );
+
+  aws.pop_back();
+  EXPECT_EQ( 13, caws.back() );
+
+  aws.back() = 997;
+  EXPECT_EQ( 997, caws.back() );
+}
+
+
+constexpr auto constexprBackTest()
+{
+  ArrayWithSize<int,4> aws;
+  aws.push_back(40);
+  aws.push_back(41);
+  aws.back() = 42;
+  return aws;
+}
+
+TEST_F(ButContainerArrayWithSize, GettingBackElementConstexpr)
+{
+  constexpr auto aws = constexprBackTest();
+  EXPECT_EQ( 42, aws.back() );
+
+  ASSERT_EQ( 2u, aws.size() );
+  EXPECT_EQ( 40, aws[0] );
+  EXPECT_EQ( 42, aws[1] );
+}
+
 }
