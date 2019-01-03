@@ -20,6 +20,11 @@
 * `Optional::get_value_or()`
 * `toFieldInfo(type_index)`
 * `toFieldInfo(type_info)`
+* `toFieldInfo(set)`
+* `toFieldInfo(map)`
+* `toFieldInfo(unordered_set)`
+* `toFieldInfo(unordered_map)`
+* `toFieldInfo(array)`
 
 ## improvements / new APIs
 * split build into core and dev
