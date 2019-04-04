@@ -1,5 +1,5 @@
 #pragma once
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <But/Exception.hpp>
 #include <But/Log/Backend/FieldInfo.hpp>
 

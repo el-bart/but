@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <gtest/gtest.h>
 #include <But/Log/Destination/JsonFile.hpp>
 #include <But/System/TempFile.hpp>
