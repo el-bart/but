@@ -6,7 +6,6 @@ RUN apt-get dist-upgrade -y
 RUN apt-get install -y cmake
 RUN apt-get install -y make ninja-build
 
-RUN apt-get install -y g++-6
 RUN apt-get install -y g++-7
 RUN apt-get install -y g++-8
 
