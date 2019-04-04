@@ -1,4 +1,4 @@
-FROM debian:testing
+FROM debian:buster
 
 RUN apt-get update
 RUN apt-get dist-upgrade -y
@@ -18,4 +18,4 @@ RUN apt-get install -y clang llvm
 
 RUN apt-get install -y googletest
 RUN apt-get install -y libboost-all-dev
-RUN apt-get install -y nlohmann-json-dev
+RUN apt-get install -y nlohmann-json3-dev
