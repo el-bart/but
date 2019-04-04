@@ -6,6 +6,8 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * fixed compilation problem with `gtest` and variadic macro expansion for type parametrized tests.
+  * `nlohmann::json` v3 is now used instead of v2.
   * added support for Clang 7.
   * `Container::ArrayWithSize::back()` added, for easier access.
   * `Container::ArrayWithSize::front()` added, for easier access.
