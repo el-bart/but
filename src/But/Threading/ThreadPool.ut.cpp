@@ -180,10 +180,10 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
     );
 
 
-INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingThreadPool, ::testing::Types<ThreadPoolStd>);
+INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingThreadPool, ::testing::Types<ThreadPoolStd>,);
 // TODO: there are data races in boost::thread, that occasionally blow up here...
 #if BOOST_VERSION > 106200
-INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingThreadPool, ::testing::Types<ThreadPoolBoost>);
+INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingThreadPool, ::testing::Types<ThreadPoolBoost>,);
 #endif
 
 }
