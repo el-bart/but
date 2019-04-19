@@ -47,6 +47,7 @@
 * exception could hold tuple<args>, that would then be queryble (to keep exact values, that caused an error, etc...) and (optionally) loggable. `toString` vs `toFieldInfo` vs both? or storage by value and query by derived class only?
 * `MovablePointer<T>` - class that will be a raw pointer, but will support moving (i.e. source is nulled at the end).
 * `AbstractFactory` should return `NotNullUnique` pointer.
+* change `BUT_THROW`'s `ss` internal variable to sth more unique, so that accidental name-slash is unlikely.
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
