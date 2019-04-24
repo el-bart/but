@@ -239,4 +239,67 @@ TEST_F(ButLogBackendFieldInfo, ToFieldInfoNanoseconds)
   */
 }
 
+
+struct CopySpy
+{
+  explicit CopySpy(int& copyCount): copyCount_{&copyCount} { }
+
+  CopySpy(CopySpy const &other):
+    copyCount_{other.copyCount_}
+  {
+    ++*copyCount_;
+  }
+  CopySpy &operator=(CopySpy const &)
+  {
+    ++*copyCount_;
+    return *this;
+  }
+
+  CopySpy(CopySpy &&) = default;
+  CopySpy &operator=(CopySpy &&) = default;
+
+  int* copyCount_{nullptr};
+};
+
+FieldInfo toFieldInfo(CopySpy const &cs)
+{
+  return FieldInfo{ Tag{"copies_made"}, Value{*cs.copyCount_} };
+}
+
+TEST_F(ButLogBackendFieldInfo, RetaggingTemporaryShouldMove)
+{
+  using But::Log::Backend::toFieldInfo;
+
+  {
+    auto copies = 0;
+    CopySpy{copies};
+    std::make_tuple( CopySpy{copies} );
+    EXPECT_EQ(0, copies);
+  }
+
+  {
+    auto copies = 0;
+    toFieldInfo( CopySpy{copies} );
+    EXPECT_EQ(0, copies);
+    toFieldInfo( CopySpy{copies} ).retag( Tag{"foo"} );
+    EXPECT_EQ(0, copies);
+  }
+
+  {
+    auto copies = 0;
+    toFieldInfo( std::make_pair( CopySpy{copies}, true ) );
+    EXPECT_EQ(0, copies);
+    toFieldInfo( std::make_pair( CopySpy{copies}, true ) ).retag( Tag{"foo"} );
+    EXPECT_EQ(0, copies);
+  }
+
+  {
+    auto copies = 0;
+    toFieldInfo( std::make_tuple( CopySpy{copies} ) );
+    EXPECT_EQ(0, copies);
+    toFieldInfo( std::make_tuple( CopySpy{copies} ) ).retag( Tag{"foo"} );
+    EXPECT_EQ(0, copies);
+  }
+}
+
 }
