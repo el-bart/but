@@ -2,6 +2,7 @@
 
 ## logger-related things
 
+* `Logger::withUniqueFields()` - same as `withFields()`, but auto-skipping duplicates.
 * consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
