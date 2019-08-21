@@ -52,6 +52,7 @@
 * change `BUT_THROW`'s `ss` internal variable to sth more unique, so that accidental name-slash is unlikely.
 * consider auto-trimming leading `../` sequences inside filename, when throwing exception.
 * `ThreadPool::queueSize()` for listing enqueued elements count.
+* `But::Guard::trigger()` to trigger guard before d-tor is reached.
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
