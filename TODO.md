@@ -53,6 +53,7 @@
 * consider auto-trimming leading `../` sequences inside filename, when throwing exception.
 * `ThreadPool::queueSize()` for listing enqueued elements count.
 * `But::Guard::trigger()` to trigger guard before d-tor is reached.
+* `BUT_ASSERT_ALWAYS()` for asserts that shall remain in release builds as well.
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
