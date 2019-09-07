@@ -27,6 +27,7 @@
 * `toFieldInfo(unordered_map)`
 * `toFieldInfo(array)`
 * consider auto-trimming leading `../` sequences inside filename, when logging filename via macro (can be a dedicated type, if needed)
+* consider splitting `toFieldInfo` into `toTag` and `toValue`.
 
 ## improvements / new APIs
 * split build into core and dev
