@@ -6,7 +6,6 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
-  * fixed type size mismatches on 32-bit architectures in `Log::Value` and `Log::toFieldInfo` (used to be a compilation error).
   * GCC-6 dropped from CI and SDK.
   * fixed compilation problem with `gtest` and variadic macro expansion for type parametrized tests.
   * `nlohmann::json` v3 is now used instead of v2.
@@ -14,6 +13,11 @@ this work is available on "master" branch, but has not yet been released.
   * `Container::ArrayWithSize::back()` added, for easier access.
   * `Container::ArrayWithSize::front()` added, for easier access.
   * `Container::BitPackedSequence::resize()` added (2 overloads, as in `std::vector`).
+
+## v1.1.1 (2020-01-24)
+minor release to fix 32-bit compilation bug.
+
+  * fixed type size mismatches on 32-bit architectures in `Log::Value` and `Log::toFieldInfo` (used to be a compilation error).
 
 ## v1.1.0 (2018-10-10)
 another round date. ;)
