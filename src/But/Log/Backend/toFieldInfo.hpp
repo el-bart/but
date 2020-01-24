@@ -28,13 +28,15 @@ inline auto toFieldInfo(char               * v) { return FieldInfo{ Tag{"string"
 inline auto toFieldInfo(char const         * v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
 inline auto toFieldInfo(char       volatile* v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
 inline auto toFieldInfo(char const volatile* v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
+// char is a string as well
+inline auto toFieldInfo(char v)                 { return FieldInfo{ Tag{"string"}, Value{v} }; }
 
 // all signed numbers to be kept as just "int"
-inline auto toFieldInfo(char v)      { return FieldInfo{ Tag{"string"}, Value{v} }; }
-inline auto toFieldInfo(short v)     { return FieldInfo{ Tag{"int"}, Value{v} }; }
-inline auto toFieldInfo(int v)       { return FieldInfo{ Tag{"int"}, Value{v} }; }
-inline auto toFieldInfo(long v)      { return FieldInfo{ Tag{"int"}, Value{v} }; }
-inline auto toFieldInfo(long long v) { return FieldInfo{ Tag{"int"}, Value{v} }; }
+inline auto toFieldInfo(signed char v)        { return FieldInfo{ Tag{"int"}, Value{v} }; }
+inline auto toFieldInfo(signed short v)       { return FieldInfo{ Tag{"int"}, Value{v} }; }
+inline auto toFieldInfo(signed int v)         { return FieldInfo{ Tag{"int"}, Value{v} }; }
+inline auto toFieldInfo(signed long v)        { return FieldInfo{ Tag{"int"}, Value{v} }; }
+inline auto toFieldInfo(signed long long v)   { return FieldInfo{ Tag{"int"}, Value{v} }; }
 
 // all unsigned numbers to be kept as just "unsigned int"
 inline auto toFieldInfo(unsigned char v)      { return FieldInfo{ Tag{"unsigned int"}, Value{v} }; }

@@ -23,19 +23,20 @@ public:
   explicit Value(const bool b): v_{b} { }
 
   //Value(const int8_t i): Value{ static_cast<int64_t>(i) } { } // this is 'char' and thus 'string'...
-  explicit Value(const uint8_t ui): Value{ static_cast<uint64_t>(ui) } { }
+  explicit Value(const signed char i):     Value{ static_cast<signed long long>(i) }    { }
+  explicit Value(const unsigned char ui):  Value{ static_cast<unsigned long long>(ui) } { }
 
-  explicit Value(const int16_t i): Value{ static_cast<int64_t>(i) } { }
-  explicit Value(const uint16_t ui): Value{ static_cast<uint64_t>(ui) } { }
+  explicit Value(const signed short i):    Value{ static_cast<signed long long>(i) }    { }
+  explicit Value(const unsigned short ui): Value{ static_cast<unsigned long long>(ui) } { }
 
-  explicit Value(const int32_t i): Value{ static_cast<int64_t>(i) } { }
-  explicit Value(const uint32_t ui): Value{ static_cast<uint64_t>(ui) } { }
+  explicit Value(const signed int i):      Value{ static_cast<signed long long>(i) }    { }
+  explicit Value(const unsigned int ui):   Value{ static_cast<unsigned long long>(ui) } { }
 
-  explicit Value(const int64_t i): v_{i} { }
-  explicit Value(const uint64_t ui): v_{ui} { }
+  explicit Value(const signed long i):     Value{ static_cast<signed long long>(i) }    { }
+  explicit Value(const unsigned long ui):  Value{ static_cast<unsigned long long>(ui) } { }
 
-  explicit Value(const long long i): Value{ static_cast<int64_t>(i) } { }
-  explicit Value(const unsigned long long ui): Value{ static_cast<uint64_t>(ui) } { }
+  explicit Value(const signed long long i):    v_{ static_cast<int64_t>(i) }   { }
+  explicit Value(const unsigned long long ui): v_{ static_cast<uint64_t>(ui) } { }
 
   explicit Value(const float fp): Value{ static_cast<double>(fp) } { }
   explicit Value(const long double fp): Value{ static_cast<double>(fp) } { }

@@ -16,7 +16,7 @@ struct TestingVisitor
   void operator()(U const&) const
   {
     FAIL() << "expected type: " << boost::typeindex::type_id<T>().pretty_name() << " - "
-           << "got: " << boost::typeindex::type_id<U>().pretty_name();
+           << "got: "           << boost::typeindex::type_id<U>().pretty_name();
   }
 };
 
@@ -83,6 +83,7 @@ struct ButLogBackendValue: public testing::Test
 
 TEST_F(ButLogBackendValue, CheckBasicValues)
 {
+  checkSignedNum<signed char>();
   checkSignedNum<short>();
   checkSignedNum<int>();
   checkSignedNum<long>();
@@ -93,6 +94,16 @@ TEST_F(ButLogBackendValue, CheckBasicValues)
   checkUnsignedNum<unsigned int>();
   checkUnsignedNum<unsigned long>();
   checkUnsignedNum<unsigned long long>();
+
+  checkSignedNum<int8_t>();
+  checkSignedNum<int16_t>();
+  checkSignedNum<int32_t>();
+  checkSignedNum<int64_t>();
+
+  checkUnsignedNum<uint8_t>();
+  checkUnsignedNum<uint16_t>();
+  checkUnsignedNum<uint32_t>();
+  checkUnsignedNum<uint64_t>();
 
   checkFpNum<float>();
   checkFpNum<double>();
