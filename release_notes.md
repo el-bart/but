@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * fixed type size mismatches on 32-bit architectures in `Log::Value` and `Log::toFieldInfo` (used to be a compilation error).
   * GCC-6 dropped from CI and SDK.
   * fixed compilation problem with `gtest` and variadic macro expansion for type parametrized tests.
   * `nlohmann::json` v3 is now used instead of v2.
