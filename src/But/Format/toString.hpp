@@ -14,17 +14,17 @@ inline auto toString(char const* c) { return std::string{c}; }
 
 inline auto toString(const bool b) { return b ? "true" : "false"; }
 
-//inline auto toString(const int8_t i) { return std::to_string(i); }
-inline auto toString(const uint8_t ui) { return std::to_string(ui); }
+inline auto toString(const signed char i) { return std::to_string(i); }
+inline auto toString(const unsigned char ui) { return std::to_string(ui); }
 
-inline auto toString(const int16_t i) { return std::to_string(i); }
-inline auto toString(const uint16_t ui) { return std::to_string(ui); }
+inline auto toString(const signed short i) { return std::to_string(i); }
+inline auto toString(const unsigned short ui) { return std::to_string(ui); }
 
-inline auto toString(const int32_t i) { return std::to_string(i); }
-inline auto toString(const uint32_t ui) { return std::to_string(ui); }
+inline auto toString(const signed int i) { return std::to_string(i); }
+inline auto toString(const unsigned int ui) { return std::to_string(ui); }
 
-inline auto toString(const int64_t i) { return std::to_string(i); }
-inline auto toString(const uint64_t ui) { return std::to_string(ui); }
+inline auto toString(const long i) { return std::to_string(i); }
+inline auto toString(const unsigned long ui) { return std::to_string(ui); }
 
 inline auto toString(const long long i) { return std::to_string(i); }
 inline auto toString(const unsigned long long ui) { return std::to_string(ui); }
