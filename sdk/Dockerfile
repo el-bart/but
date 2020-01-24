@@ -1,4 +1,4 @@
-FROM debian:testing
+FROM debian:buster
 
 RUN apt-get update
 RUN apt-get dist-upgrade -y
