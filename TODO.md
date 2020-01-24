@@ -71,3 +71,4 @@
 * is it possible to evaluate `CONSTEXPR_ASSERT` in compile-time only, when doing non-debug build?
 * `Struct::PackedPointerVector<T>`, where pointers to over-1B-aligned types are bit packed (based on `BitPackedSequence`)
 * add test-coverage measuring build
+* add x86 (i.e. 32-bit) architecture to the CI
