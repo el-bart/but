@@ -6,7 +6,7 @@ following sections give a top-level overview on each part of the library.
 
 ## CI
 
-[![travis CI build status](https://travis-ci.org/el-bart/but.svg?branch=master)](https://travis-ci.org/el-bart/but)
+[![travis CI build status](https://travis-ci.org/el-bart/but.svg?branch=v1.1)](https://travis-ci.org/el-bart/but)
 
 download automated build of [BUT's SDK Docker image](https://hub.docker.com/r/baszerr/but-sdk/), with a command: `docker pull baszerr/but-sdk`.
 
