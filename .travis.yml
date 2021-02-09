@@ -20,7 +20,6 @@ env:
         - SCRIPT="build_gcc8_Relwithdebinfo_none"
         - SCRIPT="build_gcc7_Debug_none"
         - SCRIPT="build_gcc7_Release_none"
-        - SCRIPT="build_gcc6_Release_none"
         - SCRIPT="build_default-gcc_Debug_none"
         - SCRIPT="gnu_make"
         - SCRIPT="pic"
