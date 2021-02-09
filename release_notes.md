@@ -6,6 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+## v1.1.2 (TBD)
+  * GCC-6 support is dropped (it's no longer in Debian:10 repos).
+  * fixed clang compilation (empty `...` in macro).
+
 ## v1.1.1 (2020-01-24)
   * fixed type size mismatches on 32-bit architectures in `Log::Value` and `Log::toFieldInfo` (used to be a compilation error).
 
