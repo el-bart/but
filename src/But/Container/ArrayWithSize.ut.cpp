@@ -246,7 +246,8 @@ TEST_F(ButContainerArrayWithSize, CopyAsignmentOverwritesPreviousContent)
 TEST_F(ButContainerArrayWithSize, CopyAsignmentToSelfDoesNothing)
 {
   Sequence s{"test", "values"};
-  s = s;
+  auto *tmp = &s;   // workaorund for (otherwise reasonable) warning from clang, that we're assining to self
+  s = *tmp;
   ASSERT_EQ( s.size(), 2u );
   EXPECT_EQ( s[0], "test" );
   EXPECT_EQ( s[1], "values" );

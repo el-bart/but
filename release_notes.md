@@ -7,6 +7,7 @@ work in progress.
 this work is available on "master" branch, but has not yet been released.
 
 ## v1.1.2 (TBD)
+  * fixed warnings on clang-7.
   * removed old toolchains from build.
   * GCC-6 support is dropped (it's no longer in Debian:10 repos).
   * fixed clang compilation (empty `...` in macro).

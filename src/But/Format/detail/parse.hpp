@@ -101,7 +101,7 @@ constexpr auto parse(Pf&& pf, char const* fmt)
 
     pf.segments_.push_back( std::move(st) );
   }
-  return pf;
+  return std::move(pf);
 }
 
 
