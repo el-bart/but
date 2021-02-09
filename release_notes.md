@@ -14,6 +14,14 @@ this work is available on "master" branch, but has not yet been released.
   * `Container::ArrayWithSize::front()` added, for easier access.
   * `Container::BitPackedSequence::resize()` added (2 overloads, as in `std::vector`).
 
+## v1.1.2 (TBD)
+minor release fixing couple of issues on different compiler versions.
+
+  * fixed warnings on clang-7.
+  * removed old toolchains from build.
+  * GCC-6 support is dropped (it's no longer in Debian:10 repos).
+  * fixed clang compilation (empty `...` in macro).
+
 ## v1.1.1 (2020-01-24)
 minor release to fix 32-bit compilation bug.
 

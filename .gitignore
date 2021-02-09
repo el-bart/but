@@ -2,4 +2,6 @@ CMakeLists.txt.user
 .*swp
 .*swo
 *.pyc
+
 *.orig
+*~*
