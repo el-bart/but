@@ -5,12 +5,15 @@ services:
 env:
     global:
     matrix:
-        - SCRIPT="build_clang6_Debug_address"
-        - SCRIPT="build_clang6_Debug_thread"
-        - SCRIPT="build_clang6_Debug_undefined"
-        - SCRIPT="build_clang6_Profile_none"
+        - SCRIPT="build_clang7_Debug_address"
+        - SCRIPT="build_clang7_Debug_thread"
+        - SCRIPT="build_clang7_Debug_undefined"
+        - SCRIPT="build_clang7_Debug_none"
+        - SCRIPT="build_clang7_Profile_none"
+        - SCRIPT="build_clang7_Release_none"
+        - SCRIPT="build_clang7_Relwithdebinfo_none"
+        - SCRIPT="build_clang6_Debug_none"
         - SCRIPT="build_clang6_Release_none"
-        - SCRIPT="build_clang6_Relwithdebinfo_none"
         - SCRIPT="build_default-clang_Debug_none"
         - SCRIPT="build_gcc8_Debug_address"
         - SCRIPT="build_gcc8_Debug_thread"
