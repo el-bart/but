@@ -41,7 +41,7 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingActiveObject,
     );
 
 
-INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Std>);
-INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Boost>);
+INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Std>,);
+INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Boost>,);
 
 }
