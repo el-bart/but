@@ -7,6 +7,10 @@
 ## logger-related things
 
 * `Logger::withUniqueFields()` - same as `withFields()`, but auto-skipping duplicates.
+  * better enforce non-duplicate elements
+  * `tag()`ing should only add a new layer - not rename type itself!
+  * basic types are not allowed - always must be wrapped
+  * message is allowed only as a first parameter (but is optional)
 * consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
