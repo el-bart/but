@@ -29,7 +29,7 @@ env:
         - SCRIPT="pic"
 
 script:
-    - docker build -t but-sdk sdk/
+    - docker build -t but-sdk --cache-from baszerr/but-sdk sdk/
     - >
         docker run
         --rm
