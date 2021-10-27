@@ -4,12 +4,6 @@ Basic Utilities and Tools is a set of useful helper functions, that make program
 
 following sections give a top-level overview on each part of the library.
 
-## CI
-
-[![travis CI build status](https://travis-ci.org/el-bart/but.svg?branch=master)](https://travis-ci.org/el-bart/but)
-
-download automated build of [BUT's SDK Docker image](https://hub.docker.com/r/baszerr/but-sdk/), with a command: `docker pull baszerr/but-sdk`.
-
 
 ## basic content
 it is very useful when type safety is a must, but underlying type is already existing and working.
