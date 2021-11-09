@@ -1,4 +1,5 @@
 #pragma once
+#include <type_traits>
 #include <But/Optional.hpp>
 #include <But/assert.hpp>
 
@@ -9,7 +10,10 @@ template<typename F>
 class Guard final
 {
 public:
-  Guard(F&& f): f_{ std::forward<F>(f) } { }
+  static_assert( not std::is_reference<F>::value, "guard functors can only be kept by value" );
+
+  Guard(F const& f): f_{f} { }
+  Guard(F&& f): f_{ std::move(f) } { }
   ~Guard() noexcept
   {
     if(f_)
@@ -30,6 +34,6 @@ private:
 
 
 template<typename F>
-auto makeGuard(F&& f) { return Guard<F>{ std::forward<F>(f) }; }
+auto makeGuard(F&& f) { return Guard< typename std::remove_reference<F>::type >{ std::forward<F>(f) }; }
 
 }

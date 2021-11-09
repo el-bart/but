@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `Guard` is now explicit about holding functors by value only.
   * added `run_in_sdk` helper script to do docker-based build (using provided SDK).
   * fixed compilation problem with `gtest` and variadic macro expansion for type parametrized tests.
   * `nlohmann::json` v3 is now used instead of v2.
@@ -14,7 +15,7 @@ this work is available on "master" branch, but has not yet been released.
   * `Container::ArrayWithSize::front()` added, for easier access.
   * `Container::BitPackedSequence::resize()` added (2 overloads, as in `std::vector`).
 
-## v1.1.2 (TBD)
+## v1.1.2 (2021-02-10)
 minor release fixing couple of issues on different compiler versions.
 
   * fixed warnings on clang-7.

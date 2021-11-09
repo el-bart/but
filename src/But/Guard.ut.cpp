@@ -92,4 +92,46 @@ TEST_F(ButGuard, CreatingWithHelperFunction)
   EXPECT_EQ( 1, count );
 }
 
+
+TEST_F(ButGuard, PassingLvalueResultsInCopy)
+{
+  auto count = 0;
+  auto inc = [&] { ++count; };
+  {
+    auto g = makeGuard( inc );
+    EXPECT_EQ( 0, count );
+  }
+  EXPECT_EQ( 1, count );
+}
+
+
+TEST_F(ButGuard, PassingConstLvalueResultsInCopy)
+{
+  auto count = 0;
+  const auto inc = [&] { ++count; };
+  {
+    auto g = makeGuard( inc );
+    EXPECT_EQ( 0, count );
+  }
+  EXPECT_EQ( 1, count );
+}
+
+
+TEST_F(ButGuard, MovableFunctorIsMoved)
+{
+  auto count = 0;
+  struct Movable
+  {
+    void operator()() { }
+
+    int* count_;
+    std::unique_ptr<int> prt_{ std::make_unique<int>(42) };
+  };
+
+  {
+    auto g = makeGuard( Movable{&count} );
+    auto g2 = std::move(g);
+  }
+}
+
 }
