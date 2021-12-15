@@ -4,7 +4,7 @@ set -eu -o pipefail
 APP_DIR=$(dirname "$(readlink -e "$0")")
 cd "$APP_DIR"
 
-IMG="but_sdk:1.1"
+IMG="but_sdk"
 time docker build -t "$IMG" "sdk"
 
 time docker run \
