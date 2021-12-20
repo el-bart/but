@@ -54,6 +54,13 @@ TEST_F(ButLogDestinationCommonToJsonStream, EscapingNonprintableCharacters)
 }
 
 
+TEST_F(ButLogDestinationCommonToJsonStream, ReplaceInvalidUtf8Characters)
+{
+  toJsonStream( ss_, makeFieldInfo( std::string{char(0xFF)} ) );
+  EXPECT_EQ( ss_.str(), "{\"string\":\"\uFFFD\"}" );
+}
+
+
 TEST_F(ButLogDestinationCommonToJsonStream, SomeLogs)
 {
   toJsonStream( ss_, makeFieldInfo("answer", 42) );
