@@ -24,10 +24,8 @@ inline auto toFieldInfo(std::string v)  { return FieldInfo{ Tag{"string"}, Value
 //inline auto toFieldInfo(std::wstring v) { return FieldInfo{ Tag{"string"}, Value{ std::move(v) } }; }
 
 // all CV-qualified char* types are considered just string, for the sake of simplicity
-inline auto toFieldInfo(char               * v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
-inline auto toFieldInfo(char const         * v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
-inline auto toFieldInfo(char       volatile* v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
-inline auto toFieldInfo(char const volatile* v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
+inline auto toFieldInfo(char       * v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
+inline auto toFieldInfo(char const * v) { return FieldInfo{ Tag{"string"}, Value{v} }; }
 // char is a string as well
 inline auto toFieldInfo(char v)                 { return FieldInfo{ Tag{"string"}, Value{v} }; }
 
