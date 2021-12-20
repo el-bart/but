@@ -69,6 +69,8 @@ public:
   class BitProxy final
   {
   public:
+    BitProxy(BitProxy const&) = default;
+
     value_type operator=(value_type const& other)
     {
       BUT_ASSERT(c_);

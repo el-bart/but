@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * fixes for Clang-7 and  GCC-8 compilation.
   * dropped support `toFieldInfo()` for `volatile char` combinations.
   * `Guard` is now explicit about holding functors by value only.
   * added `run_in_sdk` helper script to do docker-based build (using provided SDK).

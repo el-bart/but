@@ -139,7 +139,7 @@ TEST_F(ButContainerUnorderedArray, RemovingMiddleElement)
   const std::vector<int> expected{ itFirst->number_, itLast->number_ };
   data_.erase(itMiddle);
   ASSERT_EQ( data_.size(), 2u );
-  for(const auto e: data_)
+  for(const auto& e: data_)
   {
     const auto cmp = [&e](const auto n) { return e.number_ == n; };
     EXPECT_TRUE( (std::find_if( std::begin(expected), std::end(expected), cmp ) != std::end(expected)) );
