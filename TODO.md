@@ -36,6 +36,8 @@
 * `toFieldInfo(array)`
 * consider auto-trimming leading `../` sequences inside filename, when logging filename via macro (can be a dedicated type, if needed)
 * consider splitting `toFieldInfo` into `toTag` and `toValue`.
+* streaming out `json` will throw if an invalid character will be spotted. create sanitizer, that will replace any non-UTF-8 character with a standard replacement character (U+FFFD).
+* allow UTF-8 in regular text console output (currently all non-ASCII characters are replaced with '.' symbol in console writing mode).
 
 ## improvements / new APIs
 * split build into core and dev
@@ -63,6 +65,8 @@
 * `ThreadPool::queueSize()` for listing enqueued elements count.
 * `But::Guard::trigger()` to trigger guard before d-tor is reached.
 * `BUT_ASSERT_ALWAYS()` for asserts that shall remain in release builds as well.
+* helper to check if UTF-8 sequence is valid ([utf-8 recovery overview](https://baszerr.eu/doku.php?id=blog:2020:04:24:2020-04-24_-_utf-8_recovery)).
+* helper to replace invalid UTF-8 characters from the sequence (similar code to "validator" above).
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)

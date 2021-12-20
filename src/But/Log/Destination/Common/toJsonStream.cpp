@@ -17,6 +17,7 @@ void toJsonStream(std::ostream& os, Backend::FieldInfo const& entry)
   // note that direct stream writing, like this:
   //   os << toJson(entry);
   // is NOT possible, as for invalid UTF-8 characters it will throw, effectively creating invalid log entry (cut in the middle).
+  // it will be possible to get back to direct stream writing, once provided with invalid UTF-8 characters replacer in string data.
   constexpr auto indent = -1;
   constexpr auto indentChar = ' ';
   constexpr auto ensureAscii = false;
