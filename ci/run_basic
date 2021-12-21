@@ -18,7 +18,7 @@ do
   mode=Debug
   san=address
   echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
+  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
 done
 
 
