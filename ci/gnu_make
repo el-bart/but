@@ -9,5 +9,5 @@ then
   exit 2
 fi
 
-export $BUT_GENERATOR="Unix Makefiles"
+export BUT_GENERATOR="make"
 exec "$app_dir/build" "gcc" "Debug" "none"

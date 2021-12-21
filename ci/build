@@ -6,7 +6,7 @@ root_dir="$app_dir/.."
 src_dir="$root_dir/src"
 build_dir="$root_dir/build"
 
-BUT_GENERATOR=${BUT_GENERATOR:-Ninja}
+BUT_GENERATOR=${BUT_GENERATOR:-ninja}
 
 if [ "$#" -ne 3 ]
 then
@@ -23,30 +23,46 @@ env
 echo "$app: `nproc` CPUs available"
 free -m
 
-out_dir="$build_dir/$toolchain/$mode/$sanitizer"
-mkdir -p "$out_dir"
-cd "$out_dir"
-
 cmake_flags=()
 cmake_flags+=("-DCMAKE_TOOLCHAIN_FILE=$src_dir/cmake/toolchains/${toolchain}.cmake")
 if [ "$sanitizer" != "none" ]
 then
   cmake_flags+=("-DBUT_SANITIZE=$sanitizer")
 fi
+extra_mode=""
 if [ -n "${BUT_ENABLE_PIC:+x}" ]
 then
   cmake_flags+=("-DBUT_ENABLE_PIC=ON")
+  extra_mode="pic-$extra_mode"
 fi
 cmake_flags+=("-DCMAKE_BUILD_TYPE=$mode")
 cmake_flags+=("-DBUT_ENABLE_TESTS=ON")
-cmake_flags+=(-G "$BUT_GENERATOR")
+case "$BUT_GENERATOR" in
+  "ninja")
+    cmake_flags+=(-G "Ninja")
+    build_cmd=(ninja all)
+  ;;
+  "make")
+    cmake_flags+=(-G "Unix Makefiles")
+    extra_mode="make-$extra_mode"
+    build_cmd=(make all "-j$(nproc)")
+  ;;
+  *)
+    echo "$app: unknown generator '$BUT_GENERATOR'" >&2
+    exit 3
+  ;;
+esac
+out_dir="$build_dir/${extra_mode}$toolchain/$mode/$sanitizer"
+mkdir -p "$out_dir"
+cd "$out_dir"
+
 echo "$app: configuring cmake"
 time timeout 5m \
   cmake "${cmake_flags[@]}" "$root_dir"
 
 echo "$app: building"
 time timeout 30m \
-  ninja all
+  "${build_cmd[@]}"
 
 echo "$app: self-testing sanitizers"
 case "$sanitizer" in
