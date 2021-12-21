@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-
+app=$(basename "$0")
 app_dir=$(dirname "$(readlink -e "$0")")
 root_dir="$app_dir/.."
 sdks_dir="$root_dir/sdk"
