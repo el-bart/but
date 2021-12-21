@@ -13,7 +13,8 @@ shift 1
 
 cd "$app_dir"
 
-docker build -t "$sdk" "sdk/$sdk/"
+img="but_sdk_$sdk"
+docker build -t "$img" "sdk/$sdk/"
 
 docker run \
   -it \
@@ -22,5 +23,5 @@ docker run \
   -u "$(id -u):$(id -g)" \
   -v "$PWD:/mnt" \
   -w "/mnt" \
-  "$sdk" \
+  "$img" \
   "$@"
