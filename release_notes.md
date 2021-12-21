@@ -6,6 +6,8 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * changed SDK concept, to have 1 SDK per toolchain (it's far more flexible).
+  * added `BUT_TYPED_TEST_SUITE_P` (and others) to cover gtest naming changes from `TYPED_TEST_CASE_P` to `TYPED_TEST_SUITE_P` in recent gtest releases.
   * fixes for Clang-7 and  GCC-8 compilation.
   * dropped support `toFieldInfo()` for `volatile char` combinations.
   * `Guard` is now explicit about holding functors by value only.
