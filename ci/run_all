@@ -12,14 +12,14 @@ runs=0
 failed=()
 
 # default toolchains with all modes and sanitizers
-for sdk in "${sdks[@]}"
+for sdk in gcc clang
 do
   for mode in Debug Release Profile Relwithdebinfo
   do
     for san in none address thread undefined
     do
-      echo "$app: BUILDING WITH SDK $sdk MODE $mode SANITIZER $san"
       ((++runs))
+      echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
       time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
     done
   done
@@ -31,8 +31,8 @@ do
   for mode in Debug Release
   do
     san=none
-    echo "$app: BUILDING WITH SDK $sdk MODE $mode SANITIZER $san"
     ((++runs))
+    echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
     time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
   done
 done
@@ -43,9 +43,9 @@ do
   sdk=gcc
   mode=Debug
   san=none
-  echo "$app: BUILDING SPECIAL $special WITH SDK $sdk MODE $mode SANITIZER $san"
   ((++runs))
-  time ./run_in_sdk "gcc" ./ci/"build_$special" || failed+=("$bs")
+  echo "$app: #$runs BUILD SPECIAL $special WITH SDK $sdk MODE $mode SANITIZER $san"
+  time ./run_in_sdk "$sdk" ./ci/"build_$special" "$sdk" "$mode" "$san" || failed+=("$bs")
 done
 
 
