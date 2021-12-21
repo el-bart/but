@@ -22,7 +22,6 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
   #endif()
 endif()
 
-
 # fix for gmock/gtest issue...
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function")
 
@@ -35,3 +34,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s") # strip binaries for GCC
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-noexcept-type") # remove nonhelpful warning
 endif()
+
+# include toolchain-specific flags (if present)
+get_filename_component(TC_FILE "${CMAKE_TOOLCHAIN_FILE}" NAME)
+include(cmake/flags/${TC_FILE} OPTIONAL)
