@@ -8,7 +8,11 @@
 
 using But::Container::BitPackedSequence;
 
+#if __GNUC__ == 10 || __GNUC__ == 9
+namespace ThisIsWorkaroundForBugInGccWhereProperOperatorIsNotFoundInUnnamedNamespaces
+#else
 namespace
+#endif
 {
 
 enum class Elem
