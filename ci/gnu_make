@@ -1,32 +1,13 @@
 #!/bin/bash
-set -ex
+set -eu -o pipefail
+app=$(basename "$0")
+app_dir=$(dirname "$(readlink -e "$0")")
 
-if [ "$1" == "--help"] || [ $# -ne 0 ] && [ $# -ne 1 ]
+if [ "$#" -ne 0 ]
 then
-  echo "$0 # no arguments, for default, incremental build"
-  echo "$0 {--clean-build}  # will remove destination dir, if present"
-  exit 1
+  echo "$app: script takes no arguments" >&2
+  exit 2
 fi
 
-
-APP_DIR=$(dirname "$(readlink -e "$0")")
-SRC_DIR=$(readlink -e "$APP_DIR/..")
-
-cd "$SRC_DIR/build/"
-BUILD_DIR="gnu-make"
-if [ $# -eq 1 ]
-then
-  if [ "$1" != "--clean-build" ]
-  then
-    exec "$0" "--help"
-  fi
-  rm -rfv "$BUILD_DIR"
-fi
-mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
-
-TCC="-DCMAKE_TOOLCHAIN_FILE=$SRC_DIR/src/cmake/toolchains/gcc.cmake"
-
-time cmake $TCC "-DCMAKE_BUILD_TYPE=Debug" "-DBUT_ENABLE_TESTS=ON" -G "Unix Makefiles" "$SRC_DIR"
-time make -j$(nproc) all
-time ctest -V
+export $BUT_GENERATOR="Unix Makefiles"
+exec "$app_dir/build" "gcc" "Debug" "none"
