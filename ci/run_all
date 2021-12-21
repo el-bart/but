@@ -30,8 +30,8 @@ for sdk in "${sdks[@]}"
 do
   for mode in Debug Release
   do
-    san=none
     ((++runs))
+    san=none
     echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
     time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
   done
@@ -40,10 +40,10 @@ done
 # extra cases
 for special in pic gnu_make
 do
+  ((++runs))
   sdk=gcc
   mode=Debug
   san=none
-  ((++runs))
   echo "$app: #$runs BUILD SPECIAL $special WITH SDK $sdk MODE $mode SANITIZER $san"
   time ./run_in_sdk "$sdk" ./ci/"build_$special" "$sdk" "$mode" "$san" || failed+=("$bs")
 done
