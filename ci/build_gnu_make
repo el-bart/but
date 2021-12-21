@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu -o pipefail
+app_dir=$(dirname "$(readlink -e "$0")")
+
+export BUT_GENERATOR="make"
+exec "$app_dir/build" "$@"
