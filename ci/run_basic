@@ -1,0 +1,37 @@
+#!/bin/bash
+set -e
+app=$(basename "$0")
+app_dir=$(dirname "$(readlink -e "$0")")
+root_dir="$app_dir/.."
+sdks_dir="$root_dir/sdk"
+cd "$root_dir"
+
+readarray -t sdks <<< $(cd "$sdks_dir" && ls)
+
+runs=0
+failed=()
+
+# basic build with all toolchains
+for sdk in "${sdks[@]}"
+do
+  ((++runs))
+  mode=Debug
+  san=address
+  echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
+  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
+done
+
+
+# summary
+if [ "${#failed[@]}" -gt 0 ]
+then
+  echo "$0: found ${#failed[@]} errors in total of $runs configurations:"
+  for cfg in "${failed[@]}"
+  do
+    echo -e "\t$cfg"
+  done
+  exit 1
+else
+  echo "$0: total of $runs runs - all successful"
+  exit 0
+fi
