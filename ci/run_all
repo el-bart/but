@@ -1,29 +1,64 @@
 #!/bin/bash
 set -e
 
-# enter project's root dir
-APP_DIR=$(dirname "$(readlink -e "$0")")
-cd "$APP_DIR"
+app_dir=$(dirname "$(readlink -e "$0")")
+root_dir="$app_dir/.."
+sdks_dir="$root_dir/sdk"
+cd "$root_dir"
 
-# all builds with ninja
-ERRORS=0
-RUNS=0
-FAILED=""
-for bs in build_* gnu_make pic
+readarray -t sdks <<< $(cd "$sdks_dir" && ls)
+
+runs=0
+failed=()
+
+# default toolchains with all modes and sanitizers
+for sdk in "${sdks[@]}"
 do
-  ((++RUNS))
-  time "./$bs" "$@" || { ((++ERRORS)) ; FAILED+=" $bs" ; }
+  for mode in Debug Release Profile Relwithdebinfo
+  do
+    for san in none address thread undefined
+    do
+      echo "$app: BUILDING WITH SDK $sdk MODE $mode SANITIZER $san"
+      ((++runs))
+      time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
+    done
+  done
 done
 
-if [ "$ERRORS" -gt 0 ]
+# basic build with all toolchains
+for sdk in "${sdks[@]}"
+do
+  for mode in Debug Release
+  do
+    san=none
+    echo "$app: BUILDING WITH SDK $sdk MODE $mode SANITIZER $san"
+    ((++runs))
+    time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$bs")
+  done
+done
+
+# extra cases
+for special in pic gnu_make
+do
+  sdk=gcc
+  mode=Debug
+  san=none
+  echo "$app: BUILDING SPECIAL $special WITH SDK $sdk MODE $mode SANITIZER $san"
+  ((++runs))
+  time ./run_in_sdk "gcc" ./ci/"build_$special" || failed+=("$bs")
+done
+
+
+# summary
+if [ "${#failed[@]}" -gt 0 ]
 then
-  echo "$0: found $ERRORS errors in total of $RUNS configurations:"
-  for cfg in $FAILED
+  echo "$0: found ${#failed[@]} errors in total of $runs configurations:"
+  for cfg in "${failed[@]}"
   do
     echo -e "\t$cfg"
   done
   exit 1
 else
-  echo "$0: total of $RUNS runs - all successful"
+  echo "$0: total of $runs runs - all successful"
   exit 0
 fi
