@@ -5,9 +5,9 @@
 #include <But/Threading/Policy/Std.hpp>
 #include <But/Threading/Policy/Boost.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>
+#include <But/gtest_compat.ut.hpp>
 
 using But::Threading::detail::waitForFuture;
-
 
 namespace
 {
@@ -18,7 +18,7 @@ struct ButThreadingActiveObject: public testing::Test
   But::Threading::ActiveObject<Policy> ao_;
 };
 
-TYPED_TEST_CASE_P(ButThreadingActiveObject);
+BUT_TYPED_TEST_SUITE_P(ButThreadingActiveObject);
 
 
 TYPED_TEST_P(ButThreadingActiveObject, ClosingRightAway)
@@ -35,13 +35,13 @@ TYPED_TEST_P(ButThreadingActiveObject, ProcessingIsRunningInSeparateThread)
 }
 
 
-REGISTER_TYPED_TEST_CASE_P(ButThreadingActiveObject,
+BUT_REGISTER_TYPED_TEST_SUITE_P(ButThreadingActiveObject,
         ClosingRightAway,
         ProcessingIsRunningInSeparateThread
     );
 
 
-INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Std>,);
-INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Boost>,);
+BUT_INSTANTIATE_TYPED_TEST_SUITE_P(Std,   ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Std>,);
+BUT_INSTANTIATE_TYPED_TEST_SUITE_P(Boost, ButThreadingActiveObject, ::testing::Types<But::Threading::Policy::Boost>,);
 
 }

@@ -6,6 +6,7 @@
 #include <But/Threading/Policy/Std.hpp>
 #include <But/Threading/Policy/Boost.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>
+#include <But/gtest_compat.ut.hpp>
 
 using But::Threading::ThreadsCount;
 using But::Threading::detail::waitForFuture;
@@ -23,7 +24,7 @@ struct ButThreadingThreadPool: public testing::Test
   ThreadPoolType tp_{ ThreadsCount{1} };
 };
 
-TYPED_TEST_CASE_P(ButThreadingThreadPool);
+BUT_TYPED_TEST_SUITE_P(ButThreadingThreadPool);
 
 
 
@@ -165,7 +166,7 @@ TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
 }
 
 
-REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
+BUT_REGISTER_TYPED_TEST_SUITE_P(ButThreadingThreadPool,
         ClosingRightAway,
         PassSomethingToProcess,
         ProcessingFunction,
@@ -180,10 +181,10 @@ REGISTER_TYPED_TEST_CASE_P(ButThreadingThreadPool,
     );
 
 
-INSTANTIATE_TYPED_TEST_CASE_P(Std,   ButThreadingThreadPool, ::testing::Types<ThreadPoolStd>,);
+BUT_INSTANTIATE_TYPED_TEST_SUITE_P(Std,   ButThreadingThreadPool, ::testing::Types<ThreadPoolStd>,);
 // TODO: there are data races in boost::thread, that occasionally blow up here...
 #if BOOST_VERSION > 106200
-INSTANTIATE_TYPED_TEST_CASE_P(Boost, ButThreadingThreadPool, ::testing::Types<ThreadPoolBoost>,);
+BUT_INSTANTIATE_TYPED_TEST_SUITE_P(Boost, ButThreadingThreadPool, ::testing::Types<ThreadPoolBoost>,);
 #endif
 
 }
