@@ -1,0 +1,87 @@
+#!/bin/bash
+set -eu -o pipefail
+app=$(basename "$0")
+app_dir=$(dirname "$(readlink -e "$0")")
+root_dir="$app_dir/.."
+src_dir="$root_dir/src"
+build_dir="$root_dir/build"
+
+BUT_GENERATOR=${BUT_GENERATOR:-Ninja}
+
+if [ "$#" -ne 3 ]
+then
+  echo "$app <toolchain> <mode> <sanitizer>" >&2
+  echo "$app {gcc[X],clang[X]} {Debug|Release|Profile|Relwithdebinfo} {none,address,thread,undefined}" >&2
+  exit 2
+fi
+toolchain=$1
+mode=$2
+sanitizer=$3
+shift 3
+
+env
+echo "$app: `nproc` CPUs available"
+free -m
+
+out_dir="$build_dir/$toolchain/$mode/$sanitizer"
+mkdir -p "$out_dir"
+cd "$out_dir"
+
+cmake_flags=()
+cmake_flags+=("-DCMAKE_TOOLCHAIN_FILE=$src_dir/cmake/toolchains/${toolchain}.cmake")
+if [ "$sanitizer" != "none" ]
+then
+  cmake_flags+=("-DBUT_SANITIZE=$sanitizer")
+fi
+if [ -n "${BUT_ENABLE_PIC:+x}" ]
+then
+  cmake_flags+=("-DBUT_ENABLE_PIC=ON")
+fi
+cmake_flags+=("-DCMAKE_BUILD_TYPE=$mode")
+cmake_flags+=("-DBUT_ENABLE_TESTS=ON")
+cmake_flags+=(-G "$BUT_GENERATOR")
+echo "$app: configuring cmake"
+time timeout 5m \
+  cmake "${cmake_flags[@]}" "$root_dir"
+
+echo "$app: building"
+time timeout 30m \
+  ninja all
+
+echo "$app: self-testing sanitizers"
+case "$sanitizer" in
+  "thread")
+    if ./src/but_testThreadSanitizer.manual &>/dev/null
+    then
+      echo "$app: thread sanitizer does not work"
+      exit 40
+    fi
+  ;;
+
+  "address")
+    if ./src/but_testLeak.manual &>/dev/null
+    then
+      echo "$app: address sanitizer does not work"
+      exit 41
+    fi
+    if ./src/but_testAddressSanitizer.manual &>/dev/null
+    then
+      echo "$app: address sanitizer does not work"
+      exit 42
+    fi
+  ;;
+
+  "undefined")
+    if ./src/but_testUndefinedBehaviorSanitizer.manual &>/dev/null
+    then
+      echo "$app: undefined behavior sanitizer does not work"
+      exit 43
+    fi
+  ;;
+esac
+
+echo "$app: running automated tests"
+time timeout 5m \
+  ctest -V
+
+echo "$app: all tests passed!"
