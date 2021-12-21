@@ -1,18 +1,26 @@
 #!/bin/bash
 set -eu -o pipefail
+app=$(basename "$0")
+app_dir=$(dirname "$(readlink -e "$0")")
 
-APP_DIR=$(dirname "$(readlink -e "$0")")
-cd "$APP_DIR"
+if [ $# -lt 1 ]
+then
+  echo "$app <sdk_name> [cmd [args..]]" >&2
+  exit 2
+fi
+sdk=$1
+shift 1
 
-IMG="but_sdk"
-time docker build -t "$IMG" "sdk"
+cd "$app_dir"
 
-time docker run \
+docker build -t "$sdk" "sdk/$sdk/"
+
+docker run \
   -it \
   --rm \
   --cap-add=SYS_PTRACE \
   -u "$(id -u):$(id -g)" \
   -v "$PWD:/mnt" \
   -w "/mnt" \
-  "$IMG" \
+  "$sdk" \
   "$@"
