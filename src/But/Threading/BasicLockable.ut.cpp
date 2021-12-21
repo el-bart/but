@@ -1,4 +1,5 @@
 #include <thread>
+#include <algorithm>
 #include <string>
 #include <gtest/gtest.h>
 #include <But/Threading/BasicLockable.hpp>
