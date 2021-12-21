@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <memory>
 #include <cctype>
 #include <But/Exception.hpp>
 
