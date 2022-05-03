@@ -21,7 +21,7 @@
 * `Log::Dst::BackgroundThread` - add overflow policy (drop oldest, drop new, block).
 * sub-second accuracy timestamp field.
 * add `destination` that would retry sending logs, according to a given setup (retry count, max wait time, etc...).
-* macros for logging: BUT_LOG_FILE/LINE/FUNCTION
+* macros for logging: `BUT_LOG_FILE`/`LINE`/`FUNCTION`
 * consider removing a restriction that `Log::Proxy` is not thread-safe.
 * update format, so that it does not need to be a first argument of the log.
 * cleanup Verbose* and Text* types of outputs, so that there is no code duplication and yet all combinations are covered.
@@ -38,6 +38,13 @@
 * consider splitting `toFieldInfo` into `toTag` and `toValue`.
 * streaming out `json` will throw if an invalid character will be spotted. create sanitizer, that will replace any non-UTF-8 character with a standard replacement character (U+FFFD).
 * allow UTF-8 in regular text console output (currently all non-ASCII characters are replaced with '.' symbol in console writing mode).
+* prepare API v2:
+  * `struct(v<k,v>)`
+  * `list(k,v<v>)`
+  * `toFieldType()`
+  * `toFieldValue()`
+  * `toFieldInfo()` convenience helper that uses `toFieldType` and `toFieldValue` internally
+  * `toFieldType()` shall return `std::string_view` to prevent early pessimisation (types that would actually require returning sth dynamic, can always use `static std::string` internally)
 
 ## improvements / new APIs
 * split build into core and dev
