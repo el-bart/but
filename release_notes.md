@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * `System::Descriptor` no longer calls `close(-1)` (while not required by POSIX, it can avoid a syscall and also silences Valgrind warning).
   * added per-toolchain flags support
   * added support for Clang versions: 9, 11
   * added support for GCC versions: 9, 10
