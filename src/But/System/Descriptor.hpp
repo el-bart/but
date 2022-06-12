@@ -13,7 +13,7 @@ public:
   using value_type = int;
 
   explicit Descriptor(const value_type desc = -1): desc_{desc} { }
-  ~Descriptor() { close(desc_); }
+  ~Descriptor() { reset(); }
 
   Descriptor(Descriptor const&) = delete;
   Descriptor& operator=(Descriptor const&) = delete;
