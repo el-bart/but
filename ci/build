@@ -11,7 +11,7 @@ BUT_GENERATOR=${BUT_GENERATOR:-ninja}
 if [ "$#" -ne 3 ]
 then
   echo "$app <toolchain> <mode> <sanitizer>" >&2
-  echo "$app {gcc[X],clang[X]} {Debug|Release|Profile|Relwithdebinfo} {none,address,thread,undefined}" >&2
+  echo "$app {gcc[X]|clang[X]} {Debug|Release|Profile|Relwithdebinfo} {none|address|thread|undefined}" >&2
   exit 2
 fi
 toolchain=$1
