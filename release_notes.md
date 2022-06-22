@@ -6,6 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * note that on some versions on gcc and clang, `thread` sanitizer may report errors when using `But::Thread::Event::wait()` with timeout.
+    `Event`'s implementation is fine. this is TSAN's bug:
+    - [gcc bug report](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101978)
+    - [clang bug report](https://github.com/google/sanitizers/issues/1259)
   * `System::Descriptor` no longer calls `close(-1)` (while not required by POSIX, it can avoid a syscall and also silences Valgrind warning).
   * added per-toolchain flags support
   * added support for Clang versions: 9, 11
