@@ -6,6 +6,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+## v1.2.0 (2022-07-10)
+set of minor features.
+final release of `1.x` series, before bigger changes planned for `2.0`.
+
   * note that on some versions on gcc and clang, `thread` sanitizer may report errors when using `But::Thread::Event::wait()` with timeout.
     `Event`'s implementation is fine. this is TSAN's bug:
     - [gcc bug report](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101978)
