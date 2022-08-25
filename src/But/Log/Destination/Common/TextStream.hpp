@@ -59,6 +59,8 @@ private:
   }
 
   std::mutex mutex_;
+  // TODO: consider std::osyncstream
+  // https://en.cppreference.com/w/cpp/io/basic_osyncstream
   std::ostream& os_;
   const std::string endline_{ endlineType() };
   const Backend::NonPrintableTrimmer trim_;
