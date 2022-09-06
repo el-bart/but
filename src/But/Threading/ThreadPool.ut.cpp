@@ -3,38 +3,31 @@
 #include <gtest/gtest.h>
 #include <But/Threading/Event.hpp>
 #include <But/Threading/ThreadPool.hpp>
-#include <But/Threading/Policy/Std.hpp>
-#include <But/Threading/Policy/Boost.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>
 #include <But/gtest_compat.ut.hpp>
 
 using But::Threading::ThreadsCount;
 using But::Threading::detail::waitForFuture;
-using ThreadPoolStd = But::Threading::ThreadPool<But::Threading::Policy::Std>;
-using ThreadPoolBoost = But::Threading::ThreadPool<But::Threading::Policy::Boost>;
 
 namespace
 {
 
-template<typename ThreadPoolType>
 struct ButThreadingThreadPool: public testing::Test
 {
-  using Type = ThreadPoolType;
-
-  ThreadPoolType tp_{ ThreadsCount{1} };
+  But::Threading::ThreadPool tp_{ ThreadsCount{1} };
 };
 
 BUT_TYPED_TEST_SUITE_P(ButThreadingThreadPool);
 
 
 
-TYPED_TEST_P(ButThreadingThreadPool, ClosingRightAway)
+TEST_F(ButThreadingThreadPool, ClosingRightAway)
 {
   // leave this empty
 }
 
 
-TYPED_TEST_P(ButThreadingThreadPool, PassSomethingToProcess)
+TEST_F(ButThreadingThreadPool, PassSomethingToProcess)
 {
   auto f = this->tp_.run( []{ return std::string{"narf"}; } );
   ASSERT_TRUE( waitForFuture(f) );
@@ -44,7 +37,7 @@ TYPED_TEST_P(ButThreadingThreadPool, PassSomethingToProcess)
 
 int getAnswer() { return 42; }
 
-TYPED_TEST_P(ButThreadingThreadPool, ProcessingFunction)
+TEST_F(ButThreadingThreadPool, ProcessingFunction)
 {
   auto f = this->tp_.run(getAnswer);
   ASSERT_TRUE( waitForFuture(f) );
@@ -60,7 +53,7 @@ struct MovableOnly
   int operator()() { return 997; }
 };
 
-TYPED_TEST_P(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
+TEST_F(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
 {
   auto f = this->tp_.run(MovableOnly{});
   ASSERT_TRUE( waitForFuture(f) );
@@ -68,7 +61,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ProcessingMovableOnlyFunctor)
 }
 
 
-TYPED_TEST_P(ButThreadingThreadPool, ForwardingException)
+TEST_F(ButThreadingThreadPool, ForwardingException)
 {
   auto f = this->tp_.run( []()->int { throw std::runtime_error{"expected"}; } );
   ASSERT_TRUE( waitForFuture(f) );
@@ -79,7 +72,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ForwardingException)
 template<int N>
 int getSth() { return N; }
 
-TYPED_TEST_P(ButThreadingThreadPool, MultipleCalls)
+TEST_F(ButThreadingThreadPool, MultipleCalls)
 {
   auto f0 = this->tp_.run(getSth<0>);
   auto f1 = this->tp_.run(getSth<1>);
@@ -95,7 +88,7 @@ TYPED_TEST_P(ButThreadingThreadPool, MultipleCalls)
 
 void doNothing() { }
 
-TYPED_TEST_P(ButThreadingThreadPool, NoReturnValueSmokeTest)
+TEST_F(ButThreadingThreadPool, NoReturnValueSmokeTest)
 {
   auto f = this->tp_.run(doNothing);
   ASSERT_TRUE( waitForFuture(f) );
@@ -104,18 +97,15 @@ TYPED_TEST_P(ButThreadingThreadPool, NoReturnValueSmokeTest)
 
 struct CustomExceptionType { };
 
-TYPED_TEST_P(ButThreadingThreadPool, ForwardingExceptionWithAnExactType)
+TEST_F(ButThreadingThreadPool, ForwardingExceptionWithAnExactType)
 {
-  // boost does not support this feature...
-  if( std::is_same<decltype(this->tp_), ThreadPoolBoost>::value )
-    return;
   auto f = this->tp_.run( []()->int { throw CustomExceptionType{}; } );
   ASSERT_TRUE( waitForFuture(f) );
   EXPECT_THROW( f.get(), CustomExceptionType );
 }
 
 
-TYPED_TEST_P(ButThreadingThreadPool, ProcessingIsRunningInSeparateThread)
+TEST_F(ButThreadingThreadPool, ProcessingIsRunningInSeparateThread)
 {
   auto f = this->tp_.run( []{ return std::this_thread::get_id(); } );
   ASSERT_TRUE( waitForFuture(f) );
@@ -123,7 +113,7 @@ TYPED_TEST_P(ButThreadingThreadPool, ProcessingIsRunningInSeparateThread)
 }
 
 
-TYPED_TEST_P(ButThreadingThreadPool, GettingThreadPoolSize)
+TEST_F(ButThreadingThreadPool, GettingThreadPoolSize)
 {
   using PoolType = decltype(this->tp_);
   EXPECT_EQ( 3u, PoolType{ ThreadsCount{3} }.size() );
@@ -131,7 +121,7 @@ TYPED_TEST_P(ButThreadingThreadPool, GettingThreadPoolSize)
 }
 
 
-TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
+TEST_F(ButThreadingThreadPool, RunningOnMultipleThreads)
 {
   constexpr auto count = 4u;
   using PoolType = decltype(this->tp_);
@@ -164,27 +154,5 @@ TYPED_TEST_P(ButThreadingThreadPool, RunningOnMultipleThreads)
   for(auto& id: uniqueIds)
     EXPECT_TRUE( id != std::this_thread::get_id() );
 }
-
-
-BUT_REGISTER_TYPED_TEST_SUITE_P(ButThreadingThreadPool,
-        ClosingRightAway,
-        PassSomethingToProcess,
-        ProcessingFunction,
-        ProcessingMovableOnlyFunctor,
-        ForwardingException,
-        MultipleCalls,
-        NoReturnValueSmokeTest,
-        ForwardingExceptionWithAnExactType,
-        ProcessingIsRunningInSeparateThread,
-        GettingThreadPoolSize,
-        RunningOnMultipleThreads
-    );
-
-
-BUT_INSTANTIATE_TYPED_TEST_SUITE_P(Std,   ButThreadingThreadPool, ::testing::Types<ThreadPoolStd>,);
-// TODO: there are data races in boost::thread, that occasionally blow up here...
-#if BOOST_VERSION > 106200
-BUT_INSTANTIATE_TYPED_TEST_SUITE_P(Boost, ButThreadingThreadPool, ::testing::Types<ThreadPoolBoost>,);
-#endif
 
 }

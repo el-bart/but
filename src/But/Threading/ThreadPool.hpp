@@ -12,13 +12,12 @@ namespace But
 namespace Threading
 {
 
-template<typename Policy>
 class ThreadPool final
 {
 public:
   template<typename T>
-  using promise_type = typename Policy::template promise_type<T>;
-  using thread_type = typename Policy::thread_type;
+  using promise_type = std::promise<T>;
+  using thread_type = std::thread;
 
   explicit ThreadPool(const ThreadsCount tc):
     quit_{false}
@@ -48,7 +47,7 @@ public:
   template<typename F>
   auto run(F f)
   {
-    auto cmd = std::make_unique< detail::Task<F,Policy> >( std::move(f) );
+    auto cmd = std::make_unique< detail::Task<F> >( std::move(f) );
     auto fut = cmd->promise_.get_future();
     {
       const Queue::lock_type lock{q_};
@@ -57,7 +56,7 @@ public:
     return fut;
   }
 
-  auto size() const { return threads_.size(); }
+  ThreadsCount::value_type size() const { return threads_.size(); }
 
 private:
   auto getCommand()

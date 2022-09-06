@@ -7,6 +7,7 @@ work in progress.
 this work is available on "master" branch, but has not yet been released.
 
   * C++17 is now new minimal version required.
+  * boost::thread support in But::Threading is now dropped (bugs, compatibility issues, not that relevant nowadays).
 
 ## v1.2.0 (2022-07-10)
 set of minor features.

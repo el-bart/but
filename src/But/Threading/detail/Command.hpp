@@ -1,4 +1,5 @@
 #pragma once
+#include <future>
 
 namespace But
 {
@@ -14,7 +15,7 @@ struct Command
 };
 
 
-template<typename F, typename Policy>
+template<typename F>
 struct Task final: public Command
 {
   explicit Task(F f): f_{ std::move(f) } { }
@@ -28,7 +29,7 @@ struct Task final: public Command
     }
     catch(...)
     {
-      promise_.set_exception( Policy::currentException() );
+      promise_.set_exception( std::current_exception() );
     }
   }
 
@@ -45,7 +46,7 @@ struct Task final: public Command
   }
 
   F f_;
-  typename Policy::template promise_type<decltype(f_())> promise_;
+  std::promise<decltype(f_())> promise_;
 
   using value_type = typename std::decay<decltype(f_())>::type;
 };

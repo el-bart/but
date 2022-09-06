@@ -6,7 +6,6 @@ namespace But
 namespace Threading
 {
 
-template<typename Policy>
 class ActiveObject final
 {
 public:
@@ -19,8 +18,7 @@ public:
   }
 
 private:
-  using PoolType = ThreadPool<Policy>;
-  PoolType tp_{ ThreadsCount{1} };
+  ThreadPool tp_{ ThreadsCount{1} };
 };
 
 }
