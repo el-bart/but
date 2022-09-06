@@ -6,6 +6,8 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * C++17 is now new minimal version required.
+
 ## v1.2.0 (2022-07-10)
 set of minor features.
 final release of `1.x` series, before bigger changes planned for `2.0`.
