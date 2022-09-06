@@ -9,6 +9,7 @@ this work is available on "master" branch, but has not yet been released.
   * C++17 is now new minimal version required.
   * `boost::thread` support in But::Threading is now dropped (bugs, compatibility issues, not that relevant nowadays).
   * `System::CpuTimer` added - wrapper around intrinsic for counting CPU cycles, for very precise time measurements.
+  * removed example integration with ELK stack - it was PoC only, not a production one.
 
 ## v1.2.0 (2022-07-10)
 set of minor features.
