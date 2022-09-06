@@ -1,7 +1,6 @@
 #include <limits>
 #include <typeinfo>
 #include <type_traits>
-#include <boost/exception/all.hpp>
 
 #include <gtest/gtest.h>
 #include <But/Exception.hpp>
@@ -142,28 +141,6 @@ TEST_F(ButException, ForwardingExactExceptionTypeWithStd)
     try
     {
       std::rethrow_exception( std::current_exception() );
-    }
-    catch(Sth const&)
-    {
-      return; // ok
-    }
-  }
-  FAIL() << "oops...";
-}
-
-
-TEST_F(ButException, ForwardingExactExceptionTypeWithBoost)
-{
-  BUT_DEFINE_EXCEPTION(Sth, Exception, "sth");
-  try
-  {
-    BUT_THROW(Sth, "test");
-  }
-  catch(...)
-  {
-    try
-    {
-      boost::rethrow_exception( boost::current_exception() );
     }
     catch(Sth const&)
     {
