@@ -12,6 +12,7 @@ this work is available on "master" branch, but has not yet been released.
   * removed example integration with ELK stack - it was PoC only, not a production one.
   * removed integration with `boost::enable_current_exception`, as C++ standard has now proper tools for a long time.
   * moved from `boost::filesystem` to `std::filesystem`.
+  * `But::Optional` is now based on `std::optional`.
 
 ## v1.2.0 (2022-07-10)
 set of minor features.

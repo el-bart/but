@@ -23,21 +23,21 @@ struct ButOptional: public testing::Test
 TEST_F(ButOptional, GettingValue)
 {
   Optional<std::string> opt{"test"};
-  EXPECT_EQ( "test", opt.get() );
+  EXPECT_EQ( "test", opt.value() );
 }
 
 
 TEST_F(ButOptional, ConstCorrectness)
 {
   const Optional<std::string> opt{"test"};
-  EXPECT_EQ( "test", opt.get() );
+  EXPECT_EQ( "test", opt.value() );
 }
 
 
 TEST_F(ButOptional, GettingRvalueFromTemporaryObject)
 {
   Optional<std::string> tmp{"test"};
-  std::string&& s = std::move(tmp).get();
+  std::string&& s = std::move(tmp).value();
   EXPECT_EQ("test", s);
 }
 
@@ -54,9 +54,9 @@ TEST_F(ButOptional, Copyable)
   Optional<std::string> o1{"one"};
   Optional<std::string> o2 = o1;
   Optional<std::string> o3{o1};
-  EXPECT_EQ( "one", o1.get() );
-  EXPECT_EQ( "one", o2.get() );
-  EXPECT_EQ( "one", o3.get() );
+  EXPECT_EQ( "one", o1.value() );
+  EXPECT_EQ( "one", o2.value() );
+  EXPECT_EQ( "one", o3.value() );
 }
 
 
@@ -84,7 +84,7 @@ TEST_F(ButOptional, MoveConstructible)
   EXPECT_FALSE(p1);
   EXPECT_FALSE(p2);
   ASSERT_TRUE(p3);
-  EXPECT_EQ( "ok", *p3.get() );
+  EXPECT_EQ( "ok", *p3.value() );
 }
 
 
@@ -112,7 +112,7 @@ TEST_F(ButOptional, MoveAssignable)
   p2 = std::move(p1);
   EXPECT_FALSE(p1);
   ASSERT_TRUE(p2);
-  EXPECT_EQ( "ok", *p2.get() );
+  EXPECT_EQ( "ok", *p2.value() );
 }
 
 
@@ -122,7 +122,7 @@ TEST_F(ButOptional, SelfMoveAssignmentIsIgnored)
   auto& ref = p;
   p = std::move(ref);
   EXPECT_TRUE(p);
-  EXPECT_EQ( "ok", *p.get() );
+  EXPECT_EQ( "ok", *p.value() );
 }
 
 
@@ -130,7 +130,7 @@ TEST_F(ButOptional, Resetable)
 {
   Optional<std::string> opt{"is set"};
   ASSERT_TRUE(opt);
-  EXPECT_EQ( "is set", opt.get() );
+  EXPECT_EQ( "is set", opt.value() );
   opt.reset();
   EXPECT_FALSE(opt);
 }
@@ -140,6 +140,13 @@ TEST_F(ButOptional, ExplicitlyBoolConvertible)
 {
   const Optional<int> opt{42};
   EXPECT_TRUE( static_cast<bool>(opt) );
+}
+
+
+TEST_F(ButOptional, HasValueMemberFunction)
+{
+  const Optional<int> opt{42};
+  EXPECT_TRUE( opt.has_value() );
 }
 
 
@@ -163,7 +170,7 @@ TEST_F(ButOptional, HelperMakeFunctionBaiscUseCase)
 {
   auto opt = makeOptional<std::string>("test");
   ASSERT_TRUE(opt);
-  EXPECT_EQ( "test", opt.get() );
+  EXPECT_EQ( "test", opt.value() );
 }
 
 

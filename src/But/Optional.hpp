@@ -1,13 +1,12 @@
 #pragma once
-#include <boost/optional.hpp>
+#include <optional>
 #include <But/assert.hpp>
 
 namespace But
 {
 
-/** @brief wrapper for boost::optional, that does not behave well in many releases of boost, namely:
- *         move-construction does not work, reference types can be accepted, bool() conversion is not explicit.
- *         these are mostly historical concenrs, but stil valid on older releases at least...
+/** @brief wrapper and a drop-in replacement for std::optional.
+ *         the biggest difference from std::optional is that But::Optional becomes empty, when moved from.
  */
 template<typename T>
 class Optional
@@ -50,29 +49,32 @@ public:
     t_.emplace( std::forward<Args>(args)... );
   }
 
-  explicit operator bool() const { return static_cast<bool>(t_); }
+  auto has_value() const { return static_cast<bool>(t_); }
+  explicit operator bool() const { return has_value(); }
 
-  T&& get() &&
+  T&& value() &&
   {
     BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
-    return std::move( t_.get() );
+    return std::move( t_.value() );
   }
-  T& get() &
+  T& value() &
   {
     BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
-    return t_.get();
+    return t_.value();
   }
-  T const& get() const &
+  T const& value() const &
   {
     BUT_ASSERT( static_cast<bool>(t_) && "optional is not set" );
-    return t_.get();
+    return t_.value();
   }
 
-  auto& operator*() { return get(); }
-  auto& operator*() const { return get(); }
+  // TODO: add value_or()
 
-  auto operator->() { return &get(); }
-  auto operator->() const { return &get(); }
+  auto& operator*() { return value(); }
+  auto& operator*() const { return value(); }
+
+  auto operator->() { return &value(); }
+  auto operator->() const { return &value(); }
 
   auto operator==(Optional const& rhs) const { return t_ == rhs.t_; }
   auto operator!=(Optional const& rhs) const { return t_ != rhs.t_; }
@@ -84,7 +86,7 @@ public:
   void reset() { t_.reset(); }
 
 private:
-  boost::optional<T> t_;
+  std::optional<T> t_;
 };
 
 
