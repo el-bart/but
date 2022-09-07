@@ -1,5 +1,5 @@
 #pragma once
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <But/Log/Backend/FieldInfo.hpp>
 
 namespace But
@@ -11,7 +11,7 @@ namespace Field
 
 struct FileName final
 {
-  boost::filesystem::path value_;
+  std::filesystem::path value_;
 };
 
 

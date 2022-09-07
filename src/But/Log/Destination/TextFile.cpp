@@ -1,4 +1,4 @@
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <But/Log/Destination/TextFile.hpp>
 
 namespace But
@@ -8,7 +8,7 @@ namespace Log
 namespace Destination
 {
 
-TextFile::TextFile(boost::filesystem::path path):
+TextFile::TextFile(std::filesystem::path path):
   Common::TextStream{file_},        // NOTE: not really used until the object is fully-constructed
   path_{ std::move(path) }
 {
@@ -18,9 +18,9 @@ TextFile::TextFile(boost::filesystem::path path):
 
 namespace
 {
-void createFileIfMissing(boost::filesystem::path const& path)
+void createFileIfMissing(std::filesystem::path const& path)
 {
-  if( boost::filesystem::exists(path) )
+  if( std::filesystem::exists(path) )
     return;
   constexpr auto mode = std::ios_base::in | std::ios_base::out | std::ios_base::trunc;
   std::fstream file{ path.string(), mode };

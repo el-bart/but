@@ -1,5 +1,5 @@
 #include <cstring>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <But/System/TempFile.hpp>
 
 namespace But
@@ -7,7 +7,7 @@ namespace But
 namespace System
 {
 
-TempFile::File TempFile::initialize(boost::filesystem::path const& tmp)
+TempFile::File TempFile::initialize(std::filesystem::path const& tmp)
 {
   const auto& str = tmp.string();
   std::unique_ptr<char[]> tmpStr{ new char[ str.length() + 1 + 9 + 1 ] };
@@ -15,13 +15,13 @@ TempFile::File TempFile::initialize(boost::filesystem::path const& tmp)
   Descriptor fd{ mkstemp( tmpStr.get() ) };
   if( not fd.opened() )
     BUT_THROW( CannotCreateTemporaryFile, "from " << tmp << ", failed: " << strerror(errno) );
-  return File{ boost::filesystem::path{ tmpStr.get() }, std::move(fd) };
+  return File{ std::filesystem::path{ tmpStr.get() }, std::move(fd) };
 }
 
 
 void TempFile::unlink()
 {
-  boost::filesystem::remove( path() );
+  std::filesystem::remove( path() );
 }
 
 }

@@ -13,7 +13,7 @@ namespace Destination
 class JsonFile final: public TextFile
 {
 public:
-  explicit JsonFile(boost::filesystem::path path): TextFile{ std::move(path) } { }
+  explicit JsonFile(std::filesystem::path path): TextFile{ std::move(path) } { }
 
 private:
   void toStreamFormat(std::ostream& os, Backend::FieldInfo const& fi) override;

@@ -1,8 +1,8 @@
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <gtest/gtest.h>
 #include <But/System/TempFile.hpp>
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 using But::System::TempFile;
 
 namespace
@@ -10,7 +10,7 @@ namespace
 
 struct ButSystemTempFile: public testing::Test
 {
-  const boost::filesystem::path nameTemplate_{"/tmp/but_test_temporary_file"};
+  const fs::path nameTemplate_{"/tmp/but_test_temporary_file"};
 };
 
 
@@ -26,8 +26,8 @@ TEST_F(ButSystemTempFile, FileIsCreated)
 TEST_F(ButSystemTempFile, FileHasProperPermissions)
 {
   const TempFile tmp{nameTemplate_};
-  EXPECT_EQ( 0600, fs::status( tmp.path() ).permissions() );
-
+  using std::filesystem::perms;
+  EXPECT_EQ( perms::owner_read | perms::owner_write, fs::status( tmp.path() ).permissions() );
   fs::remove( tmp.path() );
 }
 

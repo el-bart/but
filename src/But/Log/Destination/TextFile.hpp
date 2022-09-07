@@ -1,6 +1,6 @@
 #pragma once
 #include <fstream>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <But/Log/Destination/Common/TextStream.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Exception.hpp>
@@ -19,12 +19,12 @@ class TextFile: public Common::TextStream
 public:
   BUT_DEFINE_EXCEPTION(OpeningLogFileFailed, Exception, "opening log file failed");
 
-  explicit TextFile(boost::filesystem::path path);
+  explicit TextFile(std::filesystem::path path);
 
 private:
   void reloadImplUnderLock() override;
 
-  const boost::filesystem::path path_;
+  const std::filesystem::path path_;
   std::ofstream file_;
 };
 

@@ -3,13 +3,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/lexical_cast.hpp>
 #include <gtest/gtest.h>
 #include <But/System/Descriptor.hpp>
 #include <But/assert.hpp>
 
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 using But::System::Descriptor;
 
 namespace
