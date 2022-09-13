@@ -61,7 +61,7 @@ public:
   explicit Proxy(Destination dst): lpt_{ std::move(dst) } { }
   Proxy(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
 
-  /** @brief creates a single log entry, out of a given parameters.
+  /** @brief creates a single log entry, out of given parameters.
    */
   template<typename ...Args>
   void log(Args&& ...args) const noexcept
