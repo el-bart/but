@@ -8,7 +8,7 @@ include(cmake/coverage.cmake)
 add_library(but ${SOURCES_LIB})
 target_include_directories(but PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(but
-    boost_filesystem
+    stdc++fs
     boost_system
     pthread
 )
