@@ -7,36 +7,30 @@
 // to avoid it these some tests need to be disabled when running under TSAN, for affected compilers
 
 
+#if defined(__clang__)
+
 #if __clang__major__ <= 11
 // clang detection:
 // - https://github.com/google/sanitizers/wiki/ThreadSanitizerCppManual
 // - https://clang.llvm.org/docs/ThreadSanitizer.html
 #if defined(__has_feature)
 #if __has_feature(thread_sanitizer)
-#define BUT_THREAD_SANITIZER_ENABLED 1
+#define BUT_THREAD_SANITIZER_ENABLED
 #endif
 #endif
+#endif // clang version
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
-#define BUT_THREAD_SANITIZER_ENABLED 0
-#endif
 #endif // clang
 
+
+#if defined(__GNUC__)
 
 #if __GNUC__ <= 10
 // gcc detection:
 // - https://stackoverflow.com/questions/57499943/how-to-detect-thread-sanitizer-for-gcc-5
 #ifdef __SANITIZE_THREAD__
-#define BUT_THREAD_SANITIZER_ENABLED 1
+#define BUT_THREAD_SANITIZER_ENABLED
 #endif
+#endif // gcc version
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
-#define BUT_THREAD_SANITIZER_ENABLED 0
-#endif
 #endif // gcc
-
-
-// undefined compiler
-#ifndef BUT_THREAD_SANITIZER_ENABLED
-#warning your compiler is not recognized and BUT_THREAD_SANITIZER_ENABLED is not set
-#endif
