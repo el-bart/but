@@ -7,7 +7,7 @@
 // to avoid it these some tests need to be disabled when running under TSAN, for affected compilers
 
 
-#if defined(__clang__)
+#ifdef __clang__
 
 #if __clang__major__ <= 11
 // clang detection:
@@ -23,7 +23,7 @@
 #endif // clang
 
 
-#if defined(__GNUC__)
+#ifdef __GNUC__
 
 #if __GNUC__ <= 10
 // gcc detection:
