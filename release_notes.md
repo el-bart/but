@@ -13,7 +13,8 @@ this work is available on "master" branch, but has not yet been released.
   * removed integration with `boost::enable_current_exception`, as C++ standard has now proper tools for a long time.
   * moved from `boost::filesystem` to `std::filesystem`.
   * `But::Optional` is now based on `std::optional`.
-  * certain tests are now disabled for TSAN builds, due to bugs in TSAN itself (`BUT_THREAD_SANITIZER_ENABLED` test macro)
+  * certain tests are now disabled for TSAN builds, due to bugs in TSAN itself (`BUT_THREAD_SANITIZER_ENABLED` test macro).
+  * dropped support for gcc-7 due to lack of `std::filesystem` support.
 
 ## v1.2.0 (2022-07-10)
 set of minor features.
