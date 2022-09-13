@@ -12,7 +12,7 @@ namespace Format
 #define BUT_FORMAT(fmt) \
             BUT_FORMAT_DETAIL_FORMAT_COMPILETIME_IMPL( static_cast<char const*>(fmt), ((sizeof(fmt)/3+1)*2) )
 
-/** @brief compiletime-checked equivalent of BUT_FORMAT() macro.
+/** @brief runtime-checked equivalent of BUT_FORMAT() macro.
  */
 #define BUT_FORMAT_RUNTIME(fmt) \
             BUT_FORMAT_DETAIL_FORMAT_RUNTIME_IMPL(fmt)
