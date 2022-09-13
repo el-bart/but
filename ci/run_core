@@ -1,0 +1,71 @@
+#!/bin/bash
+set -e
+app=$(basename "$0")
+app_dir=$(dirname "$(readlink -e "$0")")
+root_dir="$app_dir/.."
+sdks_dir="$root_dir/sdk"
+cd "$root_dir"
+
+function select_latest
+{
+  local name=$1
+  shift 1
+  local latest_n=0
+  for sdk in "$@"
+  do
+    if ! grep -q "^$name[0-9]" <<< "$sdk"
+    then
+      continue
+    fi
+    local n=$(sed "s/^$name//" <<< "$sdk")
+    if [ "$n" -gt "$latest_n" ]
+    then
+      latest_n=$n
+    fi
+  done
+  echo "$name$latest_n"
+}
+
+readarray -t sdks <<< $(cd "$sdks_dir" && ls)
+
+runs=0
+failed=()
+
+# debug+ASAN build with latest toolchains
+for sdk in \
+  "$(select_latest "gcc"   "${sdks[@]}")" \
+  "$(select_latest "clang" "${sdks[@]}")"
+do
+  ((++runs))
+  mode=Debug
+  san=address
+  echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
+  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+done
+
+# release build with latest toolchains
+for sdk in \
+  "$(select_latest "gcc"   "${sdks[@]}")" \
+  "$(select_latest "clang" "${sdks[@]}")"
+do
+  ((++runs))
+  mode=Release
+  san=none
+  echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
+  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+done
+
+
+# summary
+if [ "${#failed[@]}" -gt 0 ]
+then
+  echo "$0: found ${#failed[@]} errors in total of $runs configurations:"
+  for cfg in "${failed[@]}"
+  do
+    echo -e "\t$cfg"
+  done
+  exit 1
+else
+  echo "$0: total of $runs runs - all successful"
+  exit 0
+fi
