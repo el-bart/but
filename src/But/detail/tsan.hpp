@@ -13,8 +13,12 @@
 // - https://clang.llvm.org/docs/ThreadSanitizer.html
 #if defined(__has_feature)
 #if __has_feature(thread_sanitizer)
-#define BUT_THREAD_SANITIZER_ENABLED
+#define BUT_THREAD_SANITIZER_ENABLED 1
 #endif
+#endif
+
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+#define BUT_THREAD_SANITIZER_ENABLED 0
 #endif
 #endif // clang
 
@@ -23,6 +27,16 @@
 // gcc detection:
 // - https://stackoverflow.com/questions/57499943/how-to-detect-thread-sanitizer-for-gcc-5
 #ifdef __SANITIZE_THREAD__
-#define BUT_THREAD_SANITIZER_ENABLED
+#define BUT_THREAD_SANITIZER_ENABLED 1
+#endif
+
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+#define BUT_THREAD_SANITIZER_ENABLED 0
 #endif
 #endif // gcc
+
+
+// undefined compiler
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+#warning your compiler is not recognized and BUT_THREAD_SANITIZER_ENABLED is not set
+#endif
