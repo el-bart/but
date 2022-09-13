@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <But/Threading/Event.hpp>
 #include <But/Threading/JoiningThread.hpp>
+#include <But/detail/tsan.hpp>
 
 using But::Threading::Event;
 
@@ -39,6 +40,7 @@ TEST_F(ButThreadingEvent, BlockedByDefault)
   EXPECT_EQ(v, "ok");
 }
 
+#ifndef BUT_THREAD_SANITIZER_ENABLED
 
 TEST_F(ButThreadingEvent, BlockedWithTimeout)
 {
@@ -75,5 +77,7 @@ TEST_F(ButThreadingEvent, TimeoutOnBlocking)
   EXPECT_FALSE( e_.wait( std::chrono::steady_clock::now() + std::chrono::seconds{0} ) );
   EXPECT_FALSE( e_.wait( std::chrono::seconds{0} ) );
 }
+
+#endif // BUT_THREAD_SANITIZER_ENABLED
 
 }

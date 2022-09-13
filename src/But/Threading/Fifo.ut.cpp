@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 #include <But/Threading/Fifo.hpp>
 #include <But/Threading/JoiningThread.hpp>
+#include <But/detail/tsan.hpp>
 
 using But::Threading::Fifo;
 using Thread = But::Threading::JoiningThread<std::thread>;
@@ -99,6 +100,8 @@ TEST_F(ButThreadingFifo, MovableOnlyObjects)
 }
 
 
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+
 TEST_F(ButThreadingFifo, WaitForElementAdditionWithTimeout)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
@@ -106,6 +109,8 @@ TEST_F(ButThreadingFifo, WaitForElementAdditionWithTimeout)
   ASSERT_TRUE( q_.waitForNonEmpty(lock, timeout_) );
   EXPECT_EQ( "narf", q_.top() );
 }
+
+#endif // BUT_THREAD_SANITIZER_ENABLED
 
 
 TEST_F(ButThreadingFifo, WaitForElementAddition)
@@ -117,6 +122,8 @@ TEST_F(ButThreadingFifo, WaitForElementAddition)
 }
 
 
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+
 TEST_F(ButThreadingFifo, WaitForElementRemovalWithTimeout)
 {
   Thread th{ [&]{ Q::lock_type lock{q_}; q_.push("narf"); } };
@@ -124,6 +131,8 @@ TEST_F(ButThreadingFifo, WaitForElementRemovalWithTimeout)
   ASSERT_TRUE( q_.waitForNonEmpty(lock, timeout_) );
   q_.pop();
 }
+
+#endif // BUT_THREAD_SANITIZER_ENABLED
 
 
 TEST_F(ButThreadingFifo, WaitForElementRemoval)
@@ -165,6 +174,8 @@ TEST_F(ButThreadingFifo, NonEmptyTimeoutWhenElementIsNotPresent)
 }
 
 
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+
 TEST_F(ButThreadingFifo, ProducerConsumer)
 {
   const auto count = 1000;
@@ -179,6 +190,8 @@ TEST_F(ButThreadingFifo, ProducerConsumer)
     std::this_thread::yield();
   }
 }
+
+#endif // BUT_THREAD_SANITIZER_ENABLED
 
 
 TEST_F(ButThreadingFifo, ExplicitWaitingForAddition)
@@ -210,6 +223,8 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeout)
 }
 
 
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+
 TEST_F(ButThreadingFifo, ExplicitWaitingForRemoval)
 {
   {
@@ -224,6 +239,8 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForRemoval)
   EXPECT_TRUE( q_.waitForSizeBelow(2, lock, timeout_) );
   EXPECT_EQ( 1u, q_.size() );
 }
+
+#endif // BUT_THREAD_SANITIZER_ENABLED
 
 
 TEST_F(ButThreadingFifo, ExplicitWaitingForRemovalWithZeroSizeAlwaysSucceeds)

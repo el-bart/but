@@ -5,6 +5,7 @@
 #include <But/Threading/ThreadPool.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>
 #include <But/gtest_compat.ut.hpp>
+#include <But/detail/tsan.hpp>
 
 using But::Threading::ThreadsCount;
 using But::Threading::detail::waitForFuture;
@@ -121,6 +122,8 @@ TEST_F(ButThreadingThreadPool, GettingThreadPoolSize)
 }
 
 
+#ifndef BUT_THREAD_SANITIZER_ENABLED
+
 TEST_F(ButThreadingThreadPool, RunningOnMultipleThreads)
 {
   constexpr auto count = 4u;
@@ -154,5 +157,7 @@ TEST_F(ButThreadingThreadPool, RunningOnMultipleThreads)
   for(auto& id: uniqueIds)
     EXPECT_TRUE( id != std::this_thread::get_id() );
 }
+
+#endif // BUT_THREAD_SANITIZER_ENABLED
 
 }
