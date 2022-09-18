@@ -14,8 +14,8 @@ set(SRC_DIRS
     But/Log
     But/Log/detail
     But/Log/Backend
-    But/Log/Backend/detail
     # TODO
+#    But/Log/Backend/detail
 #    But/Log/Destination
 #    But/Log/Destination/Common
 #    But/Log/Destination/detail

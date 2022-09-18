@@ -2,7 +2,6 @@
 #include <string>
 #include <cassert>
 #include <cstdint>
-#include "detail/EntryImplFwd.hpp"
 
 namespace But::Log::Backend
 {
@@ -18,6 +17,8 @@ struct EntryProxy
 
   EntryProxy(EntryProxy&&) = default;
   EntryProxy& operator=(EntryProxy&&) = default;
+
+  EntryProxy object(std::string_view name);
 
   void value(std::string_view name); // null
   void value(std::string_view name, bool v);
@@ -51,15 +52,9 @@ struct EntryProxy
 private:
   friend struct EntryRoot;
 
-  explicit EntryProxy(detail::EntryImpl* impl): impl_{impl} { assert(impl_); }
+  explicit EntryProxy(void* impl): impl_{impl} { assert(impl_); }
 
-  detail::EntryImpl& impl()
-  {
-    assert(impl_);
-    return *impl_;
-  }
-
-  detail::EntryImpl* impl_;
+  void* impl_;
 };
 
 }

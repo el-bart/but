@@ -1,13 +1,19 @@
 #include "EntryRoot.hpp"
-#include "detail/EntryImpl.hpp"
+#include <nlohmann/json.hpp>
 #include <cassert>
 
 
 namespace But::Log::Backend
 {
 
+struct EntryRoot::Impl
+{
+  nlohmann::json json_{ nlohmann::json::object() };
+};
+
+
 EntryRoot::EntryRoot():
-  impl_{ std::make_shared<detail::EntryImpl>() }
+  impl_{ std::make_shared<Impl>() }
 { }
 
 
@@ -28,8 +34,8 @@ std::string EntryRoot::json() const
 }
 
 
-EntryRoot::EntryRoot(detail::EntryImpl const& impl):
-  impl_{ std::make_shared<detail::EntryImpl>(impl) }
+EntryRoot::EntryRoot(Impl const& impl):
+  impl_{ std::make_shared<Impl>(impl) }
 { }
 
 }

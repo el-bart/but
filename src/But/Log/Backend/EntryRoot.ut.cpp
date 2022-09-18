@@ -125,4 +125,24 @@ TEST_F(ButLogBackendEntryRoot, AddingAllStringTypes)
          })", er_);
 }
 
+
+TEST_F(ButLogBackendEntryRoot, CreatingSubobjects)
+{
+  auto p = er_.proxy();
+  p.value("str", "data");
+  auto p2 = p.object("subobject");
+  p2.value("b", true);
+  p2.value("n", 42);
+
+  EXPECT_EQ_JSON(
+      R"({
+           "str": "data",
+           "subobject": {
+             "b": true,
+             "n": 42
+           }
+         })", er_);
+}
+
+
 }

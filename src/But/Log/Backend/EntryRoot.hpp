@@ -2,7 +2,6 @@
 #include <string>
 #include <memory>
 #include "EntryProxy.hpp"
-#include "detail/EntryImplFwd.hpp"
 
 
 namespace But::Log::Backend
@@ -27,9 +26,11 @@ struct EntryRoot
   std::string json() const;
 
 private:
-  explicit EntryRoot(detail::EntryImpl const& impl);
+  struct Impl;
 
-  std::shared_ptr<detail::EntryImpl> impl_;
+  explicit EntryRoot(Impl const& impl);
+
+  std::shared_ptr<Impl> impl_;
 };
 
 }
