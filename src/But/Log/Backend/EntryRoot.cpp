@@ -1,28 +1,40 @@
-#pragma once
 #include "EntryRoot.hpp"
 #include "detail/EntryImpl.hpp"
+#include <cassert>
 
 
 namespace But::Log::Backend
 {
 
-EntryPoint(): impl_{ std::make_shared<detail::EntryImpl>() } { }
+EntryRoot::EntryRoot():
+  impl_{ std::make_shared<detail::EntryImpl>() }
+{ }
 
 
-~EntryPoint() = default;
+EntryRoot::~EntryRoot() = default;
 
 
-EntryProxy proxy()
+EntryRoot EntryRoot::independencCopy() const
+{
+}
+
+
+EntryProxy EntryRoot::proxy()
 {
   // TODO
   throw 42;
 }
 
 
-std::string_view json() const
+std::string EntryRoot::json() const
 {
   // TODO
   throw 42;
 }
+
+
+EntryRoot::EntryRoot(detail::EntryImpl const& impl):
+  impl_{ std::make_shared<detail::EntryImpl>(impl) }
+{ }
 
 }

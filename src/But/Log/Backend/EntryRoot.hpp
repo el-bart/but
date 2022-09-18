@@ -1,11 +1,14 @@
 #pragma once
 #include <string>
 #include <memory>
+#include "EntryProxy.hpp"
 #include "detail/EntryImplFwd.hpp"
 
 
 namespace But::Log::Backend
 {
+
+struct EntryProxy;
 
 struct EntryRoot
 {
@@ -18,10 +21,14 @@ struct EntryRoot
   EntryRoot(EntryRoot&&) = default;
   EntryRoot& operator=(EntryRoot&&) = default;
 
+  EntryRoot independencCopy() const { return EntryRoot{*impl_}; }
+
   EntryProxy proxy();
-  std::string_view json() const;
+  std::string json() const;
 
 private:
+  explicit EntryRoot(detail::EntryImpl const& impl);
+
   std::shared_ptr<detail::EntryImpl> impl_;
 };
 
