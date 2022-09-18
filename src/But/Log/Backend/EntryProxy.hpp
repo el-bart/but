@@ -18,7 +18,16 @@ struct EntryProxy
   EntryProxy(EntryProxy&&) = default;
   EntryProxy& operator=(EntryProxy&&) = default;
 
+  // TODO: finish implemenattion, based on SFINAE
+  template<typename=hasFieldValue...>
+  void nest(auto& obj);
+  template<typename=hasFieldObject...>
+  void nest(auto& obj);
+  template<typename=hasFieldArray...>
+  void nest(auto& obj);
+
   EntryProxy object(std::string_view name);
+  // TODO: array
 
   void value(std::string_view name); // null
   void value(std::string_view name, bool v);
