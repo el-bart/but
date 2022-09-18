@@ -21,7 +21,7 @@ struct EntryRoot
   EntryRoot(EntryRoot&&) = default;
   EntryRoot& operator=(EntryRoot&&) = default;
 
-  EntryRoot independencCopy() const { return EntryRoot{*impl_}; }
+  EntryRoot independentCopy() const { return EntryRoot{*impl_}; }
 
   EntryProxy proxy();
   std::string json() const;

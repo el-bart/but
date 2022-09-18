@@ -22,9 +22,29 @@ auto unify(std::string const& in)
         EXPECT_EQ( unify(a), unify( b.json() ) )
 
 
-TEST_F(ButLogBackendEntryRoot, EmptyJsonByDefault)
+TEST_F(ButLogBackendEntryRoot, EmptyObjectByDefault)
 {
   EXPECT_EQ_JSON("{}", er_);
+}
+
+
+TEST_F(ButLogBackendEntryRoot, ImplObjectIsSharedByDefault)
+{
+  er_.proxy().value("n", 42);
+  auto er2 = er_;
+  er2.proxy().value("test", "all good");
+  EXPECT_EQ_JSON(R"({"test":"all good", "n": 42 })", er_);
+  EXPECT_EQ_JSON(R"({"test":"all good", "n": 42 })", er2);
+}
+
+
+TEST_F(ButLogBackendEntryRoot, IndependentCopyCanBeMadeExplicitly)
+{
+  er_.proxy().value("initial", true);
+  auto er2 = er_.independentCopy();
+  er2.proxy().value("test", "all good");
+  EXPECT_EQ_JSON(R"({"initial": true })", er_);
+  EXPECT_EQ_JSON(R"({"test":"all good", "initial": true })", er2);
 }
 
 
