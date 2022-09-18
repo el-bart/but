@@ -8,7 +8,8 @@ namespace But::Log::Backend
 
 struct EntryRoot::Impl
 {
-  nlohmann::json json_{ nlohmann::json::object() };
+  Impl() { json_ = nlohmann::json::object(); }  // apparently only this keeps both gcc and clang happy...
+  nlohmann::json json_;
 };
 
 

@@ -144,5 +144,4 @@ TEST_F(ButLogBackendEntryRoot, CreatingSubobjects)
          })", er_);
 }
 
-
 }
