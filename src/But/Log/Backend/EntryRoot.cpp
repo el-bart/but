@@ -14,11 +14,6 @@ EntryRoot::EntryRoot():
 EntryRoot::~EntryRoot() = default;
 
 
-EntryRoot EntryRoot::independencCopy() const
-{
-}
-
-
 EntryProxy EntryRoot::proxy()
 {
   // TODO
@@ -28,8 +23,8 @@ EntryProxy EntryRoot::proxy()
 
 std::string EntryRoot::json() const
 {
-  // TODO
-  throw 42;
+  assert(impl_);
+  return impl_->json_.dump();
 }
 
 

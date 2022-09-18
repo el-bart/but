@@ -8,7 +8,7 @@ namespace But::Log::Backend::detail
 
 struct EntryImpl
 {
-  nlohmann::json json_;
+  nlohmann::json json_{ nlohmann::json::object() };
 };
 
 }

@@ -10,6 +10,8 @@ struct EntryRoot;
 
 struct EntryProxy
 {
+  EntryProxy() = delete;
+
   EntryProxy(EntryProxy const&) = default;
   EntryProxy& operator=(EntryProxy const&) = default;
 
@@ -22,6 +24,12 @@ private:
   friend struct EntryProxy;
 
   explicit EntryProxy(detail::EntryImpl* impl): impl_{impl} { assert(impl_); }
+
+  detail::EntryImpl& impl()
+  {
+    assert(impl_);
+    return *impl_;
+  }
 
   detail::EntryImpl* impl_;
 };
