@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <json.hpp> // implementation detail! do NOT rely on this!
+#include <nlohmann/json.hpp> // implementation detail! do NOT rely on this!
 
 
 namespace But::Log::Backend::detail

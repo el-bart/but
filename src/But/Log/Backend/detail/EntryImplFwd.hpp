@@ -3,6 +3,6 @@
 namespace But::Log::Backend::detail
 {
 
-struct EntryImplFwd;
+struct EntryImpl;
 
 }
