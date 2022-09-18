@@ -16,8 +16,8 @@ EntryRoot::~EntryRoot() = default;
 
 EntryProxy EntryRoot::proxy()
 {
-  // TODO
-  throw 42;
+  assert(impl_);
+  return EntryProxy{ impl_.get() };
 }
 
 
