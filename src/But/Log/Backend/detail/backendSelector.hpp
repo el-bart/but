@@ -1,0 +1,51 @@
+#pragma once
+#include <type_traits>
+
+namespace But::Log::Backend
+{
+
+struct EntryProxy;
+
+namespace detail
+{
+
+template<typename T>
+struct HasFieldValue
+{
+  template<typename U, typename = decltype( fieldValue( std::declval<EntryProxy&>(), std::declval<U>() ) )>
+  static std::true_type test(int);
+
+  template <typename U>
+  static std::false_type test(...);
+
+  static constexpr bool value = decltype(test<T>(0))::value;
+};
+
+
+template<typename T>
+struct HasObjectValue
+{
+  template<typename U, typename = decltype( objectValue( std::declval<EntryProxy&>(), std::declval<U>() ) )>
+  static std::true_type test(int);
+
+  template <typename U>
+  static std::false_type test(...);
+
+  static constexpr bool value = decltype(test<T>(0))::value;
+};
+
+
+template<typename T>
+struct HasArrayValue
+{
+  template<typename U, typename = decltype( arrayValue( std::declval<EntryProxy&>(), std::declval<U>() ) )>
+  static std::true_type test(int);
+
+  template <typename U>
+  static std::false_type test(...);
+
+  static constexpr bool value = decltype(test<T>(0))::value;
+};
+
+}
+}
