@@ -12,7 +12,7 @@ namespace detail
 template<typename T>
 struct HasFieldValue
 {
-  template<typename U, typename = decltype( fieldValue( std::declval<EntryProxy&>(), std::declval<U>() ) )>
+  template<typename U, typename = decltype( fieldValue( std::declval<U>() ) )>
   static std::true_type test(int);
 
   template <typename U>

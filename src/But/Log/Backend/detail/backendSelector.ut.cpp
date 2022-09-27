@@ -17,7 +17,7 @@ struct ButLogBackendDetailBackendSelector: public testing::Test
 
 
 struct MyValue { };
-void fieldValue(EntryProxy&, MyValue const&);
+int fieldValue(MyValue const&);
 
 struct MyObject { };
 void objectValue(EntryProxy&, MyObject const&);
