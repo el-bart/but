@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdint>
 #include <But/Log/Backend/EntryArray.hpp>
+#include <But/Log/Backend/detail/backendSelector.hpp>
 
 namespace But::Log::Backend
 {
@@ -20,6 +21,28 @@ struct EntryProxy
   EntryProxy& operator=(EntryProxy&&) = default;
 
   // TODO: finish implemenattion, based on SFINAE
+  template<typename T>
+  void nest(T const& t)
+  {
+    auto name = fieldName( static_cast<T*>(nullptr) );
+    if constexpr ( detail::HasObjectValue<T>::value )
+    {
+      auto p = object( std::move(name) );
+      objectValue(p, t);
+    }
+    else
+      if constexpr ( detail::HasFieldValue<T>::value )
+        value( std::move(name), fieldValue(t) );
+      else
+        if constexpr ( detail::HasArrayValue<T>::value )
+        {
+          auto a = array( std::move(name) );
+          arrayValue(a, t);
+        }
+        else
+          static_assert(!"cannot nest type - missing coversion function" && sizeof(T));
+  }
+
   /*
   template<typename=hasFieldValue...>
   void nest(auto& obj);
@@ -71,3 +94,5 @@ private:
 };
 
 }
+
+#include <But/Log/Backend/EntryArray_impl.hpp>

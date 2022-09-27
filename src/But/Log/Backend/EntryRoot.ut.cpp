@@ -3,6 +3,8 @@
 #include <nlohmann/json.hpp>
 
 using But::Log::Backend::EntryRoot;
+using But::Log::Backend::EntryProxy;
+using But::Log::Backend::EntryArray;
 
 namespace
 {
@@ -201,7 +203,55 @@ TEST_F(ButLogBackendEntryRoot, CreatingSubarrays)
 }
 
 
-// TODO: ntesting objects
+struct Answer { int value_{}; };
+auto fieldName(Answer const*) { return std::string_view{"Answer"}; }
+auto fieldValue(Answer const& o) { return o.value_; }
+
+struct Aggregate
+{
+  int i_{};
+  std::string s_;
+};
+auto fieldName(Aggregate const*) { return std::string_view{"Aggregate"}; }
+void objectValue(EntryProxy& p, Aggregate const& o)
+{
+  p.value("i", o.i_);
+  p.value("s", o.s_);
+}
+
+struct SimpleCollection1
+{
+  std::vector<int> c_;
+};
+auto fieldName(SimpleCollection1 const*) { return std::string_view{"SimpleCollection1"}; }
+void arrayValue(EntryArray& p, SimpleCollection1 const& o)
+{
+  for(auto e: o.c_)
+    p.value(e);
+}
+
+struct SimpleCollection2
+{
+  std::vector<int> c_;
+};
+auto fieldName(SimpleCollection2 const*) { return std::string_view{"SimpleCollection2"}; }
+void arrayValue(EntryArray& p, SimpleCollection2 const& o) { p.add(o.c_); }
+
+TEST_F(ButLogBackendEntryRoot, CreatingObjectsViaNesting)
+{
+  auto p = er_.proxy();
+  p.nest( Answer{42} );
+  p.nest( Aggregate{ 13, "foo" } );
+  p.nest( SimpleCollection1{ {13, 42, 666} } );
+  p.nest( SimpleCollection2{ {997, 10} } );
+  EXPECT_EQ_JSON(
+      R"({
+           "Answer": 42,
+           "Aggregate": { "i": 13, "s": "foo" },
+           "SimpleCollection1": [ 13, 42, 666 ],
+           "SimpleCollection2": [ 997, 10 ]
+         })", er_);
+}
 
 // TODO: ntesting arrays
 

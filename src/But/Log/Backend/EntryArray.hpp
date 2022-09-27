@@ -2,6 +2,7 @@
 #include <string>
 #include <cassert>
 #include <cstdint>
+#include <But/Log/Backend/detail/backendSelector.hpp>
 
 namespace But::Log::Backend
 {
@@ -18,15 +19,16 @@ struct EntryArray
   EntryArray(EntryArray&&) = default;
   EntryArray& operator=(EntryArray&&) = default;
 
-  // TODO: finish implemenattion, based on SFINAE
-  /*
-  template<typename=hasFieldValue...>
-  void nest(auto& obj);
-  template<typename=hasFieldObject...>
-  void nest(auto& obj);
-  template<typename=hasFieldArray...>
-  void nest(auto& obj);
-  */
+  template<typename T>
+  void nest(T const& t);
+
+  template<typename C>
+  void add(C const& c)
+  {
+    for(auto const& e: c)
+      nest(e);
+  }
+  // TODO: add(begin, end)
 
   EntryProxy object();
   EntryArray array();
