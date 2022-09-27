@@ -4,6 +4,7 @@
 
 using But::Log::Backend::EntryRoot;
 using But::Log::Backend::EntryProxy;
+using But::Log::Backend::EntryArray;
 namespace D = But::Log::Backend::detail;
 
 namespace
@@ -23,7 +24,7 @@ struct MyObject { };
 void objectValue(EntryProxy&, MyObject const&);
 
 struct MyArray { };
-void arrayValue(EntryProxy&, MyArray const&);
+void arrayValue(EntryArray&, MyArray const&);
 
 
 TEST_F(ButLogBackendDetailBackendSelector, CheckValue)
@@ -54,7 +55,7 @@ struct MyObjectV { };
 void objectValue(EntryProxy, MyObjectV const&); // note: EntryProxy is passed by value
 
 struct MyArrayV { };
-void arrayValue(EntryProxy, MyArrayV const&);   // note: EntryProxy is passed by value
+void arrayValue(EntryArray, MyArrayV const&);   // note: EntryProxy is passed by value
 
 
 TEST_F(ButLogBackendDetailBackendSelector, CheckObjectV)
