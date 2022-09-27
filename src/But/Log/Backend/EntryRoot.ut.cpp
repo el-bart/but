@@ -219,6 +219,19 @@ void objectValue(EntryProxy& p, Aggregate const& o)
   p.value("s", o.s_);
 }
 
+TEST_F(ButLogBackendEntryRoot, CreatingObjectsViaNesting)
+{
+  auto p = er_.proxy();
+  p.nest( Answer{42} );
+  p.nest( Aggregate{ 13, "foo" } );
+  EXPECT_EQ_JSON(
+      R"({
+           "Answer": 42,
+           "Aggregate": { "i": 13, "s": "foo" }
+         })", er_);
+}
+
+
 struct SimpleCollection1
 {
   std::vector<int> c_;
@@ -237,22 +250,37 @@ struct SimpleCollection2
 auto fieldName(SimpleCollection2 const*) { return std::string_view{"SimpleCollection2"}; }
 void arrayValue(EntryArray& p, SimpleCollection2 const& o) { p.add(o.c_); }
 
-TEST_F(ButLogBackendEntryRoot, CreatingObjectsViaNesting)
+struct SimpleCollection3
+{
+  std::vector<int> c_;
+};
+auto fieldName(SimpleCollection3 const*) { return std::string_view{"SimpleCollection3"}; }
+void arrayValue(EntryArray& p, SimpleCollection3 const& o) { p.add( o.c_.begin(), o.c_.end() ); }
+
+struct ObjectsCollection
+{
+  std::vector<Aggregate> c_;
+};
+auto fieldName(ObjectsCollection const*) { return std::string_view{"ObjectsCollection"}; }
+void arrayValue(EntryArray& p, ObjectsCollection const& o) { p.add(o.c_); }
+
+TEST_F(ButLogBackendEntryRoot, CreatingArraysViaNesting)
 {
   auto p = er_.proxy();
-  p.nest( Answer{42} );
-  p.nest( Aggregate{ 13, "foo" } );
   p.nest( SimpleCollection1{ {13, 42, 666} } );
   p.nest( SimpleCollection2{ {997, 10} } );
+  p.nest( SimpleCollection3{ {1, 2, 3} } );
+  p.nest( ObjectsCollection{ { Aggregate{13, "doh"}, Aggregate{42, "answer"} } } );
   EXPECT_EQ_JSON(
       R"({
-           "Answer": 42,
-           "Aggregate": { "i": 13, "s": "foo" },
            "SimpleCollection1": [ 13, 42, 666 ],
-           "SimpleCollection2": [ 997, 10 ]
+           "SimpleCollection2": [ 997, 10 ],
+           "SimpleCollection3": [ 1, 2, 3 ],
+           "ObjectsCollection": [
+             { "i": 13, "s": "doh" },
+             { "i": 42, "s": "answer" }
+           ]
          })", er_);
 }
-
-// TODO: ntesting arrays
 
 }

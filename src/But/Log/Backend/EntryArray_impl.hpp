@@ -1,5 +1,5 @@
-// this header should not be included directly in client code!
-// it's here as a workarund for a GCC bug.
+// this header should not be included directly by client code.
+// it's here as a workarund for a GCC bug...
 #pragma once
 
 namespace But::Log::Backend

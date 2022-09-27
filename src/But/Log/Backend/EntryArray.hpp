@@ -25,10 +25,16 @@ struct EntryArray
   template<typename C>
   void add(C const& c)
   {
-    for(auto const& e: c)
-      nest(e);
+    using std::begin;
+    using std::end;
+    add( begin(c), end(c) );
   }
-  // TODO: add(begin, end)
+  template<typename It>
+  void add(It from, It to)
+  {
+    for(It it=from; it!=to; ++it)
+      nest(*it);
+  }
 
   EntryProxy object();
   EntryArray array();
@@ -59,8 +65,6 @@ struct EntryArray
   void value(char (&v)[N])       { value(std::string_view{v}); }
   template<size_t N>
   void value(char const (&v)[N]) { value(std::string_view{v}); }
-
-  // TODO: adding elements goes here
 
 private:
   friend struct EntryProxy;

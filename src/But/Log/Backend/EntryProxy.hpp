@@ -20,7 +20,6 @@ struct EntryProxy
   EntryProxy(EntryProxy&&) = default;
   EntryProxy& operator=(EntryProxy&&) = default;
 
-  // TODO: finish implemenattion, based on SFINAE
   template<typename T>
   void nest(T const& t)
   {
@@ -42,15 +41,6 @@ struct EntryProxy
         else
           static_assert(!"cannot nest type - missing coversion function" && sizeof(T));
   }
-
-  /*
-  template<typename=hasFieldValue...>
-  void nest(auto& obj);
-  template<typename=hasFieldObject...>
-  void nest(auto& obj);
-  template<typename=hasFieldArray...>
-  void nest(auto& obj);
-  */
 
   EntryProxy object(std::string_view name);
   EntryArray array(std::string_view name);
@@ -82,8 +72,6 @@ struct EntryProxy
   template<size_t N>
   void value(std::string_view name, char const (&v)[N]) { value(name, std::string_view{v}); }
 
-  // TODO: adding elements goes here
-
 private:
   friend struct EntryRoot;
   friend struct EntryArray;
@@ -95,4 +83,5 @@ private:
 
 }
 
+// GCC bug workaround - keep it here
 #include <But/Log/Backend/EntryArray_impl.hpp>
