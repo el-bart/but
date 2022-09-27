@@ -1,13 +1,15 @@
 #pragma once
 #include <string>
 #include <memory>
-#include "EntryProxy.hpp"
-
+#include <But/Log/Backend/EntryProxy.hpp>
 
 namespace But::Log::Backend
 {
 
 struct EntryProxy;
+
+namespace detail
+{
 
 struct EntryRoot
 {
@@ -33,4 +35,5 @@ private:
   std::shared_ptr<Impl> impl_;
 };
 
+}
 }

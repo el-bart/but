@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include <But/Log/Backend/EntryRoot.hpp>
+#include <But/Log/Backend/detail/EntryRoot.hpp>
 #include <nlohmann/json.hpp>
 
-using But::Log::Backend::EntryRoot;
+using But::Log::Backend::detail::EntryRoot;
 using But::Log::Backend::EntryProxy;
 using But::Log::Backend::EntryArray;
 

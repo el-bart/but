@@ -8,7 +8,10 @@
 namespace But::Log::Backend
 {
 
+namespace detail
+{
 struct EntryRoot;
+}
 
 struct EntryProxy
 {
@@ -73,7 +76,7 @@ struct EntryProxy
   void value(std::string_view name, char const (&v)[N]) { value(name, std::string_view{v}); }
 
 private:
-  friend struct EntryRoot;
+  friend struct detail::EntryRoot;
   friend struct EntryArray;
 
   explicit EntryProxy(void* impl): impl_{impl} { assert(impl_); }

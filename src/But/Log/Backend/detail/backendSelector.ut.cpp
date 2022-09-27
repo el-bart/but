@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <But/Log/Backend/detail/backendSelector.hpp>
-#include <But/Log/Backend/EntryRoot.hpp>
+#include <But/Log/Backend/EntryProxy.hpp>
+#include <But/Log/Backend/EntryArray.hpp>
 
-using But::Log::Backend::EntryRoot;
 using But::Log::Backend::EntryProxy;
 using But::Log::Backend::EntryArray;
 namespace D = But::Log::Backend::detail;
@@ -12,8 +12,6 @@ namespace
 
 struct ButLogBackendDetailBackendSelector: public testing::Test
 {
-  EntryRoot er_;
-  EntryProxy ep_{ er_.proxy() };
 };
 
 
