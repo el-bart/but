@@ -49,4 +49,25 @@ TEST_F(ButLogBackendDetailBackendSelector, CheckArray)
   EXPECT_TRUE(  D::HasArrayValue<MyArray >::value );
 }
 
+
+struct MyObjectV { };
+void objectValue(EntryProxy, MyObjectV const&); // note: EntryProxy is passed by value
+
+struct MyArrayV { };
+void arrayValue(EntryProxy, MyArrayV const&);   // note: EntryProxy is passed by value
+
+
+TEST_F(ButLogBackendDetailBackendSelector, CheckObjectV)
+{
+  EXPECT_TRUE(  D::HasObjectValue<MyObjectV>::value );
+  EXPECT_FALSE( D::HasObjectValue<MyArrayV >::value );
+}
+
+
+TEST_F(ButLogBackendDetailBackendSelector, CheckArrayV)
+{
+  EXPECT_FALSE( D::HasArrayValue<MyObjectV>::value );
+  EXPECT_TRUE(  D::HasArrayValue<MyArrayV >::value );
+}
+
 }
