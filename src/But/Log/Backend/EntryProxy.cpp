@@ -20,6 +20,15 @@ EntryProxy EntryProxy::object(std::string_view name)
   return EntryProxy{&so};
 }
 
+
+EntryArray EntryProxy::array(std::string_view name)
+{
+  auto& sa = j(impl_)[ std::string{name} ];
+  sa = nlohmann::json::array();
+  return EntryArray{&sa};
+}
+
+
 void EntryProxy::value(std::string_view name)                     { j(impl_)[ std::string{name} ] = nullptr; }
 void EntryProxy::value(std::string_view name, bool v)             { j(impl_)[ std::string{name} ] = v; }
 void EntryProxy::value(std::string_view name, std::string_view v) { j(impl_)[ std::string{name} ] = std::string{v}; }

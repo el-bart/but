@@ -144,4 +144,65 @@ TEST_F(ButLogBackendEntryRoot, CreatingSubobjects)
          })", er_);
 }
 
+
+TEST_F(ButLogBackendEntryRoot, CreatingSubarrays)
+{
+  auto p = er_.proxy();
+  {
+    auto a = p.array("bools");
+    a.value(true);
+    a.value(false);
+  }
+  {
+    auto a = p.array("ints");
+    a.value(int8_t{1});
+    a.value(uint8_t{2});
+    a.value(int16_t{3});
+    a.value(uint16_t{4});
+    a.value(int32_t{5});
+    a.value(uint32_t{6});
+    a.value(int64_t{7});
+    a.value(uint64_t{8});
+  }
+  {
+    auto a = p.array("floats");
+    a.value(float{1.5});
+    a.value(double{2.72});
+  }
+  {
+    auto a = p.array("strings");
+    a.value( "cstr" );
+    a.value( static_cast<char const*>("cstr ptr") );
+    {
+      char s[] = "non-const";
+      a.value(s);
+    }
+    {
+      char s[] = "non-const ptr";
+      a.value( static_cast<char*>(s) );
+    }
+    a.value( std::string{"string"} );
+    a.value( std::string_view{"string_view"} );
+  }
+  {
+    auto a = p.array("misc");
+    a.object();
+    a.array();
+  }
+
+  EXPECT_EQ_JSON(
+      R"({
+           "bools": [ true, false ],
+           "ints": [ 1,2,3,4,5,6,7,8 ],
+           "floats": [ 1.5, 2.72 ],
+           "strings": [ "cstr", "cstr ptr", "non-const", "non-const ptr", "string", "string_view" ],
+           "misc": [ {}, [] ]
+         })", er_);
+}
+
+
+// TODO: ntesting objects
+
+// TODO: ntesting arrays
+
 }

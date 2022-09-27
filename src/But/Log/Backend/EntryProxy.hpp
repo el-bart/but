@@ -2,6 +2,7 @@
 #include <string>
 #include <cassert>
 #include <cstdint>
+#include <But/Log/Backend/EntryArray.hpp>
 
 namespace But::Log::Backend
 {
@@ -19,15 +20,17 @@ struct EntryProxy
   EntryProxy& operator=(EntryProxy&&) = default;
 
   // TODO: finish implemenattion, based on SFINAE
+  /*
   template<typename=hasFieldValue...>
   void nest(auto& obj);
   template<typename=hasFieldObject...>
   void nest(auto& obj);
   template<typename=hasFieldArray...>
   void nest(auto& obj);
+  */
 
   EntryProxy object(std::string_view name);
-  // TODO: array
+  EntryArray array(std::string_view name);
 
   void value(std::string_view name); // null
   void value(std::string_view name, bool v);
@@ -60,6 +63,7 @@ struct EntryProxy
 
 private:
   friend struct EntryRoot;
+  friend struct EntryArray;
 
   explicit EntryProxy(void* impl): impl_{impl} { assert(impl_); }
 
