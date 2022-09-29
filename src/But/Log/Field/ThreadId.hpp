@@ -1,6 +1,6 @@
 #pragma once
 #include <thread>
-#include <But/Log/Backend/FieldInfo.hpp>
+#include <string>
 
 namespace But
 {
@@ -14,7 +14,8 @@ struct ThreadId final
   std::thread::id value_{ std::this_thread::get_id() };
 };
 
-Backend::FieldInfo toFieldInfo(ThreadId const& tid);
+inline auto fieldName(ThreadId const*) { return std::string_view{"But::ThreadId"}; }
+std::string fieldValue(ThreadId const& tid);
 
 }
 }

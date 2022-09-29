@@ -1,26 +1,24 @@
 #include <sstream>
-#include <gtest/gtest.h>
 #include <But/Log/Field/ThreadId.hpp>
 #include <But/Threading/JoiningThread.hpp>
+#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
 
-using But::Log::Backend::Tag;
 using But::Log::Field::ThreadId;
 
 namespace
 {
 
-struct ButLogFieldThreadId: public testing::Test
+struct ButLogFieldThreadId: public But::Log::Backend::detail::EntryRootTestBase
 { };
 
 
 TEST_F(ButLogFieldThreadId, ConvertingToFieldInfo)
 {
   const auto tid = ThreadId{};
-  const auto fi = toFieldInfo(tid);
-  EXPECT_EQ( Tag{"But::ThreadId"}, fi.tag() );
+  EXPECT_EQ( "But::ThreadId", fieldName(&tid) );
   std::stringstream ss;
   ss << tid.value_;
-  EXPECT_EQ( ss.str(), fi.value().get<std::string>() );
+  EXPECT_EQ( ss.str(), fieldValue(tid) );
 }
 
 
@@ -44,6 +42,15 @@ TEST_F(ButLogFieldThreadId, DifferentThreadsHaveDifferentIds)
   ThreadId tid2;
   std::thread{ [&] { tid2 = ThreadId{}; } }.join();
   EXPECT_NE( tid1.value_, tid2.value_ );
+}
+
+TEST_F(ButLogFieldThreadId, Logging)
+{
+  const auto tid = ThreadId{};
+  er_.proxy().nest(tid);
+  std::stringstream ss;
+  ss << tid.value_;
+  EXPECT_EQ_JSON("{ \"But::ThreadId\": \"" + ss.str() + "\" }", er_);
 }
 
 }
