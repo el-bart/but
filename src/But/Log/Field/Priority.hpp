@@ -1,5 +1,5 @@
 #pragma once
-#include <But/Log/Backend/FieldInfo.hpp>
+#include <string>
 
 namespace But
 {
@@ -16,7 +16,8 @@ enum class Priority
   error   = 3
 };
 
-Backend::FieldInfo toFieldInfo(Priority pri);
+inline auto fieldName(Priority const*) { return std::string_view{"But::Priority"}; }
+std::string_view fieldValue(Priority pri);
 
 }
 }
