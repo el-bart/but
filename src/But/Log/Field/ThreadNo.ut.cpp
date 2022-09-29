@@ -1,24 +1,30 @@
-#include <gtest/gtest.h>
 #include <But/Log/Field/ThreadNo.hpp>
 #include <But/Threading/JoiningThread.hpp>
+#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
 
-using But::Log::Backend::Tag;
-using But::Log::Backend::Value;
 using But::Log::Field::ThreadNo;
 
 namespace
 {
 
-struct ButLogFieldThreadNo: public testing::Test
+struct ButLogFieldThreadNo: public But::Log::Backend::detail::EntryRootTestBase
 { };
 
 
 TEST_F(ButLogFieldThreadNo, ConvertingToFieldInfo)
 {
   const auto tno = ThreadNo{};
-  const auto fi = toFieldInfo(tno);
-  EXPECT_EQ( Tag{"But::ThreadNo"}, fi.tag() );
-  EXPECT_EQ( Value{tno.value_}, fi.value() );
+  EXPECT_EQ( "But::ThreadNo", fieldName(&tno) );
+  EXPECT_EQ( tno.value_, fieldValue(tno) );
+}
+
+
+TEST_F(ButLogFieldThreadNo, Logging)
+{
+  auto tno = ThreadNo{};
+  tno.value_ = 42;
+  er_.proxy().nest(tno);
+  EXPECT_EQ_JSON(R"({ "But::ThreadNo": 42 })", er_);
 }
 
 
