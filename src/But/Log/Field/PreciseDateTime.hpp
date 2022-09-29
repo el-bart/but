@@ -3,7 +3,7 @@
 #include <ctime>
 #include <cerrno>
 #include <cstring>
-#include <But/Log/Backend/FieldInfo.hpp>
+#include <string>
 #include <But/Log/Field/detail/date2str.hpp>
 
 namespace But
@@ -30,10 +30,8 @@ struct PreciseDateTime final
 };
 
 
-inline auto toFieldInfo(const PreciseDateTime uits)
-{
-  return Backend::FieldInfo{ Backend::Tag{"But::PreciseDT"}, Backend::Value{ uits.date() + "T" + uits.time() + "Z" } };
-}
+inline auto fieldName(PreciseDateTime const*) { return std::string_view{"But::PreciseDT"}; }
+inline auto fieldValue(PreciseDateTime const& o) { return o.date() + "T" + o.time() + "Z"; }
 
 }
 }

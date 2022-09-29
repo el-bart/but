@@ -1,30 +1,37 @@
-#include <gtest/gtest.h>
 #include <But/Log/Field/PreciseDateTime.hpp>
+#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
 
-using But::Log::Backend::Tag;
 using But::Log::Field::ConversionError;
 using But::Log::Field::PreciseDateTime;
 
 namespace
 {
 
-struct ButLogFieldPreciseDateTime: public testing::Test
+struct ButLogFieldPreciseDateTime: public But::Log::Backend::detail::EntryRootTestBase
 { };
 
 
 TEST_F(ButLogFieldPreciseDateTime, ConvertingToString)
 {
-  EXPECT_EQ( "1970-01-01T00:20:34.000000000Z", toFieldInfo( PreciseDateTime{1234} ).value().get<std::string>() );
-  EXPECT_EQ( "1971-02-05T05:33:20.000000000Z", toFieldInfo( PreciseDateTime{34580000} ).value().get<std::string>() );
+  EXPECT_EQ( "1970-01-01T00:20:34.000000000Z", fieldValue( PreciseDateTime{1234} ) );
+  EXPECT_EQ( "1971-02-05T05:33:20.000000000Z", fieldValue( PreciseDateTime{34580000} ) );
+}
+
+
+TEST_F(ButLogFieldPreciseDateTime, Logging)
+{
+  const PreciseDateTime pdt{34580000};
+  er_.proxy().nest(pdt);
+  EXPECT_EQ_JSON(R"({ "But::PreciseDT": "1971-02-05T05:33:20.000000000Z" })", er_);
 }
 
 
 TEST_F(ButLogFieldPreciseDateTime, ConvertingToFieldInfo)
 {
   const auto tv = timespec{1234,42};
-  const auto fi = toFieldInfo( PreciseDateTime{tv} );
-  EXPECT_EQ( Tag{"But::PreciseDT"}, fi.tag() );
-  EXPECT_EQ( "1970-01-01T00:20:34.000000042Z", fi.value().get<std::string>() );
+  const auto pdt = PreciseDateTime{tv};
+  EXPECT_EQ( "But::PreciseDT", fieldName(&pdt) );
+  EXPECT_EQ( "1970-01-01T00:20:34.000000042Z", fieldValue(pdt) );
 }
 
 
