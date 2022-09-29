@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <But/Log/Backend/FieldInfo.hpp>
 
 namespace But
 {
@@ -14,10 +13,8 @@ struct FormattedString final
   std::string value_;
 };
 
-inline auto toFieldInfo(FormattedString fs)
-{
-  return Backend::FieldInfo{ Backend::Tag{"But::Formatted"}, Backend::Value{ std::move(fs.value_) } };
-}
+inline auto fieldName(FormattedString const*) { return std::string_view{"But::FormattedString"}; }
+inline auto fieldValue(FormattedString const& fs) { return std::string_view{fs.value_}; }
 
 inline auto operator==(FormattedString const& lhs, FormattedString const& rhs) { return lhs.value_ == rhs.value_; }
 
