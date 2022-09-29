@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <ctime>
-#include <But/Log/Backend/FieldInfo.hpp>
 #include <But/Log/Field/detail/date2str.hpp>
 
 namespace But
@@ -23,10 +22,8 @@ struct UtcIsoDateTime final
 };
 
 
-inline auto toFieldInfo(const UtcIsoDateTime uits)
-{
-  return Backend::FieldInfo{ Backend::Tag{"But::UtcIsoDT"}, Backend::Value{ uits.date() + "T" + uits.time() + "Z" } };
-}
+inline auto fieldName(UtcIsoDateTime const*) { return std::string_view{"But::UtcIsoDT"}; }
+inline auto fieldValue(const UtcIsoDateTime uits) { return uits.date() + "T" + uits.time() + "Z"; }
 
 }
 }

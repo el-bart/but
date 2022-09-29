@@ -1,6 +1,6 @@
 #pragma once
 #include <But/Log/Field/UtcIsoDateTime.hpp>
-#include <But/Log/Backend/FieldInfo.hpp>
+#include <string>
 
 namespace But
 {
@@ -19,7 +19,8 @@ struct UtcDate final
 };
 
 
-inline auto toFieldInfo(UtcDate const& d) { return Backend::FieldInfo{ Backend::Tag{"But::UtcDate"}, Backend::Value{ d.timestamp_.date() } }; }
+inline auto fieldName(UtcDate const*) { return std::string_view{"But::UtcDate"}; }
+inline auto fieldValue(UtcDate const& d) { return d.timestamp_.date(); }
 
 }
 }
