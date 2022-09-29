@@ -3,10 +3,6 @@
 #include <But/Log/Backend/detail/EntryRoot.hpp>
 #include <nlohmann/json.hpp>
 
-using But::Log::Backend::detail::EntryRoot;
-using But::Log::Backend::EntryProxy;
-using But::Log::Backend::EntryArray;
-
 namespace But::Log::Backend::detail
 {
 
@@ -18,7 +14,7 @@ struct EntryRootTestBase: public testing::Test
     return tmp.dump(2);
   }
 
-  EntryRoot er_;
+  But::Log::Backend::detail::EntryRoot er_;
 };
 
 #define EXPECT_EQ_JSON(a, b) \
