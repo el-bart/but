@@ -1,4 +1,3 @@
-#include <gtest/gtest.h>
 #include <But/Log/Field/FileName.hpp>
 #include <But/Log/Backend/detail/EntryRoot.ut.hpp>
 
