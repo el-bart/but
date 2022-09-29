@@ -1,6 +1,6 @@
 #pragma once
 #include <chrono>
-#include <But/Log/Backend/FieldInfo.hpp>
+#include <string>
 
 namespace But
 {
@@ -22,7 +22,8 @@ private:
 };
 
 
-Backend::FieldInfo toFieldInfo(Timestamp uts);
+inline auto fieldName(Timestamp const*) { return std::string_view{"But::Timestamp"}; }
+double fieldValue(Timestamp const& ts);
 
 }
 }
