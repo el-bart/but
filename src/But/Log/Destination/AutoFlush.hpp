@@ -22,9 +22,9 @@ public:
   { }
 
 private:
-  void logImpl(Backend::FieldInfo const& fi) override
+  void logImpl(std::string&& str) override
   {
-    chained_->log(fi);
+    chained_->log( std::move(str) );
     chained_->flush();
   }
   void reloadImpl() override { chained_->reload(); }

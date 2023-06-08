@@ -12,7 +12,7 @@ namespace Destination
 
 struct SinkMock: public Sink
 {
-  MOCK_METHOD1(logImpl, void(::But::Log::Backend::FieldInfo const&));
+  MOCK_METHOD1(logImpl, void(std::string&&));
   MOCK_METHOD0(reloadImpl, void());
   MOCK_METHOD0(flushImpl, void());
 };
