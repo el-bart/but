@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
-#include <But/Log/Backend/NonPrintableTrimmer.hpp>
 #include <But/Log/Destination/Sink.hpp>
+#include <But/Log/Backend/NonPrintableTrimmer.hpp>
 
 namespace But
 {
@@ -13,7 +13,7 @@ namespace Destination
 class Syslog final: public Sink
 {
 private:
-  void logImpl(Backend::FieldInfo const& fi) override;
+  void logImpl(std::string&& str) override;
   void reloadImpl() override { }
   void flushImpl() override { }
 
