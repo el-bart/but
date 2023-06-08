@@ -11,7 +11,7 @@ namespace Destination
 class Null final: public Sink
 {
 private:
-  void logImpl(Backend::FieldInfo const&) override { }
+  void logImpl(std::string&&) override { }
   void reloadImpl() override { }
   void flushImpl() override { }
 };
