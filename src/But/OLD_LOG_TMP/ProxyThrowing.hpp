@@ -45,7 +45,7 @@ public:
   }
 
   template<typename ...Args>
-  auto withFields(Args&& ...args) const
+  [[nodiscard]] auto withFields(Args&& ...args) const
   {
     auto tmp = convertSimplifiedArgs( std::forward<Args>(args)... );
     return ProxyThrowing{ dst_, translator_, makeSharedNN<Data>( std::move(tmp) ) };
@@ -64,7 +64,7 @@ private:
   { }
 
   template<typename ...Args>
-  auto convertSimplifiedArgs(Args&& ...args) const
+  [[nodiscard]] auto convertSimplifiedArgs(Args&& ...args) const
   {
     auto tmp = *commonFields_;
     tmp.reserve( tmp.size() + sizeof...(args) );
