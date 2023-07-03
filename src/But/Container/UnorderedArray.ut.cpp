@@ -360,6 +360,8 @@ struct TestAllocator
     g_dataBlocks.emplace_back(new char[n*sizeof(Data)]);
     return reinterpret_cast<Data*>( g_dataBlocks.back().get() );
   }
+
+  auto operator==(TestAllocator const&) const { return true; }
 };
 
 TEST_F(ButContainerUnorderedArray, ChangingUnderlyuingContainersAllocator)
