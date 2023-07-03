@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+app=$(basename "$0")
+app_dir=$(dirname "$(readlink -e "$0")")
+root_dir="$app_dir/.."
+sdks_dir="$root_dir/sdk"
+cd "$root_dir"
+
+if [ $# -ne 1 ]
+then
+  echo "$app <sdk_name>" >&2
+  exit 2
+fi
+sdk="$1"
+shift 1
+
+runs=0
+failed=()
+
+# default toolchains with all modes and sanitizers
+for mode in Debug Release Profile Relwithdebinfo
+do
+  for san in none address thread undefined
+  do
+    ((++runs))
+    echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
+    time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+  done
+done
+
+
+# summary
+if [ "${#failed[@]}" -gt 0 ]
+then
+  echo "$0: found ${#failed[@]} errors in total of $runs configurations:"
+  for cfg in "${failed[@]}"
+  do
+    echo -e "\t$cfg"
+  done
+  exit 1
+else
+  echo "$0: total of $runs runs - all successful"
+  exit 0
+fi
