@@ -440,6 +440,7 @@ constexpr auto constexprSmokeTest()
     for(auto e: tab)
       sum += e;
     BUT_ASSERT( sum == 1+2+42 );
+    (void)sum;
     tab.clear();
   }
 
@@ -450,6 +451,7 @@ constexpr auto constexprSmokeTest()
   for(auto e: tab)
     sum += e;
   BUT_ASSERT( sum == 4+2+0 );
+  (void)sum;
   return tab;
 }
 
