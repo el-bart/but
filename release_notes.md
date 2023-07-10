@@ -6,6 +6,7 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * added support for clang-15.
   * added support for clang-14.
   * added support for clang-13.
   * `BUT_MPL_VALUE_WRAP` is now split into: `BUT_MPL_VALUE_WRAP_CP`, `BUT_MPL_VALUE_WRAP_MV` and `BUT_MPL_VALUE_WRAP_CP_MV`, depending if type is copyable, movable or both.
