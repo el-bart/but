@@ -38,7 +38,7 @@ do
   mode=Debug
   san=address
   echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
 done
 
 # release build with latest toolchains
@@ -50,7 +50,7 @@ do
   mode=Release
   san=none
   echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
 done
 
 

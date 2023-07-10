@@ -20,7 +20,7 @@ do
     do
       ((++runs))
       echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-      time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+      time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
     done
   done
 done
@@ -33,7 +33,7 @@ do
     ((++runs))
     san=none
     echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-    time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk")
+    time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
   done
 done
 
@@ -45,7 +45,7 @@ do
   mode=Debug
   san=none
   echo "$app: #$runs BUILD SPECIAL $special WITH SDK $sdk MODE $mode SANITIZER $san"
-  time ./run_in_sdk "$sdk" ./ci/"build_$special" "$sdk" "$mode" "$san" || failed+=("$sdk")
+  time ./run_in_sdk "$sdk" ./ci/"build_$special" "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
 done
 
 
