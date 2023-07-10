@@ -1,5 +1,6 @@
 #include <string>
 #include <chrono>
+#include <thread>
 #include <gtest/gtest.h>
 #include <But/Threading/ActiveObject.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>

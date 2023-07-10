@@ -1,5 +1,6 @@
 #include <string>
 #include <chrono>
+#include <thread>
 #include <gtest/gtest.h>
 #include <But/Threading/Event.hpp>
 #include <But/Threading/ThreadPool.hpp>
