@@ -11,7 +11,7 @@ struct ButMplValueWrap: public testing::Test
 { };
 
 
-BUT_MPL_VALUE_WRAP(MyInt, int);
+BUT_MPL_VALUE_WRAP_CP_MV(MyInt, int);
 
 TEST_F(ButMplValueWrap, Integer)
 {
@@ -20,7 +20,7 @@ TEST_F(ButMplValueWrap, Integer)
 }
 
 
-BUT_MPL_VALUE_WRAP(MyStr, std::string);
+BUT_MPL_VALUE_WRAP_CP_MV(MyStr, std::string);
 
 TEST_F(ButMplValueWrap, String)
 {
@@ -46,7 +46,7 @@ TEST_F(ButMplValueWrap, MovingAndCopying)
 }
 
 
-BUT_MPL_VALUE_WRAP(MyPtr, std::unique_ptr<int>);
+BUT_MPL_VALUE_WRAP_MV(MyPtr, std::unique_ptr<int>);
 
 TEST_F(ButMplValueWrap, RvalueGetOperator)
 {
@@ -74,7 +74,7 @@ TEST_F(ButMplValueWrap, ForwardingArgumentsToCtor)
 }
 
 
-BUT_MPL_VALUE_WRAP(MyVec, std::vector<double>);
+BUT_MPL_VALUE_WRAP_CP_MV(MyVec, std::vector<double>);
 
 TEST_F(ButMplValueWrap, InitializerListWorks)
 {
@@ -83,7 +83,7 @@ TEST_F(ButMplValueWrap, InitializerListWorks)
 }
 
 
-BUT_MPL_VALUE_WRAP(MyNum, unsigned);
+BUT_MPL_VALUE_WRAP_CP_MV(MyNum, unsigned);
 
 TEST_F(ButMplValueWrap, ComparisonOperatorsAreDefined)
 {
@@ -95,6 +95,46 @@ TEST_F(ButMplValueWrap, ComparisonOperatorsAreDefined)
   EXPECT_TRUE( i1 <= i2 );
   EXPECT_TRUE( i2 >  i1 );
   EXPECT_TRUE( i2 >= i1 );
+}
+
+
+BUT_MPL_VALUE_WRAP_MV(MyUniquePtr, std::unique_ptr<int>);
+
+TEST_F(ButMplValueWrap, MovableOnlyObject)
+{
+  MyUniquePtr ptr1{ std::make_unique<int>(42) };
+  ASSERT_TRUE( ptr1.get() );
+
+  MyUniquePtr ptr2 = std::move(ptr1);
+  ASSERT_FALSE( ptr1.get() );
+  ASSERT_TRUE( ptr2.get() );
+}
+
+
+struct CopyableOnly
+{
+  explicit CopyableOnly(std::string data): data_{ std::move(data) } { }
+  CopyableOnly(CopyableOnly const&) = default;
+  CopyableOnly& operator=(CopyableOnly const&) = default;
+
+  CopyableOnly(CopyableOnly &&) = delete;
+  CopyableOnly& operator=(CopyableOnly &&) = delete;
+
+  std::string data_;
+};
+
+auto operator<(CopyableOnly const& lhs, CopyableOnly const& rhs) { return lhs.data_ < rhs.data_; }
+
+BUT_MPL_VALUE_WRAP_CP(MyCopyableOnly, CopyableOnly);
+
+TEST_F(ButMplValueWrap, CopyableOnlyObject)
+{
+  MyCopyableOnly s1{"foo bar"};
+  ASSERT_EQ( s1.get().data_, "foo bar" );
+
+  MyCopyableOnly s2{s1};
+  ASSERT_EQ( s1.get().data_, "foo bar" );
+  ASSERT_EQ( s2.get().data_, "foo bar" );
 }
 
 }
