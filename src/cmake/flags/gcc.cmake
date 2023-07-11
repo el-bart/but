@@ -1,0 +1,5 @@
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  if ("${CMAKE_CXX_COMPILER_VERSION}" MATCHES "^12\\.")
+    include(cmake/flags/gcc12.cmake)
+  endif()
+endif()

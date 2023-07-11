@@ -40,7 +40,7 @@ TEST_F(ButThreadingEvent, BlockedByDefault)
   EXPECT_EQ(v, "ok");
 }
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
+#ifdef BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 TEST_F(ButThreadingEvent, BlockedWithTimeout)
 {
@@ -78,6 +78,6 @@ TEST_F(ButThreadingEvent, TimeoutOnBlocking)
   EXPECT_FALSE( e_.wait( std::chrono::seconds{0} ) );
 }
 
-#endif // BUT_THREAD_SANITIZER_ENABLED
+#endif // BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 }

@@ -100,7 +100,7 @@ TEST_F(ButThreadingFifo, MovableOnlyObjects)
 }
 
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
+#ifdef BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 TEST_F(ButThreadingFifo, WaitForElementAdditionWithTimeout)
 {
@@ -110,7 +110,7 @@ TEST_F(ButThreadingFifo, WaitForElementAdditionWithTimeout)
   EXPECT_EQ( "narf", q_.top() );
 }
 
-#endif // BUT_THREAD_SANITIZER_ENABLED
+#endif // BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 
 TEST_F(ButThreadingFifo, WaitForElementAddition)
@@ -122,7 +122,7 @@ TEST_F(ButThreadingFifo, WaitForElementAddition)
 }
 
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
+#ifdef BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 TEST_F(ButThreadingFifo, WaitForElementRemovalWithTimeout)
 {
@@ -132,7 +132,7 @@ TEST_F(ButThreadingFifo, WaitForElementRemovalWithTimeout)
   q_.pop();
 }
 
-#endif // BUT_THREAD_SANITIZER_ENABLED
+#endif // BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 
 TEST_F(ButThreadingFifo, WaitForElementRemoval)
@@ -174,7 +174,7 @@ TEST_F(ButThreadingFifo, NonEmptyTimeoutWhenElementIsNotPresent)
 }
 
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
+#ifdef BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 TEST_F(ButThreadingFifo, ProducerConsumer)
 {
@@ -191,7 +191,7 @@ TEST_F(ButThreadingFifo, ProducerConsumer)
   }
 }
 
-#endif // BUT_THREAD_SANITIZER_ENABLED
+#endif // BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 
 TEST_F(ButThreadingFifo, ExplicitWaitingForAddition)
@@ -223,7 +223,7 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForAdditionWithTimeout)
 }
 
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
+#ifdef BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 TEST_F(ButThreadingFifo, ExplicitWaitingForRemoval)
 {
@@ -240,7 +240,7 @@ TEST_F(ButThreadingFifo, ExplicitWaitingForRemoval)
   EXPECT_EQ( 1u, q_.size() );
 }
 
-#endif // BUT_THREAD_SANITIZER_ENABLED
+#endif // BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 
 TEST_F(ButThreadingFifo, ExplicitWaitingForRemovalWithZeroSizeAlwaysSucceeds)

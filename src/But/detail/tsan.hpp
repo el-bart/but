@@ -25,7 +25,7 @@
 
 #ifdef __GNUC__
 
-#if __GNUC__ <= 10
+#if __GNUC__ <= 12
 // gcc detection:
 // - https://stackoverflow.com/questions/57499943/how-to-detect-thread-sanitizer-for-gcc-5
 #ifdef __SANITIZE_THREAD__

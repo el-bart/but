@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install -y \
     libboost-all-dev \
     nlohmann-json3-dev
 
-RUN apt-get update && apt-get install -y g++
+RUN apt-get update && apt-get install -y g++-12

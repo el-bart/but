@@ -6,6 +6,9 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
+  * added support for gcc: 11, 12
+  * added support for clang: 13, 14, 15
+  * `BUT_MPL_VALUE_WRAP` is now split into: `BUT_MPL_VALUE_WRAP_CP`, `BUT_MPL_VALUE_WRAP_MV` and `BUT_MPL_VALUE_WRAP_CP_MV`, depending if type is copyable, movable or both.
   * C++17 is now new minimal version required.
   * `boost::thread` support in But::Threading is now dropped (bugs, compatibility issues, not that relevant nowadays).
   * `System::CpuTimer` added - wrapper around intrinsic for counting CPU cycles, for very precise time measurements.
@@ -15,6 +18,11 @@ this work is available on "master" branch, but has not yet been released.
   * `But::Optional` is now based on `std::optional`.
   * certain tests are now disabled for TSAN builds, due to bugs in TSAN itself (`BUT_THREAD_SANITIZER_ENABLED` test macro).
   * dropped support for gcc-7 due to lack of `std::filesystem` support.
+
+## v1.2.1 (2022-11-02)
+minor bugfix
+
+  * fixed missing `#pragma once` in `date2str.hpp`.
 
 ## v1.2.0 (2022-07-10)
 set of minor features.

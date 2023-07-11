@@ -83,7 +83,9 @@ public:
       return *this = static_cast<value_type>(other);
     }
 
-    operator const value_type() const
+    operator const value_type() const { return value(); }
+
+    const value_type value() const
     {
       BUT_ASSERT(c_);
       return c_->readValueAtPosition(pos_);
