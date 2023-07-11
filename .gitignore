@@ -5,3 +5,5 @@ CMakeLists.txt.user
 
 *.orig
 *~*
+
+/build
