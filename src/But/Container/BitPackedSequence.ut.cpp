@@ -8,7 +8,7 @@
 
 using But::Container::BitPackedSequence;
 
-#if __GNUC__ == 10 || __GNUC__ == 9
+#if 9 <= __GNUC__ && __GNUC__ <= 12
 namespace ThisIsWorkaroundForBugInGccWhereProperOperatorIsNotFoundInUnnamedNamespaces
 #else
 namespace
