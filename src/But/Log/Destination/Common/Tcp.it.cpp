@@ -1,5 +1,14 @@
 #include <thread>
+
+#if __GNUC__ >= 12
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtsan"
+#endif
 #include <boost/asio.hpp>
+#if __GNUC__ >= 12
+#pragma GCC diagnostic pop
+#endif
+
 #include <gtest/gtest.h>
 #include <But/Log/Destination/Common/Tcp.hpp>
 #include <But/Threading/JoiningThread.hpp>
