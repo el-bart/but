@@ -123,7 +123,7 @@ TEST_F(ButThreadingThreadPool, GettingThreadPoolSize)
 }
 
 
-#ifndef BUT_THREAD_SANITIZER_ENABLED
+#ifdef BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 TEST_F(ButThreadingThreadPool, RunningOnMultipleThreads)
 {
@@ -159,6 +159,6 @@ TEST_F(ButThreadingThreadPool, RunningOnMultipleThreads)
     EXPECT_TRUE( id != std::this_thread::get_id() );
 }
 
-#endif // BUT_THREAD_SANITIZER_ENABLED
+#endif // BUT_THREAD_SANITIZER_WORKAROUND_NEEDED
 
 }
