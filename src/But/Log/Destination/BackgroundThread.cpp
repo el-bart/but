@@ -21,16 +21,15 @@ BackgroundThread::~BackgroundThread()
   queue_.push( Queue::value_type{} );
 }
 
-void BackgroundThread::logImpl(Backend::FieldInfo const& fi)
+void BackgroundThread::logImpl(std::string&& str)
 {
-  auto copy = fi;
   Queue::lock_type lock{queue_};
   if(maximumQueueSize_)
   {
     queue_.waitForSizeBelow(maximumQueueSize_, lock);
     BUT_ASSERT( queue_.size() < maximumQueueSize_ );
   }
-  queue_.push( std::move(copy) );
+  queue_.push( std::move(str) );
 }
 
 

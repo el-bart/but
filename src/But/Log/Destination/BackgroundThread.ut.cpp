@@ -6,15 +6,12 @@
 #include <But/Log/Destination/SinkMock.ut.hpp>
 #include <But/Threading/Event.hpp>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
 using testing::_;
 using testing::Throw;
-using But::Log::Backend::FieldInfo;
 using But::Log::Destination::Sink;
 using But::Log::Destination::SinkMock;
 using But::Log::Destination::BackgroundThread;
-using But::Log::Destination::detail::args2FieldInfo;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
 namespace
@@ -30,13 +27,13 @@ struct ButLogDestinationBackgroundThread: public testing::Test
 TEST_F(ButLogDestinationBackgroundThread, LoggingWorks)
 {
   EXPECT_CALL((*mock_), logImpl(_) );
-  sink_.log( args2FieldInfo("whatever") );
+  sink_.log("whatever");
 }
 
 
 struct IdLoggingSink: public Sink
 {
-  void logImpl(FieldInfo const&) override { logThreadId_  = std::this_thread::get_id(); }
+  void logImpl(std::string&&) override { logThreadId_  = std::this_thread::get_id(); }
   void flushImpl() override { }
   void reloadImpl() override { }
 
@@ -48,7 +45,7 @@ TEST_F(ButLogDestinationBackgroundThread, LoggingIsDoneInSeparateThrad)
   auto idLogSink = But::makeSharedNN<IdLoggingSink>();
   {
     BackgroundThread sink{idLogSink, 1000*1000};
-    sink.log( args2FieldInfo("whatever") );
+    sink.log("whatever");
   }
   EXPECT_NE( std::thread::id{}, idLogSink->logThreadId_ );
   EXPECT_NE( std::this_thread::get_id(), idLogSink->logThreadId_ );
@@ -74,7 +71,7 @@ TEST_F(ButLogDestinationBackgroundThread, AllLogsAreFlushedBeforeStoppingBackgro
   constexpr auto count = 100;
   EXPECT_CALL((*mock_), logImpl(_) ).Times( testing::Exactly(count) );
   for(auto i=0; i<count; ++i)
-    sink_.log( args2FieldInfo("x") );
+    sink_.log("x");
 }
 
 
@@ -90,7 +87,7 @@ TEST_F(ButLogDestinationBackgroundThread, FlushingBLocksUntilAllLogsAreLoggedAnd
   EXPECT_CALL((*mock_), flushImpl() )
     .InSequence(seq);
   for(auto i=0; i<count; ++i)
-    sink_.log( args2FieldInfo("x") );
+    sink_.log("x");
   sink_.flush();
 }
 
@@ -98,7 +95,7 @@ TEST_F(ButLogDestinationBackgroundThread, FlushingBLocksUntilAllLogsAreLoggedAnd
 TEST_F(ButLogDestinationBackgroundThread, ExceptionsFromChainedSinkLogsAreIgnored)
 {
   EXPECT_CALL((*mock_), logImpl(_) ).WillRepeatedly( Throw( std::runtime_error{"should be ignored"} ) );
-  EXPECT_NO_THROW( sink_.log( args2FieldInfo("error") ) );
+  EXPECT_NO_THROW( sink_.log("error") );
 }
 
 
@@ -122,19 +119,19 @@ TEST_F(ButLogDestinationBackgroundThread, QueuesSizeIsObeyed)
   EXPECT_CALL( (*mock_), logImpl(_) ).Times( testing::AtLeast(1) );
 
   But::Threading::Event e;
-  auto block = [&](FieldInfo const&) { EXPECT_TRUE( e.wait() ); };
+  auto block = [&](std::string &&) { EXPECT_TRUE( e.wait() ); };
   EXPECT_CALL( (*mock_), logImpl(_) )
     .WillOnce( testing::Invoke(block) )
     .RetiresOnSaturation();
 
   BackgroundThread sink{mock_, 2};
-  sink.log( args2FieldInfo("x") );
-  sink.log( args2FieldInfo("x") );
-  sink.log( args2FieldInfo("x") );
+  sink.log("x");
+  sink.log("x");
+  sink.log("x");
 
   {
     Thread th1{ [&] {
-      sink.log( args2FieldInfo("x") );
+      sink.log("x");
       loggedAt = Clock::now();
     } };
     Thread th2{ [&] {
@@ -152,7 +149,7 @@ TEST_F(ButLogDestinationBackgroundThread, SizeOfZeroMeansNoLimit)
   EXPECT_CALL( (*mock_), logImpl(_) ).Times( testing::AtLeast(1) );
   BackgroundThread sink{mock_, 0};
   for(auto i=0; i<100; ++i)
-    sink.log( args2FieldInfo("x") );
+    sink.log("x");
 }
 
 }

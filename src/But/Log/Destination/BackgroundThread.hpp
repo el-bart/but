@@ -28,13 +28,13 @@ public:
   ~BackgroundThread();
 
 private:
-  void logImpl(Backend::FieldInfo const& fi) override;
+  void logImpl(std::string&& str) override;
   void reloadImpl() override { chained_->reload(); }
   void flushImpl() override;
 
   void threadLoop();
 
-  using Queue = But::Threading::Fifo< But::Optional<Backend::FieldInfo> >;
+  using Queue = But::Threading::Fifo< But::Optional<std::string> >;
 
   const size_t maximumQueueSize_;
   But::NotNullShared<Sink> chained_;
