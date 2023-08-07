@@ -12,7 +12,7 @@ namespace Destination
 namespace Common
 {
 
-void toJsonStream(std::ostream& os, Backend::FieldInfo const& entry)
+void toJsonStream(std::ostream& os, std::string const& str)
 {
   // note that direct stream writing, like this:
   //   os << toJson(entry);
@@ -22,7 +22,7 @@ void toJsonStream(std::ostream& os, Backend::FieldInfo const& entry)
   constexpr auto indentChar = ' ';
   constexpr auto ensureAscii = false;
   constexpr auto errorHandler = nlohmann::json::error_handler_t::replace;
-  os << toJson(entry).dump(indent, indentChar, ensureAscii, errorHandler);
+  os << toJson(str).dump(indent, indentChar, ensureAscii, errorHandler);
 }
 
 }
