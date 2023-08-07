@@ -10,14 +10,16 @@ namespace Log
 {
 namespace Destination
 {
+namespace Common
+{
 
-class Tcp final
+class TcpClient final
 {
 public:
   BUT_DEFINE_EXCEPTION(IncompleteWrite, But::Exception, "incomplete write");
 
-  explicit Tcp(std::string host, uint16_t port);
-  ~Tcp();
+  explicit TcpClient(std::string host, uint16_t port);
+  ~TcpClient();
 
   void write(std::string const& data);
   void close();
@@ -33,6 +35,7 @@ private:
   std::unique_ptr<Pimpl> pimpl_;
 };
 
+}
 }
 }
 }

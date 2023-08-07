@@ -7,7 +7,7 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <But/Log/Destination/Tcp.hpp>
+#include <But/Log/Destination/Common/TcpClient.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -17,8 +17,10 @@ namespace Log
 {
 namespace Destination
 {
+namespace Common
+{
 
-struct Tcp::Pimpl final
+struct TcpClient::Pimpl final
 {
   Pimpl(std::string const& host, const uint16_t port)
   {
@@ -33,16 +35,16 @@ struct Tcp::Pimpl final
 };
 
 
-Tcp::Tcp(std::string host, const uint16_t port):
+TcpClient::TcpClient(std::string host, const uint16_t port):
   host_{ std::move(host) },
   port_{port}
 { }
 
 
-Tcp::~Tcp() = default;
+TcpClient::~TcpClient() = default;
 
 
-void Tcp::write(std::string const& data)
+void TcpClient::write(std::string const& data)
 {
   connect();
   try
@@ -62,18 +64,19 @@ void Tcp::write(std::string const& data)
 }
 
 
-void Tcp::close()
+void TcpClient::close()
 {
   pimpl_.reset();
 }
 
 
-void Tcp::connect()
+void TcpClient::connect()
 {
   if(not pimpl_)
     pimpl_ = std::make_unique<Pimpl>(host_, port_);
 }
 
+}
 }
 }
 }
