@@ -7,13 +7,13 @@ namespace Log
 namespace Destination
 {
 
-void MultiSink::logImplNe(Backend::FieldInfo const& fi) noexcept
+void MultiSink::logImplNe(std::string&& str) noexcept
 {
   for(auto& d: dsts_)
   {
     try
     {
-      d->log(fi);
+      d->log( std::string{str} );
     }
     catch(...)
     { /* this is logger - ignoring any errors when forwarind logs! */ }

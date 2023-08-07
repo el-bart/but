@@ -25,11 +25,11 @@ public:
   explicit MultiSink(NotNullShared<Args>... args): dsts_{ value_type{ std::move(args) }... } { }
 
 private:
-  void logImpl(Backend::FieldInfo const& fi) override { logImplNe(fi); }
+  void logImpl(std::string && str) override { logImplNe( std::move(str) ); }
   void reloadImpl() override { reloadImplNe(); }
   void flushImpl() override { flushImplNe(); }
 
-  void logImplNe(Backend::FieldInfo const& fi) noexcept;
+  void logImplNe(std::string&& str) noexcept;
   void reloadImplNe() noexcept;
   void flushImplNe() noexcept;
 

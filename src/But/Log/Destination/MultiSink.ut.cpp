@@ -1,14 +1,10 @@
-#include <gtest/gtest.h>
 #include <But/Log/Destination/MultiSink.hpp>
-#include <But/Log/Destination/detail/args2FieldInfo.hpp>
+#include <gtest/gtest.h>
 
 using But::makeSharedNN;
 using But::NotNullShared;
-using But::Log::Backend::FieldInfo;
-using But::Log::Field::FormattedString;
 using But::Log::Destination::Sink;
 using But::Log::Destination::MultiSink;
-using But::Log::Destination::detail::args2FieldInfo;
 
 namespace
 {
@@ -16,7 +12,7 @@ namespace
 template<int N>
 struct TestDst final: public Sink
 {
-  void logImpl(FieldInfo const&) override
+  void logImpl(std::string&&) override
   {
     ++logs_;
     if(throws_)
@@ -56,40 +52,26 @@ struct ButLogDestinationMultiSink: public testing::Test
 TEST_F(ButLogDestinationMultiSink, NoDestinationsSmokeTest)
 {
   MultiSink m{ {} };
-  m.log( args2FieldInfo("test") );
+  m.log("test");
 }
 
 
 TEST_F(ButLogDestinationMultiSink, SingleDestinationWorks)
 {
   MultiSink m{ {td1_} };
-  m.log( args2FieldInfo("test") );
+  m.log("test");
   EXPECT_EQ( 1u, td1_->logs_ );
 }
 
 
 TEST_F(ButLogDestinationMultiSink, PrintingGoesThroughAllDestinations)
 {
-  multi_.log( args2FieldInfo("one") );
+  multi_.log("one");
   EXPECT_EQ( 1u, td1_->logs_ );
   EXPECT_EQ( 1u, td2_->logs_ );
   EXPECT_EQ( 1u, td3_->logs_ );
 
-  multi_.log( args2FieldInfo("two") );
-  EXPECT_EQ( 2u, td1_->logs_ );
-  EXPECT_EQ( 2u, td2_->logs_ );
-  EXPECT_EQ( 2u, td3_->logs_ );
-}
-
-
-TEST_F(ButLogDestinationMultiSink, FormattedPrintingGoesThroughAllDestinations)
-{
-  multi_.log( args2FieldInfo( FormattedString{"x"}, "one" ) );
-  EXPECT_EQ( 1u, td1_->logs_ );
-  EXPECT_EQ( 1u, td2_->logs_ );
-  EXPECT_EQ( 1u, td3_->logs_ );
-
-  multi_.log( args2FieldInfo( FormattedString{"y"}, "two" ) );
+  multi_.log("two");
   EXPECT_EQ( 2u, td1_->logs_ );
   EXPECT_EQ( 2u, td2_->logs_ );
   EXPECT_EQ( 2u, td3_->logs_ );
@@ -102,15 +84,10 @@ TEST_F(ButLogDestinationMultiSink, ExceptionInAnyPrinterDoesNotStopProcessing)
   td2_->throws_ = true;
   td3_->throws_ = true;
 
-  multi_.log( args2FieldInfo("one") );
+  multi_.log("one");
   EXPECT_EQ( 1u, td1_->logs_ );
   EXPECT_EQ( 1u, td2_->logs_ );
   EXPECT_EQ( 1u, td3_->logs_ );
-
-  multi_.log( args2FieldInfo( FormattedString{"$0"}, "one" ) );
-  EXPECT_EQ( 2u, td1_->logs_ );
-  EXPECT_EQ( 2u, td2_->logs_ );
-  EXPECT_EQ( 2u, td3_->logs_ );
 }
 
 
@@ -162,12 +139,12 @@ TEST_F(ButLogDestinationMultiSink, ConstructingFromExplicitListOfPointersToDeriv
 {
   MultiSink m{td1_, td2_, td3_};
 
-  m.log( args2FieldInfo("first", 42) );
+  m.log("first");
   EXPECT_EQ( 1u, td1_->logs_ );
   EXPECT_EQ( 1u, td2_->logs_ );
   EXPECT_EQ( 1u, td3_->logs_ );
 
-  m.log( args2FieldInfo("second", 43) );
+  m.log("second");
   EXPECT_EQ( 2u, td1_->logs_ );
   EXPECT_EQ( 2u, td2_->logs_ );
   EXPECT_EQ( 2u, td3_->logs_ );
