@@ -23,7 +23,7 @@ struct TestSink final: public Sink
   void reloadImpl() override { }
   void flushImpl() override { }
 
-  json log2json(size_t index) const
+  json parse(size_t index) const
   {
     return json::parse( logs_.at(index) );
   }
@@ -42,18 +42,19 @@ struct ButLogProxyThrowing: public testing::Test
 TEST_F(ButLogProxyThrowing, NoArgumentsToLog)
 {
   pt_.log("test");
-  EXPECT_EQ( sink_->log2json(0), ( json{ {"message", "test"} } ) );
+  EXPECT_EQ( sink_->parse(0), ( json{ {"message", "test"} } ) );
 }
 
-#if 0
 
+#if 0
 TEST_F(ButLogProxyThrowing, LoggingSimpleValuesOneAtATime)
 {
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log(42);
-  log.log("foo");
-  log.log(3.14);
-  EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | double='3.14' | " );
+  pt_.log("m", 42);
+  pt_.log("m");
+  pt_.log("m", 3.14);
+  EXPECT_EQ( sink_->parse(0), ( json{ {"message", "m"}, {"named", 42} } ) );
+  EXPECT_EQ( sink_->parse(1), ( json{ {"message", "m"} } ) );
+  // TODO
 }
 
 
