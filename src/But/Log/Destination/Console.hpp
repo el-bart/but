@@ -1,5 +1,5 @@
 #pragma once
-#include <But/Log/Destination/Common/TextStream.hpp>
+#include <But/Log/Destination/Common/LockedStream.hpp>
 
 namespace But
 {
@@ -8,17 +8,16 @@ namespace Log
 namespace Destination
 {
 
-class JsonConsole: public Common::TextStream
+class Console: public Common::LockedStream
 {
 public:
   /** @brief initializes cout.
    *  @param syncWithStdio synchronization with stdio is usaully not needed and disabling it gives ~10% speed extra.
    */
-  explicit JsonConsole(bool syncWithStdio = false);
+  explicit Console(bool syncWithStdio = false);
 
 private:
   void reloadImplUnderLock() override { }
-  void toStreamFormat(std::ostream& os, Backend::FieldInfo const& fi) override;
 };
 
 }
