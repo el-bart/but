@@ -10,17 +10,17 @@
 #endif
 
 #include <gtest/gtest.h>
-#include <But/Log/Destination/Common/Tcp.hpp>
+#include <But/Log/Destination/Tcp.hpp>
 #include <But/Threading/JoiningThread.hpp>
 
-using But::Log::Destination::Common::Tcp;
+using But::Log::Destination::Tcp;
 using boost::asio::ip::tcp;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
 namespace
 {
 
-struct ButLogDestinationCommonTcp: public testing::Test
+struct ButLogDestinationTcp: public testing::Test
 {
   void accept()
   {
@@ -49,13 +49,13 @@ struct ButLogDestinationCommonTcp: public testing::Test
 };
 
 
-TEST_F(ButLogDestinationCommonTcp, NoConnectionByDefault)
+TEST_F(ButLogDestinationTcp, NoConnectionByDefault)
 {
   EXPECT_NO_THROW( (Tcp{"no-such-host", 6666}) );
 }
 
 
-TEST_F(ButLogDestinationCommonTcp, ConnectingWhenSending)
+TEST_F(ButLogDestinationTcp, ConnectingWhenSending)
 {
   const auto msg = std::string{"hello world!"};
   Thread th{ [&] { client_.write(msg); } };
@@ -64,14 +64,14 @@ TEST_F(ButLogDestinationCommonTcp, ConnectingWhenSending)
 }
 
 
-TEST_F(ButLogDestinationCommonTcp, ThrowingOnIoError)
+TEST_F(ButLogDestinationTcp, ThrowingOnIoError)
 {
   Tcp client{"127.6.6.6", 6666};
   EXPECT_ANY_THROW( client.write("oops") );
 }
 
 
-TEST_F(ButLogDestinationCommonTcp, ReconnectingOnConnectionLoss)
+TEST_F(ButLogDestinationTcp, ReconnectingOnConnectionLoss)
 {
   {
     const auto msg = std::string{"hello world!"};
@@ -95,7 +95,7 @@ TEST_F(ButLogDestinationCommonTcp, ReconnectingOnConnectionLoss)
 }
 
 
-TEST_F(ButLogDestinationCommonTcp, ExplicitClosingAllowsFutureReconnections)
+TEST_F(ButLogDestinationTcp, ExplicitClosingAllowsFutureReconnections)
 {
   for(auto i=0; i<3; ++i)
   {

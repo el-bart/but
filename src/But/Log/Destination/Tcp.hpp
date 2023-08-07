@@ -10,8 +10,6 @@ namespace Log
 {
 namespace Destination
 {
-namespace Common
-{
 
 class Tcp final
 {
@@ -35,7 +33,6 @@ private:
   std::unique_ptr<Pimpl> pimpl_;
 };
 
-}
 }
 }
 }

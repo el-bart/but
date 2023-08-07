@@ -7,7 +7,7 @@
 #pragma GCC diagnostic pop
 #endif
 
-#include <But/Log/Destination/Common/Tcp.hpp>
+#include <But/Log/Destination/Tcp.hpp>
 
 using boost::asio::ip::tcp;
 
@@ -16,8 +16,6 @@ namespace But
 namespace Log
 {
 namespace Destination
-{
-namespace Common
 {
 
 struct Tcp::Pimpl final
@@ -76,7 +74,6 @@ void Tcp::connect()
     pimpl_ = std::make_unique<Pimpl>(host_, port_);
 }
 
-}
 }
 }
 }
