@@ -1,17 +1,17 @@
 #include <fstream>
 #include <gtest/gtest.h>
-#include <But/Log/Destination/Common/TextStream.hpp>
+#include <But/Log/Destination/Common/LockedStream.hpp>
 #include <But/System/TempFile.hpp>
 
-using But::Log::Destination::Common::TextStream;
+using But::Log::Destination::Common::LockedStream;
 
 namespace
 {
 
-struct OutputFileStream: public TextStream
+struct OutputFileStream: public LockedStream
 {
   explicit OutputFileStream(std::string path):
-    TextStream{os_},
+    LockedStream{os_},
     os_{ std::move(path) }
   { }
 
@@ -20,9 +20,9 @@ struct OutputFileStream: public TextStream
   std::ofstream os_;
 };
 
-struct ButLogDestinationTextStream: public testing::Test
+struct ButLogDestinationLockedStream: public testing::Test
 {
-  ~ButLogDestinationTextStream()
+  ~ButLogDestinationLockedStream()
   {
     tmp_.unlink();
   }
@@ -44,7 +44,7 @@ struct ButLogDestinationTextStream: public testing::Test
 };
 
 
-TEST_F(ButLogDestinationTextStream, FlushingWorks)
+TEST_F(ButLogDestinationLockedStream, FlushingWorks)
 {
   EXPECT_EQ( 0u, countLines() );
   s_.log("test");

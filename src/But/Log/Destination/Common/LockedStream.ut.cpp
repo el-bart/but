@@ -1,36 +1,36 @@
 #include <thread>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Destination/Common/TextStream.hpp>
+#include <But/Log/Destination/Common/LockedStream.hpp>
 #include <gtest/gtest.h>
 
-using But::Log::Destination::Common::TextStream;
+using But::Log::Destination::Common::LockedStream;
 using But::Log::Destination::Sink;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
 namespace
 {
 
-struct StringStream: public TextStream
+struct StringStream: public LockedStream
 {
-  StringStream(): TextStream{ss_} { }
+  StringStream(): LockedStream{ss_} { }
   void reloadImplUnderLock() override { }
   std::stringstream ss_;
 };
 
-struct ButLogDestinationTextStream: public testing::Test
+struct ButLogDestinationLockedStream: public testing::Test
 {
   StringStream s_;
 };
 
 
-TEST_F(ButLogDestinationTextStream, PrintingSampleData)
+TEST_F(ButLogDestinationLockedStream, PrintingSampleData)
 {
   s_.log("foo");
   EXPECT_EQ( s_.ss_.str(), "foo\n" );
 }
 
 
-TEST_F(ButLogDestinationTextStream, OperatingViaBaseClass)
+TEST_F(ButLogDestinationLockedStream, OperatingViaBaseClass)
 {
   auto& base = static_cast<Sink&>(s_);
   base.log("foo");
@@ -38,7 +38,7 @@ TEST_F(ButLogDestinationTextStream, OperatingViaBaseClass)
 }
 
 
-TEST_F(ButLogDestinationTextStream, PreservingNonPrintableCharacters)
+TEST_F(ButLogDestinationLockedStream, PreservingNonPrintableCharacters)
 {
   s_.log("beep \07 / CRLF \r\n / normal");
   EXPECT_EQ( s_.ss_.str(), "beep \07 / CRLF \r\n / normal\n" );
@@ -54,7 +54,7 @@ auto countLines(std::stringstream& ss)
   return lines;
 }
 
-TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutput)
+TEST_F(ButLogDestinationLockedStream, MultithreadedExecutionDoesNotInterleaveOutput)
 {
   auto logger = std::make_shared<StringStream>();
   {
@@ -67,7 +67,7 @@ TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutpu
 }
 
 
-TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
+TEST_F(ButLogDestinationLockedStream, MultithreadedExecutionDoesNotInterleaveOutputWhenUsedViaBaseClass)
 {
   auto loggerSS = std::make_shared<StringStream>();
   {
@@ -81,19 +81,19 @@ TEST_F(ButLogDestinationTextStream, MultithreadedExecutionDoesNotInterleaveOutpu
 }
 
 
-TEST_F(ButLogDestinationTextStream, ReloadingSmokeTest)
+TEST_F(ButLogDestinationLockedStream, ReloadingSmokeTest)
 {
   s_.reload();
 }
 
 
-TEST_F(ButLogDestinationTextStream, FlushingSmokeTest)
+TEST_F(ButLogDestinationLockedStream, FlushingSmokeTest)
 {
   s_.flush();
 }
 
 
-TEST_F(ButLogDestinationTextStream, EmptyLogIsNewLine)
+TEST_F(ButLogDestinationLockedStream, EmptyLogIsNewLine)
 {
   s_.log("");
   EXPECT_EQ( s_.ss_.str(), "\n" );

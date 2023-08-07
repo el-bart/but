@@ -14,10 +14,10 @@ namespace Destination
 namespace Common
 {
 
-class TextStream: public Sink
+class LockedStream: public Sink
 {
 protected:
-  explicit TextStream(std::ostream& os): os_{os} { }
+  explicit LockedStream(std::ostream& os): os_{os} { }
 
   auto const& endline() const { return endline_; }
 
