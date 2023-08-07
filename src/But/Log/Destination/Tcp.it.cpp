@@ -10,20 +10,17 @@
 #endif
 
 #include <gtest/gtest.h>
-#include <But/Log/Destination/JsonTcp.hpp>
+#include <But/Log/Destination/Tcp.hpp>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Destination/detail/args2FieldInfo.hpp>
 
-using But::Log::Destination::detail::args2FieldInfo;
-
-using But::Log::Destination::JsonTcp;
+using But::Log::Destination::Tcp;
 using boost::asio::ip::tcp;
 using Thread = But::Threading::JoiningThread<std::thread>;
 
 namespace
 {
 
-struct ButLogDestinationJsonTcp: public testing::Test
+struct ButLogDestinationTcp: public testing::Test
 {
   void accept()
   {
@@ -46,9 +43,9 @@ struct ButLogDestinationJsonTcp: public testing::Test
 
   void logAndRead()
   {
-    Thread th{ [&] { sink_.log( args2FieldInfo("test" ) ); } };
+    Thread th{ [&] { sink_.log("test"); } };
     accept();
-    const auto expected = std::string{R"xx({"string":"test"})xx"} + "\n";
+    const auto expected = std::string{"test\n"};
     EXPECT_EQ( expected, read( expected.size() ) );
   }
 
@@ -56,23 +53,23 @@ struct ButLogDestinationJsonTcp: public testing::Test
   tcp::acceptor acceptor_{ io_, tcp::endpoint( tcp::v4(), 1230 ) };
   tcp::socket socket_{io_};
 
-  JsonTcp sink_{"127.0.0.1", 1230};
+  Tcp sink_{"127.0.0.1", 1230};
 };
 
 
-TEST_F(ButLogDestinationJsonTcp, SendingLogsWorks)
+TEST_F(ButLogDestinationTcp, SendingLogsWorks)
 {
   logAndRead();
 }
 
 
-TEST_F(ButLogDestinationJsonTcp, FlushingIsNoOp)
+TEST_F(ButLogDestinationTcp, FlushingIsNoOp)
 {
   sink_.flush();
 }
 
 
-TEST_F(ButLogDestinationJsonTcp, ReloadingWorks)
+TEST_F(ButLogDestinationTcp, ReloadingWorks)
 {
   logAndRead();
 
