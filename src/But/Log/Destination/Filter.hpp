@@ -28,15 +28,15 @@ public:
   }
 
 private:
-  void logImpl(Backend::FieldInfo const& fi) override
+  void logImpl(std::string&& str) override
   {
-    if( filter_(fi) )
-      sink_->log(fi);
+    if( filter_(str) )
+      sink_->log( std::move(str) );
   }
   void reloadImpl() override { sink_->reload(); }
   void flushImpl() override { sink_->flush(); }
 
-  std::function< bool(Backend::FieldInfo const&) > filter_;
+  std::function< bool(std::string const&) > filter_;
   NotNullShared<Sink> sink_;
 };
 
