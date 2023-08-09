@@ -47,6 +47,18 @@ struct Float
 auto fieldName(Float const*) { return "Float"; }
 auto fieldValue(Float const& n) { return n.value_; }
 
+struct Aggregate
+{
+  int a_{0};
+  int b_{0};
+};
+auto fieldName(Aggregate const*) { return "Aggregate"; }
+void objectValue(But::Log::Backend::EntryProxy& proxy, Aggregate const& a)
+{
+  proxy.value("a", a.a_);
+  proxy.value("b", a.b_);
+}
+
 
 struct ButLogProxyThrowing: public testing::Test
 {
@@ -79,6 +91,7 @@ TEST_F(ButLogProxyThrowing, LoggingMultipleSimpleValuesAtOnce)
   EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "foo"}, {"Integer", 42}, {"Float", 3.14} } ) );
 }
 
+
 TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
 {
   pt_.log( BUT_FORMAT("${0} != $1"), Float{13}, Integer{42} );
@@ -87,12 +100,33 @@ TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
             {"Integer", 42},
             {"Float", 13.0}
     };
-  expected["But::Format"]["format"] = "${0} != $1";
   {
     auto array = json::array();
     array.push_back(13.0);
     array.push_back(42);
     expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "${0} != $1";
+  }
+
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
+}
+
+
+TEST_F(ButLogProxyThrowing, FormattedLoggingOfAggregateIsReadable)
+{
+  pt_.log( BUT_FORMAT("${0} != $1"), Aggregate{997, 51}, Integer{42} );
+  auto expected = json{
+            {"message", R"({"Aggregate":{"a":997,"b":51}} != 42)"},
+            {"Integer", 42},
+    };
+  expected["Aggregate"]["a"] = 997;
+  expected["Aggregate"]["b"] = 51;
+  {
+    auto array = json::array();
+    array.push_back( json{ {"a", 997}, {"b", 51} } );
+    array.push_back(42);
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "${0} != $1";
   }
 
   EXPECT_EQ_JSON( sink_->parse(0), expected );
