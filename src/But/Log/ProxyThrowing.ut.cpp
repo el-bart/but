@@ -33,6 +33,21 @@ struct TestSink final: public Sink
 };
 
 
+struct Integer
+{
+  int value_;
+};
+auto fieldName(Integer const*) { return "Integer"; }
+auto fieldValue(Integer const& n) { return n.value_; }
+
+struct Float
+{
+  double value_;
+};
+auto fieldName(Float const*) { return "Float"; }
+auto fieldValue(Float const& n) { return n.value_; }
+
+
 struct ButLogProxyThrowing: public testing::Test
 {
   But::NotNullShared<TestSink> sink_{ But::makeSharedNN<TestSink>() };
@@ -47,42 +62,44 @@ TEST_F(ButLogProxyThrowing, NoArgumentsToLog)
 }
 
 
-#if 0
 TEST_F(ButLogProxyThrowing, LoggingSimpleValuesOneAtATime)
 {
-  pt_.log("m", 42);
+  pt_.log("m", Integer{42});
   pt_.log("m");
-  pt_.log("m", 3.14);
-  EXPECT_EQ( sink_->parse(0), ( json{ {"message", "m"}, {"named", 42} } ) );
-  EXPECT_EQ( sink_->parse(1), ( json{ {"message", "m"} } ) );
-  // TODO
+  pt_.log("m", Float{3.14});
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "m"}, {"Integer", 42} } ) );
+  EXPECT_EQ_JSON( sink_->parse(1), ( json{ {"message", "m"} } ) );
+  EXPECT_EQ_JSON( sink_->parse(2), ( json{ {"message", "m"}, {"Float", 3.14} } ) );
 }
 
 
 TEST_F(ButLogProxyThrowing, LoggingMultipleSimpleValuesAtOnce)
 {
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log(42, "foo", 3.14);
-  EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | double='3.14' | " );
+  pt_.log("foo", Float{3.14}, Integer{42});
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "foo"}, {"Integer", 42}, {"Float", 3.14} } ) );
 }
-
-
-TEST_F(ButLogProxyThrowing, SinkTypeValueLogging)
-{
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log(42, "foo", 'a');
-  EXPECT_EQ( buffer_.str(), "int='42' | string='foo' | string='a' | ");
-}
-
 
 TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
 {
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log( BUT_FORMAT("${0} = $1"), "answer", 42 );
-  EXPECT_EQ( buffer_.str(), "But::Formatted='answer = 42' | string='answer' | int='42' | ");
+  pt_.log( BUT_FORMAT("${0} != $1"), Float{13}, Integer{42} );
+  auto expected = json{
+            {"message", "13.000000 != 42"},
+            {"Integer", 42},
+            {"Float", 13.0}
+    };
+  expected["But::Format"]["format"] = "${0} != $1";
+  {
+    auto array = json::array();
+    array.push_back(13.0);
+    array.push_back(42);
+    expected["But::Format"]["args"] = std::move(array);
+  }
+
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
 
 
+#if 0
 struct SomeThrowingType { };
 FieldInfo toFieldInfo(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 

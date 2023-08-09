@@ -37,13 +37,24 @@ public:
   void log(std::string_view const message, Args&& ...args) const
   {
     auto root = entryRoot_.independentCopy();
-    auto proxy = root.proxy();
-    proxy.value("message", message);
-    addFields( proxy, std::forward<Args>(args)... );
-    // TODO...
-    //auto tmp = convertSimplifiedArgs( std::forward<Args>(args)... );
-    //Backend::FieldInfo fi{ Log::Destination::Common::rootElementTag(), std::move(tmp) };
-    dst_->log( root.json() );
+    logImpl(root, message, std::forward<Args>(args)... );
+  }
+
+  template<size_t ArgumentsCount, size_t MaxSegments, typename ...Args>
+  void log(Format::ParsedCompiletime<ArgumentsCount, MaxSegments> const& format, Args&& ...args) const
+  {
+    const auto translated = translator_->translate(format);
+    auto formatted = Field::FormattedString{ Format::apply( translated, makeString(args)... ) };
+
+    auto root = entryRoot_.independentCopy();
+    {
+      auto proxy = root.proxy();
+      auto fmt = proxy.object("But::Format");
+      fmt.value( "format", format.inputFormat() );
+      auto array = fmt.array("args");
+      addFields(array, args...);
+    }
+    logImpl(root, fieldValue(formatted), std::forward<Args>(args)... );
   }
 
   template<typename ...Args>
@@ -73,7 +84,38 @@ private:
   template<typename ...Args>
   void addFields(Backend::EntryProxy& proxy, Args&& ...args) const
   {
+    // TODO: handle repeated field types...
     ( proxy.nest( std::forward<Args>(args) ) , ... );
+  }
+
+  template<typename ...Args>
+  void addFields(Backend::EntryArray& array, Args&& ...args) const
+  {
+    ( array.nest( std::forward<Args>(args) ) , ... );
+  }
+
+  template<typename ...Args>
+  void logImpl(Backend::detail::EntryRoot& root, std::string_view const message, Args&& ...args) const
+  {
+    {
+      auto proxy = root.proxy();
+      proxy.value("message", message);
+      addFields( proxy, std::forward<Args>(args)... );
+    }
+    dst_->log( root.json() );
+  }
+
+  template<typename T>
+  std::string makeString(T const& t) const
+  {
+    if constexpr ( Backend::detail::HasFieldValue<T>::value )
+      return std::to_string( fieldValue(t) );
+    else
+    {
+      Backend::detail::EntryRoot er;
+      er.proxy().nest(t);
+      return er.json();
+    }
   }
 
   /*
