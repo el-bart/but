@@ -21,15 +21,24 @@ struct TestSink final: public Sink
     logs_.push_back( std::move(str) );
   }
 
-  void reloadImpl() override { }
-  void flushImpl() override { }
+  void reloadImpl() override { ++reloads_; }
+  void flushImpl() override  { ++flushes_; }
 
   json parse(size_t index) const
   {
     return json::parse( logs_.at(index) );
   }
 
+  unsigned reloads_{0};
+  unsigned flushes_{0};
   std::vector<std::string> logs_;
+};
+
+
+struct ButLogProxyThrowing: public testing::Test
+{
+  But::NotNullShared<TestSink> sink_{ But::makeSharedNN<TestSink>() };
+  ProxyThrowing<> pt_{sink_};
 };
 
 
@@ -58,13 +67,6 @@ void objectValue(But::Log::Backend::EntryProxy& proxy, Aggregate const& a)
   proxy.value("a", a.a_);
   proxy.value("b", a.b_);
 }
-
-
-struct ButLogProxyThrowing: public testing::Test
-{
-  But::NotNullShared<TestSink> sink_{ But::makeSharedNN<TestSink>() };
-  ProxyThrowing<> pt_{sink_};
-};
 
 
 TEST_F(ButLogProxyThrowing, NoArgumentsToLog)
@@ -107,7 +109,6 @@ TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
     expected["But::Format"]["args"] = std::move(array);
     expected["But::Format"]["format"] = "${0} != $1";
   }
-
   EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
 
@@ -128,108 +129,85 @@ TEST_F(ButLogProxyThrowing, FormattedLoggingOfAggregateIsReadable)
     expected["But::Format"]["args"] = std::move(array);
     expected["But::Format"]["format"] = "${0} != $1";
   }
-
   EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
 
 
-#if 0
 struct SomeThrowingType { };
-FieldInfo toFieldInfo(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
+auto fieldName(SomeThrowingType const*) { return "SomeThrowingType"; }
+bool fieldValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
 TEST_F(ButLogProxyThrowing, InternalExceptionsArePropagatedToCaller)
 {
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  EXPECT_THROW( log.log( SomeThrowingType{} ), std::runtime_error );
+  EXPECT_THROW( pt_.log("let's throw", SomeThrowingType{}), std::runtime_error );
 }
 
 
 TEST_F(ButLogProxyThrowing, LoggerIsConst)
 {
-  const ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log(42);
+  auto const& pt = pt_;
+  pt.log("doh");
 }
 
 
 TEST_F(ButLogProxyThrowing, LogReloadingIsForwarder)
 {
-  auto dst = But::makeSharedNN<TestSink>(buffer_);
-  ProxyThrowing<> log{dst};
-  EXPECT_EQ( 0u, dst->reloads_ );
-  log.reload();
-  EXPECT_EQ( 1u, dst->reloads_ );
+  EXPECT_EQ( 0u, sink_->reloads_ );
+  pt_.reload();
+  EXPECT_EQ( 1u, sink_->reloads_ );
 }
 
 
 TEST_F(ButLogProxyThrowing, LogFlushingIsForwarder)
 {
-  auto dst = But::makeSharedNN<TestSink>(buffer_);
-  ProxyThrowing<> log{dst};
-  EXPECT_EQ( 0u, dst->flushes_ );
-  log.flush();
-  EXPECT_EQ( 1u, dst->flushes_ );
+  EXPECT_EQ( 0u, sink_->flushes_ );
+  pt_.flush();
+  EXPECT_EQ( 1u, sink_->flushes_ );
 }
 
 
 struct ThrowingDestination final: public Sink
 {
-  void logImpl(FieldInfo const&) { throw std::runtime_error{"ignored"}; }
-  void reloadImpl() { throw std::runtime_error{"ignored"}; }
-  void flushImpl()  { throw std::runtime_error{"ignored"}; }
+  void logImpl(std::string &&) override { throw std::runtime_error{"ignored"}; }
+  void reloadImpl() override { throw std::runtime_error{"ignored"}; }
+  void flushImpl()  override { throw std::runtime_error{"ignored"}; }
 };
 
 TEST_F(ButLogProxyThrowing, AllErrorsFromActualDestinationsAreForwarded)
 {
   ProxyThrowing<> log{ But::makeSharedNN<ThrowingDestination>() };
-  EXPECT_THROW( log.log("hello", "john"), std::runtime_error );
+  EXPECT_THROW( log.log("hello"), std::runtime_error );
   EXPECT_THROW( log.reload(), std::runtime_error  );
   EXPECT_THROW( log.flush(), std::runtime_error  );
 }
 
 
-struct Answer
-{
-  int value_{42};
-};
-
-inline auto toFieldInfo(const Answer a)
-{
-  using But::Log::Backend::toFieldInfo;
-  return toFieldInfo(a.value_).retag(Tag{"Answer"});
-}
-
-TEST_F(ButLogProxyThrowing, FormattingNonStandardTypes)
-{
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, Answer{} );
-  EXPECT_EQ( buffer_.str(), "But::Formatted='computer says Answer=42' | string='computer' | Answer='42' | " );
-}
-
-
 struct Misc
 {
-  int value_{42};
+  int value_{0};
 };
-
-inline auto toFieldInfo(const Misc m)
-{
-  using But::Log::Backend::toFieldInfo;
-  return toFieldInfo(m.value_).retag(Tag{"Misc"});
-}
-
-inline auto toString(const Misc m)
-{
-  return std::to_string(m.value_);
-}
+auto fieldName(Misc const*) { return "Misc"; }
+int fieldValue(Misc const& m) { return m.value_; }
+inline auto toString(Misc const m) { return "answer_" + std::to_string(m.value_); }
 
 TEST_F(ButLogProxyThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
 {
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log( BUT_FORMAT("$0 says $1"), std::string{"computer"}, Misc{} );
-  EXPECT_EQ( buffer_.str(), "But::Formatted='computer says 42' | string='computer' | Misc='42' | " );
+  pt_.log( BUT_FORMAT("computer says $0"), Misc{42} );
+  auto expected = json{
+            {"message", "computer says answer_42"},
+            {"Misc", 42}
+    };
+  {
+    auto array = json::array();
+    array.push_back(42);
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "computer says $0";
+  }
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
 
 
+#if 0
 TEST_F(ButLogProxyThrowing, FormattingInTheMiddleOfArgumentsList)
 {
   ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };

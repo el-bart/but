@@ -108,13 +108,18 @@ private:
   template<typename T>
   std::string makeString(T const& t) const
   {
-    if constexpr ( Backend::detail::HasFieldValue<T>::value )
-      return std::to_string( fieldValue(t) );
+    if constexpr ( Backend::detail::HasToString<T>::value )
+      return toString(t);
     else
     {
-      Backend::detail::EntryRoot er;
-      er.proxy().nest(t);
-      return er.json();
+      if constexpr ( Backend::detail::HasFieldValue<T>::value )
+        return std::to_string( fieldValue(t) );
+      else
+      {
+        Backend::detail::EntryRoot er;
+        er.proxy().nest(t);
+        return er.json();
+      }
     }
   }
 
