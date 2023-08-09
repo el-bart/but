@@ -98,7 +98,7 @@ TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
 {
   pt_.log( BUT_FORMAT("${0} != $1"), Float{13}, Integer{42} );
   auto expected = json{
-            {"message", "13.000000 != 42"},
+            {"message", "${0} != $1"},
             {"Integer", 42},
             {"Float", 13.0}
     };
@@ -108,6 +108,7 @@ TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
     array.push_back(42);
     expected["But::Format"]["args"] = std::move(array);
     expected["But::Format"]["format"] = "${0} != $1";
+    expected["But::Format"]["But::FormattedString"] = "13.000000 != 42";
   }
   EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
@@ -117,7 +118,7 @@ TEST_F(ButLogProxyThrowing, FormattedLoggingOfAggregateIsReadable)
 {
   pt_.log( BUT_FORMAT("${0} != $1"), Aggregate{997, 51}, Integer{42} );
   auto expected = json{
-            {"message", R"({"Aggregate":{"a":997,"b":51}} != 42)"},
+            {"message", "${0} != $1"},
             {"Integer", 42},
     };
   expected["Aggregate"]["a"] = 997;
@@ -128,6 +129,7 @@ TEST_F(ButLogProxyThrowing, FormattedLoggingOfAggregateIsReadable)
     array.push_back(42);
     expected["But::Format"]["args"] = std::move(array);
     expected["But::Format"]["format"] = "${0} != $1";
+    expected["But::Format"]["But::FormattedString"] = R"({"Aggregate":{"a":997,"b":51}} != 42)";
   }
   EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
@@ -194,7 +196,7 @@ TEST_F(ButLogProxyThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
 {
   pt_.log( BUT_FORMAT("computer says $0"), Misc{42} );
   auto expected = json{
-            {"message", "computer says answer_42"},
+            {"message", "computer says $0"},
             {"Misc", 42}
     };
   {
@@ -202,6 +204,7 @@ TEST_F(ButLogProxyThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
     array.push_back(42);
     expected["But::Format"]["args"] = std::move(array);
     expected["But::Format"]["format"] = "computer says $0";
+    expected["But::Format"]["But::FormattedString"] = "computer says answer_42";
   }
   EXPECT_EQ_JSON( sink_->parse(0), expected );
 }

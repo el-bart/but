@@ -43,18 +43,10 @@ public:
   template<size_t ArgumentsCount, size_t MaxSegments, typename ...Args>
   void log(Format::ParsedCompiletime<ArgumentsCount, MaxSegments> const& format, Args&& ...args) const
   {
-    const auto translated = translator_->translate(format);
-    auto formatted = Field::FormattedString{ Format::apply( translated, makeString(args)... ) };
-
     auto root = entryRoot_.independentCopy();
-    {
-      auto proxy = root.proxy();
-      auto fmt = proxy.object("But::Format");
-      fmt.value( "format", format.inputFormat() );
-      auto array = fmt.array("args");
-      addFields(array, args...);
-    }
-    logImpl(root, fieldValue(formatted), std::forward<Args>(args)... );
+    auto proxy = root.proxy();
+    addFormatNode( proxy, format, args... );
+    logImpl(root, format.inputFormat(), std::forward<Args>(args)... );
   }
 
   template<typename ...Args>
@@ -75,6 +67,22 @@ private:
     translator_{ std::move(tr) },
     entryRoot_{ std::move(entryRoot) }
   { }
+
+  template<size_t ArgumentsCount, size_t MaxSegments, typename ...Args>
+  void addFormatNode(Backend::EntryProxy& proxy, Format::ParsedCompiletime<ArgumentsCount, MaxSegments> const& format, Args const& ...args) const
+  {
+    auto fmt = proxy.object("But::Format");
+    fmt.value("format", format.inputFormat());
+    {
+      auto array = fmt.array("args");
+      addFields(array, args...);
+    }
+    {
+      const auto translated = translator_->translate(format);
+      auto formatted = Field::FormattedString{ Format::apply( translated, makeString(args)... ) };
+      fmt.nest( std::move(formatted) );
+    }
+  }
 
   template<typename ...Args>
   void addFields(Backend::EntryProxy& proxy, Args&& ...args) const
