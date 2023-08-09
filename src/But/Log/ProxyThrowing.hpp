@@ -61,20 +61,15 @@ public:
   [[nodiscard]] auto withFields(Args&& ...args) const
   {
     auto root = entryRoot_.independentCopy();
-    addFields( root.proxy(), std::forward<Args>(args)... );
+    auto proxy = root.proxy();
+    addFields( proxy, std::forward<Args>(args)... );
     return ProxyThrowing{ dst_, translator_, std::move(root) };
-    /*
-    auto tmp = convertSimplifiedArgs( std::forward<Args>(args)... );
-    return ProxyThrowing{ dst_, translator_, makeSharedNN<Data>( std::move(tmp) ) };
-    */
   }
 
   void reload() { dst_->reload(); }
   void flush() { dst_->flush(); }
 
 private:
-  //using Data = std::vector<Backend::FieldInfo>;
-
   ProxyThrowing(Destination dst, Translator tr, Backend::detail::EntryRoot entryRoot):
     dst_{ std::move(dst) },
     translator_{ std::move(tr) },
@@ -122,35 +117,6 @@ private:
       }
     }
   }
-
-  /*
-  template<typename ...Args>
-  [[nodiscard]] auto convertSimplifiedArgs(Args&& ...args) const
-  {
-    auto tmp = *entryRoot_;
-    tmp.reserve( tmp.size() + sizeof...(args) );
-    convertArgs( tmp, detail::simplifyRepresentation( std::forward<Args>(args) )... );
-    return tmp;
-  }
-
-  void convertArgs(Data&) const { }
-
-  template<typename Head, typename ...Tail>
-  void convertArgs(Data& out, Head&& head, Tail&& ...tail) const
-  {
-    using Backend::toFieldInfo;
-    out.push_back( toFieldInfo( std::forward<Head>(head) ) );
-    convertArgs( out, std::forward<Tail>(tail)... );
-  }
-
-  template<size_t N, size_t M, typename ...Tail>
-  void convertArgs(Data& out, Format::ParsedCompiletime<N,M>&& parsed, Tail&& ...tail) const
-  {
-    const auto translated = translator_->translate( std::move(parsed) );
-    auto formatted = Field::FormattedString{ Format::apply(translated, tail...) };
-    convertArgs( out, std::move(formatted), std::forward<Tail>(tail)... );
-  }
-  */
 
   mutable Destination dst_;
   Translator translator_{};

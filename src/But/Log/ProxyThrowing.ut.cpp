@@ -207,24 +207,15 @@ TEST_F(ButLogProxyThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
 }
 
 
-#if 0
-TEST_F(ButLogProxyThrowing, FormattingInTheMiddleOfArgumentsList)
-{
-  ProxyThrowing<> log{ But::makeSharedNN<TestSink>(buffer_) };
-  log.log( "gues", "what!", BUT_FORMAT("$0 says $1"), std::string{"computer"}, int{42} );
-  EXPECT_EQ( buffer_.str(), "string='gues' | string='what!' | But::Formatted='computer says 42' | string='computer' | int='42' | " );
-}
-
-
 struct CustomTranslator
 {
   template<size_t N, size_t M>
-  auto translate(But::Format::ParsedCompiletime<N,M>&& parsed) const
+  auto translate(But::Format::ParsedCompiletime<N,M> const& parsed) const
   {
     ++counter_;
     if(throws_)
       throw std::runtime_error{"translation error, as requested"};
-    return std::move(parsed);
+    return parsed;
   }
 
   auto& operator->() const { return *this; }
@@ -237,9 +228,9 @@ struct CustomTranslator
 TEST_F(ButLogProxyThrowing, TranslationsAreNotAffectingNonFormattedLogs)
 {
   CustomTranslator ct;
-  ProxyThrowing<CustomTranslator const*> log{ But::makeSharedNN<TestSink>(buffer_), &ct };
+  ProxyThrowing<CustomTranslator const*> pt{sink_, &ct};
   EXPECT_EQ(0u, ct.counter_);
-  log.log("not affected");
+  pt.log("not affected");
   EXPECT_EQ(0u, ct.counter_);
 }
 
@@ -247,9 +238,9 @@ TEST_F(ButLogProxyThrowing, TranslationsAreNotAffectingNonFormattedLogs)
 TEST_F(ButLogProxyThrowing, UsingCustomTranslator)
 {
   CustomTranslator ct;
-  ProxyThrowing<CustomTranslator const*> log{ But::makeSharedNN<TestSink>(buffer_), &ct };
+  ProxyThrowing<CustomTranslator const*> pt{sink_, &ct};
   EXPECT_EQ(0u, ct.counter_);
-  log.log( BUT_FORMAT("test") );
+  pt.log( BUT_FORMAT("test") );
   EXPECT_EQ(1u, ct.counter_);
 }
 
@@ -257,8 +248,8 @@ TEST_F(ButLogProxyThrowing, UsingCustomTranslator)
 TEST_F(ButLogProxyThrowing, ExceptionsFromTranslationsArePropagated)
 {
   CustomTranslator ct{true};
-  ProxyThrowing<CustomTranslator const*> log{ But::makeSharedNN<TestSink>(buffer_), &ct };
-  EXPECT_THROW( log.log( BUT_FORMAT("test $0"), "xx" ), std::runtime_error );
+  ProxyThrowing<CustomTranslator const*> pt{sink_, &ct};
+  EXPECT_THROW( pt.log( BUT_FORMAT("test $0"), Integer{42} ), std::runtime_error );
 }
 
 
@@ -276,35 +267,30 @@ TEST_F(ButLogProxyThrowing, CopyableAndMovable)
 
 TEST_F(ButLogProxyThrowing, ProxyWithDefaultFields)
 {
-  const auto log = ProxyThrowing<>{ But::makeSharedNN<TestSink>(buffer_) };
-  const auto proxy = log.withFields("foo", 42);
+  const auto cpt = pt_;
+  const auto proxy = cpt.withFields(Integer{42}, Misc{13});
   proxy.log("narf");
-  EXPECT_EQ( buffer_.str(), "string='foo' | int='42' | string='narf' | " );
   proxy.log("yay!!!");
-  EXPECT_EQ( buffer_.str(), "string='foo' | int='42' | string='narf' | "
-                            "string='foo' | int='42' | string='yay!!!' | " );
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "narf"},   {"Integer", 42}, {"Misc", 13} } ) );
+  EXPECT_EQ_JSON( sink_->parse(1), ( json{ {"message", "yay!!!"}, {"Integer", 42}, {"Misc", 13} } ) );
 }
 
 
 TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerived)
 {
-  const auto log = ProxyThrowing<>{ But::makeSharedNN<TestSink>(buffer_) };
-  const auto tmp = log.withFields("foo");
-  const auto proxy = tmp.withFields(42);
+  const auto tmp = pt_.withFields(Integer{42});
+  const auto proxy = tmp.withFields(Misc{13});
   proxy.log("narf");
-  EXPECT_EQ( buffer_.str(), "string='foo' | int='42' | string='narf' | " );
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "narf"}, {"Integer", 42}, {"Misc", 13} } ) );
 }
 
 
 TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBase)
 {
-  const auto log = ProxyThrowing<>{ But::makeSharedNN<TestSink>(buffer_) };
-  const auto proxy= log.withFields("foo");
-  const auto other= proxy.withFields(42);
+  const auto proxy = pt_.withFields(Integer{42});
+  const auto other = proxy.withFields(Misc{13});
   proxy.log("narf");
-  EXPECT_EQ( buffer_.str(), "string='foo' | string='narf' | " );
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "narf"}, {"Integer", 42} } ) );
 }
-
-#endif
 
 }
