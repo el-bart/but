@@ -48,5 +48,18 @@ struct HasArrayValue
   static constexpr bool value = decltype(test<T>(0))::value;
 };
 
+
+template<typename T>
+struct HasToString
+{
+  template<typename U, typename = decltype( toString( std::declval<U>() ) )>
+  static std::true_type test(int);
+
+  template <typename U>
+  static std::false_type test(...);
+
+  static constexpr bool value = decltype(test<T>(0))::value;
+};
+
 }
 }

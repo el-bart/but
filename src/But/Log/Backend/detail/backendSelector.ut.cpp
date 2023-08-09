@@ -69,4 +69,16 @@ TEST_F(ButLogBackendDetailBackendSelector, CheckArrayV)
   EXPECT_TRUE(  D::HasArrayValue<MyArrayV >::value );
 }
 
+
+struct StringAware { };
+auto toString(StringAware const&) { return "ok"; }
+
+struct StringUnaware { };
+
+TEST_F(ButLogBackendDetailBackendSelector, CheckToString)
+{
+  EXPECT_TRUE(  D::HasToString<StringAware>::value );
+  EXPECT_FALSE( D::HasToString<StringUnaware>::value );
+}
+
 }
