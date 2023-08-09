@@ -1,6 +1,7 @@
 #include <memory>
 #include <vector>
 #include <But/Log/ProxyThrowing.hpp>
+#include <But/Log/Backend/detail/unifyJson.ut.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <nlohmann/json.hpp>
 #include <gtest/gtest.h>
@@ -8,7 +9,7 @@
 using But::Log::ProxyThrowing;
 using But::Log::Destination::Sink;
 using But::Log::Field::FormattedString;
-using json = nlohmann::ordered_json;
+using nlohmann::json;
 
 namespace
 {
@@ -42,7 +43,7 @@ struct ButLogProxyThrowing: public testing::Test
 TEST_F(ButLogProxyThrowing, NoArgumentsToLog)
 {
   pt_.log("test");
-  EXPECT_EQ( sink_->parse(0), ( json{ {"message", "test"} } ) );
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "test"} } ) );
 }
 
 
