@@ -8,16 +8,27 @@ namespace But::Log::Backend::detail
 
 struct EntryRootTestBase: public testing::Test
 {
-  static auto unify(std::string const& in)
+  static std::string unify(char const* in)
   {
-    const auto tmp = nlohmann::json::parse(in);
-    return tmp.dump(2);
+    return unify( nlohmann::json::parse(in) );
+  }
+  static std::string unify(std::string const& in)
+  {
+    return unify( nlohmann::json::parse(in) );
+  }
+  static std::string unify(nlohmann::json const& in)
+  {
+    return in.dump(4);
+  }
+  static std::string unify(But::Log::Backend::detail::EntryRoot const& in)
+  {
+    return unify( in.json() );
   }
 
   But::Log::Backend::detail::EntryRoot er_;
 };
 
 #define EXPECT_EQ_JSON(a, b) \
-        EXPECT_EQ( unify(a), unify( b.json() ) )
+        EXPECT_EQ( unify(a), unify(b) )
 
 }
