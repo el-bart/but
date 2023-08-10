@@ -1,50 +1,44 @@
 #pragma once
-#include <But/Log/ProxyThrowing.hpp>
+#include <But/Log/LoggerThrowing.hpp>
 
-namespace But
-{
-namespace Log
+namespace But::Log
 {
 
-/** @brief proxy class, to be used as an entry point for logging.
+/** @brief logger class, to be used as an entry point for logging.
  *         Destination type can be anything that derives from Destination::Sink class,
  *         or a user-provided type, that will handle all the arguments on its own.
  *
- * @warning Proxy is NOT thread-safe! "sinks" however are. what it means is one can re-use
- *          shared sinks between threads, but each thread shall have own copy of Proxy object to use.
+ * @warning Logger is NOT thread-safe! "sinks" however are. what it means is one can re-use
+ *          shared sinks between threads, but each thread shall have own copy of Logger object to use.
  *
  * @example basic, on-console output logger can be achieved like this:
  * <code>
- * using Log = But::Log::Proxy<Destination::Console>;
- * Log log;
- * log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} );
+ * using Log = But::Log::Logger<>
+ * Log log{ std::make_shared<Destination::Console>() };
+ * log.log( "hello, world!", Severity::Info, Timestamp{}, UtcDate{} );
  * </code>
  *
- * @example the most trivial, near-to-zero overhead, on-console output logger can be achieved like this:
+ * @example for testing ignore-all logger can be created like this:
  * <code>
- * using Log = But::Log::Proxy<Destination::TextConsole>;
- * Log log;
- * log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} );
+ * using Log = But::Log::Logger<>
+ * Log log{ std::make_shared<Destination::Null>() };
+ * log.log( "hello, world", Severity::Info, Timestamp{}, UtcDate{} );
  * </code>
  *
  * @example multi-thread safe logging to file, with all attributes preserved, one JSON per line:
  * <code>
  * using Thread = But::JoiningThread<std::thread>;
- * using Log = But::Log::Proxy<But::NotNullShared<Destination::Sink>;
- * Log log{ But::makeSharedNN<Destination::JsonFile>("/tmp/my_program.log") };
- * // note: each thread gets its own COPY of Proxy object!
- * auto action = [log]() { log.log( Timestamp{}, " hello - current UTC date is: ", UtcDate{} ); };
+ * using Log = But::Log::Logger<But::NotNullShared<Destination::Sink>;
+ * Log log{ But::makeSharedNN<Destination::File>("/tmp/my_program.log") };
+ * // note: each thread gets its own COPY of Logger object!
+ * auto action = [log]() { log.log( "hello - UTC date!", Severity::Info, Timestamp{}, UtcDate{} ); };
  * Thread th1{action};
  * Thread th2{action};
  * </code>
  *
- * @example if a dynamic output is needed, use Destination::Sink as a base class,
- *          for implementing any output for you want. as a parameter you will receive a
- *          collection of type-value pairs, representing each argument.
- *
  * @warning it is sink's implementer responsibility to handle input/output in a thread-safe manner!
  *
- * @note all Destinations must either be (smart) pointers or provide an arrow operator.
+ * @note all Destinations must either be smark pointers to base class Destination::Sink
  *
  * @note class allows parametrization with "translators", for having localization support (i.e. logs in different
  *       languages). by default no translation is being made.
@@ -52,14 +46,14 @@ namespace Log
  * @note "translators" are only applicable for *formatted* logs!
  */
 template<typename Translator = Localization::None>
-class Proxy final
+class Logger final
 {
 public:
-  using Backend = ProxyThrowing<Translator>;
+  using Backend = LoggerThrowing<Translator>;
   using Destination = typename Backend::Destination;
 
-  explicit Proxy(Destination dst): lpt_{ std::move(dst) } { }
-  Proxy(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
+  explicit Logger(Destination dst): lpt_{ std::move(dst) } { }
+  Logger(Destination dst, Translator tr): lpt_{ std::move(dst), std::move(tr) } { }
 
   /** @brief creates a single log entry, out of given parameters.
    */
@@ -99,20 +93,19 @@ public:
     { /* this is <del>sparta</del> logger! */ }
   }
 
-  /** @brief returns a proxy pobject, that will always add a given set of fields (i.e. exact values!) into each log.
+  /** @brief returns a logger object, that will always add a given set of fields (i.e. exact values!) into each log.
    *  @warning this creates new object, that allocates memory. it may throw!
    */
   template<typename ...Args>
   auto withFields(Args&& ...args) const
   {
-    return Proxy<Translator>{ lpt_.withFields( std::forward<Args>(args)... ) };
+    return Logger<Translator>{ lpt_.withFields( std::forward<Args>(args)... ) };
   }
 
 
 private:
-  explicit Proxy(Backend backend): lpt_{ std::move(backend) } { }
+  explicit Logger(Backend backend): lpt_{ std::move(backend) } { }
   Backend lpt_;
 };
 
-}
 }

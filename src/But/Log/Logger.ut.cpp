@@ -1,37 +1,33 @@
 #include <memory>
 #include <sstream>
 #include <gtest/gtest.h>
-#include <But/Log/Proxy.hpp>
+#include <But/Log/Logger.hpp>
+#include <But/Log/Field/LineNumber.hpp>
+#include <But/Log/Destination/FakeSink.ut.hpp>
 
-using But::Log::Proxy;
-using But::Log::Backend::FieldInfo;
+using But::Log::Logger;
+using But::Log::Field::LineNumber;
 using But::Log::Destination::Sink;
+using But::Log::Destination::FakeSink;
 
 namespace
 {
 
-struct DestinationStub final: Sink
+struct ButLogLogger: public testing::Test
 {
-  void logImpl(FieldInfo const&) override { }
-  void reloadImpl() override { }
-  void flushImpl() override { }
+  Logger<> lp_{ But::makeSharedNN<FakeSink>() };
 };
 
 
-struct ButLogProxy: public testing::Test
+TEST_F(ButLogLogger, LoggingApiSmokeTest)
 {
-  Proxy<> lp_{ But::makeSharedNN<DestinationStub>() };
-};
-
-
-TEST_F(ButLogProxy, LoggingApiSmokeTest)
-{
-  lp_.log("the", "answer", "is", 42);
-  lp_.log( BUT_FORMAT("$0 is ok"), "pinky" );
+  lp_.log("no substance");
+  lp_.log("the message", LineNumber{42});
+  lp_.log( BUT_FORMAT("line $0 is ok"), LineNumber{42} );
 }
 
 
-TEST_F(ButLogProxy, LoggerIsMovable)
+TEST_F(ButLogLogger, LoggerIsMovable)
 {
   auto other = std::move(lp_);
   (void)other;
@@ -40,15 +36,15 @@ TEST_F(ButLogProxy, LoggerIsMovable)
 
 struct ThrowingDestination final: Sink
 {
-  void logImpl(FieldInfo const&) override { throw std::runtime_error{"ignored"}; }
+  void logImpl(std::string &&) override { throw std::runtime_error{"ignored"}; }
   void reloadImpl() override { throw std::runtime_error{"ignored"}; }
   void flushImpl() override { throw std::runtime_error{"ignored"}; }
 };
 
-TEST_F(ButLogProxy, AllErrorsFromActualDestinationsAreIgnored)
+TEST_F(ButLogLogger, AllErrorsFromActualDestinationsAreIgnored)
 {
-  Proxy<> log{ But::makeSharedNN<ThrowingDestination>() };
-  EXPECT_NO_THROW( log.log("hello", "john") );
+  Logger<> log{ But::makeSharedNN<ThrowingDestination>() };
+  EXPECT_NO_THROW( log.log("hello, world") );
   EXPECT_NO_THROW( log.reload() );
   EXPECT_NO_THROW( log.flush() );
 }
@@ -60,30 +56,30 @@ struct CustomTranslator
   auto translate(But::Format::ParsedCompiletime<N,M>&& parsed) const { return parsed; }
 };
 
-TEST_F(ButLogProxy, ConstructorsForDifferentObjects)
+TEST_F(ButLogLogger, ConstructorsForDifferentObjects)
 {
-  const auto dst = But::makeSharedNN<DestinationStub>();
+  const auto dst = But::makeSharedNN<FakeSink>();
   {
-    Proxy<CustomTranslator> lp{dst};
+    Logger<CustomTranslator> lp{dst};
   }
   {
-    Proxy<CustomTranslator> lp{ dst, CustomTranslator{} };
+    Logger<CustomTranslator> lp{ dst, CustomTranslator{} };
   }
 }
 
 
-TEST_F(ButLogProxy, ProxyWithDefaultFieldsSmokeTest)
+TEST_F(ButLogLogger, LoggerWithDefaultFieldsSmokeTest)
 {
-  auto proxy = lp_.withFields("foo", "bar");
-  proxy.log(42);
+  auto proxy = lp_.withFields( LineNumber{42} );
+  proxy.log("test");
 }
 
 
-TEST_F(ButLogProxy, ProxyWithDefaultFieldsDoesNotThrow)
+TEST_F(ButLogLogger, LoggerWithDefaultFieldsDoesNotThrow)
 {
-  Proxy<> log{ But::makeSharedNN<ThrowingDestination>() };
-  auto proxy = log.withFields("foo", "bar");
-  EXPECT_NO_THROW( proxy.log("hello", "john") );
+  Logger<> log{ But::makeSharedNN<ThrowingDestination>() };
+  auto proxy = log.withFields( LineNumber{42} );
+  EXPECT_NO_THROW( proxy.log("ok") );
 }
 
 }
