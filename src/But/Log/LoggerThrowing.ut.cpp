@@ -2,42 +2,22 @@
 #include <vector>
 #include <But/Log/LoggerThrowing.hpp>
 #include <But/Log/Backend/detail/unifyJson.ut.hpp>
-#include <But/Log/Destination/Sink.hpp>
+#include <But/Log/Destination/FakeSink.ut.hpp>
 #include <nlohmann/json.hpp>
 #include <gtest/gtest.h>
 
 using But::Log::LoggerThrowing;
 using But::Log::Destination::Sink;
+using But::Log::Destination::FakeSink;
 using But::Log::Field::FormattedString;
 using nlohmann::json;
 
 namespace
 {
 
-struct TestSink final: public Sink
-{
-  void logImpl(std::string&& str) override
-  {
-    logs_.push_back( std::move(str) );
-  }
-
-  void reloadImpl() override { ++reloads_; }
-  void flushImpl() override  { ++flushes_; }
-
-  json parse(size_t index) const
-  {
-    return json::parse( logs_.at(index) );
-  }
-
-  unsigned reloads_{0};
-  unsigned flushes_{0};
-  std::vector<std::string> logs_;
-};
-
-
 struct ButLogLoggerThrowing: public testing::Test
 {
-  But::NotNullShared<TestSink> sink_{ But::makeSharedNN<TestSink>() };
+  But::NotNullShared<FakeSink> sink_{ But::makeSharedNN<FakeSink>() };
   LoggerThrowing<> pt_{sink_};
 };
 
