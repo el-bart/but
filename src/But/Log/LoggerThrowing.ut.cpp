@@ -315,6 +315,13 @@ TEST_F(ButLogLoggerThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBa
 }
 
 
+TEST_F(ButLogLoggerThrowing, LoggingElementByReferenceWorks)
+{
+  Integer n{42};
+  pt_.log("ref is fine", n);
+}
+
+
 //
 // NOTE: below tests should fail the compilation. commented out for obvious reasons...
 //

@@ -8,6 +8,7 @@
 #include <But/Log/Localization/None.hpp>
 #include <But/Log/Backend/detail/EntryRoot.hpp>
 #include <But/Log/detail/allNamesUnique.hpp>
+#include <type_traits>
 
 namespace But
 {
@@ -89,7 +90,7 @@ private:
   template<typename ...Args>
   void addFields(Backend::EntryProxy& proxy, Args&& ...args) const
   {
-    static_assert( detail::allNamesUnique( fieldName( static_cast<Args const*>(nullptr) )... ),
+    static_assert( detail::allNamesUnique( fieldName( static_cast<typename std::remove_reference<Args>::type const*>(nullptr) )... ),
                    "all parameters must be of a different type. if you are here - consider tagging" );
     ( proxy.nest( std::forward<Args>(args) ) , ... );
   }
