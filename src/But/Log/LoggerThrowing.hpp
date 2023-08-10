@@ -88,7 +88,8 @@ private:
   template<typename ...Args>
   void addFields(Backend::EntryProxy& proxy, Args&& ...args) const
   {
-    // TODO: handle repeated field types...
+    static_assert( detail::allNamesUnique( fieldName( static_cast<Args const*>(nullptr) )... ),
+                   "all parameters must be of a different type. if you are here - consider tagging" );
     ( proxy.nest( std::forward<Args>(args) ) , ... );
   }
 
