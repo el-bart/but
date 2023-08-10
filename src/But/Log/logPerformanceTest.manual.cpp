@@ -1,12 +1,11 @@
 #include <chrono>
 #include <iostream>
 #include <But/NotNull.hpp>
-#include <But/Log/Proxy.hpp>
-#include <But/Log/Destination/TextConsole.hpp>
+#include <But/Log/Logger.hpp>
+#include <But/Log/Destination/Console.hpp>
 
 using Clock = std::chrono::high_resolution_clock;
-using But::Log::Backend::Tag;
-using But::Log::Backend::FieldInfo;
+using But::Log::Backend::EntryProxy;
 
 namespace
 {
@@ -20,8 +19,8 @@ constexpr auto g_logsCount = 100*1000;
 
 auto makeLogger()
 {
-  auto dst = But::makeSharedNN<But::Log::Destination::TextConsole>();
-  return But::Log::Proxy<>{ std::move(dst) };
+  auto dst = But::makeSharedNN<But::Log::Destination::Console>();
+  return But::Log::Logger<>{ std::move(dst) };
 }
 
 
@@ -42,38 +41,17 @@ void testSimpleString(Logger& log)
     log.log("hello, world");
 }
 
-template<typename Logger>
-void testStringAndInt(Logger& log)
-{
-  for(auto i=0; i<g_logsCount; ++i)
-    log.log("answer is", 42);
-}
-
-template<typename Logger>
-void testStringAndInts(Logger& log)
-{
-  for(auto i=0; i<g_logsCount; ++i)
-    log.log("options:", 41, 42, 43);
-}
-
-template<typename Logger>
-void testStringAndDouble(Logger& log)
-{
-  for(auto i=0; i<g_logsCount; ++i)
-    log.log("some value =", 4.2);
-}
-
 
 struct Point
 {
   int x_;
   int y_;
 };
-
-auto toFieldInfo(Point const& p)
+constexpr auto fieldName(Point const*) { return "Point"; }
+void objectValue(EntryProxy& p, Point const& pt)
 {
-  using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Tag{"Point"}, { toFieldInfo(p.x_), toFieldInfo(p.y_) } };
+  p.value("x", pt.x_);
+  p.value("y", pt.y_);
 }
 
 template<typename Logger>
@@ -89,12 +67,13 @@ struct Line
   Point from_;
   Point to_;
 };
-
-auto toFieldInfo(Line const& l)
+constexpr auto fieldName(Line const*) { return "Line"; }
+void objectValue(EntryProxy& p, Line const& l)
 {
-  using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Tag{"Line"}, { toFieldInfo(l.from_), toFieldInfo(l.to_) } };
+  p.object("from").nest(l.from_);
+  p.object("to").nest(l.to_);
 }
+
 
 template<typename Logger>
 void testCustomNestedStructure(Logger& log)
@@ -122,12 +101,9 @@ int main(int argc, char** argv)
   switch(testCaseNumber)
   {
     case 0: testCout(); break;
-    case 2: testSimpleString(lp); break;
-    case 3: testStringAndInt(lp); break;
-    case 4: testStringAndInts(lp); break;
-    case 5: testStringAndDouble(lp); break;
-    case 6: testCustomStructure(lp); break;
-    case 7: testCustomNestedStructure(lp); break;
+    case 1: testSimpleString(lp); break;
+    case 2: testCustomStructure(lp); break;
+    case 3: testCustomNestedStructure(lp); break;
     default: std::cerr << argv[0] << ": unknown test case " << testCaseNumber << std::endl; return 2;
   }
   const auto stop = Clock::now();
