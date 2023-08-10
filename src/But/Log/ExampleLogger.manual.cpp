@@ -22,6 +22,7 @@ auto fieldValue(MySev ms)
     case MySev::Warning: return "WARNING";
     case MySev::Error:   return "ERROR";
   }
+  throw std::logic_error{"unknown enum"};
 }
 
 
