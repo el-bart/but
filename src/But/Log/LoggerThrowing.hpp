@@ -2,6 +2,7 @@
 #include <But/NotNull.hpp>
 #include <But/Format/apply.hpp>
 #include <But/Format/format.hpp>
+#include <But/Format/toString.hpp>
 #include <But/Log/Field/FormattedString.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Localization/None.hpp>
@@ -111,11 +112,6 @@ private:
   }
 
   template<typename T>
-  auto makeStringFromValue(T const&         v) const { return std::to_string(v); }
-  auto makeStringFromValue(std::string      v) const { return v; }
-  auto makeStringFromValue(std::string_view v) const { return std::string{v}; }
-
-  template<typename T>
   std::string makeString(T const& t) const
   {
     if constexpr ( Backend::detail::HasToString<T>::value )
@@ -123,7 +119,7 @@ private:
     else
     {
       if constexpr ( Backend::detail::HasFieldValue<T>::value )
-        return makeStringFromValue( fieldValue(t) );
+        return Format::toString( fieldValue(t) );
       else
       {
         Backend::detail::EntryRoot er;
