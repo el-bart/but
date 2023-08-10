@@ -297,11 +297,21 @@ TEST_F(ButLogLoggerThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBa
 }
 
 
-// NOTE: below test should fail the compilation. commented out for obvious reasons...
+//
+// NOTE: below tests should fail the compilation. commented out for obvious reasons...
+//
+
 #if 0
 TEST_F(ButLogLoggerThrowing, RepeatedArgumentsCauseCompilationToFail)
 {
   pt_.log("m", Integer{42}, Integer{13});
+}
+#endif
+
+#if 0
+TEST_F(ButLogLoggerThrowing, RepeatedArgumentsCauseCompilationToFail)
+{
+  (void)pt_.withFields(Integer{42}, Integer{13});
 }
 #endif
 
