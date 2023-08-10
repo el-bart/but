@@ -48,6 +48,20 @@ void objectValue(But::Log::Backend::EntryProxy& proxy, Aggregate const& a)
   proxy.value("b", a.b_);
 }
 
+struct String
+{
+  std::string value_;
+};
+constexpr auto fieldName(String const*) { return "String"; }
+auto fieldValue(String const& n) { return n.value_; }
+
+struct StringView
+{
+  std::string_view value_;
+};
+constexpr auto fieldName(StringView const*) { return "StringView"; }
+auto fieldValue(StringView const& n) { return n.value_; }
+
 
 TEST_F(ButLogLoggerThrowing, NoArgumentsToLog)
 {
@@ -233,6 +247,30 @@ TEST_F(ButLogLoggerThrowing, ExceptionsFromTranslationsArePropagated)
   CustomTranslator ct{true};
   LoggerThrowing<CustomTranslator const*> pt{sink_, &ct};
   EXPECT_THROW( pt.log( BUT_FORMAT("test $0"), Integer{42} ), std::runtime_error );
+}
+
+
+TEST_F(ButLogLoggerThrowing, StringsAreCorrectlyFormatted)
+{
+  CustomTranslator ct{true};
+  LoggerThrowing<CustomTranslator const*> pt{sink_, &ct};
+  EXPECT_THROW( pt.log( BUT_FORMAT("test $0"), Integer{42} ), std::runtime_error );
+
+  pt_.log( BUT_FORMAT("${0} != $1"), String{"foo"}, StringView{"bar"} );
+  auto expected = json{
+            {"message", "${0} != $1"},
+            {"String", "foo"},
+            {"StringView", "bar"}
+    };
+  {
+    auto array = json::array();
+    array.push_back("foo");
+    array.push_back("bar");
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "${0} != $1";
+    expected["But::Format"]["But::FormattedString"] = R"(foo != bar)";
+  }
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
 }
 
 
