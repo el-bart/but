@@ -6,6 +6,7 @@
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Localization/None.hpp>
 #include <But/Log/Backend/detail/EntryRoot.hpp>
+#include <But/Log/detail/allNamesUnique.hpp>
 
 namespace But
 {
