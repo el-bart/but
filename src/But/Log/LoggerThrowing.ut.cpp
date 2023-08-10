@@ -296,4 +296,13 @@ TEST_F(ButLogLoggerThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBa
   EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "narf"}, {"Integer", 42} } ) );
 }
 
+
+// NOTE: below test should fail the compilation. commented out for obvious reasons...
+#if 0
+TEST_F(ButLogLoggerThrowing, RepeatedArgumentsCauseCompilationToFail)
+{
+  pt_.log("m", Integer{42}, Integer{13});
+}
+#endif
+
 }
