@@ -5,47 +5,19 @@
 
 ## logger-related things
 
-* `Logger::withUniqueFields()` - same as `withFields()`, but auto-skipping duplicates.
-  * better enforce non-duplicate elements
-  * `tag()`ing should only add a new layer - not rename type itself!
-  * basic types are not allowed - always must be wrapped
-  * message is allowed only as a first parameter (but is optional)
-* consider adding bigger SSO to Backend::Value (compared to what std::string offers on GCC).
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
-* add fields: `Size`, `Index`, `Address`
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occurs, but dropping if nothing 'special' happens for some time
 * add support for correlation chains (UUIDs/GUIDs).
 * retry-sink, that will try to send log, in case of errors, multiple times.
 * `Log::Dst::BackgroundThread` - add overflow policy (drop oldest, drop new, block).
-* sub-second accuracy timestamp field.
 * add `destination` that would retry sending logs, according to a given setup (retry count, max wait time, etc...).
 * macros for logging: `BUT_LOG_FILE`/`LINE`/`FUNCTION`
-* consider removing a restriction that `Log::Proxy` is not thread-safe.
-* update format, so that it does not need to be a first argument of the log.
-* cleanup Verbose* and Text* types of outputs, so that there is no code duplication and yet all combinations are covered.
-* `LogProxy::withFields()` vs. lazy evaluation of the fields?
-* `Optional::get_value_or()`
-* `toFieldInfo(type_index)`
-* `toFieldInfo(type_info)`
-* `toFieldInfo(set)`
-* `toFieldInfo(map)`
-* `toFieldInfo(unordered_set)`
-* `toFieldInfo(unordered_map)`
-* `toFieldInfo(array)`
 * consider auto-trimming leading `../` sequences inside filename, when logging filename via macro (can be a dedicated type, if needed)
-* consider splitting `toFieldInfo` into `toTag` and `toValue`.
-* streaming out `json` will throw if an invalid character will be spotted. create sanitizer, that will replace any non-UTF-8 character with a standard replacement character (U+FFFD).
-* allow UTF-8 in regular text console output (currently all non-ASCII characters are replaced with '.' symbol in console writing mode).
-* prepare API v2:
-  * `struct(v<k,v>)`
-  * `list(k,v<v>)`
-  * `toFieldType()`
-  * `toFieldValue()`
-  * `toFieldInfo()` convenience helper that uses `toFieldType` and `toFieldValue` internally
-  * `toFieldType()` shall return `std::string_view` to prevent early pessimisation (types that would actually require returning sth dynamic, can always use `static std::string` internally)
+
 
 ## improvements / new APIs
+* `Optional::get_value_or()`
 * split build into core and dev
 * `but::throw` with comma-based syntax, instead of streams (compatible with logging + no need for a macro to use it)
 * `but::guard<A>` -> `but::guard<B>` (lambda -> `std::function<void()>`)
@@ -73,6 +45,7 @@
 * `BUT_ASSERT_ALWAYS()` for asserts that shall remain in release builds as well.
 * helper to check if UTF-8 sequence is valid ([utf-8 recovery overview](https://baszerr.eu/doku.php?id=blog:2020:04:24:2020-04-24_-_utf-8_recovery)).
 * helper to replace invalid UTF-8 characters from the sequence (similar code to "validator" above).
+
 
 ## misc ideas
 * iterator wrappers to make creation of more-constrained iterators easier (eg. forward-iterator out of random-access iterator)
