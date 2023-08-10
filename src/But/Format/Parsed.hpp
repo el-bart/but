@@ -14,9 +14,8 @@ namespace Format
 {
 
 /** @brief represents a parsed format, from a given text with. set of parameters can be applied to get a final message.
- *  @note format of the parameter is defined by its type, via toFieldInfo() function. it
- *        is not specified for a given type usage. this way formatting for a given parameters
- *        is always constant.
+ *  @note format of the parameter is defined by its type, via toString() function (if available). it
+ *        is not specified for a given type usage. this way formatting for a given parameters is always constant.
  */
 template<size_t ArgumentsCount, size_t MaxSegments>
 class ParsedCompiletime final
