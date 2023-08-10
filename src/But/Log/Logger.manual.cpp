@@ -1,5 +1,5 @@
-#include <But/Log/Proxy.hpp>
-#include <But/Log/Destination/TextConsole.hpp>
+#include <But/Log/Logger.hpp>
+#include <But/Log/Destination/Console.hpp>
 #include <But/Log/Field/Timestamp.hpp>
 #include <But/Log/Field/LineNumber.hpp>
 #include <But/Log/Field/Priority.hpp>
@@ -9,11 +9,10 @@ using namespace But::Log::Field;
 
 int main()
 {
-  But::Log::Proxy<> p{ But::makeSharedNN<But::Log::Destination::TextConsole>() };
-  p.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "hello, world" );
-  p.log( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, "bye, world" );
-  p.log( BUT_FORMAT("format test of $0"), "whatever..." );
-  p.log( Timestamp{}, Priority::warning, ':', BUT_FORMAT("trailing args $0"), "included" );
+  But::Log::Logger<> p{ But::makeSharedNN<But::Log::Destination::Console>() };
+  p.log( "hello, world", Timestamp{}, Priority::info, FileName{__FILE__}, LineNumber{__LINE__} );
+  p.log( "byte, world", Timestamp{}, Priority::info, FileName{__FILE__}, LineNumber{__LINE__} );
+  p.log( BUT_FORMAT("message generated from ${0}:${1}"), FileName{__FILE__}, LineNumber{__LINE__} );
   p.flush();
   p.reload();
 }
