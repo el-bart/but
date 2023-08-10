@@ -15,7 +15,7 @@ struct FileName final
 };
 
 
-inline auto fieldName(FileName const*) { return std::string_view{"But::FileName"}; }
+inline constexpr auto fieldName(FileName const*) { return std::string_view{"But::FileName"}; }
 inline auto fieldValue(FileName const& o) { return std::string_view{ o.value_.c_str() }; }
 
 }

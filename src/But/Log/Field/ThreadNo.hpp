@@ -15,7 +15,7 @@ struct ThreadNo final
   uint64_t value_;
 };
 
-inline auto fieldName(ThreadNo const*) { return std::string_view{"But::ThreadNo"}; }
+inline constexpr auto fieldName(ThreadNo const*) { return std::string_view{"But::ThreadNo"}; }
 inline auto fieldValue(const ThreadNo o) { return o.value_; }
 
 }

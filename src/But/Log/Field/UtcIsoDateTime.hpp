@@ -22,7 +22,7 @@ struct UtcIsoDateTime final
 };
 
 
-inline auto fieldName(UtcIsoDateTime const*) { return std::string_view{"But::UtcIsoDT"}; }
+inline constexpr auto fieldName(UtcIsoDateTime const*) { return std::string_view{"But::UtcIsoDT"}; }
 inline auto fieldValue(const UtcIsoDateTime uits) { return uits.date() + "T" + uits.time() + "Z"; }
 
 }

@@ -19,7 +19,7 @@ struct UtcTime final
 };
 
 
-inline auto fieldName(UtcTime const*) { return std::string_view{"But::UtcTime"}; }
+inline constexpr auto fieldName(UtcTime const*) { return std::string_view{"But::UtcTime"}; }
 inline auto fieldValue(const UtcTime uts) { return uts.timestamp_.time(); }
 
 }

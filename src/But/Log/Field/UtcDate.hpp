@@ -19,7 +19,7 @@ struct UtcDate final
 };
 
 
-inline auto fieldName(UtcDate const*) { return std::string_view{"But::UtcDate"}; }
+inline constexpr auto fieldName(UtcDate const*) { return std::string_view{"But::UtcDate"}; }
 inline auto fieldValue(UtcDate const& d) { return d.timestamp_.date(); }
 
 }

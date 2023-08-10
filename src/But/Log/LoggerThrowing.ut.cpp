@@ -46,14 +46,14 @@ struct Integer
 {
   int value_;
 };
-auto fieldName(Integer const*) { return "Integer"; }
+constexpr auto fieldName(Integer const*) { return "Integer"; }
 auto fieldValue(Integer const& n) { return n.value_; }
 
 struct Float
 {
   double value_;
 };
-auto fieldName(Float const*) { return "Float"; }
+constexpr auto fieldName(Float const*) { return "Float"; }
 auto fieldValue(Float const& n) { return n.value_; }
 
 struct Aggregate
@@ -61,7 +61,7 @@ struct Aggregate
   int a_{0};
   int b_{0};
 };
-auto fieldName(Aggregate const*) { return "Aggregate"; }
+constexpr auto fieldName(Aggregate const*) { return "Aggregate"; }
 void objectValue(But::Log::Backend::EntryProxy& proxy, Aggregate const& a)
 {
   proxy.value("a", a.a_);
@@ -136,7 +136,7 @@ TEST_F(ButLogLoggerThrowing, FormattedLoggingOfAggregateIsReadable)
 
 
 struct SomeThrowingType { };
-auto fieldName(SomeThrowingType const*) { return "SomeThrowingType"; }
+constexpr auto fieldName(SomeThrowingType const*) { return "SomeThrowingType"; }
 bool fieldValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
 TEST_F(ButLogLoggerThrowing, InternalExceptionsArePropagatedToCaller)
@@ -188,7 +188,7 @@ struct Misc
 {
   int value_{0};
 };
-auto fieldName(Misc const*) { return "Misc"; }
+constexpr auto fieldName(Misc const*) { return "Misc"; }
 int fieldValue(Misc const& m) { return m.value_; }
 inline auto toString(Misc const m) { return "answer_" + std::to_string(m.value_); }
 

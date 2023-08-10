@@ -196,7 +196,7 @@ TEST_F(ButLogBackendEntryRoot, CreatingSubarrays)
 
 
 struct Answer { int value_{}; };
-auto fieldName(Answer const*) { return std::string_view{"Answer"}; }
+constexpr auto fieldName(Answer const*) { return std::string_view{"Answer"}; }
 auto fieldValue(Answer const& o) { return o.value_; }
 
 struct Aggregate
@@ -204,7 +204,7 @@ struct Aggregate
   int i_{};
   std::string s_;
 };
-auto fieldName(Aggregate const*) { return std::string_view{"Aggregate"}; }
+constexpr auto fieldName(Aggregate const*) { return std::string_view{"Aggregate"}; }
 void objectValue(EntryProxy& p, Aggregate const& o)
 {
   p.value("i", o.i_);
@@ -228,7 +228,7 @@ struct SimpleCollection1
 {
   std::vector<int> c_;
 };
-auto fieldName(SimpleCollection1 const*) { return std::string_view{"SimpleCollection1"}; }
+constexpr auto fieldName(SimpleCollection1 const*) { return std::string_view{"SimpleCollection1"}; }
 void arrayValue(EntryArray& p, SimpleCollection1 const& o)
 {
   for(auto e: o.c_)
@@ -239,21 +239,21 @@ struct SimpleCollection2
 {
   std::vector<int> c_;
 };
-auto fieldName(SimpleCollection2 const*) { return std::string_view{"SimpleCollection2"}; }
+constexpr auto fieldName(SimpleCollection2 const*) { return std::string_view{"SimpleCollection2"}; }
 void arrayValue(EntryArray& p, SimpleCollection2 const& o) { p.add(o.c_); }
 
 struct SimpleCollection3
 {
   std::vector<int> c_;
 };
-auto fieldName(SimpleCollection3 const*) { return std::string_view{"SimpleCollection3"}; }
+constexpr auto fieldName(SimpleCollection3 const*) { return std::string_view{"SimpleCollection3"}; }
 void arrayValue(EntryArray& p, SimpleCollection3 const& o) { p.add( o.c_.begin(), o.c_.end() ); }
 
 struct ObjectsCollection
 {
   std::vector<Aggregate> c_;
 };
-auto fieldName(ObjectsCollection const*) { return std::string_view{"ObjectsCollection"}; }
+constexpr auto fieldName(ObjectsCollection const*) { return std::string_view{"ObjectsCollection"}; }
 void arrayValue(EntryArray& p, ObjectsCollection const& o) { p.add(o.c_); }
 
 TEST_F(ButLogBackendEntryRoot, CreatingArraysViaNesting)

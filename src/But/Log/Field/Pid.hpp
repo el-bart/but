@@ -15,7 +15,7 @@ struct Pid final
   pid_t value_{ getpid() };
 };
 
-inline auto fieldName(Pid const*) { return std::string_view{"But::Pid"}; }
+inline constexpr auto fieldName(Pid const*) { return std::string_view{"But::Pid"}; }
 inline auto fieldValue(Pid const& o) { return o.value_; }
 
 

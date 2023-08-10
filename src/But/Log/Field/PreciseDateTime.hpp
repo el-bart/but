@@ -30,7 +30,7 @@ struct PreciseDateTime final
 };
 
 
-inline auto fieldName(PreciseDateTime const*) { return std::string_view{"But::PreciseDT"}; }
+inline constexpr auto fieldName(PreciseDateTime const*) { return std::string_view{"But::PreciseDT"}; }
 inline auto fieldValue(PreciseDateTime const& o) { return o.date() + "T" + o.time() + "Z"; }
 
 }

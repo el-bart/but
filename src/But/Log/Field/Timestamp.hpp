@@ -22,7 +22,7 @@ private:
 };
 
 
-inline auto fieldName(Timestamp const*) { return std::string_view{"But::Timestamp"}; }
+inline constexpr auto fieldName(Timestamp const*) { return std::string_view{"But::Timestamp"}; }
 double fieldValue(Timestamp const& ts);
 
 }

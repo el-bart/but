@@ -14,7 +14,7 @@ struct LineNumber final
 };
 
 
-inline auto fieldName(LineNumber const*) { return std::string_view{"But::LineNumber"}; }
+inline constexpr auto fieldName(LineNumber const*) { return std::string_view{"But::LineNumber"}; }
 inline auto fieldValue(LineNumber const& o) { return o.value_; }
 
 }
