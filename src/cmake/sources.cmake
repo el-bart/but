@@ -20,8 +20,6 @@ set(SRC_DIRS
     But/Log/Localization
     But/Log/Destination
     But/Log/Destination/Common
-    # TODO
-#    But/Log/Destination/detail
     But/Mpl
     But/Mpl/detail
     But/System
