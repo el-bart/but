@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <string_view>
 
 namespace But
 {
@@ -7,6 +8,7 @@ namespace Format
 {
 
 inline auto toString(std::string str) { return str; }
+inline auto toString(std::string_view str) { return std::string{str}; }
 inline auto toString(char c) { return std::string(1,c); }
 inline auto toString(char* c) { return std::string{c}; }
 inline auto toString(char const* c) { return std::string{c}; }
