@@ -10,8 +10,9 @@ this work is available on "master" branch, but has not yet been released.
   * dropped support for clang: 6, 7.
   * added support for gcc: 11, 12.
   * added support for clang: 13, 14, 15.
-  * `But::Log::Proxy*` classes have been renamed to (more adequate) `But::Log::Logger*`.
+  * `But::Log` performance is nearly double, with still a big space for improvement.
   * `But::Log::Logger*` now check for uniqueness of arguments at compile time.
+  * `But::Log::Proxy*` classes have been renamed to (more adequate) `But::Log::Logger*`.
   * `BUT_MPL_VALUE_WRAP` is now split into: `BUT_MPL_VALUE_WRAP_CP`, `BUT_MPL_VALUE_WRAP_MV` and `BUT_MPL_VALUE_WRAP_CP_MV`, depending if type is copyable, movable or both.
   * C++17 is now new minimal version required.
   * `boost::thread` support in But::Threading is now dropped (bugs, compatibility issues, not that relevant nowadays).
