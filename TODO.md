@@ -2,7 +2,6 @@
 
 ## issues
 
-* `But::Threading::*<But::Threading::Policy::Boost>` cause issues with C++17 - appears to be a problem with boost. TBD what to do with it. possbly `boost` backend will be removed in next release, as `std` already provides all the needed stuff.
 
 ## logger-related things
 
