@@ -12,25 +12,25 @@ namespace But
 namespace Log
 {
 
-/** @brief exception-throwing version of Proxy class. use when logger errors are to be reported, too.
- *         aside from exceptions handling, this class shares all the other properties with Proxy.
+/** @brief exception-throwing version of Logger class. use when logger errors are to be reported, too.
+ *         aside from exceptions handling, this class shares all the other properties with Logger.
  *         see it's description for details.
  *
  * @warning throwing exceptions from logger is NOT a typical behaviour! unless you are absolutely sure what you are doing
- *          and this behavior is truely required, DON'T DO THIS! use Proxy, that does not throw, instead.
+ *          and this behavior is truely required, DON'T DO THIS! use Logger, that does not throw, instead.
  *          you have been warned.
  */
 template<typename Translator = Localization::None>
-class ProxyThrowing final
+class LoggerThrowing final
 {
 public:
   using Destination = But::NotNullShared<Destination::Sink>;
 
-  explicit ProxyThrowing(Destination dst):
-    ProxyThrowing{ std::move(dst), Translator{} }
+  explicit LoggerThrowing(Destination dst):
+    LoggerThrowing{ std::move(dst), Translator{} }
   { }
-  ProxyThrowing(Destination dst, Translator tr):
-    ProxyThrowing{ std::move(dst), std::move(tr), Backend::detail::EntryRoot{} }
+  LoggerThrowing(Destination dst, Translator tr):
+    LoggerThrowing{ std::move(dst), std::move(tr), Backend::detail::EntryRoot{} }
   { }
 
   template<typename ...Args>
@@ -55,14 +55,14 @@ public:
     auto root = entryRoot_.independentCopy();
     auto proxy = root.proxy();
     addFields( proxy, std::forward<Args>(args)... );
-    return ProxyThrowing{ dst_, translator_, std::move(root) };
+    return LoggerThrowing{ dst_, translator_, std::move(root) };
   }
 
   void reload() { dst_->reload(); }
   void flush() { dst_->flush(); }
 
 private:
-  ProxyThrowing(Destination dst, Translator tr, Backend::detail::EntryRoot entryRoot):
+  LoggerThrowing(Destination dst, Translator tr, Backend::detail::EntryRoot entryRoot):
     dst_{ std::move(dst) },
     translator_{ std::move(tr) },
     entryRoot_{ std::move(entryRoot) }

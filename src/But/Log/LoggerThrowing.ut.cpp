@@ -1,12 +1,12 @@
 #include <memory>
 #include <vector>
-#include <But/Log/ProxyThrowing.hpp>
+#include <But/Log/LoggerThrowing.hpp>
 #include <But/Log/Backend/detail/unifyJson.ut.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <nlohmann/json.hpp>
 #include <gtest/gtest.h>
 
-using But::Log::ProxyThrowing;
+using But::Log::LoggerThrowing;
 using But::Log::Destination::Sink;
 using But::Log::Field::FormattedString;
 using nlohmann::json;
@@ -35,10 +35,10 @@ struct TestSink final: public Sink
 };
 
 
-struct ButLogProxyThrowing: public testing::Test
+struct ButLogLoggerThrowing: public testing::Test
 {
   But::NotNullShared<TestSink> sink_{ But::makeSharedNN<TestSink>() };
-  ProxyThrowing<> pt_{sink_};
+  LoggerThrowing<> pt_{sink_};
 };
 
 
@@ -69,14 +69,14 @@ void objectValue(But::Log::Backend::EntryProxy& proxy, Aggregate const& a)
 }
 
 
-TEST_F(ButLogProxyThrowing, NoArgumentsToLog)
+TEST_F(ButLogLoggerThrowing, NoArgumentsToLog)
 {
   pt_.log("test");
   EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "test"} } ) );
 }
 
 
-TEST_F(ButLogProxyThrowing, LoggingSimpleValuesOneAtATime)
+TEST_F(ButLogLoggerThrowing, LoggingSimpleValuesOneAtATime)
 {
   pt_.log("m", Integer{42});
   pt_.log("m");
@@ -87,14 +87,14 @@ TEST_F(ButLogProxyThrowing, LoggingSimpleValuesOneAtATime)
 }
 
 
-TEST_F(ButLogProxyThrowing, LoggingMultipleSimpleValuesAtOnce)
+TEST_F(ButLogLoggerThrowing, LoggingMultipleSimpleValuesAtOnce)
 {
   pt_.log("foo", Float{3.14}, Integer{42});
   EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "foo"}, {"Integer", 42}, {"Float", 3.14} } ) );
 }
 
 
-TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
+TEST_F(ButLogLoggerThrowing, SinkFormattedLogging)
 {
   pt_.log( BUT_FORMAT("${0} != $1"), Float{13}, Integer{42} );
   auto expected = json{
@@ -114,7 +114,7 @@ TEST_F(ButLogProxyThrowing, SinkFormattedLogging)
 }
 
 
-TEST_F(ButLogProxyThrowing, FormattedLoggingOfAggregateIsReadable)
+TEST_F(ButLogLoggerThrowing, FormattedLoggingOfAggregateIsReadable)
 {
   pt_.log( BUT_FORMAT("${0} != $1"), Aggregate{997, 51}, Integer{42} );
   auto expected = json{
@@ -139,20 +139,20 @@ struct SomeThrowingType { };
 auto fieldName(SomeThrowingType const*) { return "SomeThrowingType"; }
 bool fieldValue(SomeThrowingType const&) { throw std::runtime_error{"this one is ignored"}; }
 
-TEST_F(ButLogProxyThrowing, InternalExceptionsArePropagatedToCaller)
+TEST_F(ButLogLoggerThrowing, InternalExceptionsArePropagatedToCaller)
 {
   EXPECT_THROW( pt_.log("let's throw", SomeThrowingType{}), std::runtime_error );
 }
 
 
-TEST_F(ButLogProxyThrowing, LoggerIsConst)
+TEST_F(ButLogLoggerThrowing, LoggerIsConst)
 {
   auto const& pt = pt_;
   pt.log("doh");
 }
 
 
-TEST_F(ButLogProxyThrowing, LogReloadingIsForwarder)
+TEST_F(ButLogLoggerThrowing, LogReloadingIsForwarder)
 {
   EXPECT_EQ( 0u, sink_->reloads_ );
   pt_.reload();
@@ -160,7 +160,7 @@ TEST_F(ButLogProxyThrowing, LogReloadingIsForwarder)
 }
 
 
-TEST_F(ButLogProxyThrowing, LogFlushingIsForwarder)
+TEST_F(ButLogLoggerThrowing, LogFlushingIsForwarder)
 {
   EXPECT_EQ( 0u, sink_->flushes_ );
   pt_.flush();
@@ -175,9 +175,9 @@ struct ThrowingDestination final: public Sink
   void flushImpl()  override { throw std::runtime_error{"ignored"}; }
 };
 
-TEST_F(ButLogProxyThrowing, AllErrorsFromActualDestinationsAreForwarded)
+TEST_F(ButLogLoggerThrowing, AllErrorsFromActualDestinationsAreForwarded)
 {
-  ProxyThrowing<> log{ But::makeSharedNN<ThrowingDestination>() };
+  LoggerThrowing<> log{ But::makeSharedNN<ThrowingDestination>() };
   EXPECT_THROW( log.log("hello"), std::runtime_error );
   EXPECT_THROW( log.reload(), std::runtime_error  );
   EXPECT_THROW( log.flush(), std::runtime_error  );
@@ -192,7 +192,7 @@ auto fieldName(Misc const*) { return "Misc"; }
 int fieldValue(Misc const& m) { return m.value_; }
 inline auto toString(Misc const m) { return "answer_" + std::to_string(m.value_); }
 
-TEST_F(ButLogProxyThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
+TEST_F(ButLogLoggerThrowing, FormattingNonStandardTypesWithToStringFreeFunction)
 {
   pt_.log( BUT_FORMAT("computer says $0"), Misc{42} );
   auto expected = json{
@@ -228,37 +228,37 @@ struct CustomTranslator
 };
 
 
-TEST_F(ButLogProxyThrowing, TranslationsAreNotAffectingNonFormattedLogs)
+TEST_F(ButLogLoggerThrowing, TranslationsAreNotAffectingNonFormattedLogs)
 {
   CustomTranslator ct;
-  ProxyThrowing<CustomTranslator const*> pt{sink_, &ct};
+  LoggerThrowing<CustomTranslator const*> pt{sink_, &ct};
   EXPECT_EQ(0u, ct.counter_);
   pt.log("not affected");
   EXPECT_EQ(0u, ct.counter_);
 }
 
 
-TEST_F(ButLogProxyThrowing, UsingCustomTranslator)
+TEST_F(ButLogLoggerThrowing, UsingCustomTranslator)
 {
   CustomTranslator ct;
-  ProxyThrowing<CustomTranslator const*> pt{sink_, &ct};
+  LoggerThrowing<CustomTranslator const*> pt{sink_, &ct};
   EXPECT_EQ(0u, ct.counter_);
   pt.log( BUT_FORMAT("test") );
   EXPECT_EQ(1u, ct.counter_);
 }
 
 
-TEST_F(ButLogProxyThrowing, ExceptionsFromTranslationsArePropagated)
+TEST_F(ButLogLoggerThrowing, ExceptionsFromTranslationsArePropagated)
 {
   CustomTranslator ct{true};
-  ProxyThrowing<CustomTranslator const*> pt{sink_, &ct};
+  LoggerThrowing<CustomTranslator const*> pt{sink_, &ct};
   EXPECT_THROW( pt.log( BUT_FORMAT("test $0"), Integer{42} ), std::runtime_error );
 }
 
 
-TEST_F(ButLogProxyThrowing, CopyableAndMovable)
+TEST_F(ButLogLoggerThrowing, CopyableAndMovable)
 {
-  using Logger = ProxyThrowing<>;
+  using Logger = LoggerThrowing<>;
 
   EXPECT_TRUE( std::is_copy_constructible<Logger>::value );
   EXPECT_TRUE( std::is_copy_assignable<Logger>::value );
@@ -268,7 +268,7 @@ TEST_F(ButLogProxyThrowing, CopyableAndMovable)
 }
 
 
-TEST_F(ButLogProxyThrowing, ProxyWithDefaultFields)
+TEST_F(ButLogLoggerThrowing, ProxyWithDefaultFields)
 {
   const auto cpt = pt_;
   const auto proxy = cpt.withFields(Integer{42}, Misc{13});
@@ -279,7 +279,7 @@ TEST_F(ButLogProxyThrowing, ProxyWithDefaultFields)
 }
 
 
-TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerived)
+TEST_F(ButLogLoggerThrowing, ProxyWithDefaultFieldsGetsDerived)
 {
   const auto tmp = pt_.withFields(Integer{42});
   const auto proxy = tmp.withFields(Misc{13});
@@ -288,7 +288,7 @@ TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerived)
 }
 
 
-TEST_F(ButLogProxyThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBase)
+TEST_F(ButLogLoggerThrowing, ProxyWithDefaultFieldsGetsDerivedButDoesNotAffectBase)
 {
   const auto proxy = pt_.withFields(Integer{42});
   const auto other = proxy.withFields(Misc{13});
