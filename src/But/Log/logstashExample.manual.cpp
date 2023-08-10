@@ -3,22 +3,18 @@
 #include <random>
 #include <iostream>
 #include <boost/lexical_cast.hpp>
-#include <But/Log/Destination/JsonTcp.hpp>
+#include <But/Log/Destination/Tcp.hpp>
 #include <But/Log/Destination/MultiSink.hpp>
-#include <But/Log/Destination/TextConsole.hpp>
+#include <But/Log/Destination/Console.hpp>
 #include <But/Log/Destination/BackgroundThread.hpp>
-#include <But/Log/Proxy.hpp>
+#include <But/Log/Logger.hpp>
 #include <But/Log/Field/Timestamp.hpp>
 #include <But/Log/Field/LineNumber.hpp>
 #include <But/Log/Field/Priority.hpp>
 #include <But/Log/Field/FileName.hpp>
-#include <But/Log/Destination/detail/args2FieldInfo.hpp>
-
-using But::Log::Destination::detail::args2FieldInfo;
 
 using namespace But::Log::Field;
-using But::Log::Backend::Tag;
-using But::Log::Backend::FieldInfo;
+using But::Log::Backend::EntryProxy;
 using Clock = std::chrono::steady_clock;
 
 
@@ -26,46 +22,44 @@ struct Component
 {
   std::string name_;
 };
+constexpr auto fieldName(Component const*) { return "Component"; }
+auto fieldValue(Component const& c) { return std::string_view{c.name_}; }
 
-auto toFieldInfo(Component const& c)
-{
-  using But::Log::Backend::toFieldInfo;
-  return toFieldInfo(c.name_).retag(Tag{"Component"});
-}
 
 struct Point
 {
   int x_;
   int y_;
 };
-
-auto toFieldInfo(Point const& p)
+constexpr auto fieldName(Point const*) { return "Point"; }
+void objectValue(EntryProxy& p, Point const& pt)
 {
-  using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Tag{"Point"}, { toFieldInfo(p.x_).retag(Tag{"x"}), toFieldInfo(p.y_).retag(Tag{"y"}) } };
+  p.value("x", pt.x_);
+  p.value("y", pt.y_);
 }
+
 
 struct Line
 {
   Point from_;
   Point to_;
 };
-
-auto toFieldInfo(Line const& l)
+constexpr auto fieldName(Line const*) { return "Line"; }
+void objectValue(EntryProxy& p, Line const& l)
 {
-  using But::Log::Backend::toFieldInfo;
-  return FieldInfo{ Tag{"Line"}, { toFieldInfo(l.from_).retag(Tag{"from"}), toFieldInfo(l.to_).retag(Tag{"to"}) } };
+  p.object("from").nest(l.from_);
+  p.object("to").nest(l.to_);
 }
 
 
 auto makeLogger(std::string host, const uint16_t port)
 {
-  auto tcp = But::makeSharedNN<But::Log::Destination::JsonTcp>( std::move(host), port );
-  auto console = But::makeSharedNN<But::Log::Destination::TextConsole>();
+  auto tcp = But::makeSharedNN<But::Log::Destination::Tcp>( std::move(host), port );
+  auto console = But::makeSharedNN<But::Log::Destination::Console>();
   auto multi = But::makeSharedNN<But::Log::Destination::MultiSink>( std::move(console), std::move(tcp) );
   auto bgThread = But::makeSharedNN<But::Log::Destination::BackgroundThread>( std::move(multi), 2*1000 );
-  But::Log::Proxy<> p{ std::move(bgThread) };
-  return p;
+  But::Log::Logger<> log{ std::move(bgThread) };
+  return log;
 }
 
 
@@ -87,7 +81,7 @@ int main(int argc, char** argv)
     return 2;
   }
 
-  auto p = makeLogger( argv[1], boost::lexical_cast<uint16_t>(argv[2]) );
+  auto log = makeLogger( argv[1], boost::lexical_cast<uint16_t>(argv[2]) );
   auto prng = Prng{};
   constexpr auto logDelay = std::chrono::milliseconds{200};
   constexpr auto flushDelay = std::chrono::seconds{1};
@@ -99,29 +93,29 @@ int main(int argc, char** argv)
     switch( prng() )
     {
       case 0:
-        p.log( args2FieldInfo( Timestamp{}, Priority::info, '@', FileName{__FILE__}, ':', LineNumber{__LINE__}, Component{"zerowy"}, "hello, world" ) );
+        log.log( "hello, world", Timestamp{}, Priority::info, FileName{__FILE__}, LineNumber{__LINE__}, Component{"FooBar"} );
         break;
       case 1:
-        p.log( args2FieldInfo( Timestamp{}, Priority::debug, Component{"point-hair boss"}, Point{13, 42} ) );
+        log.log( "other case here", Timestamp{}, Priority::debug, Component{"point-hair boss"}, Point{13, 42} );
         break;
       case 2:
-        p.log( args2FieldInfo( Timestamp{}, Priority::debug, Component{"multi-point"}, Point{69, 997}, Point{13, 42} ) );
+        log.log( "yet again sth new", Timestamp{}, Priority::debug, Component{"another-point"}, Point{12, 41} );
         break;
       case 3:
-        p.log( args2FieldInfo( Priority::warning, Component{"line man"}, Line{ Point{1, 2}, Point{3, 4} } ) );
+        log.log( "lining up", Priority::warning, Component{"line man"}, Line{ Point{1, 2}, Point{3, 4} } );
         break;
     }
 
     if( Clock::now() >= flushDeadline )
     {
-      p.flush();
+      log.flush();
       flushDeadline += flushDelay;
     }
 
     std::this_thread::sleep_until(deadline);
 
     // NOTE: you can also play with:
-    // p.reload();
+    // log.reload();
     // to simulate dosconnections every now and then...
   }
 }
