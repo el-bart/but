@@ -10,7 +10,7 @@
 #include <But/Log/Logger.hpp>
 #include <But/Log/Field/Timestamp.hpp>
 #include <But/Log/Field/LineNumber.hpp>
-#include <But/Log/Field/Priority.hpp>
+#include <But/Log/Field/LogLevel.hpp>
 #include <But/Log/Field/FileName.hpp>
 
 using namespace But::Log::Field;
@@ -93,16 +93,16 @@ int main(int argc, char** argv)
     switch( prng() )
     {
       case 0:
-        log.log( "hello, world", Timestamp{}, Priority::info, FileName{__FILE__}, LineNumber{__LINE__}, Component{"FooBar"} );
+        log.log( "hello, world", Timestamp{}, LogLevel::info, FileName{__FILE__}, LineNumber{__LINE__}, Component{"FooBar"} );
         break;
       case 1:
-        log.log( "other case here", Timestamp{}, Priority::debug, Component{"point-hair boss"}, Point{13, 42} );
+        log.log( "other case here", Timestamp{}, LogLevel::debug, Component{"point-hair boss"}, Point{13, 42} );
         break;
       case 2:
-        log.log( "yet again sth new", Timestamp{}, Priority::debug, Component{"another-point"}, Point{12, 41} );
+        log.log( "yet again sth new", Timestamp{}, LogLevel::debug, Component{"another-point"}, Point{12, 41} );
         break;
       case 3:
-        log.log( "lining up", Priority::warning, Component{"line man"}, Line{ Point{1, 2}, Point{3, 4} } );
+        log.log( "lining up", LogLevel::warning, Component{"line man"}, Line{ Point{1, 2}, Point{3, 4} } );
         break;
     }
 
