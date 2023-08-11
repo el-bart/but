@@ -6,22 +6,27 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on "master" branch, but has not yet been released.
 
-  * dropped support for gcc: 7, 8.
-  * dropped support for clang: 6, 7.
-  * added support for gcc: 11, 12.
-  * added support for clang: 13, 14, 15.
-  * `But::Log` performance is nearly double, with still a big space for improvement.
-  * `But::Log::Logger*` now check for uniqueness of arguments at compile time.
-  * `But::Log::Proxy*` classes have been renamed to (more adequate) `But::Log::Logger*`.
-  * `BUT_MPL_VALUE_WRAP` is now split into: `BUT_MPL_VALUE_WRAP_CP`, `BUT_MPL_VALUE_WRAP_MV` and `BUT_MPL_VALUE_WRAP_CP_MV`, depending if type is copyable, movable or both.
-  * C++17 is now new minimal version required.
-  * `boost::thread` support in But::Threading is now dropped (bugs, compatibility issues, not that relevant nowadays).
+  * tooling:
+    * C++17 is now new minimal version required.
+    * dropped support for gcc: 7, 8.
+    * dropped support for clang: 6, 7.
+    * added support for gcc: 11, 12.
+    * added support for clang: 13, 14, 15.
+  * `But::Log`:
+    * performance is nearly double, with still a big space for improvement.
+    * `Logger*` now check for uniqueness of arguments at compile time.
+    * `Proxy*` classes have been renamed to (more adequate) `Logger*`.
+    * `Field::Priority` has been renamed to (more adequate) `Field::LogLevel`.
+  * removed:
+    * `boost::thread` support in But::Threading is now dropped (bugs, compatibility issues, not that relevant nowadays).
+    * removed example integration with ELK stack - it was PoC only, not a production one.
+    * removed integration with `boost::enable_current_exception`, as C++ standard has now proper tools for a long time.
+  * internal changes:
+    * moved from `boost::filesystem` to `std::filesystem`.
+    * `But::Optional` is now based on `std::optional`.
+    * certain tests are now disabled for TSAN builds, due to bugs in TSAN itself (`BUT_THREAD_SANITIZER_ENABLED` test macro).
   * `System::CpuTimer` added - wrapper around intrinsic for counting CPU cycles, for very precise time measurements.
-  * removed example integration with ELK stack - it was PoC only, not a production one.
-  * removed integration with `boost::enable_current_exception`, as C++ standard has now proper tools for a long time.
-  * moved from `boost::filesystem` to `std::filesystem`.
-  * `But::Optional` is now based on `std::optional`.
-  * certain tests are now disabled for TSAN builds, due to bugs in TSAN itself (`BUT_THREAD_SANITIZER_ENABLED` test macro).
+  * `BUT_MPL_VALUE_WRAP` is now split into: `BUT_MPL_VALUE_WRAP_CP`, `BUT_MPL_VALUE_WRAP_MV` and `BUT_MPL_VALUE_WRAP_CP_MV`, depending if type is copyable, movable or both.
 
 ## v1.2.1 (2022-11-02)
 minor bugfix
