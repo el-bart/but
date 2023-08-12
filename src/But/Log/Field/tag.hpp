@@ -10,6 +10,7 @@ namespace But::Log::Field
 template<typename T>
 auto tag(std::string_view name, T&& t)
 {
+  // TODO: once C++20 becomes a minimum value, change this to std::remove_cvref<>
   using U = typename std::decay<T>::type;
   return detail::DynamicallyNamedObject<U>{ std::move(name), std::forward<T>(t) };
 }
