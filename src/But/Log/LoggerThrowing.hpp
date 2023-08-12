@@ -3,6 +3,7 @@
 #include <But/Format/apply.hpp>
 #include <But/Format/format.hpp>
 #include <But/Format/toString.hpp>
+#include <But/Log/Field/tag.hpp>
 #include <But/Log/Field/FormattedString.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Localization/None.hpp>
@@ -90,9 +91,25 @@ private:
   template<typename ...Args>
   void addFields(Backend::EntryProxy& proxy, Args&& ...args) const
   {
-    static_assert( detail::allNamesUnique( fieldName( static_cast<typename std::remove_reference<Args>::type const*>(nullptr) )... ),
+    static_assert( detail::allNamesUnique( fieldNameProxy( static_cast<typename std::remove_reference<Args>::type const*>(nullptr) )... ),
                    "all parameters must be of a different type. if you are here - consider tagging" );
-    ( proxy.nest( std::forward<Args>(args) ) , ... );
+    ( addField(proxy, std::forward<Args>(args) ) , ... );
+  }
+
+  template<typename T>
+  void addField(Backend::EntryProxy& proxy, T&& t) const
+  {
+    proxy.nest( std::forward<T>(t) );
+  }
+  template<typename T>
+  void addField(Backend::EntryProxy& proxy, Field::detail::DynamicallyNamedObject<T> const& t) const
+  {
+    objectValue(proxy, t);
+  }
+  template<typename T>
+  void addField(Backend::EntryProxy& proxy, Field::detail::DynamicallyNamedObject<T> && t) const
+  {
+    objectValue(proxy, std::move(t));
   }
 
   template<typename ...Args>
@@ -129,6 +146,11 @@ private:
       }
     }
   }
+
+  template<typename T>
+  static constexpr std::optional<std::string_view> fieldNameProxy(T const* t) { return fieldName(t); }
+  template<typename T>
+  static constexpr std::optional<std::string_view> fieldNameProxy(Field::detail::DynamicallyNamedObject<T> const*) { return {}; }
 
   mutable Destination dst_;
   Translator translator_{};

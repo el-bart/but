@@ -1,6 +1,7 @@
 #include <memory>
 #include <vector>
 #include <But/Log/LoggerThrowing.hpp>
+#include <But/Log/Field/tag.hpp>
 #include <But/Log/Backend/unifyJson.ut.hpp>
 #include <But/Log/Destination/FakeSink.ut.hpp>
 #include <nlohmann/json.hpp>
@@ -9,6 +10,7 @@
 using But::Log::LoggerThrowing;
 using But::Log::Destination::Sink;
 using But::Log::Destination::FakeSink;
+using But::Log::Field::tag;
 using But::Log::Field::FormattedString;
 using nlohmann::json;
 
@@ -48,6 +50,16 @@ void objectValue(But::Log::Backend::EntryProxy& proxy, Aggregate const& a)
   proxy.value("b", a.b_);
 }
 
+struct Array
+{
+  int values_[3];
+};
+constexpr auto fieldName(Array const*) { return "Array"; }
+void arrayValue(But::Log::Backend::EntryArray& array, Array const& a)
+{
+  array.add( std::begin(a.values_), std::end(a.values_) );
+}
+
 struct String
 {
   std::string value_;
@@ -72,12 +84,29 @@ TEST_F(ButLogLoggerThrowing, NoArgumentsToLog)
 
 TEST_F(ButLogLoggerThrowing, LoggingSimpleValuesOneAtATime)
 {
-  pt_.log("m", Integer{42});
-  pt_.log("m");
-  pt_.log("m", Float{3.14});
-  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "m"}, {"Integer", 42} } ) );
-  EXPECT_EQ_JSON( sink_->parse(1), ( json{ {"message", "m"} } ) );
-  EXPECT_EQ_JSON( sink_->parse(2), ( json{ {"message", "m"}, {"Float", 3.14} } ) );
+  {
+    pt_.log("m", Integer{42});
+    EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "m"}, {"Integer", 42} } ) );
+  }
+  {
+    pt_.log("m");
+    EXPECT_EQ_JSON( sink_->parse(1), ( json{ {"message", "m"} } ) );
+  }
+  {
+    pt_.log("m", Float{3.14});
+    EXPECT_EQ_JSON( sink_->parse(2), ( json{ {"message", "m"}, {"Float", 3.14} } ) );
+  }
+  {
+    pt_.log("m", Aggregate{13, 997});
+    auto exp = json{ {"message", "m"} };
+    exp["Aggregate"]["a"] = 13;
+    exp["Aggregate"]["b"] = 997;
+    EXPECT_EQ_JSON( sink_->parse(3), exp );
+  }
+  {
+    pt_.log("m", Array{1,2,3});
+    EXPECT_EQ_JSON( sink_->parse(4), ( json{ {"message", "m"}, {"Array", std::vector<int>{1,2,3}} } ) );
+  }
 }
 
 
@@ -319,6 +348,38 @@ TEST_F(ButLogLoggerThrowing, LoggingElementByReferenceWorks)
 {
   Integer n{42};
   pt_.log("ref is fine", n);
+}
+
+
+TEST_F(ButLogLoggerThrowing, LoggingDynamicallyTaggedValue)
+{
+  pt_.log("action!", tag("answer", 42));
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "action!"}, {"answer", 42} } ) );
+}
+
+
+TEST_F(ButLogLoggerThrowing, LoggingRepeatedDynamicallyTaggedValue)
+{
+  pt_.log("action!", tag("answer", 42), tag("foo", "bar"));
+  EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "action!"}, {"answer", 42}, {"foo", "bar"} } ) );
+}
+
+
+TEST_F(ButLogLoggerThrowing, LoggingDynamicallyTaggedObject)
+{
+  pt_.log( "action!", tag("answer", Integer{42}) );
+  auto exp = json{ {"message", "action!"} };
+  exp["answer"]["Integer"] = 42;
+  EXPECT_EQ_JSON( sink_->parse(0), exp );
+}
+
+
+TEST_F(ButLogLoggerThrowing, LoggingDynamicallyTaggedArray)
+{
+  pt_.log( "action!", tag("answer", Array{0,4,2}) );
+  auto exp = json{ {"message", "action!"} };
+  exp["answer"]["Array"] = std::vector<int>{0,4,2};
+  EXPECT_EQ_JSON( sink_->parse(0), exp );
 }
 
 
