@@ -1,6 +1,7 @@
 #include "EntryArray.hpp"
 #include "EntryProxy.hpp"
 #include <nlohmann/json.hpp>
+#include <cassert>
 
 namespace But::Log::Backend
 {
@@ -18,6 +19,7 @@ nlohmann::json& j(void* impl)
 EntryProxy EntryArray::object()
 {
   j(impl_).push_back( nlohmann::json::object() );
+  assert( j(impl_).back().is_object() );
   return EntryProxy{ &j(impl_).back() };
 }
 
@@ -25,6 +27,7 @@ EntryProxy EntryArray::object()
 EntryArray EntryArray::array()
 {
   j(impl_).push_back( nlohmann::json::array() );
+  assert( j(impl_).back().is_array() );
   return EntryArray{ &j(impl_).back() };
 }
 

@@ -11,18 +11,18 @@ using But::Log::Backend::EntryArray;
 namespace
 {
 
-struct ButLogBackendEntryRoot: public EntryRootTestBase
+struct ButLogBackendDetailEntryRoot: public EntryRootTestBase
 {
 };
 
 
-TEST_F(ButLogBackendEntryRoot, EmptyObjectByDefault)
+TEST_F(ButLogBackendDetailEntryRoot, EmptyObjectByDefault)
 {
   EXPECT_EQ_JSON("{}", er_);
 }
 
 
-TEST_F(ButLogBackendEntryRoot, ImplObjectIsSharedByDefault)
+TEST_F(ButLogBackendDetailEntryRoot, ImplObjectIsSharedByDefault)
 {
   er_.proxy().value("n", 42);
   auto er2 = er_;
@@ -32,7 +32,7 @@ TEST_F(ButLogBackendEntryRoot, ImplObjectIsSharedByDefault)
 }
 
 
-TEST_F(ButLogBackendEntryRoot, IndependentCopyCanBeMadeExplicitly)
+TEST_F(ButLogBackendDetailEntryRoot, IndependentCopyCanBeMadeExplicitly)
 {
   er_.proxy().value("initial", true);
   auto er2 = er_.independentCopy();
@@ -42,7 +42,7 @@ TEST_F(ButLogBackendEntryRoot, IndependentCopyCanBeMadeExplicitly)
 }
 
 
-TEST_F(ButLogBackendEntryRoot, AddingBasicValuesViaProxy)
+TEST_F(ButLogBackendDetailEntryRoot, AddingBasicValuesViaProxy)
 {
   auto p = er_.proxy();
   p.value("b", true);
@@ -62,7 +62,7 @@ TEST_F(ButLogBackendEntryRoot, AddingBasicValuesViaProxy)
 }
 
 
-TEST_F(ButLogBackendEntryRoot, AddingAllIntegerValues)
+TEST_F(ButLogBackendDetailEntryRoot, AddingAllIntegerValues)
 {
   auto p = er_.proxy();
   p.value("int",      0);
@@ -92,7 +92,7 @@ TEST_F(ButLogBackendEntryRoot, AddingAllIntegerValues)
 }
 
 
-TEST_F(ButLogBackendEntryRoot, AddingAllStringTypes)
+TEST_F(ButLogBackendDetailEntryRoot, AddingAllStringTypes)
 {
   auto p = er_.proxy();
   {
@@ -120,7 +120,7 @@ TEST_F(ButLogBackendEntryRoot, AddingAllStringTypes)
 }
 
 
-TEST_F(ButLogBackendEntryRoot, CreatingSubobjects)
+TEST_F(ButLogBackendDetailEntryRoot, CreatingSubobjects)
 {
   auto p = er_.proxy();
   p.value("str", "data");
@@ -139,7 +139,7 @@ TEST_F(ButLogBackendEntryRoot, CreatingSubobjects)
 }
 
 
-TEST_F(ButLogBackendEntryRoot, CreatingSubarrays)
+TEST_F(ButLogBackendDetailEntryRoot, CreatingSubarrays)
 {
   auto p = er_.proxy();
   {
@@ -211,7 +211,7 @@ void objectValue(EntryProxy& p, Aggregate const& o)
   p.value("s", o.s_);
 }
 
-TEST_F(ButLogBackendEntryRoot, CreatingObjectsViaNesting)
+TEST_F(ButLogBackendDetailEntryRoot, CreatingObjectsViaNesting)
 {
   auto p = er_.proxy();
   p.nest( Answer{42} );
@@ -256,7 +256,7 @@ struct ObjectsCollection
 constexpr auto fieldName(ObjectsCollection const*) { return std::string_view{"ObjectsCollection"}; }
 void arrayValue(EntryArray& p, ObjectsCollection const& o) { p.add(o.c_); }
 
-TEST_F(ButLogBackendEntryRoot, CreatingArraysViaNesting)
+TEST_F(ButLogBackendDetailEntryRoot, CreatingArraysViaNesting)
 {
   auto p = er_.proxy();
   p.nest( SimpleCollection1{ {13, 42, 666} } );
@@ -273,6 +273,13 @@ TEST_F(ButLogBackendEntryRoot, CreatingArraysViaNesting)
              { "i": 42, "s": "answer" }
            ]
          })", er_);
+}
+
+TEST_F(ButLogBackendDetailEntryRoot, ManuallyNestingObjects)
+{
+  auto p = er_.proxy();
+  p.object("foo").object("bar").value("answer", 42);
+  EXPECT_EQ_JSON(R"({ "foo": { "bar": { "answer": 42 } } })", er_);
 }
 
 }
