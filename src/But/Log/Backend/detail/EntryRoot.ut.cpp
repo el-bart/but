@@ -282,4 +282,11 @@ TEST_F(ButLogBackendDetailEntryRoot, ManuallyNestingObjects)
   EXPECT_EQ_JSON(R"({ "foo": { "bar": { "answer": 42 } } })", er_);
 }
 
+TEST_F(ButLogBackendDetailEntryRoot, ManuallyNestingArrays)
+{
+  auto p = er_.proxy();
+  p.array("foo").array().value(42);
+  EXPECT_EQ_JSON(R"({ "foo": [ [ 42 ] ] })", er_);
+}
+
 }
