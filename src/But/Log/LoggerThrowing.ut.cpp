@@ -321,6 +321,62 @@ TEST_F(ButLogLoggerThrowing, FormattingDynamicallyTaggedBaseType)
 }
 
 
+TEST_F(ButLogLoggerThrowing, FormattingDynamicallyTaggedValue)
+{
+  pt_.log( BUT_FORMAT("answer is $0"), tag("answer", Integer{42}) );
+  auto expected = json{ {"message", "answer is $0"} };
+  expected["answer"]["Integer"] = 42;
+  {
+    auto tmp = json{};
+    tmp["answer"]["Integer"] = 42;
+    auto array = json::array();
+    array.push_back( std::move(tmp) );
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "answer is $0";
+    expected["But::Format"]["But::FormattedString"] = R"(answer is {"answer":{"Integer":42}})";
+  }
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
+}
+
+
+TEST_F(ButLogLoggerThrowing, FormattingDynamicallyTaggedObject)
+{
+  pt_.log( BUT_FORMAT("answer is $0"), tag("answer", Aggregate{4,2}) );
+  auto expected = json{ {"message", "answer is $0"} };
+  expected["answer"]["Aggregate"]["a"] = 4;
+  expected["answer"]["Aggregate"]["b"] = 2;
+  {
+    auto tmp = json{};
+    tmp["answer"]["Aggregate"]["a"] = 4;
+    tmp["answer"]["Aggregate"]["b"] = 2;
+    auto array = json::array();
+    array.push_back( std::move(tmp) );
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "answer is $0";
+    expected["But::Format"]["But::FormattedString"] = R"(answer is {"answer":{"Aggregate":{"a":4,"b":2}}})";
+  }
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
+}
+
+
+TEST_F(ButLogLoggerThrowing, FormattingDynamicallyTaggedArray)
+{
+  pt_.log( BUT_FORMAT("answer is $0"), tag("answer", Array{1,2,3}) );
+  auto expected = json{ {"message", "answer is $0"} };
+  expected["answer"]["Array"] = std::vector<int>{1,2,3};
+  {
+    auto tmp = json{};
+    tmp["answer"]["Array"] = std::vector<int>{1,2,3};
+    auto array = json::array();
+    array.push_back( std::move(tmp) );
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "answer is $0";
+    expected["But::Format"]["But::FormattedString"] = R"(answer is {"answer":{"Array":[1,2,3]}})";
+  }
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
+}
+
+
 TEST_F(ButLogLoggerThrowing, CopyableAndMovable)
 {
   using Logger = LoggerThrowing<>;
