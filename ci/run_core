@@ -31,30 +31,21 @@ readarray -t sdks <<< $(cd "$sdks_dir" && ls)
 runs=0
 failed=()
 
-# debug+ASAN build with latest toolchains
+# debug+ASAN and release builds with latest toolchains
 for sdk in \
   "$(select_latest "gcc"   "${sdks[@]}")" \
   "$(select_latest "clang" "${sdks[@]}")"
 do
-  ((++runs))
-  mode=Debug
-  san=address
-  echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
+  for mode in \
+    Debug \
+    Release
+  do
+    ((++runs))
+    san=address
+    echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
+    time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
+  done
 done
-
-# release build with latest toolchains
-for sdk in \
-  "$(select_latest "gcc"   "${sdks[@]}")" \
-  "$(select_latest "clang" "${sdks[@]}")"
-do
-  ((++runs))
-  mode=Release
-  san=none
-  echo "$app: #$runs BUILD WITH SDK $sdk MODE $mode SANITIZER $san"
-  time ./run_in_sdk "$sdk" ./ci/build "$sdk" "$mode" "$san" || failed+=("$sdk/$mode/$san")
-done
-
 
 # summary
 if [ "${#failed[@]}" -gt 0 ]
