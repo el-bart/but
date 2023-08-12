@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 #include <But/Log/Field/LineNumber.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::LineNumber;
 
 namespace
 {
 
-struct ButLogFieldLineNumber: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldLineNumber: public But::Log::Backend::EntryRootTestBase
 {
   const LineNumber ln_{666};
 };

@@ -1,12 +1,12 @@
 #include <But/Log/Field/Timestamp.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::Timestamp;
 
 namespace
 {
 
-struct ButLogFieldTimestamp: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldTimestamp: public But::Log::Backend::EntryRootTestBase
 { };
 
 

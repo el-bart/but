@@ -1,12 +1,12 @@
 #include <But/Log/Field/FileName.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::FileName;
 
 namespace
 {
 
-struct ButLogFieldFileName: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldFileName: public But::Log::Backend::EntryRootTestBase
 {
   const FileName fn_{"some/file/path.txt"};
 };

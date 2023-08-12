@@ -1,5 +1,5 @@
 #include <But/Log/Field/PreciseDateTime.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::ConversionError;
 using But::Log::Field::PreciseDateTime;
@@ -7,7 +7,7 @@ using But::Log::Field::PreciseDateTime;
 namespace
 {
 
-struct ButLogFieldPreciseDateTime: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldPreciseDateTime: public But::Log::Backend::EntryRootTestBase
 { };
 
 

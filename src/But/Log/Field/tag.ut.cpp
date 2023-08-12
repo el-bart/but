@@ -1,5 +1,5 @@
 #include <But/Log/Field/tag.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Backend::EntryProxy;
 using But::Log::Backend::EntryArray;
@@ -9,7 +9,7 @@ using But::Log::Field::detail::DynamicallyNamedObject;
 namespace
 {
 
-struct ButLogFieldTag: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldTag: public But::Log::Backend::EntryRootTestBase
 {
   But::Log::Backend::EntryProxy p_{ er_.proxy() };
 };

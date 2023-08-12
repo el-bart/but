@@ -1,14 +1,14 @@
 #include <sstream>
 #include <But/Log/Field/ThreadId.hpp>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::ThreadId;
 
 namespace
 {
 
-struct ButLogFieldThreadId: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldThreadId: public But::Log::Backend::EntryRootTestBase
 { };
 
 

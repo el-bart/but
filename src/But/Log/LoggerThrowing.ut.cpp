@@ -1,7 +1,7 @@
 #include <memory>
 #include <vector>
 #include <But/Log/LoggerThrowing.hpp>
-#include <But/Log/Backend/detail/unifyJson.ut.hpp>
+#include <But/Log/Backend/unifyJson.ut.hpp>
 #include <But/Log/Destination/FakeSink.ut.hpp>
 #include <nlohmann/json.hpp>
 #include <gtest/gtest.h>

@@ -1,12 +1,12 @@
 #include <But/Log/Field/Pid.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::Pid;
 
 namespace
 {
 
-struct ButLogFieldPid: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldPid: public But::Log::Backend::EntryRootTestBase
 { };
 
 

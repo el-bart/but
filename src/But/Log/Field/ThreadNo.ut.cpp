@@ -1,13 +1,13 @@
 #include <But/Log/Field/ThreadNo.hpp>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::ThreadNo;
 
 namespace
 {
 
-struct ButLogFieldThreadNo: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldThreadNo: public But::Log::Backend::EntryRootTestBase
 { };
 
 

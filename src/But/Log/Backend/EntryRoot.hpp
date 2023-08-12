@@ -8,9 +8,6 @@ namespace But::Log::Backend
 
 struct EntryProxy;
 
-namespace detail
-{
-
 struct EntryRoot
 {
   EntryRoot();
@@ -35,5 +32,4 @@ private:
   std::shared_ptr<Impl> impl_;
 };
 
-}
 }

@@ -6,7 +6,7 @@
 #include <But/Log/Field/FormattedString.hpp>
 #include <But/Log/Destination/Sink.hpp>
 #include <But/Log/Localization/None.hpp>
-#include <But/Log/Backend/detail/EntryRoot.hpp>
+#include <But/Log/Backend/EntryRoot.hpp>
 #include <But/Log/detail/allNamesUnique.hpp>
 #include <type_traits>
 
@@ -33,7 +33,7 @@ public:
     LoggerThrowing{ std::move(dst), Translator{} }
   { }
   LoggerThrowing(Destination dst, Translator tr):
-    LoggerThrowing{ std::move(dst), std::move(tr), Backend::detail::EntryRoot{} }
+    LoggerThrowing{ std::move(dst), std::move(tr), Backend::EntryRoot{} }
   { }
 
   template<typename ...Args>
@@ -65,7 +65,7 @@ public:
   void flush() { dst_->flush(); }
 
 private:
-  LoggerThrowing(Destination dst, Translator tr, Backend::detail::EntryRoot entryRoot):
+  LoggerThrowing(Destination dst, Translator tr, Backend::EntryRoot entryRoot):
     dst_{ std::move(dst) },
     translator_{ std::move(tr) },
     entryRoot_{ std::move(entryRoot) }
@@ -102,7 +102,7 @@ private:
   }
 
   template<typename ...Args>
-  void logImpl(Backend::detail::EntryRoot& root, std::string_view const message, Args&& ...args) const
+  void logImpl(Backend::EntryRoot& root, std::string_view const message, Args&& ...args) const
   {
     {
       auto proxy = root.proxy();
@@ -123,7 +123,7 @@ private:
         return Format::toString( fieldValue(t) );
       else
       {
-        Backend::detail::EntryRoot er;
+        Backend::EntryRoot er;
         er.proxy().nest(t);
         return er.json();
       }
@@ -132,7 +132,7 @@ private:
 
   mutable Destination dst_;
   Translator translator_{};
-  Backend::detail::EntryRoot entryRoot_;
+  Backend::EntryRoot entryRoot_;
 };
 
 }

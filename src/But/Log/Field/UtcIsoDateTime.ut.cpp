@@ -1,12 +1,12 @@
 #include <But/Log/Field/UtcIsoDateTime.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::UtcIsoDateTime;
 
 namespace
 {
 
-struct ButLogFieldUtcIsoDateTime: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldUtcIsoDateTime: public But::Log::Backend::EntryRootTestBase
 { };
 
 

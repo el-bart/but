@@ -1,12 +1,12 @@
 #include <But/Log/Field/LogLevel.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::LogLevel;
 
 namespace
 {
 
-struct ButLogFieldLogLevel: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldLogLevel: public But::Log::Backend::EntryRootTestBase
 { };
 
 

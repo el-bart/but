@@ -1,12 +1,12 @@
 #include <But/Log/Field/FormattedString.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::FormattedString;
 
 namespace
 {
 
-struct ButLogFieldFormattedString: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldFormattedString: public But::Log::Backend::EntryRootTestBase
 {
   const FormattedString fs_{"foo bar"};
 };

@@ -1,5 +1,5 @@
 #include <But/Log/Field/UtcDate.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 
 using But::Log::Field::UtcDate;
 using But::Log::Field::UtcIsoDateTime;
@@ -7,7 +7,7 @@ using But::Log::Field::UtcIsoDateTime;
 namespace
 {
 
-struct ButLogFieldUtcDate: public But::Log::Backend::detail::EntryRootTestBase
+struct ButLogFieldUtcDate: public But::Log::Backend::EntryRootTestBase
 { };
 
 

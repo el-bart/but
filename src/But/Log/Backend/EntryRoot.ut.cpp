@@ -1,28 +1,28 @@
 #include <gtest/gtest.h>
-#include <But/Log/Backend/detail/EntryRoot.hpp>
-#include <But/Log/Backend/detail/EntryRoot.ut.hpp>
+#include <But/Log/Backend/EntryRoot.hpp>
+#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
 #include <nlohmann/json.hpp>
 
-using But::Log::Backend::detail::EntryRoot;
-using But::Log::Backend::detail::EntryRootTestBase;
+using But::Log::Backend::EntryRoot;
+using But::Log::Backend::EntryRootTestBase;
 using But::Log::Backend::EntryProxy;
 using But::Log::Backend::EntryArray;
 
 namespace
 {
 
-struct ButLogBackendDetailEntryRoot: public EntryRootTestBase
+struct ButLogBackendEntryRoot: public EntryRootTestBase
 {
 };
 
 
-TEST_F(ButLogBackendDetailEntryRoot, EmptyObjectByDefault)
+TEST_F(ButLogBackendEntryRoot, EmptyObjectByDefault)
 {
   EXPECT_EQ_JSON("{}", er_);
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, ImplObjectIsSharedByDefault)
+TEST_F(ButLogBackendEntryRoot, ImplObjectIsSharedByDefault)
 {
   er_.proxy().value("n", 42);
   auto er2 = er_;
@@ -32,7 +32,7 @@ TEST_F(ButLogBackendDetailEntryRoot, ImplObjectIsSharedByDefault)
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, IndependentCopyCanBeMadeExplicitly)
+TEST_F(ButLogBackendEntryRoot, IndependentCopyCanBeMadeExplicitly)
 {
   er_.proxy().value("initial", true);
   auto er2 = er_.independentCopy();
@@ -42,7 +42,7 @@ TEST_F(ButLogBackendDetailEntryRoot, IndependentCopyCanBeMadeExplicitly)
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, AddingBasicValuesViaProxy)
+TEST_F(ButLogBackendEntryRoot, AddingBasicValuesViaProxy)
 {
   auto p = er_.proxy();
   p.value("b", true);
@@ -62,7 +62,7 @@ TEST_F(ButLogBackendDetailEntryRoot, AddingBasicValuesViaProxy)
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, AddingAllIntegerValues)
+TEST_F(ButLogBackendEntryRoot, AddingAllIntegerValues)
 {
   auto p = er_.proxy();
   p.value("int",      0);
@@ -92,7 +92,7 @@ TEST_F(ButLogBackendDetailEntryRoot, AddingAllIntegerValues)
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, AddingAllStringTypes)
+TEST_F(ButLogBackendEntryRoot, AddingAllStringTypes)
 {
   auto p = er_.proxy();
   {
@@ -120,7 +120,7 @@ TEST_F(ButLogBackendDetailEntryRoot, AddingAllStringTypes)
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, CreatingSubobjects)
+TEST_F(ButLogBackendEntryRoot, CreatingSubobjects)
 {
   auto p = er_.proxy();
   p.value("str", "data");
@@ -139,7 +139,7 @@ TEST_F(ButLogBackendDetailEntryRoot, CreatingSubobjects)
 }
 
 
-TEST_F(ButLogBackendDetailEntryRoot, CreatingSubarrays)
+TEST_F(ButLogBackendEntryRoot, CreatingSubarrays)
 {
   auto p = er_.proxy();
   {
@@ -211,7 +211,7 @@ void objectValue(EntryProxy& p, Aggregate const& o)
   p.value("s", o.s_);
 }
 
-TEST_F(ButLogBackendDetailEntryRoot, CreatingObjectsViaNesting)
+TEST_F(ButLogBackendEntryRoot, CreatingObjectsViaNesting)
 {
   auto p = er_.proxy();
   p.nest( Answer{42} );
@@ -256,7 +256,7 @@ struct ObjectsCollection
 constexpr auto fieldName(ObjectsCollection const*) { return std::string_view{"ObjectsCollection"}; }
 void arrayValue(EntryArray& p, ObjectsCollection const& o) { p.add(o.c_); }
 
-TEST_F(ButLogBackendDetailEntryRoot, CreatingArraysViaNesting)
+TEST_F(ButLogBackendEntryRoot, CreatingArraysViaNesting)
 {
   auto p = er_.proxy();
   p.nest( SimpleCollection1{ {13, 42, 666} } );
@@ -275,14 +275,14 @@ TEST_F(ButLogBackendDetailEntryRoot, CreatingArraysViaNesting)
          })", er_);
 }
 
-TEST_F(ButLogBackendDetailEntryRoot, ManuallyNestingObjects)
+TEST_F(ButLogBackendEntryRoot, ManuallyNestingObjects)
 {
   auto p = er_.proxy();
   p.object("foo").object("bar").value("answer", 42);
   EXPECT_EQ_JSON(R"({ "foo": { "bar": { "answer": 42 } } })", er_);
 }
 
-TEST_F(ButLogBackendDetailEntryRoot, ManuallyNestingArrays)
+TEST_F(ButLogBackendEntryRoot, ManuallyNestingArrays)
 {
   auto p = er_.proxy();
   p.array("foo").array().value(42);

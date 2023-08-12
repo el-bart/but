@@ -2,7 +2,7 @@
 #include <nlohmann/json.hpp>
 #include <cassert>
 
-namespace But::Log::Backend::detail
+namespace But::Log::Backend
 {
 
 struct EntryRoot::Impl
