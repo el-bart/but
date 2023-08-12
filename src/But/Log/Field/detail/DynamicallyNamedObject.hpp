@@ -19,16 +19,13 @@ struct DynamicallyNamedObject
 template<typename T>
 inline void objectValue(Backend::EntryProxy& proxy, DynamicallyNamedObject<T> const& v)
 {
-  if constexpr ( Backend::detail::HasObjectValue<T>::value )
+  auto constexpr nestedHasDefinitions = Backend::detail::HasObjectValue<T>::value ||
+                                        Backend::detail::HasFieldValue<T>::value  ||
+                                        Backend::detail::HasArrayValue<T>::value;
+  if constexpr (nestedHasDefinitions)
     proxy.object(v.name_).nest(v.nested_);
   else
-    if constexpr ( Backend::detail::HasFieldValue<T>::value )
-      proxy.object(v.name_).nest(v.nested_);
-    else
-      if constexpr ( Backend::detail::HasArrayValue<T>::value )
-        proxy.object(v.name_).nest(v.nested_);
-      else
-        proxy.value(v.name_, v.nested_);
+    proxy.value(v.name_, v.nested_);
 }
 
 }
