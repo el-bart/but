@@ -12,6 +12,7 @@ this work is available on "master" branch, but has not yet been released.
     * dropped support for clang: 6, 7.
     * added support for gcc: 11, 12.
     * added support for clang: 13, 14, 15.
+    * all SDKs now contain also basic tools like `vim` and `gdb`.
   * `But::Log`:
     * performance is nearly double, with still a big space for improvement.
     * `Logger*` now check for uniqueness of arguments at compile time.
