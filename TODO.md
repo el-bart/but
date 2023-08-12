@@ -12,7 +12,7 @@
 * retry-sink, that will try to send log, in case of errors, multiple times.
 * `Log::Dst::BackgroundThread` - add overflow policy (drop oldest, drop new, block).
 * add `destination` that would retry sending logs, according to a given setup (retry count, max wait time, etc...).
-* macros for logging: `BUT_LOG_FILE`/`LINE`/`FUNCTION`
+* macros for logging: `BUT_LOG_FILE`/`LINE`/`FUNCTION` + aggregated `BUT_LOG_SOURCE` that collects all 3.
 * consider auto-trimming leading `../` sequences inside filename, when logging filename via macro (can be a dedicated type, if needed)
 
 
