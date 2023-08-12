@@ -15,13 +15,7 @@ struct ButLogFieldTag: public But::Log::Backend::detail::EntryRootTestBase
 };
 
 
-struct Value
-{
-  int value_;
-};
-
-int fieldValue(Value const& v) { return v.value_; }
-
+struct Value { int value_; };
 
 struct Object
 {
@@ -29,55 +23,42 @@ struct Object
   std::unique_ptr<double> pd_;
 };
 
-void objectValue(EntryProxy& e, Object const& o)
+struct Array { int tab_[4]; };
+
+
+TEST_F(ButLogFieldTag, TaggingBasicValueCreatesValidObject)
 {
-  throw 43;
-  (void)e;
-  (void)o;
-  // TODO
+  DynamicallyNamedObject<int> const d = tag("correct", 42);
+  EXPECT_EQ(d.name_, "correct");
+  EXPECT_EQ(d.nested_, 42);
 }
 
 
-struct Array
+TEST_F(ButLogFieldTag, TaggingValueCreatesValidObject)
 {
-  int tab_[4];
-};
-
-void arrayValue(EntryArray& e, Array const& a)
-{
-  throw 44;
-  (void)e;
-  (void)a;
-  // TODO
+  DynamicallyNamedObject<Value> const d = tag("correct", Value{42});
+  EXPECT_EQ(d.name_, "correct");
+  EXPECT_EQ(d.nested_.value_, 42);
 }
 
 
-TEST_F(ButLogFieldTag, TaggingCreatesValidObject)
+TEST_F(ButLogFieldTag, TaggingObjectCreatesValidObject)
 {
-  {
-    DynamicallyNamedObject<int> const d = tag("correct", 42);
-    EXPECT_EQ(d.name_, "correct");
-    EXPECT_EQ(d.nested_, 42);
-  }
-  {
-    DynamicallyNamedObject<Value> const d = tag("correct", Value{42});
-    EXPECT_EQ(d.name_, "correct");
-    EXPECT_EQ(d.nested_.value_, 42);
-  }
-  {
-    DynamicallyNamedObject<Object> const d = tag("correct", Object{"x", nullptr});
-    EXPECT_EQ(d.name_, "correct");
-    EXPECT_EQ(d.nested_.s_, "x");
-    EXPECT_EQ(d.nested_.pd_.get(), nullptr);
-  }
-  {
-    DynamicallyNamedObject<Array> const d = tag("correct", Array{{1,2,3,4}});
-    EXPECT_EQ(d.name_, "correct");
-    EXPECT_EQ(d.nested_.tab_[0], 1);
-    EXPECT_EQ(d.nested_.tab_[1], 2);
-    EXPECT_EQ(d.nested_.tab_[2], 3);
-    EXPECT_EQ(d.nested_.tab_[3], 4);
-  }
+  DynamicallyNamedObject<Object> const d = tag("correct", Object{"x", nullptr});
+  EXPECT_EQ(d.name_, "correct");
+  EXPECT_EQ(d.nested_.s_, "x");
+  EXPECT_EQ(d.nested_.pd_.get(), nullptr);
+}
+
+
+TEST_F(ButLogFieldTag, TaggingArrayCreatesValidObject)
+{
+  DynamicallyNamedObject<Array> const d = tag("correct", Array{{1,2,3,4}});
+  EXPECT_EQ(d.name_, "correct");
+  EXPECT_EQ(d.nested_.tab_[0], 1);
+  EXPECT_EQ(d.nested_.tab_[1], 2);
+  EXPECT_EQ(d.nested_.tab_[2], 3);
+  EXPECT_EQ(d.nested_.tab_[3], 4);
 }
 
 
@@ -118,31 +99,35 @@ void arrayValue(EntryArray& e, NamedArray const& a)
 }
 
 
-TEST_F(ButLogFieldTag, TaggingNamedElementCreatesValidObject)
+TEST_F(ButLogFieldTag, TaggingBasicUnnamedValueCreatesValidObject)
 {
-  {
-    auto const d = tag("correct", 42);
-    objectValue(p_, d);
-    EXPECT_EQ_JSON( er_.json(), R"( {"correct": 42} )" );
-  }
-  if(0)         
-  {
-    auto const d = tag("correct", NamedValue{42});
-    objectValue(p_, d);
-    EXPECT_EQ_JSON( er_.json(), R"( { "correct": { "NamedValue": 42 } } )" );
-  }
-  //if(0)         
-  {
-    auto const d = tag("correct", NamedObject{"x", 13});
-    objectValue(p_, d);
-    EXPECT_EQ_JSON( er_.json(), R"( { "correct": { "NamedObject": { "str": "x", "n": 13 } } } )" );
-  }
-  if(0)         
-  {
-    auto const d = tag("correct", NamedArray{{1,2,3,4}});
-    objectValue(p_, d);
-    EXPECT_EQ_JSON( er_.json(), R"( { "correct": { "NamedArray": [1,2,3,4] } } )" );
-  }
+  auto const d = tag("correct", 42);
+  objectValue(p_, d);
+  EXPECT_EQ_JSON( er_.json(), R"( {"correct": 42} )" );
+}
+
+
+TEST_F(ButLogFieldTag, TaggingNamedValueCreatesValidObject)
+{
+  auto const d = tag("correct", NamedValue{42});
+  objectValue(p_, d);
+  EXPECT_EQ_JSON( er_.json(), R"( { "correct": { "NamedValue": 42 } } )" );
+}
+
+
+TEST_F(ButLogFieldTag, TaggingNamedObjectCreatesValidObject)
+{
+  auto const d = tag("correct", NamedObject{"x", 13});
+  objectValue(p_, d);
+  EXPECT_EQ_JSON( er_.json(), R"( { "correct": { "NamedObject": { "str": "x", "n": 13 } } } )" );
+}
+
+
+TEST_F(ButLogFieldTag, TaggingNamedArrayCreatesValidObject)
+{
+  auto const d = tag("correct", NamedArray{{1,2,3,4}});
+  objectValue(p_, d);
+  EXPECT_EQ_JSON( er_.json(), R"( { "correct": { "NamedArray": [1,2,3,4] } } )" );
 }
 
 }

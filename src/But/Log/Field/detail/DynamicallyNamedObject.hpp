@@ -19,7 +19,6 @@ struct DynamicallyNamedObject
 template<typename T>
 inline void objectValue(Backend::EntryProxy& proxy, DynamicallyNamedObject<T> const& v)
 {
-  // TODO:          
   if constexpr ( Backend::detail::HasObjectValue<T>::value )
     proxy.object(v.name_).nest(v.nested_);
   else
