@@ -32,7 +32,8 @@ auto stringToLogLevel(std::string const& str)
   // TODO: this should be doable with sax parser, instead
   auto const j = nlohmann::json::parse(str);
   auto const it = j.find(prioFieldTag);
-  if( it == end(j) ) return Field::LogLevel::info;   // default version
+  if( it == end(j) )
+    return Field::LogLevel::info;   // default version
 
   std::string const& value = *it;
   for(auto p: {
