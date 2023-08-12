@@ -14,7 +14,7 @@ with this class in place, code can be easily refactored later on, if needed (add
 passed info like file, line and function to the message. allows to create whole tree of exceptions.
  * `NotNull` - wrapper for (smart)pointers, that ensures element held inside is not null. if user would
 pass such a pointer, exception will be thrown during construction.
- * `Optional` - template fixing boost::optional's issues with move semantics, multi-arg c-tors and references.
+ * `Optional` - a version of `std::optional`, where moved-object is unset, instead of being set, but moved-from.
  * `Guard` - helper object (and "make" function) to generate RAII-style cleanup, for local elements, that
 are not worth a dedicated, reusable class, yet still must be exception-safe.
 
@@ -35,37 +35,50 @@ for lack of guarantees on objects order, after addition/removal of any element.
 ## logger
 this module implements a type-safe, style-unified logger, with different output "destinations".
 note that this logger is NOT line oriented!
-instead it is entry-oriented, where entry is a sequence of (possibly nested) `<type,value>` pairs, that can be formatted / indexed later on.
-this allows creating arbitrary filtering mechanisms and any output format, including structured ones (Json, XML, etc...).
+instead it is oriented at structured logging, where message is fixed (compile-time constant) and all parameters are named.
+this allows creating arbitrary complex and nested output JSON format.
+having machine processable logs allows for querying and filtering, in a non-ambiguous way.
 
-for example logger can save timestamp, thread-id and message as 3 separate parameters.
-this will render structures, that are named ("tagger") and have value.
-it is easy to convert such a data entry to structured Json, XML or even log to data base or other key-value store.
+note that whole implementation is more of a logger-framework.
+user shall create own wrapper, that adds common fields required (eg. timestamp, log level, thread ID, etc...).
+see `But/Log/ExampleLogger.manual.cpp` for an example, how such a custom wrapper can be crated.
 
-all destinations implement `Destination::Sink`.
+loggers are designed to be passed around by values.
+while it is also possible to make it "enterprise-style", by providing a global variable, used for logging from everywhere,
+it's not recommended as it makes testing harder and does not guard against thread safety.
+
+all destinations implement `Destination::Sink` interface.
 they support getting already-formatted sequence of type-value elements.
-
-loggers are designed to be passed by values, though it is also possible to make it "enterprise-style", by
-providing a global variable, used for logging from everywhere.
-user can also provide macros to wrap that up with things like: file names, line numbers or function names.
 
 all destinations support `flush()` method, that forces all logs to be sent to their destination (file, socket, etc...).
 another option is `reload()`, that forces to re-establish destination (reconnect, reopen file, etc...),
 so that log rotation can be implemented.
 
-in order to add support for user's type/class `Abc`, it is enough to add `toFieldInfo(Abc const&) -> Backend::FieldInfo`
-free function, to the same namespace `Abc` has been declared in (for ADL - Argument Dependent Lookup).
+in order to add support for user's type/class `Abc`, it is enough to add two, free functions,
+in structure's namespace (for ADL - Argument Dependent Lookup):
+- `constexpr inline std::string_view fieldName(Abc const*) { return "My_type_name_is_Abc"; }`
+- depending on `Abc`'s semantics, exactly one of 3 functions below:
+  - `X fieldValue(Abc const& e)` - if `Abc` can be represented as a simple type `X` (eg. `int`, `dobule`, `string`, etc...)
+  - `void objectValue(Backend::EntryProxy& p, Abc const& e)` - if `Abc` is an object type (contains multiple fields)
+  - `void arrayValue(Backend::EntryArray& p, Abc const& e)` - if `Abc` is a collection
+
 from this moment on, logger will be able to log your type just like any other.
+this includes all the fields, eg. custom priorities, or domain-specific types.
+framework will automatically pick correct "value function", depending on what's available.
+
+note that `fieldName()` must be `constexpr`.
+this is used internally, to provide additional checks at compile time (eg. if given field type is not used more than once).
 
 logger object also supports `withFields(...)` member function, that creates a new logger, that will always append given values to each log it logs.
 this way it is extremely easy to create correlation chains - just pass on "extended" loggers down the call chain, as the data gets processed.
+added fields will always be added, to each log, w/o a need for internal code to know about it.
 
- * `LoggerProxy` - proxy object making usage simpler. in order to use logger, one should provide convenience.
- * `LoggerProxyThrowing` - same as `LoggerProxy`, but forwarding exceptions from the implementation. useful in some unusual requirements scenarios.
+ * `Logger` - basic logger, object allowing to log in a structured fashion. user is expected to create a domain-specific wrapper to use in own projects.
+ * `LoggerThrowing` - same as `Logger`, but forwarding exceptions from the implementation. useful only some unusual cases.
  * `Destination` - namespace containing typical destinations, that are provided out of the box.
  * `Destination::Sink` - base class for dynamic destinations.
 
- note that it is possible to integrate with LogStash, via `Destination::JsonTcp` sink.
+ note that it is trivially possible to integrate with LogStash, via `Destination::Tcp` sink.
 
 
 ## meta programming
