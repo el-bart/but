@@ -303,6 +303,24 @@ TEST_F(ButLogLoggerThrowing, StringsAreCorrectlyFormatted)
 }
 
 
+TEST_F(ButLogLoggerThrowing, FormattingDynamicallyTaggedBaseType)
+{
+  pt_.log( BUT_FORMAT("answer is $0"), tag("answer", 42) );
+  auto expected = json{
+            {"message", "answer is $0"},
+            {"answer", 42}
+    };
+  {
+    auto array = json::array();
+    array.push_back( json{ {"answer", 42} } );
+    expected["But::Format"]["args"] = std::move(array);
+    expected["But::Format"]["format"] = "answer is $0";
+    expected["But::Format"]["But::FormattedString"] = R"(answer is {"answer":42})";
+  }
+  EXPECT_EQ_JSON( sink_->parse(0), expected );
+}
+
+
 TEST_F(ButLogLoggerThrowing, CopyableAndMovable)
 {
   using Logger = LoggerThrowing<>;
@@ -358,7 +376,7 @@ TEST_F(ButLogLoggerThrowing, LoggingDynamicallyTaggedValue)
 }
 
 
-TEST_F(ButLogLoggerThrowing, LoggingRepeatedDynamicallyTaggedValue)
+TEST_F(ButLogLoggerThrowing, LoggingMultipleDynamicallyTaggedValue)
 {
   pt_.log("action!", tag("answer", 42), tag("foo", "bar"));
   EXPECT_EQ_JSON( sink_->parse(0), ( json{ {"message", "action!"}, {"answer", 42}, {"foo", "bar"} } ) );

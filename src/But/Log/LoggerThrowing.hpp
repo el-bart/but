@@ -146,6 +146,14 @@ private:
       }
     }
   }
+  template<typename T>
+  std::string makeString(Field::detail::DynamicallyNamedObject<T> const& t) const
+  {
+    Backend::EntryRoot er;
+    auto p = er.proxy();
+    objectValue(p, t);
+    return er.json();
+  }
 
   template<typename T>
   static constexpr std::optional<std::string_view> fieldNameProxy(T const* t) { return fieldName(t); }
