@@ -2,9 +2,17 @@
 
 short summary of each release, with version and release date.
 
+
 ## current development
 work in progress.
-this work is available on "master" branch, but has not yet been released.
+this work is available on `master` branch, but has not yet been released.
+
+
+## v2.0.0 (2023-08-13)
+major redesign of `But::Log`, including user-facing interface.
+shifting away from `boost` in favor of corresponding `std` components.
+renewed SDKs.
+many minor tweaks and improvements.
 
   * tooling:
     * C++17 is now new minimal version required.
@@ -29,10 +37,12 @@ this work is available on "master" branch, but has not yet been released.
   * `System::CpuTimer` added - wrapper around intrinsic for counting CPU cycles, for very precise time measurements.
   * `BUT_MPL_VALUE_WRAP` is now split into: `BUT_MPL_VALUE_WRAP_CP`, `BUT_MPL_VALUE_WRAP_MV` and `BUT_MPL_VALUE_WRAP_CP_MV`, depending if type is copyable, movable or both.
 
+
 ## v1.2.1 (2022-11-02)
 minor bugfix
 
   * fixed missing `#pragma once` in `date2str.hpp`.
+
 
 ## v1.2.0 (2022-07-10)
 set of minor features.
@@ -59,6 +69,7 @@ final release of `1.x` series, before bigger changes planned for `2.0`.
   * `Container::ArrayWithSize::front()` added, for easier access.
   * `Container::BitPackedSequence::resize()` added (2 overloads, as in `std::vector`).
 
+
 ## v1.1.2 (2021-02-10)
 minor release fixing couple of issues on different compiler versions.
 
@@ -67,10 +78,12 @@ minor release fixing couple of issues on different compiler versions.
   * GCC-6 support is dropped (it's no longer in Debian:10 repos).
   * fixed clang compilation (empty `...` in macro).
 
+
 ## v1.1.1 (2020-01-24)
 minor release to fix 32-bit compilation bug.
 
   * fixed type size mismatches on 32-bit architectures in `Log::Value` and `Log::toFieldInfo` (used to be a compilation error).
+
 
 ## v1.1.0 (2018-10-10)
 another round date. ;)
@@ -91,6 +104,7 @@ mostly related to logging.
   * `Log::Backend::FieldInfo` now supports `vector<T>` as a collection type.
   * `Threading::LockProxy` is no longer implementation detail.
   * `Threading::LockProxy` provides `operator*()` and a member function `get()`, for convenience.
+
 
 ## v1.0.0 (2017-12-12)
 new logger concept, based on a structure logging idea (https://www.baszerr.eu/lib/exe/fetch.php/docs/structured_logging.pdf).
@@ -152,6 +166,7 @@ countless small fixes and improvements - see the list below for the full overvie
   * test applications generate XML reports in JUnit format.
   * color output from ctest.
 
+
 ## v0.2.0 (2017-03-27)
 small interface updates along with minor fixes here and there.
 the only purely-new elements is filtering backend for logger.
@@ -162,6 +177,7 @@ the only purely-new elements is filtering backend for logger.
  * `Log::Destination::Filter`
  * convenience using statements for `NotNull<>` pointer
  * unified pointer getting interface of `NotNull<>::pointer()` for lvalue and rvalue types
+
 
 ## v0.1.0 (2017-03-20)
 after doing continuous development for quite a while a time has come for the first release.
