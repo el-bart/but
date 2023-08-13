@@ -5,6 +5,7 @@
 
 ## logger-related things
 
+* `BUT_FORMAT` used from `But::Log::Logger::log()` for types with `tag()`ed `fieldValue` or direct value, should give just the value - not full declaration with type name.
 * add Log/Fields for: `DateTime`, `ModuleName`, `FunctionName`, `PrettyFunctionName`
 * add `Log::Field::ProcessName`
 * logger feature for buffering debug logs for some time, so that they are logged only if warning/error occurs, but dropping if nothing 'special' happens for some time
