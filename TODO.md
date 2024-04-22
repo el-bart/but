@@ -15,6 +15,7 @@
 * add `destination` that would retry sending logs, according to a given setup (retry count, max wait time, etc...).
 * macros for logging: `BUT_LOG_FILE`/`LINE`/`FUNCTION` + aggregated `BUT_LOG_SOURCE` that collects all 3.
 * consider auto-trimming leading `../` sequences inside filename, when logging filename via macro (can be a dedicated type, if needed)
+* add support for `std::optional<T>`, where name of `T` would be added as a field, but `null` would become its output value.
 
 
 ## improvements / new APIs
