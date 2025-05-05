@@ -102,6 +102,6 @@ ctest_flags=()
 
 echo "$app: running automated tests"
 time timeout 5m \
-  ctest "${ctest_flags}"
+  ctest "${ctest_flags[@]}"
 
 echo "$app: all tests passed!"
