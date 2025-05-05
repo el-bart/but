@@ -97,8 +97,8 @@ case "$sanitizer" in
   ;;
 esac
 
-ctest_flags=()
-[ "$CTEST_VERBOSE" = "true" ] && ctest_flags+=(-V)
+ctest_flags=(--output-on-failure)
+[ "$CTEST_VERBOSE" = "true" ] && ctest_flags+=(--verbose)
 
 echo "$app: running automated tests"
 time timeout 5m \

@@ -9,9 +9,7 @@ foreach(app but_uts but_mts but_its)
   add_test(NAME run_${app}
            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${app}
                    --order rand
-                   --use-colour yes
-                   --reporter xml
-                   --out "${CMAKE_CURRENT_BINARY_DIR}/${app}_report.xml")
+                   --use-colour yes)
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 
@@ -26,8 +24,7 @@ foreach(app but_utgs but_mtgs but_itgs)
   add_test(NAME run_${app}
            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${app}
                    --gtest_shuffle
-                   --gtest_color=yes
-                   --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${app}_report.xml)
+                   --gtest_color=yes)
   list(APPEND TEST_TARGETS ${app})
 endforeach()
 
