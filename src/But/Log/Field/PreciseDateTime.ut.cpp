@@ -1,5 +1,5 @@
 #include <But/Log/Field/PreciseDateTime.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 
 using But::Log::Field::ConversionError;
 using But::Log::Field::PreciseDateTime;

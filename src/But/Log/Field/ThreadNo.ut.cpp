@@ -1,6 +1,6 @@
 #include <But/Log/Field/ThreadNo.hpp>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 
 using But::Log::Field::ThreadNo;
 

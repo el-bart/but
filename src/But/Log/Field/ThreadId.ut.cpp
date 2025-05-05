@@ -1,7 +1,7 @@
 #include <sstream>
 #include <But/Log/Field/ThreadId.hpp>
 #include <But/Threading/JoiningThread.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 
 using But::Log::Field::ThreadId;
 

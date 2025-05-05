@@ -1,5 +1,5 @@
 #include <But/Log/Field/Timestamp.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 
 using But::Log::Field::Timestamp;
 

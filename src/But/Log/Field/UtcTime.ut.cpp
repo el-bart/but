@@ -1,5 +1,5 @@
 #include <But/Log/Field/UtcTime.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 
 using But::Log::Field::UtcTime;
 using But::Log::Field::UtcIsoDateTime;

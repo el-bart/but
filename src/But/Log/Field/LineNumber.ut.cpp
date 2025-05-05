@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <But/Log/Field/LineNumber.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 
 using But::Log::Field::LineNumber;
 

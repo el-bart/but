@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <But/Log/Backend/EntryRoot.hpp>
-#include <But/Log/Backend/EntryRootTestBase.ut.hpp>
+#include <But/Log/Backend/EntryRootTestBase.utg.hpp>
 #include <nlohmann/json.hpp>
 
 using But::Log::Backend::EntryRoot;
