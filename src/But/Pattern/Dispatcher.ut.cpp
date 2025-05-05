@@ -1,6 +1,6 @@
 #include <gmock/gmock.h>
 #include <But/Pattern/Dispatcher.hpp>
-#include <But/Pattern/DispatcherTestStructure.ut.hpp>
+#include <But/Pattern/DispatcherTestStructure.utg.hpp>
 
 using But::Pattern::Dispatcher;
 using But::Pattern::AutoDispatcher;
