@@ -7,6 +7,7 @@ src_dir="$root_dir/src"
 build_dir="$root_dir/build"
 
 BUT_GENERATOR=${BUT_GENERATOR:-ninja}
+CTEST_VERBOSE=${CTEST_VERBOSE:-false}
 
 if [ "$#" -ne 3 ]
 then
@@ -96,8 +97,11 @@ case "$sanitizer" in
   ;;
 esac
 
+ctest_flags=()
+[ "$CTEST_VERBOSE" = "true" ] && ctest_flags+=(-V)
+
 echo "$app: running automated tests"
 time timeout 5m \
-  ctest -V
+  ctest "${ctest_flags}"
 
 echo "$app: all tests passed!"
