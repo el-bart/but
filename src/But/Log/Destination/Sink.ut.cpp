@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <But/Log/Destination/Sink.hpp>
-#include <But/Log/Destination/SinkMock.ut.hpp>
+#include <But/Log/Destination/SinkMock.utg.hpp>
 
 using testing::_;
 using But::Log::Destination::Sink;

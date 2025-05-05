@@ -3,7 +3,7 @@
 #include <atomic>
 #include <gtest/gtest.h>
 #include <But/Log/Destination/BackgroundThread.hpp>
-#include <But/Log/Destination/SinkMock.ut.hpp>
+#include <But/Log/Destination/SinkMock.utg.hpp>
 #include <But/Threading/Event.hpp>
 #include <But/Threading/JoiningThread.hpp>
 

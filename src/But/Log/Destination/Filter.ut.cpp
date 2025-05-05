@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <But/Log/Destination/Filter.hpp>
-#include <But/Log/Destination/SinkMock.ut.hpp>
+#include <But/Log/Destination/SinkMock.utg.hpp>
 
 using testing::_;
 using testing::StrictMock;
