@@ -7,6 +7,8 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on `master` branch, but has not yet been released.
 
+  * support for tests in `catch2` inside the library code
+
 
 ## v2.0.0 (2023-08-13)
 major redesign of `But::Log`, including user-facing interface.

@@ -1,8 +1,25 @@
+# catch2
 add_executable(but_uts ${SOURCES_UT})
 add_executable(but_mts ${SOURCES_MT})
 add_executable(but_its ${SOURCES_IT})
-
 foreach(app but_uts but_mts but_its)
+  target_link_libraries(${app} but)
+  target_link_libraries(${app} Catch2WithMain)
+  target_link_libraries(${app} boost_serialization boost_chrono)
+  add_test(NAME run_${app}
+           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${app}
+                   --order rand
+                   --use-colour yes
+                   --reporter xml
+                   --out "${CMAKE_CURRENT_BINARY_DIR}/${app}_report.xml")
+  list(APPEND TEST_TARGETS ${app})
+endforeach()
+
+# gtest
+add_executable(but_utgs ${SOURCES_UTG})
+add_executable(but_mtgs ${SOURCES_MTG})
+add_executable(but_itgs ${SOURCES_ITG})
+foreach(app but_utgs but_mtgs but_itgs)
   target_link_libraries(${app} but)
   target_link_libraries(${app} gmock_main gmock gtest)
   target_link_libraries(${app} boost_serialization boost_chrono)

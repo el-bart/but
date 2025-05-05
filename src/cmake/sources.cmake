@@ -29,10 +29,25 @@ set(SRC_DIRS
 )
 
 expand_names(SOURCES_ALL    "cpp"        ${SRC_DIRS})
+expand_names(SOURCES_MANUAL "manual.cpp" ${SRC_DIRS})
+# catch2
 expand_names(SOURCES_UT     "ut.cpp"     ${SRC_DIRS})
 expand_names(SOURCES_MT     "mt.cpp"     ${SRC_DIRS})
 expand_names(SOURCES_IT     "it.cpp"     ${SRC_DIRS})
-expand_names(SOURCES_MANUAL "manual.cpp" ${SRC_DIRS})
+# gtest
+expand_names(SOURCES_UTG    "utg.cpp"    ${SRC_DIRS})
+expand_names(SOURCES_MTG    "mtg.cpp"    ${SRC_DIRS})
+expand_names(SOURCES_ITG    "itg.cpp"    ${SRC_DIRS})
 
 set(SOURCES_LIB ${SOURCES_ALL})
-list(REMOVE_ITEM SOURCES_LIB ${SOURCES_UT} ${SOURCES_MT} ${SOURCES_IT} ${SOURCES_MANUAL})
+list(REMOVE_ITEM SOURCES_LIB
+  ${SOURCES_MANUAL}
+  # catch2
+  ${SOURCES_UT}
+  ${SOURCES_MT}
+  ${SOURCES_IT}
+  # gtest
+  ${SOURCES_UTG}
+  ${SOURCES_MTG}
+  ${SOURCES_ITG}
+)
