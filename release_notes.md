@@ -8,6 +8,7 @@ work in progress.
 this work is available on `master` branch, but has not yet been released.
 
   * support for tests in `catch2` inside the library code
+  * `But::System::SocketPair` added (RAII-wrapper for `socketpair()` syscall)
 
 
 ## v2.0.0 (2023-08-13)

@@ -47,7 +47,7 @@
 * `BUT_ASSERT_ALWAYS()` for asserts that shall remain in release builds as well.
 * helper to check if UTF-8 sequence is valid ([utf-8 recovery overview](https://baszerr.eu/doku.php?id=blog:2020:04:24:2020-04-24_-_utf-8_recovery)).
 * helper to replace invalid UTF-8 characters from the sequence (similar code to "validator" above).
-* `System` should contain: `SocketPair`, `Epoll` (interruptable)
+* `System` should contain `Epoll` (interruptable)
 
 
 ## misc ideas
