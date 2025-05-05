@@ -2,7 +2,7 @@
 #include <vector>
 #include <But/Log/LoggerThrowing.hpp>
 #include <But/Log/Field/tag.hpp>
-#include <But/Log/Backend/unifyJson.ut.hpp>
+#include <But/Log/Backend/unifyJson.utg.hpp>
 #include <But/Log/Destination/FakeSink.ut.hpp>
 #include <nlohmann/json.hpp>
 #include <gtest/gtest.h>

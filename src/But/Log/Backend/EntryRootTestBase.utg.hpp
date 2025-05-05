@@ -1,7 +1,7 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <But/Log/Backend/EntryRoot.hpp>
-#include <But/Log/Backend/unifyJson.ut.hpp>
+#include <But/Log/Backend/unifyJson.utg.hpp>
 
 namespace But::Log::Backend
 {
