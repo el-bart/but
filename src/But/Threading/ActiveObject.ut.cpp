@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <But/Threading/ActiveObject.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>
-#include <But/gtest_compat.ut.hpp>
+#include <But/gtest_compat.utg.hpp>
 
 using But::Threading::detail::waitForFuture;
 

@@ -5,7 +5,7 @@
 #include <But/Threading/Event.hpp>
 #include <But/Threading/ThreadPool.hpp>
 #include <But/Threading/detail/waitForFuture.ut.hpp>
-#include <But/gtest_compat.ut.hpp>
+#include <But/gtest_compat.utg.hpp>
 #include <But/detail/tsan.hpp>
 
 using But::Threading::ThreadsCount;
