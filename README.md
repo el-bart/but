@@ -125,3 +125,43 @@ system, effectively makes low-throughput system. ;)
 ## Format
  * `BUT_FORMAT` - helper for generated parsed format, that can check syntax at compile time and process arguments at runtime (arity is always checked at compile time, too). since output format for each parameter is predefined, effectively all checks are done `static_assert`s.
  * `BUT_FORMAT_RUNTIME` - variant of the `BUT_FORMAT` that performs all checks at run time.
+
+
+## library organization
+source code is organized into files, name to signify its purpose.
+following sections summarize the conventions.
+
+### general rules
+CamelCase is used throughout the code base.
+directories map 1:1 to namespaces and start with upper-case.
+classes are named upper-case.
+
+build is organized into docker-based SDKs, that can be ran independently for:
+* each compiler
+* each mode (debug, release, etc...)
+* each sanitizer (thread, address, etc...)
+see `ci/run_all` for examples how to utilize these capabilities to have a good testing across many different configurations.
+
+for rationale of these rules see [taming of the software](https://www.youtube.com/watch?v=NGLid96ceEo) video.
+
+### files naming
+aside from functions and classes, file extensions have extra meaning, too.
+regular sources are named `*.cpp` and `*.hpp`, as usual.
+test are named after test type, i.e.:
+* `ut` is Unit Tests (1 class)
+* `mt` is Module Tests (integration between different elements)
+* `it` is Integration Tests (integration of bigger chunks and / or testing against actual OS dependencies)
+* `mtest` is Manual TEST (application that does some action, that can be then verified manually for correctness)
+
+### testing frameworks
+BUT development started around 2014, but it's roots are dating back to around 2006, with (now abandoned) `System` library.
+when it all started `gtest` and `gmock` were the state of the art.
+nowadays `catch2` is much better choice.
+however since BUT (as of 20025) is ~20KLOC, porting won't happen over night.
+
+therefor old, `gtest`-based tests are named `*.<test_type>g.?pp` and new `catch2`-based are `*.<test_type>.?pp`.
+e.g.:
+* `Foo.utg.cpp` -> `gtest`-based UT for Foo class.
+* `Bar.ut.cpp` -> `catch2`-based UT for Bar class.
+* `xyz.ut.hpp` -> `catch2`-based helper code for UTs.
+* `abc.utg.hpp` -> `gtest`-based helper code for UTs.
