@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     ninja-build
 
 RUN apt-get update && apt-get install -y \
+    catch2 \
     googletest \
     libboost-all-dev \
     nlohmann-json3-dev
