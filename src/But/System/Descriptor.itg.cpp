@@ -59,6 +59,13 @@ struct ButSystemDescriptor: public testing::Test
 };
 
 
+TEST_F(ButSystemDescriptor, UseDefaultCtor)
+{
+  Descriptor d;
+  EXPECT_FALSE( d.opened() );
+}
+
+
 TEST_F(ButSystemDescriptor, TestSuiteSanityCheck)
 {
   close( td_.releaseFd() );

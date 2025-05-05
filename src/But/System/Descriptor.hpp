@@ -12,7 +12,8 @@ class Descriptor final
 public:
   using value_type = int;
 
-  explicit Descriptor(const value_type desc = -1): desc_{desc} { }
+  Descriptor(): Descriptor(-1) { } // needed where explicit c-tor cannot be easily used
+  explicit Descriptor(const value_type desc): desc_{desc} { }
   ~Descriptor() { reset(); }
 
   Descriptor(Descriptor const&) = delete;
