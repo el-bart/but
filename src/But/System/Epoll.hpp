@@ -1,8 +1,9 @@
 #pragma once
 #include <chrono>
-#include <vector>
-#include <initializer_list>
+#include <functional>
+#include <linux/eventpoll.h>
 #include <But/System/Descriptor.hpp>
+#include <But/System/SocketPair.hpp>
 
 namespace But::System
 {
@@ -10,26 +11,43 @@ namespace But::System
 class Epoll final
 {
 public:
+  enum Event: decltype(EPOLLIN)
+  {
+    In     = EPOLLIN,
+    Pri    = EPOLLPRI,
+    Out    = EPOLLOUT,
+    Err    = EPOLLERR,
+    Hup    = EPOLLHUP,
+    Nval   = EPOLLNVAL,
+    Rdnorm = EPOLLRDNORM,
+    Rdband = EPOLLRDBAND,
+    Wrnorm = EPOLLWRNORM,
+    Wrband = EPOLLWRBAND,
+    Msg    = EPOLLMSG,
+    Rdhup  = EPOLLRDHUP,
+  };
+
+  using OnEvent = std::function<void(int, Event)>;
+
   struct Registration
   {
-    // TODO
+    template<typename ...Events>
+    Registration(OnEvent onEvent, int fd, Events ...events):
+      onEvent_{ std::move(onEvent) },
+      fd_{fd},
+      events_{ ( static_cast<decltype(EPOLLIN)>(events) | ... ) }
+    {
+      static_assert( sizeof...(events) > 0u, "some events must be specified for FD" );
+      static_assert( ( std::is_same_v<Event, Events> && ... ), "all variadic args must be of Event type" );
+    }
+
+    OnEvent onEvent_;
+    int fd_{-1};
+    decltype(EPOLLIN) events_{};
   };
 
-  struct Notification
-  {
-    // TODO
-  };
-  using value_type = std::vector<Notification>;
-
-  Epoll(): Epoll( {} ) { }
-  explicit Epoll(std::initializer_list<Registration> regs)
-  {
-    for(auto r: regs)
-      add(r);
-    // TODO: interruptions
-  }
-
-  ~Epoll(); // TODO
+  Epoll();
+  //~Epoll(); // TODO
 
   Epoll(Epoll const&) = delete;
   Epoll& operator=(Epoll const&) = delete;
@@ -40,25 +58,26 @@ public:
   void swap(Epoll& other)
   {
     (void)other; // TODO
+    using std::swap;
     //std::swap(other.pair_, pair_);
   }
 
   /** non-blocking wait for events. if there are no events - returns immediately.
-   *  @returns reference to local collection of response values. it is overwritten upon each call to wait().
+   *  @returns number of notifications sent.
    */
-  value_type const& check();
+  size_t check();
 
   /** blocking wait for events.
-   *  @returns reference to local collection of response values. it is overwritten upon each call to wait().
+   *  @returns number of notifications sent.
    */
-  value_type const& wait(std::chrono::milliseconds timeout = std::chrono::milliseconds{0});
+  size_t wait(std::chrono::milliseconds timeout = std::chrono::milliseconds{0});
 
   /** blocking wait for events. blocks w/o a timeout.
-   *  @returns reference to local collection of response values. it is overwritten upon each call to wait().
+   *  @returns number of notifications sent.
    */
-  value_type const& wait();
+  size_t wait();
 
-  void add(Registration const& reg); // TODO
+  void add(Registration reg); // TODO
   void remove(int fd); // TODO
 
   /** @brief interrupts check()/wait() calls from a separate thread.
@@ -68,7 +87,8 @@ public:
   void interrupt(); // TODO
 
 private:
-  value_type results;
+  SocketPair irq;
+  Descriptor epFd;
   // TODO
 };
 

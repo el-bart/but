@@ -1,13 +1,26 @@
 #include <type_traits>
 #include <But/System/Epoll.hpp>
+#include <But/System/SocketPair.hpp>
 #include <catch2/catch.hpp>
 
 using But::System::Epoll;
-using But::System::Epoll;
-using But::System::Descriptor;
+using But::System::SocketPair;
+//using But::System::Descriptor;
 
 namespace
 {
+
+SCENARIO("Epoll: functionality")
+{
+  SocketPair sp1;
+  SocketPair sp2;
+  SocketPair sp3;
+
+  GIVEN("default-initialized Epoll")
+  {
+    Epoll ep;
+  }
+}
 
 /*
 SCENARIO("Epoll: default-initialized")
