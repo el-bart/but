@@ -1,6 +1,9 @@
 #pragma once
 #include <chrono>
+#include <vector>
+#include <unordered_map>
 #include <functional>
+#include <type_traits>
 #include <linux/eventpoll.h>
 #include <But/System/Descriptor.hpp>
 #include <But/System/SocketPair.hpp>
@@ -19,12 +22,12 @@ public:
     Err    = EPOLLERR,
     Hup    = EPOLLHUP,
     Nval   = EPOLLNVAL,
-    Rdnorm = EPOLLRDNORM,
-    Rdband = EPOLLRDBAND,
-    Wrnorm = EPOLLWRNORM,
-    Wrband = EPOLLWRBAND,
+    RdNorm = EPOLLRDNORM,
+    RdBand = EPOLLRDBAND,
+    WrNorm = EPOLLWRNORM,
+    WrBand = EPOLLWRBAND,
     Msg    = EPOLLMSG,
-    Rdhup  = EPOLLRDHUP,
+    RdHup  = EPOLLRDHUP,
   };
 
   using OnEvent = std::function<void(int, Event)>;
@@ -47,7 +50,6 @@ public:
   };
 
   Epoll();
-  //~Epoll(); // TODO
 
   Epoll(Epoll const&) = delete;
   Epoll& operator=(Epoll const&) = delete;
@@ -55,41 +57,36 @@ public:
   Epoll(Epoll&& other) = default;
   Epoll& operator=(Epoll&& other) = default;
 
-  void swap(Epoll& other)
-  {
-    (void)other; // TODO
-    using std::swap;
-    //std::swap(other.pair_, pair_);
-  }
+  void swap(Epoll& other);
 
   /** non-blocking wait for events. if there are no events - returns immediately.
    *  @returns number of notifications sent.
    */
   size_t check();
 
-  /** blocking wait for events.
-   *  @returns number of notifications sent.
-   */
-  size_t wait(std::chrono::milliseconds timeout = std::chrono::milliseconds{0});
-
   /** blocking wait for events. blocks w/o a timeout.
    *  @returns number of notifications sent.
    */
   size_t wait();
 
-  void add(Registration reg); // TODO
-  void remove(int fd); // TODO
+  /** blocking wait for events.
+   *  @returns number of notifications sent.
+   */
+  size_t wait(std::chrono::milliseconds timeout);
+
+  void add(Registration reg);
+  void remove(int fd);
 
   /** @brief interrupts check()/wait() calls from a separate thread.
    *  @note this call is both thread-safe and reentrant.
    *  @note once interrup() is called, it will affect the next call to check() / wait(), even if it was called after the interrup() returned. only 1 call will be affected, though.
    */
-  void interrupt(); // TODO
+  void interrupt();
 
 private:
   SocketPair irq;
   Descriptor epFd;
-  // TODO
+  std::unordered_map<int, std::vector<Registration>> registrations_;
 };
 
 
