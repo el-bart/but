@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <functional>
 #include <type_traits>
-#include <linux/eventpoll.h>
+#include <sys/epoll.h>
 #include <But/System/Descriptor.hpp>
 #include <But/System/SocketPair.hpp>
 
@@ -14,14 +14,13 @@ namespace But::System
 class Epoll final
 {
 public:
-  enum Event: decltype(EPOLLIN)
+  enum Event: uint32_t
   {
     In     = EPOLLIN,
     Pri    = EPOLLPRI,
     Out    = EPOLLOUT,
     Err    = EPOLLERR,
     Hup    = EPOLLHUP,
-    Nval   = EPOLLNVAL,
     RdNorm = EPOLLRDNORM,
     RdBand = EPOLLRDBAND,
     WrNorm = EPOLLWRNORM,
@@ -31,23 +30,6 @@ public:
   };
 
   using OnEvent = std::function<void(int, Event)>;
-
-  struct Registration
-  {
-    template<typename ...Events>
-    Registration(OnEvent onEvent, int fd, Events ...events):
-      onEvent_{ std::move(onEvent) },
-      fd_{fd},
-      events_{ ( static_cast<decltype(EPOLLIN)>(events) | ... ) }
-    {
-      static_assert( sizeof...(events) > 0u, "some events must be specified for FD" );
-      static_assert( ( std::is_same_v<Event, Events> && ... ), "all variadic args must be of Event type" );
-    }
-
-    OnEvent onEvent_;
-    int fd_{-1};
-    decltype(EPOLLIN) events_{};
-  };
 
   Epoll();
 
@@ -74,7 +56,14 @@ public:
    */
   size_t wait(std::chrono::milliseconds timeout);
 
-  void add(Registration reg);
+  template<typename ...Events>
+  void add(int fd, OnEvent onEvent, Events ...events)
+  {
+    static_assert( sizeof...(events) > 0u, "some events must be specified for FD" );
+    static_assert( ( std::is_same_v<Event, Events> && ... ), "all variadic args must be of Event type" );
+    add( fd, Registration{ std::move(onEvent), ( static_cast<decltype(EPOLLIN)>(events) | ... ) } );
+  }
+
   void remove(int fd);
 
   /** @brief interrupts check()/wait() calls from a separate thread.
@@ -84,8 +73,16 @@ public:
   void interrupt();
 
 private:
-  SocketPair irq;
-  Descriptor epFd;
+  struct Registration
+  {
+    OnEvent onEvent_;
+    decltype(EPOLLIN) events_{};
+  };
+
+  void add(int fd, Registration &&reg);
+
+  SocketPair irq_;
+  Descriptor epFd_;
   std::unordered_map<int, std::vector<Registration>> registrations_;
 };
 
