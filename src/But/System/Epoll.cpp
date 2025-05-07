@@ -1,4 +1,5 @@
 #include <But/System/Epoll.hpp>
+#include <But/System/syscallRetry.hpp>
 #include <stdexcept>
 #include <sys/epoll.h>
 
@@ -17,11 +18,10 @@ void drainFd(int fd, Epoll::Event)
 }
 
 Epoll::Epoll():
-  epFd_{ epoll_create1(0) }
+  epFd_{ syscallRetry( []() { return epoll_create1(0); } ) }
 {
-  // TODO: POSIX retry thing...
   if(not epFd_)
-    throw std::runtime_error{"But::System::Epoll: failed to create: epoll_create1() failed"}; // TODO errno info
+    BUT_THROW(EpollError, "failed to create: epoll_create1(): " << strerror(errno));
   add( irq_.get().d2_.get(), drainFd, Event::In );
 }
 
@@ -56,7 +56,7 @@ size_t Epoll::wait(std::chrono::milliseconds timeout)
 void Epoll::add(int fd, Registration &&reg)
 {
   if(not reg.onEvent_)
-    throw std::logic_error{"But::System::Epoll::add(): onEvent cannot be empty"};
+    BUT_THROW(EpollError, "Epoll::add(): onEvent cannot be empty");
   // TODO
   (void)fd;
   (void)reg;
@@ -70,8 +70,8 @@ void Epoll::remove(int fd)
 
 void Epoll::interrupt()
 {
-  // TODO: retries on POSIX stuff
-  write( irq_.get().d1_.get(), "x", 1 );
+  if( syscallRetry( [&]() { return write( irq_.get().d1_.get(), "x", 1 ); } ) == -1 )
+    BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
 }
 
 }

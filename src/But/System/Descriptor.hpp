@@ -1,6 +1,7 @@
 #pragma once
 #include <unistd.h>
 #include <utility>
+#include <But/System/syscallRetry.hpp>
 
 namespace But
 {
@@ -41,7 +42,7 @@ public:
   void reset(const value_type desc = -1)
   {
     if( opened() )
-      close(desc_);
+      syscallRetry( [=]() { return close(desc_); } );
     desc_ = desc;
   }
 

@@ -5,6 +5,7 @@
 #include <functional>
 #include <type_traits>
 #include <sys/epoll.h>
+#include <But/Exception.hpp>
 #include <But/System/Descriptor.hpp>
 #include <But/System/SocketPair.hpp>
 
@@ -14,6 +15,8 @@ namespace But::System
 class Epoll final
 {
 public:
+  BUT_DEFINE_EXCEPTION(EpollError, Exception, "But::System::Epoll failed");
+
   enum Event: uint32_t
   {
     In     = EPOLLIN,

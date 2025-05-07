@@ -1,7 +1,9 @@
 #pragma once
 #include <utility>
 #include <cerrno>
+#include <cstring>
 #include <sys/socket.h>
+#include <But/Exception.hpp>
 #include <But/System/Descriptor.hpp>
 
 namespace But::System
@@ -10,6 +12,8 @@ namespace But::System
 class SocketPair final
 {
 public:
+  BUT_DEFINE_EXCEPTION(CannotCreateSocketPair, Exception, "socketpair()");
+
   struct Pair
   {
     Descriptor d1_;
@@ -55,12 +59,8 @@ private:
   static value_type init()
   {
     int sp[2];
-    while( socketpair(AF_UNIX, SOCK_STREAM, 0, sp) == -1 )
-    {
-      if(errno == EINTR ) continue;
-      if(errno == EAGAIN) continue;
-      break;
-    }
+    if( syscallRetry( [&]() { return socketpair(AF_UNIX, SOCK_STREAM, 0, sp); } ) == -1 )
+      BUT_THROW(CannotCreateSocketPair, "syscall failed: " << strerror(errno));
     return Pair{ Descriptor{sp[0]}, Descriptor{sp[1]} };
   }
 
