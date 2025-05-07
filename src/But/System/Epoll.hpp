@@ -17,19 +17,23 @@ class Epoll final
 public:
   BUT_DEFINE_EXCEPTION(EpollError, Exception, "But::System::Epoll failed");
 
-  enum Event: uint32_t
+  enum Event: std::underlying_type_t<EPOLL_EVENTS>
   {
-    In     = EPOLLIN,
-    Pri    = EPOLLPRI,
-    Out    = EPOLLOUT,
-    Err    = EPOLLERR,
-    Hup    = EPOLLHUP,
-    RdNorm = EPOLLRDNORM,
-    RdBand = EPOLLRDBAND,
-    WrNorm = EPOLLWRNORM,
-    WrBand = EPOLLWRBAND,
-    Msg    = EPOLLMSG,
-    RdHup  = EPOLLRDHUP,
+    In        = EPOLLIN,
+    Pri       = EPOLLPRI,
+    Out       = EPOLLOUT,
+    Rdnorm    = EPOLLRDNORM,
+    Rdband    = EPOLLRDBAND,
+    Wrnorm    = EPOLLWRNORM,
+    Wrband    = EPOLLWRBAND,
+    Msg       = EPOLLMSG,
+    Err       = EPOLLERR,
+    Hup       = EPOLLHUP,
+    Rdhup     = EPOLLRDHUP,
+    Exclusive = EPOLLEXCLUSIVE,
+    Wakeup    = EPOLLWAKEUP,
+    Oneshot   = EPOLLONESHOT,
+    Et        = EPOLLET,
   };
 
   using OnEvent = std::function<void(int, Event)>;
@@ -47,24 +51,29 @@ public:
   /** non-blocking wait for events. if there are no events - returns immediately.
    *  @returns number of notifications sent.
    */
-  size_t check();
+  size_t check() { return waitImpl(0); }
 
   /** blocking wait for events. blocks w/o a timeout.
    *  @returns number of notifications sent.
    */
-  size_t wait();
+  size_t wait() { return waitImpl(-1); }
 
   /** blocking wait for events.
    *  @returns number of notifications sent.
    */
-  size_t wait(std::chrono::milliseconds timeout);
+  size_t wait(std::chrono::milliseconds const timeout)
+  {
+    if(timeout < std::chrono::milliseconds::zero())
+      BUT_THROW(EpollError, "Epoll::wait(): onEvent cannot be empty");
+    return waitImpl( static_cast<int>( timeout.count() ) );
+  }
 
   template<typename ...Events>
   void add(int fd, OnEvent onEvent, Events ...events)
   {
     static_assert( sizeof...(events) > 0u, "some events must be specified for FD" );
     static_assert( ( std::is_same_v<Event, Events> && ... ), "all variadic args must be of Event type" );
-    add( fd, Registration{ std::move(onEvent), ( static_cast<decltype(EPOLLIN)>(events) | ... ) } );
+    add( fd, Registration{ std::move(onEvent), ( static_cast<std::underlying_type_t<Event>>(events) | ... ) } );
   }
 
   void remove(int fd);
@@ -79,14 +88,20 @@ private:
   struct Registration
   {
     OnEvent onEvent_;
-    decltype(EPOLLIN) events_{};
+    std::underlying_type_t<Event> events_{};
   };
+  using Registrations = std::unordered_map<int, std::vector<Registration>>;
 
   void add(int fd, Registration &&reg);
+  void addNew(int fd, Registration &&reg);
+  void addToExisting(Registrations::iterator it, Registration &&reg);
+  size_t waitImpl(int timeoutMs);
+  size_t dispatch(epoll_event const& ev);
+  size_t dispatch(Registration& reg, epoll_event const& ev);
 
-  SocketPair irq_;
+  SocketPair interruptSource_;
   Descriptor epFd_;
-  std::unordered_map<int, std::vector<Registration>> registrations_;
+  Registrations registrations_;
 };
 
 

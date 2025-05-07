@@ -1,7 +1,7 @@
 #include <But/System/Epoll.hpp>
 #include <But/System/syscallRetry.hpp>
 #include <stdexcept>
-#include <sys/epoll.h>
+#include <cassert>
 
 
 namespace But::System
@@ -12,7 +12,7 @@ namespace
 void drainFd(int fd, Epoll::Event)
 {
   char buf[1024];
-  while( read(fd, buf, sizeof(buf) ) > 0 )
+  while( syscallRetry( [&]() { return read(fd, buf, sizeof(buf) ); } ) > 0 )
   { }
 }
 }
@@ -22,56 +22,142 @@ Epoll::Epoll():
 {
   if(not epFd_)
     BUT_THROW(EpollError, "failed to create: epoll_create1(): " << strerror(errno));
-  add( irq_.get().d2_.get(), drainFd, Event::In );
+  add( interruptSource_.get().d2_.get(), drainFd, Event::In );
 }
-
 
 void Epoll::swap(Epoll& other)
 {
-  (void)other; // TODO
   using std::swap;
-  // TODO
-  //std::swap(other.pair_, pair_);
+  swap(interruptSource_, other.interruptSource_);
+  swap(epFd_, other.epFd_);
+  swap(registrations_, other.registrations_);
 }
 
-size_t Epoll::check()
+void Epoll::remove(int fd)
 {
-  // TODO
-  return 42;
+  auto it = registrations_.find(fd);
+  if(it == end(registrations_))
+    return;
+  if( syscallRetry( [&]() { return epoll_ctl(epFd_.get(), EPOLL_CTL_DEL, fd, nullptr); } ) == -1 )
+    BUT_THROW(EpollError, "epoll_ctr(EPOLL_CTL_DEL): failed to remove fd=" << fd << ": " << strerror(errno));
+  registrations_.erase(it);
 }
 
-size_t Epoll::wait()
+void Epoll::interrupt()
 {
-  // TODO
-  return 42;
-}
-
-size_t Epoll::wait(std::chrono::milliseconds timeout)
-{
-  // TODO
-  (void)timeout;
-  return 42;
+  if( syscallRetry( [&]() { return write( interruptSource_.get().d1_.get(), "x", 1 ); } ) == -1 )
+    BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
 }
 
 void Epoll::add(int fd, Registration &&reg)
 {
   if(not reg.onEvent_)
     BUT_THROW(EpollError, "Epoll::add(): onEvent cannot be empty");
-  // TODO
-  (void)fd;
-  (void)reg;
+
+  auto it = registrations_.find(fd);
+  if(it == end(registrations_))
+    addNew(fd, std::move(reg));
+  else
+    addToExisting(it, std::move(reg));
 }
 
-void Epoll::remove(int fd)
+void Epoll::addNew(int fd, Registration &&reg)
 {
-  // TODO
-  (void)fd;
+  auto& v = registrations_[fd];
+  assert(v.empty());
+
+  epoll_event ev;
+  bzero(&ev, sizeof(ev));
+  ev.data.fd = fd;
+  ev.events = reg.events_;
+  if( syscallRetry( [&]() { return epoll_ctl(epFd_.get(), EPOLL_CTL_ADD, fd, &ev); } ) == -1 )
+    BUT_THROW(EpollError, "epoll_ctr(EPOLL_CTL_ADD): failed to add fd=" << fd << ": " << strerror(errno));
+
+  v.push_back( std::move(reg) );
 }
 
-void Epoll::interrupt()
+void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
 {
-  if( syscallRetry( [&]() { return write( irq_.get().d1_.get(), "x", 1 ); } ) == -1 )
-    BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
+  assert(not it->second.empty());
+  auto const fd = it->first;
+
+  epoll_event ev;
+  bzero(&ev, sizeof(ev));
+  ev.data.fd = fd;
+  ev.events = reg.events_;
+  for(auto& r: it->second)
+    ev.events |= r.events_;
+  if( syscallRetry( [&]() { return epoll_ctl(epFd_.get(), EPOLL_CTL_MOD, fd, &ev); } ) == -1 )
+    BUT_THROW(EpollError, "epoll_ctr(EPOLL_CTL_MOD): failed to modify fd=" << fd << " with events=" << reg.events_ << ": " << strerror(errno));
+
+  it->second.push_back( std::move(reg) );
+}
+
+size_t Epoll::waitImpl(int timeoutMs)
+{
+  auto constexpr maxEvents = 1024;
+  epoll_event events[maxEvents];
+  auto const n = syscallRetry( [&]() { return epoll_wait(epFd_.get(), events, maxEvents, timeoutMs); } );
+  if( n == -1 )
+    BUT_THROW(EpollError, "epoll_wait(): " << strerror(errno));
+
+  // note that exception here is not an issue, as events are level-triggered, not edge-triggered.
+  // after an error it's enough to re-call waitImpl().
+  size_t calls = 0;
+  for(auto i=0; i<n; ++i)
+    calls += dispatch(events[i]);
+  return calls;
+}
+
+size_t Epoll::dispatch(epoll_event const& ev)
+{
+  auto it = registrations_.find(ev.data.fd);
+  assert( it != end(registrations_) && "FDs registrations set is inconcistent" );
+  size_t calls = 0;
+  for(auto& reg: it->second)
+    calls += dispatch(reg, ev);
+  return calls;
+}
+
+namespace
+{
+constexpr auto allEventTypes()
+{
+  return std::array{
+    Epoll::Event::In,
+    Epoll::Event::Pri,
+    Epoll::Event::Out,
+    Epoll::Event::Rdnorm,
+    Epoll::Event::Rdband,
+    Epoll::Event::Wrnorm,
+    Epoll::Event::Wrband,
+    Epoll::Event::Msg,
+    Epoll::Event::Err,
+    Epoll::Event::Hup,
+    Epoll::Event::Rdhup,
+    Epoll::Event::Exclusive,
+    Epoll::Event::Wakeup,
+    Epoll::Event::Oneshot,
+    Epoll::Event::Et,
+  };
+}
+}
+
+size_t Epoll::dispatch(Registration& reg, epoll_event const& ev)
+{
+  if( (reg.events_ & ev.events) == 0 )
+    return 0;
+
+  size_t calls = 0;
+  for(auto type: allEventTypes())
+    if(ev.events & type)
+      if(reg.events_ & type)
+      {
+        assert(reg.onEvent_);
+        reg.onEvent_(ev.data.fd, type);
+        ++calls;
+      }
+  return calls;
 }
 
 }
