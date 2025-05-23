@@ -16,8 +16,9 @@ Epoll::Epoll():
   // make interruption sockets non-blocking, to make draining and interrupting easier
   makeNonblocking( interruptSource_.get().d1_.get() );
   makeNonblocking( interruptSource_.get().d2_.get() );
-  add( interruptSource_.get().d2_.get(), [this](int fd, Epoll::Event) { this->interruptHandler(fd); }, Event::Out );
+  add( interruptSource_.get().d2_.get(), [this](int fd, Epoll::Event) { this->interruptHandler(fd); }, Event::In );
 }
+
 
 void Epoll::swap(Epoll& other)
 {
@@ -26,6 +27,7 @@ void Epoll::swap(Epoll& other)
   swap(epFd_, other.epFd_);
   swap(registrations_, other.registrations_);
 }
+
 
 void Epoll::remove(int fd)
 {
@@ -37,6 +39,7 @@ void Epoll::remove(int fd)
   registrations_.erase(it);
 }
 
+
 void Epoll::interrupt()
 {
   if( syscallRetry( [&]() { return write( interruptSource_.get().d1_.get(), "x", 1 ); } ) != -1 )
@@ -45,6 +48,7 @@ void Epoll::interrupt()
     return;
   BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
 }
+
 
 void Epoll::add(int fd, Registration &&reg)
 {
@@ -57,6 +61,7 @@ void Epoll::add(int fd, Registration &&reg)
   else
     addToExisting(it, std::move(reg));
 }
+
 
 void Epoll::addNew(int fd, Registration &&reg)
 {
@@ -72,6 +77,7 @@ void Epoll::addNew(int fd, Registration &&reg)
 
   v.push_back( std::move(reg) );
 }
+
 
 void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
 {
@@ -90,6 +96,7 @@ void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
   it->second.push_back( std::move(reg) );
 }
 
+
 size_t Epoll::waitImpl(int timeoutMs)
 {
   interruptsCalled_ = 0;
@@ -104,9 +111,12 @@ size_t Epoll::waitImpl(int timeoutMs)
   size_t calls = 0;
   for(auto i=0; i<n; ++i)
     calls += dispatch(events[i]);
+
+  // do not count interruptions as 'actions" (it's just an impl-detail)
   assert( calls >= interruptsCalled_ );
   return calls - interruptsCalled_;
 }
+
 
 size_t Epoll::dispatch(epoll_event const& ev)
 {
@@ -117,6 +127,7 @@ size_t Epoll::dispatch(epoll_event const& ev)
     calls += dispatch(reg, ev);
   return calls;
 }
+
 
 namespace
 {

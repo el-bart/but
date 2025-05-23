@@ -64,7 +64,7 @@ public:
   size_t wait(std::chrono::milliseconds const timeout)
   {
     if(timeout < std::chrono::milliseconds::zero())
-      BUT_THROW(EpollError, "Epoll::wait(): onEvent cannot be empty");
+      BUT_THROW(EpollError, "Epoll::wait(): timeout cannot be negative");
     return waitImpl( static_cast<int>( timeout.count() ) );
   }
 
