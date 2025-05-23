@@ -7,10 +7,14 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on `master` branch, but has not yet been released.
 
-  * support for tests in `catch2` inside the library code
-  * `But::System::SocketPair` added (RAII-wrapper for `socketpair()` syscall)
-  * `But::System::syscallRetry` added wrapper that auto-restarts syscall that failed spuriously
-  * `But::System::makeNonblocking` wrapper that makes a socket non-blocking
+  * tooling:
+    * support for tests in `catch2` inside the library code
+    * enforcing C++17 on all builds and compilers
+    * added support for: clang16
+  * `But::System`:
+    * `SocketPair` added (RAII-wrapper for `socketpair()` syscall)
+    * `syscallRetry` added wrapper that auto-restarts syscall that failed spuriously
+    * `makeNonblocking` wrapper that makes a socket non-blocking
 
 
 ## v2.0.0 (2023-08-13)
