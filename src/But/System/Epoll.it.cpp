@@ -1,20 +1,17 @@
-#include <type_traits>
 #include <But/System/Epoll.hpp>
 #include <But/System/SocketPair.hpp>
+#include <type_traits>
 #include <catch2/catch.hpp>
 
+using Clock = std::chrono::steady_clock;
 using But::System::Epoll;
 using But::System::SocketPair;
-//using But::System::Descriptor;
 
 namespace
 {
 
-SCENARIO("Epoll: functionality")
+SCENARIO("But::System::Epoll: functionality")
 {
-  SocketPair sp1;
-  SocketPair sp2;
-  SocketPair sp3;
   Epoll ep;
 
   WHEN("interrupt is called many times")
@@ -41,102 +38,115 @@ SCENARIO("Epoll: functionality")
   }
 }
 
-/*
-SCENARIO("Epoll: default-initialized")
+SCENARIO("But::System::Epoll: default-initialized")
 {
-  Epoll sp;
+  Epoll ep;
 
-  THEN("it's opened by default")
-  {
-    CHECK( sp.opened() );
-    CHECK( sp );
-    CHECK( sp.get().d1_.opened() );
-    CHECK( sp.get().d2_.opened() );
-  }
+  SocketPair sp1;
+  auto callsToFd1 = 0u;
+  auto onFd1 = [&](int fd, Epoll::Event /*ev*/) { CHECK( fd == sp1.get().d1_.get() ); ++callsToFd1; };
 
-  WHEN("releasing")
-  {
-    auto const tmp = sp.release();
-    CHECK(not sp);
-    CHECK( tmp.d1_.opened() );
-    CHECK( tmp.d2_.opened() );
-  }
+  SocketPair sp2;
+  auto callsToFd2 = 0u;
+  auto onFd2 = [&](int fd, Epoll::Event /*ev*/) { CHECK( fd == sp2.get().d1_.get() ); ++callsToFd2; };
 
-  WHEN("resetting with default value")
+  SocketPair sp3;
+  auto callsToFd3 = 0u;
+  auto onFd3 = [&](int fd, Epoll::Event /*ev*/) { CHECK( fd == sp3.get().d1_.get() ); ++callsToFd3; };
+
+  WHEN("nothing is added")
   {
-    sp.reset();
-    THEN("it's all closed")
+    THEN("check() returns immediately")
     {
-      CHECK( not sp );
-      CHECK( not sp.get().d1_.opened() );
-      CHECK( not sp.get().d2_.opened() );
+      CHECK( ep.check() == 0 );
     }
   }
 
-  GIVEN("different socket pair set")
+  WHEN("fd1 is added for read")
   {
-    Epoll other;
-    int otherFd[2] = { other.get().d1_.get(), other.get().d2_.get() };
-    int spFd[2]    = { sp.get().d1_.get(),    sp.get().d2_.get()    };
+    ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
 
-    WHEN("swapping")
+    AND_WHEN("there's no data")
     {
-      using std::swap;
-      swap(sp, other);
-
-      THEN("descriptors are swapped")
+      THEN("check() returns immidiately")
       {
-        CHECK( sp.get().d1_.get() == otherFd[0] );
-        CHECK( sp.get().d2_.get() == otherFd[1] );
-        CHECK( other.get().d1_.get() == spFd[0] );
-        CHECK( other.get().d2_.get() == spFd[1] );
+        CHECK( ep.check() == 0 );
       }
     }
 
-    WHEN("resetting with other value")
+    AND_WHEN("there's data waiting")
     {
-      sp.reset( other.release() );
-
-      THEN("other is closed")
+      REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("check() returns actions")
       {
-        CHECK(not other);
-      }
-      THEN("sp value has been updated to other's content")
-      {
-        CHECK( sp.get().d1_.get() == otherFd[0] );
-        CHECK( sp.get().d2_.get() == otherFd[1] );
+        REQUIRE( ep.check() == 1 );
+        CHECK( callsToFd1 == 1 );
       }
     }
 
-    WHEN("moving around")
+    AND_WHEN("fd1 is added for write")
     {
-      sp = std::move(other);
-      THEN("ownership is transfered")
+      ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::Out );
+      AND_WHEN("there's data waiting")
       {
-        CHECK(not other);
-        CHECK(sp);
-        CHECK( sp.get().d1_.get() == otherFd[0] );
-        CHECK( sp.get().d2_.get() == otherFd[1] );
-      }
-    }
-
-    WHEN("move-constructing")
-    {
-      Epoll tmp{ std::move(sp) };
-      THEN("ownership is transfered")
-      {
-        CHECK(not sp);
-        CHECK(tmp);
-        CHECK( tmp.get().d1_.get() == spFd[0] );
-        CHECK( tmp.get().d2_.get() == spFd[1] );
+        REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+        THEN("check() returns actions for both read and write")
+        {
+          REQUIRE( ep.check() == 2 );
+          CHECK( callsToFd1 == 2 );
+        }
       }
     }
   }
+
+  WHEN("multiple FDs are added")
+  {
+    ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
+    ep.add( sp2.get().d1_.get(), onFd2, Epoll::Event::In );
+    ep.add( sp3.get().d1_.get(), onFd3, Epoll::Event::In );
+
+    AND_WHEN("there's no data")
+    {
+      THEN("check() returns immidiately")
+      {
+        CHECK( ep.check() == 0 );
+      }
+
+      AND_WHEN("wait() with a timeout is called")
+      {
+        auto const timeout = std::chrono::milliseconds{3};
+        auto const start = Clock::now();
+        REQUIRE( ep.wait(timeout) == 0 );
+        auto const dt = Clock::now() - start;
+        THEN("call times out")
+        {
+          CHECK( dt >= timeout );
+        }
+      }
+    }
+
+    AND_WHEN("there's data waiting")
+    {
+      REQUIRE( write( sp2.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("check() returns actions for a proper FD")
+      {
+        REQUIRE( ep.check() == 1 );
+        CHECK( callsToFd2 == 1 );
+      }
+    }
+  }
+
+  // TODO: add() multiple actions in 1 go
+  // TODO: wait() with timeout
+  // TODO: wait() with no timeout
+  // TODO: remove()
+  // TODO: remove() when >1 action is registered
+  // TODO: swap
+  // TODO: move-ctor
 }
-*/
 
 
-SCENARIO("Epoll: is non-copyable")
+SCENARIO("But::System::Epoll: is non-copyable")
 {
   CHECK( not std::is_copy_assignable<Epoll>::value );
   CHECK( not std::is_copy_constructible<Epoll>::value );
