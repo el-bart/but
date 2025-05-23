@@ -17,6 +17,8 @@ int syscallRetry(F&& f)
     auto const ret = f();
     if(ret != -1)
       return ret;
+    if(errno == EWOULDBLOCK) // normal on a non-blocking socket (note that on some OSes EWOULDBLOCK != EAGAIN)
+      return ret;
     switch(errno)
     {
       case EINTR:  continue;    // interrupted system call

@@ -48,10 +48,10 @@ SCENARIO("syscallRetry(): functionality")
     auto const ret = syscallRetry( [&]() {
         if(++counter < 3)
         {
-          errno=EINTR;
+          errno = EINTR;
           return -1;
         }
-        errno=0;
+        errno = 0;
         return 42;
         } );
     THEN("it's retried until non-error is returned")
@@ -62,16 +62,37 @@ SCENARIO("syscallRetry(): functionality")
     }
   }
 
+  WHEN("running and returning -1 and errno EWOULDBLOCK")
+  {
+    auto counter = 0;
+    auto const ret = syscallRetry( [&]() {
+        if(++counter < 3)
+        {
+          errno = EWOULDBLOCK;
+          return -1;
+        }
+        errno = 0;
+        return 42;
+        } );
+    THEN("it returns immediately")
+    {
+      CHECK(counter == 1);
+      CHECK(ret == -1);
+      CHECK(errno == EWOULDBLOCK);
+    }
+  }
+// it may be the case on some non-Linux OSes
+#if EAGAIN != EWOULDBLOCK
   WHEN("running and returning -1 and errno EAGAIN")
   {
     auto counter = 0;
     auto const ret = syscallRetry( [&]() {
         if(++counter < 3)
         {
-          errno=EAGAIN;
+          errno = EAGAIN;
           return -1;
         }
-        errno=0;
+        errno = 0;
         return 42;
         } );
     THEN("it's retried until non-error is returned")
@@ -81,6 +102,7 @@ SCENARIO("syscallRetry(): functionality")
       CHECK(errno == 0);
     }
   }
+#endif
 }
 
 }
