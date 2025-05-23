@@ -10,7 +10,9 @@ this work is available on `master` branch, but has not yet been released.
   * tooling:
     * support for tests in `catch2` inside the library code
     * enforcing C++17 on all builds and compilers
-    * added support for: clang16
+    * added support for clang: 16
+    * dropped support for clang: 9, 11
+    * dropped support for gcc: 9, 10
   * `But::System`:
     * `SocketPair` added (RAII-wrapper for `socketpair()` syscall)
     * `syscallRetry` added wrapper that auto-restarts syscall that failed spuriously
