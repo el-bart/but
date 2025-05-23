@@ -1,11 +1,14 @@
 #include <But/System/Epoll.hpp>
 #include <But/System/SocketPair.hpp>
+#include <But/Threading/JoiningThread.hpp>
+#include <thread>
 #include <type_traits>
 #include <catch2/catch.hpp>
 
 using Clock = std::chrono::steady_clock;
 using But::System::Epoll;
 using But::System::SocketPair;
+using But::Threading::JoiningThread;
 
 namespace
 {
@@ -160,10 +163,69 @@ SCENARIO("But::System::Epoll: default-initialized")
     }
   }
 
-  // TODO: wait() with no timeout
+  WHEN("interruption is called from a separate thread")
+  {
+    ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
+    JoiningThread<std::thread> th{ [&] { ep.interrupt(); } };
+
+    THEN("blocking wait() is interrupted")
+    {
+      CHECK( ep.wait() == 0 );
+    }
+  }
+
+  WHEN("2 FDs are registered")
+  {
+    ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
+    ep.add( sp2.get().d1_.get(), onFd2, Epoll::Event::In );
+
+    AND_WHEN("2nd epoll is created with 1 more FD")
+    {
+      Epoll other;
+      other.add( sp3.get().d1_.get(), onFd3, Epoll::Event::In );
+
+      WHEN("swap() is called")
+      {
+        swap(ep, other);
+        AND_WHEN("FD1 has data")
+        {
+          REQUIRE( write(sp1.get().d2_.get(), "abc", 3) == 3 );
+          THEN("ep has no events")
+          {
+            CHECK( ep.check() == 0 );
+            CHECK( callsToFd1 == 0 );
+          }
+          THEN("other Epoll has events")
+          {
+            CHECK( other.check() == 1 );
+            CHECK( callsToFd1 == 1 );
+          }
+        }
+      }
+
+      WHEN("swap() is called")
+      {
+        swap(ep, other);
+        AND_WHEN("FD1 has data")
+        {
+          REQUIRE( write(sp1.get().d2_.get(), "abc", 3) == 3 );
+          THEN("ep has no events")
+          {
+            CHECK( ep.check() == 0 );
+            CHECK( callsToFd1 == 0 );
+          }
+          THEN("other Epoll has events")
+          {
+            CHECK( other.check() == 1 );
+            CHECK( callsToFd1 == 1 );
+          }
+        }
+      }
+    }
+  }
+                                                            
   // TODO: remove()
   // TODO: remove() when >1 action is registered
-  // TODO: swap
   // TODO: move-ctor
 }
 
