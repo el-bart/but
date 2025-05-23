@@ -98,7 +98,9 @@ private:
   size_t waitImpl(int timeoutMs);
   size_t dispatch(epoll_event const& ev);
   size_t dispatch(Registration& reg, epoll_event const& ev);
+  void interruptHandler(int fd);
 
+  size_t interruptsCalled_{0};
   SocketPair interruptSource_;
   Descriptor epFd_;
   Registrations registrations_;

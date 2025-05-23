@@ -1,5 +1,6 @@
 #include <But/System/Epoll.hpp>
 #include <But/System/syscallRetry.hpp>
+#include <But/System/makeNonblocking.hpp>
 #include <stdexcept>
 #include <cassert>
 
@@ -7,22 +8,15 @@
 namespace But::System
 {
 
-namespace
-{
-void drainFd(int fd, Epoll::Event)
-{
-  char buf[1024];
-  while( syscallRetry( [&]() { return read(fd, buf, sizeof(buf) ); } ) > 0 )
-  { }
-}
-}
-
 Epoll::Epoll():
   epFd_{ syscallRetry( []() { return epoll_create1(0); } ) }
 {
   if(not epFd_)
     BUT_THROW(EpollError, "failed to create: epoll_create1(): " << strerror(errno));
-  add( interruptSource_.get().d2_.get(), drainFd, Event::In );
+  // make interruption sockets non-blocking, to make draining and interrupting easier
+  makeNonblocking( interruptSource_.get().d1_.get() );
+  makeNonblocking( interruptSource_.get().d2_.get() );
+  add( interruptSource_.get().d2_.get(), [this](int fd, Epoll::Event) { this->interruptHandler(fd); }, Event::Out );
 }
 
 void Epoll::swap(Epoll& other)
@@ -45,8 +39,11 @@ void Epoll::remove(int fd)
 
 void Epoll::interrupt()
 {
-  if( syscallRetry( [&]() { return write( interruptSource_.get().d1_.get(), "x", 1 ); } ) == -1 )
-    BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
+  if( syscallRetry( [&]() { return write( interruptSource_.get().d1_.get(), "x", 1 ); } ) != -1 )
+    return;
+  if( errno == EAGAIN)   // all good - there's already data in the socket so interruption will work fine
+    return;
+  BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
 }
 
 void Epoll::add(int fd, Registration &&reg)
@@ -95,6 +92,7 @@ void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
 
 size_t Epoll::waitImpl(int timeoutMs)
 {
+  interruptsCalled_ = 0;
   auto constexpr maxEvents = 1024;
   epoll_event events[maxEvents];
   auto const n = syscallRetry( [&]() { return epoll_wait(epFd_.get(), events, maxEvents, timeoutMs); } );
@@ -106,7 +104,8 @@ size_t Epoll::waitImpl(int timeoutMs)
   size_t calls = 0;
   for(auto i=0; i<n; ++i)
     calls += dispatch(events[i]);
-  return calls;
+  assert( calls >= interruptsCalled_ );
+  return calls - interruptsCalled_;
 }
 
 size_t Epoll::dispatch(epoll_event const& ev)
@@ -158,6 +157,23 @@ size_t Epoll::dispatch(Registration& reg, epoll_event const& ev)
         ++calls;
       }
   return calls;
+}
+
+
+namespace
+{
+inline void drain(int fd)
+{
+  char buf[1024];
+  while( syscallRetry( [&]() { return read(fd, buf, sizeof(buf) ); } ) > 0 )
+  { }
+}
+}
+
+void Epoll::interruptHandler(int fd)
+{
+  ++interruptsCalled_;
+  drain(fd);
 }
 
 }

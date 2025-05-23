@@ -15,10 +15,29 @@ SCENARIO("Epoll: functionality")
   SocketPair sp1;
   SocketPair sp2;
   SocketPair sp3;
+  Epoll ep;
 
-  GIVEN("default-initialized Epoll")
+  WHEN("interrupt is called many times")
   {
-    Epoll ep;
+    for(auto i = 0; i < 1'024; ++i)
+      REQUIRE_NOTHROW( ep.interrupt() );
+    THEN("interrupt does not block and interruption is applied once")
+    {
+      REQUIRE_NOTHROW( ep.interrupt() );
+      CHECK( ep.wait() == 0u );
+    }
+  }
+
+  WHEN("no descriptors added")
+  {
+    AND_WHEN("interruption() is called")
+    {
+      ep.interrupt();
+      THEN("wait() returns immediately")
+      {
+        CHECK( ep.wait() == 0u );
+      }
+    }
   }
 }
 
