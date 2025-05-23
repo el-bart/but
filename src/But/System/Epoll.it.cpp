@@ -137,6 +137,36 @@ SCENARIO("But::System::Epoll: default-initialized")
         CHECK( callsToFd2 == 1 );
       }
     }
+
+    AND_WHEN("FD is removed")
+    {
+      ep.remove( sp1.get().d1_.get() );
+      AND_WHEN("data is written")
+      {
+        REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+        THEN("no events are generated")
+        {
+          CHECK( ep.check() == 0 );
+        }
+      }
+    }
+
+    AND_WHEN("more than one action is registered to the same FD")
+    {
+      ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::Out );
+      AND_WHEN("FD is removed")
+      {
+        ep.remove( sp1.get().d1_.get() );
+        AND_WHEN("data is written")
+        {
+          REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+          THEN("no events are generated")
+          {
+            CHECK( ep.check() == 0 );
+          }
+        }
+      }
+    }
   }
 
   WHEN("multiple FDs are added")
@@ -223,10 +253,50 @@ SCENARIO("But::System::Epoll: default-initialized")
       }
     }
   }
-                                                            
-  // TODO: remove()
-  // TODO: remove() when >1 action is registered
-  // TODO: move-ctor
+  WHEN("2 dynamically-allocated Epolls are created with distinct FDs are registered")
+  {
+    auto ep1 = std::make_unique<Epoll>();
+    ep1->add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
+    ep1->add( sp2.get().d1_.get(), onFd2, Epoll::Event::In );
+
+    AND_WHEN("2nd Epoll is dynamically allocated")
+    {
+      auto ep2 = std::make_unique<Epoll>();
+      ep2->add( sp3.get().d1_.get(), onFd3, Epoll::Event::In );
+
+      AND_WHEN("move assignment is called")
+      {
+        *ep2 = std::move(*ep1);
+
+        AND_WHEN("data is added to FD from source Epoll")
+        {
+          REQUIRE( write(sp1.get().d2_.get(), "abc", 3) == 3 );
+
+          THEN("data is available for reading")
+          {
+            CHECK( ep2->check() == 1 );
+            CHECK( callsToFd1 == 1 );
+          }
+        }
+      }
+    }
+
+    AND_WHEN("move-ctor is called")
+    {
+      Epoll ep2{ std::move(*ep1) };
+
+      AND_WHEN("data is added to FD")
+      {
+        REQUIRE( write(sp1.get().d2_.get(), "abc", 3) == 3 );
+
+        THEN("data is available for reading")
+        {
+          CHECK( ep2.check() == 1 );
+          CHECK( callsToFd1 == 1 );
+        }
+      }
+    }
+  }
 }
 
 
