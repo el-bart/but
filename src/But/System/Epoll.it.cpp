@@ -136,8 +136,30 @@ SCENARIO("But::System::Epoll: default-initialized")
     }
   }
 
-  // TODO: add() multiple actions in 1 go
-  // TODO: wait() with timeout
+  WHEN("multiple FDs are added")
+  {
+    ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In, Epoll::Event::Out );
+
+    AND_WHEN("there's no data")
+    {
+      THEN("input is executed")
+      {
+        CHECK( ep.check() == 1 );
+        CHECK( callsToFd1 == 1 );
+      }
+    }
+
+    AND_WHEN("there's data waiting")
+    {
+      REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("both read and write actions are called")
+      {
+        REQUIRE( ep.check() == 2 );
+        CHECK( callsToFd1 == 2 );
+      }
+    }
+  }
+
   // TODO: wait() with no timeout
   // TODO: remove()
   // TODO: remove() when >1 action is registered
