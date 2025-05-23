@@ -8,6 +8,16 @@
 namespace But::System
 {
 
+namespace
+{
+inline void drainFd(int fd, Epoll::Event /*ev*/)
+{
+  char buf[1024];
+  while( syscallRetry( [&]() { return read(fd, buf, sizeof(buf) ); } ) > 0 )
+  { }
+}
+}
+
 Epoll::Epoll():
   epFd_{ syscallRetry( []() { return epoll_create1(0); } ) }
 {
@@ -16,7 +26,7 @@ Epoll::Epoll():
   // make interruption sockets non-blocking, to make draining and interrupting easier
   makeNonblocking( interruptSource_.get().d1_.get() );
   makeNonblocking( interruptSource_.get().d2_.get() );
-  add( interruptSource_.get().d2_.get(), [this](int fd, Epoll::Event) { this->interruptHandler(fd); }, Event::In );
+  add( interruptSource_.get().d2_.get(), drainFd, Event::In );
 }
 
 
@@ -99,7 +109,6 @@ void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
 
 size_t Epoll::waitImpl(int timeoutMs)
 {
-  interruptsCalled_ = 0;
   auto constexpr maxEvents = 1024;
   epoll_event events[maxEvents];
   auto const n = syscallRetry( [&]() { return epoll_wait(epFd_.get(), events, maxEvents, timeoutMs); } );
@@ -111,10 +120,7 @@ size_t Epoll::waitImpl(int timeoutMs)
   size_t calls = 0;
   for(auto i=0; i<n; ++i)
     calls += dispatch(events[i]);
-
-  // do not count interruptions as 'actions" (it's just an impl-detail)
-  assert( calls >= interruptsCalled_ );
-  return calls - interruptsCalled_;
+  return calls;
 }
 
 
@@ -165,26 +171,10 @@ size_t Epoll::dispatch(Registration& reg, epoll_event const& ev)
       {
         assert(reg.onEvent_);
         reg.onEvent_(ev.data.fd, type);
-        ++calls;
+        if( ev.data.fd != interruptSource_.get().d2_.get() )
+          ++calls;
       }
   return calls;
-}
-
-
-namespace
-{
-inline void drain(int fd)
-{
-  char buf[1024];
-  while( syscallRetry( [&]() { return read(fd, buf, sizeof(buf) ); } ) > 0 )
-  { }
-}
-}
-
-void Epoll::interruptHandler(int fd)
-{
-  ++interruptsCalled_;
-  drain(fd);
 }
 
 }
