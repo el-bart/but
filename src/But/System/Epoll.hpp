@@ -1,6 +1,6 @@
 #pragma once
+#include <list>
 #include <chrono>
-#include <vector>
 #include <unordered_map>
 #include <functional>
 #include <type_traits>
@@ -68,6 +68,9 @@ public:
     return waitImpl( static_cast<int>( timeout.count() ) );
   }
 
+  /** adds new event handler, for a given FD and event(s) type(s).
+   *  @note it can safely be called from onEvent(s).
+   */
   template<typename ...Events>
   void add(int fd, OnEvent onEvent, Events ...events)
   {
@@ -90,7 +93,7 @@ private:
     OnEvent onEvent_;
     std::underlying_type_t<Event> events_{};
   };
-  using Registrations = std::unordered_map<int, std::vector<Registration>>;
+  using Registrations = std::unordered_map<int, std::list<Registration>>; // list<> is used as it can be expanded on the fly
 
   void add(int fd, Registration &&reg);
   void addNew(int fd, Registration &&reg);

@@ -124,6 +124,82 @@ SCENARIO("But::System::Epoll: default-initialized")
     }
   }
 
+  WHEN("fd1 is added to regeister more FDs, when its called")
+  {
+    auto addMore = [&](auto, auto) {
+      ++callsToFd1;
+      char buf[6];
+      CHECK( read( sp1.get().d1_.get(), buf, 6 ) == 6 );
+      ep.add( sp2.get().d1_.get(), onFd2, Epoll::Event::In );
+      ep.add( sp3.get().d1_.get(), onFd3, Epoll::Event::In );
+    };
+    ep.add( sp1.get().d1_.get(), addMore, Epoll::Event::In );
+
+    AND_WHEN("there's data waiting")
+    {
+      REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("check() returns actions")
+      {
+        REQUIRE( ep.check() == 1 );
+        CHECK( callsToFd1 == 1 );
+
+        AND_WHEN("data is waiting on fd2 and fd3")
+        {
+          REQUIRE( write( sp2.get().d2_.get(), "foo", 3 ) == 3 );
+          REQUIRE( write( sp3.get().d2_.get(), "bar", 3 ) == 3 );
+          THEN("check() returns actions")
+          {
+            REQUIRE( ep.check() == 2 );
+            CHECK( callsToFd2 == 1 );
+            CHECK( callsToFd3 == 1 );
+          }
+        }
+      }
+    }
+  }
+
+  WHEN("fd1 is added to regeister more actions on the same FD, when its called")
+  {
+    auto c1 = 0u;
+    auto onC1 = [&](int /*fd*/, Epoll::Event /*ev*/) { ++c1; };
+    auto c2 = 0u;
+    auto onC2 = [&](int /*fd*/, Epoll::Event /*ev*/) { ++c2; };
+    auto addMore = [&](auto, auto) {
+      ++callsToFd1;
+      char buf[6];
+      CHECK( read( sp1.get().d1_.get(), buf, 6 ) == 6 );
+      if( callsToFd1 == 1 )
+      {
+        // add more FDs - once
+        ep.add( sp1.get().d1_.get(), onC1, Epoll::Event::In );
+        ep.add( sp1.get().d1_.get(), onC2, Epoll::Event::In );
+      }
+    };
+    ep.add( sp1.get().d1_.get(), addMore, Epoll::Event::In );
+
+    AND_WHEN("there's data waiting")
+    {
+      REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("check() returns actions")
+      {
+        REQUIRE( ep.check() == 1 );
+        CHECK( callsToFd1 == 1 );
+
+        AND_WHEN("data is waiting on fd1 again")
+        {
+          REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+          THEN("check() returns actions")
+          {
+            REQUIRE( ep.check() == 3 );
+            CHECK( callsToFd1 == 2 );
+            CHECK( c1 == 1 );
+            CHECK( c2 == 1 );
+          }
+        }
+      }
+    }
+  }
+
   WHEN("multiple FDs are added")
   {
     ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
