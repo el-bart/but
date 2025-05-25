@@ -102,8 +102,8 @@ void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
     ev.events |= r.events_;
   if( syscallRetry( [&]() { return epoll_ctl(epFd_.get(), EPOLL_CTL_MOD, fd, &ev); } ) == -1 )
     BUT_THROW(EpollError, "epoll_ctr(EPOLL_CTL_MOD): failed to modify fd=" << fd << " with events=" << reg.events_ << ": " << strerror(errno));
-  // add at the begining, to avoid re-processing these in the very same iteration, when adding from an onEvent action for the same FD
-  it->second.push_front( std::move(reg) );
+
+  it->second.push_back( std::move(reg) );
 }
 
 

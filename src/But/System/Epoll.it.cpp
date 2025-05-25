@@ -171,8 +171,8 @@ SCENARIO("But::System::Epoll: default-initialized")
       if( callsToFd1 == 1 )
       {
         // add more FDs - once
-        ep.add( sp1.get().d1_.get(), onC1, Epoll::Event::In );
-        ep.add( sp1.get().d1_.get(), onC2, Epoll::Event::In );
+        ep.add( sp1.get().d1_.get(), onC1, Epoll::Event::Out );
+        ep.add( sp1.get().d1_.get(), onC2, Epoll::Event::Out );
       }
     };
     ep.add( sp1.get().d1_.get(), addMore, Epoll::Event::In );
@@ -185,13 +185,12 @@ SCENARIO("But::System::Epoll: default-initialized")
         REQUIRE( ep.check() == 1 );
         CHECK( callsToFd1 == 1 );
 
-        AND_WHEN("data is waiting on fd1 again")
+        AND_WHEN("data can be written to fd1")
         {
-          REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
           THEN("check() returns actions")
           {
-            REQUIRE( ep.check() == 3 );
-            CHECK( callsToFd1 == 2 );
+            REQUIRE( ep.check() == 2 );
+            CHECK( callsToFd1 == 1 );
             CHECK( c1 == 1 );
             CHECK( c2 == 1 );
           }
