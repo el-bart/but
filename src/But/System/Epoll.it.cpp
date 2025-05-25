@@ -122,6 +122,24 @@ SCENARIO("But::System::Epoll: default-initialized")
         CHECK( otherCalls == 1 );
       }
     }
+
+    AND_WHEN("original FD is closed")
+    {
+      close( sp1.get().d1_.get() );
+      THEN("when check() is called, nothing happens")
+      {
+        CHECK( ep.check() == 0);
+      }
+    }
+
+    AND_WHEN("FD paired to the registered one is closed")
+    {
+      close( sp1.get().d2_.get() );
+      THEN("when check() is called, callback is called")
+      {
+        CHECK( ep.check() == 1);
+      }
+    }
   }
 
   WHEN("fd1 is added to regeister more FDs, when its called")
@@ -306,7 +324,23 @@ SCENARIO("But::System::Epoll: default-initialized")
     }
   }
 
-  // TODO: closed FD and call check()
+  WHEN("fd1 is added for read and on error events")
+  {
+    ep.add( sp1.get().d1_.get(), [&](auto,auto) { ep.remove( sp1.get().d1_.get() ); }, Epoll::Event::Hup );
+
+    AND_WHEN("paired FD is closed")
+    {
+      close( sp1.get().d2_.get() );
+      THEN("when check() is called, nothing happens")
+      {
+        CHECK(ep.check() == 1);
+        AND_THEN("no further actions are called (after FD is removed)")
+        {
+          CHECK(ep.check() == 0);
+        }
+      }
+    }
+  }
 
   WHEN("multiple FDs are added")
   {
