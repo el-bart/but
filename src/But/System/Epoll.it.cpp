@@ -264,7 +264,48 @@ SCENARIO("But::System::Epoll: default-initialized")
     }
   }
 
-  // TODO: re-register the same FD
+  WHEN("fd1 is added with multiple actions, and re-registering self")
+  {
+    auto callsToReregistered = 0u;
+    auto reregistered = [&](int /*fd*/, Epoll::Event /*ev*/) { ++callsToReregistered; };
+
+    auto c1 = 0u;
+    auto onC1 = [&](int /*fd*/, Epoll::Event /*ev*/) {
+      ++c1;
+      char buf[6];
+      CHECK( read( sp1.get().d1_.get(), buf, 6 ) == 6 );
+      ep.remove( sp1.get().d1_.get() );
+      ep.add( sp1.get().d1_.get(), reregistered, Epoll::Event::In );
+    };
+
+    auto c2 = 0u;
+    auto onC2 = [&](int /*fd*/, Epoll::Event /*ev*/) { ++c2; };
+
+    ep.add( sp1.get().d1_.get(), onC1, Epoll::Event::In );
+    ep.add( sp1.get().d1_.get(), onC2, Epoll::Event::In );
+
+    AND_WHEN("there's data waiting")
+    {
+      REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("check() calls all actions for a given FD")
+      {
+        REQUIRE( ep.check() == 2 );
+        CHECK( c1 == 1 );
+        CHECK( c2 == 1 );
+
+        AND_WHEN("data is still waiting on fd1")
+        {
+          REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+          THEN("check() calls only newly registered action")
+          {
+            REQUIRE( ep.check() == 1 );
+            CHECK( callsToReregistered == 1 );
+          }
+        }
+      }
+    }
+  }
+
   // TODO: closed FD and call check()
 
   WHEN("multiple FDs are added")
