@@ -65,6 +65,14 @@ SCENARIO("But::System::Epoll: default-initialized")
     }
   }
 
+  WHEN("adding negative FD")
+  {
+    THEN("exception is thrown")
+    {
+      CHECK_THROWS_AS( ep.add(-1, onFd1, Epoll::Event::In), Epoll::EpollError );
+    }
+  }
+
   WHEN("fd1 is added for read")
   {
     ep.add( sp1.get().d1_.get(), onFd1, Epoll::Event::In );
