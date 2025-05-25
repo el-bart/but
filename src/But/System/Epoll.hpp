@@ -1,6 +1,7 @@
 #pragma once
 #include <list>
 #include <chrono>
+#include <memory>
 #include <unordered_map>
 #include <functional>
 #include <type_traits>
@@ -69,7 +70,7 @@ public:
   }
 
   /** adds new event handler, for a given FD and event(s) type(s).
-   *  @note it can safely be called from onEvent(s).
+   *  @note it can safely be called from onEvent().
    */
   template<typename ...Events>
   void add(int fd, OnEvent onEvent, Events ...events)
@@ -79,6 +80,11 @@ public:
     add( fd, Registration{ std::move(onEvent), ( static_cast<std::underlying_type_t<Event>>(events) | ... ) } );
   }
 
+  /** removes all actions associated with a given FD.
+   *  @note it can safely be called from onEvent()
+   *  @warning when called from onEvent() on FD that's currently being processed, all pending events for this FD will still be called, while
+   *           newly regsitered ones will not be called untill next check() / wait() call.
+   */
   void remove(int fd);
 
   /** @brief interrupts check()/wait() calls from a separate thread.
@@ -93,7 +99,9 @@ private:
     OnEvent onEvent_;
     std::underlying_type_t<Event> events_{};
   };
-  using Registrations = std::unordered_map<int, std::list<Registration>>; // list<> is used as it can be expanded on the fly
+  // list<> is used as it can be expanded on the fly
+  // shared_ptr<> is there to ensure remove-of-self works from onEvent() actions
+  using Registrations = std::unordered_map<int, std::shared_ptr<std::list<Registration>>>;
 
   void add(int fd, Registration &&reg);
   void addNew(int fd, Registration &&reg);

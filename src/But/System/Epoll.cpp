@@ -76,7 +76,8 @@ void Epoll::add(int fd, Registration &&reg)
 void Epoll::addNew(int fd, Registration &&reg)
 {
   auto& v = registrations_[fd];
-  assert(v.empty());
+  assert(not v);
+  v = std::make_shared< std::list<Registration> >();
 
   epoll_event ev;
   bzero(&ev, sizeof(ev));
@@ -85,25 +86,25 @@ void Epoll::addNew(int fd, Registration &&reg)
   if( syscallRetry( [&]() { return epoll_ctl(epFd_.get(), EPOLL_CTL_ADD, fd, &ev); } ) == -1 )
     BUT_THROW(EpollError, "epoll_ctr(EPOLL_CTL_ADD): failed to add fd=" << fd << ": " << strerror(errno));
 
-  v.push_back( std::move(reg) );
+  v->push_back( std::move(reg) );
 }
 
 
 void Epoll::addToExisting(Registrations::iterator it, Registration &&reg)
 {
-  assert(not it->second.empty());
+  assert(not it->second->empty());
   auto const fd = it->first;
 
   epoll_event ev;
   bzero(&ev, sizeof(ev));
   ev.data.fd = fd;
   ev.events = reg.events_;
-  for(auto& r: it->second)
+  for(auto& r: *it->second)
     ev.events |= r.events_;
   if( syscallRetry( [&]() { return epoll_ctl(epFd_.get(), EPOLL_CTL_MOD, fd, &ev); } ) == -1 )
     BUT_THROW(EpollError, "epoll_ctr(EPOLL_CTL_MOD): failed to modify fd=" << fd << " with events=" << reg.events_ << ": " << strerror(errno));
 
-  it->second.push_back( std::move(reg) );
+  it->second->push_back( std::move(reg) );
 }
 
 
@@ -127,9 +128,13 @@ size_t Epoll::waitImpl(int timeoutMs)
 size_t Epoll::dispatch(epoll_event const& ev)
 {
   auto it = registrations_.find(ev.data.fd);
-  assert( it != end(registrations_) && "FDs registrations set is inconcistent" );
+  if( it == end(registrations_) )   // can happen if kernel woudl return >1 event, for the same FD
+    return 0;
+
+  auto lst = it->second; // local copy of shared_ptr<> in case remove-of-self is executed from an action
+  assert(lst);
   size_t calls = 0;
-  for(auto& reg: it->second)
+  for(auto& reg: *lst)
     calls += dispatch(reg, ev);
   return calls;
 }
