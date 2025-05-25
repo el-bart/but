@@ -100,6 +100,20 @@ SCENARIO("But::System::Epoll: default-initialized")
         }
       }
     }
+
+    AND_WHEN("2nd action on fd1 read is added")
+    {
+      auto otherCalls = 0u;
+      auto otherAction = [&](int fd, Epoll::Event /*ev*/) { CHECK( fd == sp1.get().d1_.get() ); ++otherCalls; };
+      ep.add( sp1.get().d1_.get(), otherAction, Epoll::Event::In );
+      REQUIRE( write( sp1.get().d2_.get(), "foobar", 6 ) == 6 );
+      THEN("check() runs both actions")
+      {
+        REQUIRE( ep.check() == 2 );
+        CHECK( callsToFd1 == 1 );
+        CHECK( otherCalls == 1 );
+      }
+    }
   }
 
   WHEN("multiple FDs are added")
