@@ -7,6 +7,11 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on `master` branch, but has not yet been released.
 
+## v2.1.0 (2025-06-07)
+added support for `catch2` and more `System` wrappers.
+removed legacy SDKs.
+minor improvements.
+
   * tooling:
     * support for tests in `catch2` inside the library code
     * enforcing C++17 on all builds and compilers
