@@ -124,7 +124,7 @@ mostly related to logging.
 
 
 ## v1.0.0 (2017-12-12)
-new logger concept, based on a structure logging idea (https://www.baszerr.eu/lib/exe/fetch.php/docs/structured_logging.pdf).
+new logger concept, based on a [structure logging idea](https://www.baszerr.eu/lib/exe/fetch.php/docs/structured_logging.pdf).
 build system updated and simplified.
 countless small fixes and improvements - see the list below for the full overview.
 
