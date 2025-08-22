@@ -305,9 +305,16 @@ TEST_F(ButNotNull, CopyingAssignmentFromSelf)
 
 TEST_F(ButNotNull, MovingAssignmentFromSelf)
 {
+#if __GNUC__ >= 12
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wself-move"
+#endif
   rb_ = std::move(rb_);
   ub_ = std::move(ub_);
   sb_ = std::move(sb_);
+#if __GNUC__ >= 12
+#pragma GCC diagnostic pop
+#endif
   EXPECT_EQ( "base", rb_->s_ );
   EXPECT_EQ( "base", ub_->s_ );
   EXPECT_EQ( "base", sb_->s_ );
