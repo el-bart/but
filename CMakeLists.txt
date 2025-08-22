@@ -1,7 +1,7 @@
 #
 # NOTE: use this file only for development. in bigger project add 'src' subdirectory directly.
 #
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.25)
 project(But_dev)
 
 set(BUT_ENABLE_TESTS OFF CACHE BOOL   "build tests (useful for development. to be turned off when preparing installation builds)")
@@ -13,6 +13,7 @@ if(BUT_ENABLE_TESTS)
   message(STATUS "BUT: enabling tests")
   add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
+  find_package(Catch2 REQUIRED)
   enable_testing()
 endif()
 
