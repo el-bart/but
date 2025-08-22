@@ -14,7 +14,7 @@ using namespace But::Log::Field;
 // note that Logger does not enforce any specific severity class to be used
 enum class MySev { Info, Warning, Error };
 inline constexpr auto fieldName(MySev const*) { return "MySev"; }
-auto fieldValue(MySev ms)
+inline auto fieldValue(MySev ms)
 {
   switch(ms)
   {
