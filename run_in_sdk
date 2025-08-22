@@ -19,6 +19,7 @@ docker build -t "$img" "sdk/$sdk/"
 docker run \
   -it \
   --rm \
+  --init \
   --cap-add=SYS_PTRACE \
   -u "$(id -u):$(id -g)" \
   -v "$PWD:/mnt" \
