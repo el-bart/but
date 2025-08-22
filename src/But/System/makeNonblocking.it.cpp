@@ -1,7 +1,7 @@
 #include <type_traits>
 #include <But/System/makeNonblocking.hpp>
 #include <But/System/SocketPair.hpp>
-#include <catch2/catch.hpp>
+#include <But/detail/catch2.hpp>
 
 using But::System::SocketPair;
 using But::System::makeNonblocking;

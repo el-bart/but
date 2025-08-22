@@ -3,7 +3,7 @@
 #include <But/Threading/JoiningThread.hpp>
 #include <thread>
 #include <type_traits>
-#include <catch2/catch.hpp>
+#include <But/detail/catch2.hpp>
 
 using Clock = std::chrono::steady_clock;
 using But::System::Epoll;

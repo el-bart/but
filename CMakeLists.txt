@@ -11,9 +11,16 @@ set(BUT_ENABLE_PIC   OFF CACHE BOOL   "build code with Place-Independent-Code fl
 
 if(BUT_ENABLE_TESTS)
   message(STATUS "BUT: enabling tests")
+
   add_subdirectory(/usr/src/googletest ${CMAKE_CURRENT_BINARY_DIR}/gtest)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest)
+
   find_package(Catch2 REQUIRED)
+  message(STATUS "Catch2 version: ${Catch2_VERSION}")
+  string(REGEX MATCH "^[0-9]+" CATCH2_VERSION_MAJOR ${Catch2_VERSION})
+  add_definitions(-DCATCH2_VERSION_MAJOR=${CATCH2_VERSION_MAJOR})
+  message(STATUS "Catch2 major version: ${CATCH2_VERSION_MAJOR}")
+
   enable_testing()
 endif()
 
