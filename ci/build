@@ -70,7 +70,7 @@ case "$sanitizer" in
   "thread")
     if ./src/but_testThreadSanitizer.manual &>/dev/null
     then
-      echo "$app: thread sanitizer does not work"
+      echo "$app: thread sanitizer does not work" >&2
       exit 40
     fi
   ;;
@@ -78,12 +78,12 @@ case "$sanitizer" in
   "address")
     if ./src/but_testLeak.manual &>/dev/null
     then
-      echo "$app: address sanitizer does not work"
+      echo "$app: address sanitizer does not work" >&2
       exit 41
     fi
     if ./src/but_testAddressSanitizer.manual &>/dev/null
     then
-      echo "$app: address sanitizer does not work"
+      echo "$app: address sanitizer does not work" >&2
       exit 42
     fi
   ;;
@@ -91,7 +91,7 @@ case "$sanitizer" in
   "undefined")
     if ./src/but_testUndefinedBehaviorSanitizer.manual &>/dev/null
     then
-      echo "$app: undefined behavior sanitizer does not work"
+      echo "$app: undefined behavior sanitizer does not work" >&2
       exit 43
     fi
   ;;
