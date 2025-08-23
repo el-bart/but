@@ -11,7 +11,6 @@ this work is available on `master` branch, but has not yet been released.
     * Clang 17
     * Clang 18
     * Clang 19
-    * GCC 13
     * GCC 14
   * added support for `catch2` version 3
   * moved latest SDKs to Debian:13
