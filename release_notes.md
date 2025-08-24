@@ -7,6 +7,10 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on `master` branch, but has not yet been released.
 
+
+## v2.2.0 (2025-08-24)
+new toolchains support added.
+
   * compilers:
     * Clang 17
     * Clang 18
