@@ -52,11 +52,18 @@ void Epoll::remove(int fd)
 
 void Epoll::interrupt()
 {
-  if( syscallRetry( [&]() { return write( interruptSource_.get().d1_.get(), "x", 1 ); } ) != -1 )
-    return;
-  if( errno == EAGAIN)   // all good - there's already data in the socket so interruption will work fine
-    return;
-  BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
+  while(true)
+  {
+    if( write( interruptSource_.get().d1_.get(), "x", 1 ) != -1 )
+      return;
+    if( errno == EWOULDBLOCK )  // normal on a non-blocking socket (note that on some OSes EWOULDBLOCK != EAGAIN)
+      return;
+    if( errno == EAGAIN)        // all good - there's already data in the socket so interruption will work fine
+      return;
+    if( errno == EINTR)         // interrupted system call - just retry
+      continue;
+    BUT_THROW(EpollError, "write() to interrupt source socket pair failed: " << strerror(errno));
+  }
 }
 
 
