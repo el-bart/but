@@ -6,4 +6,8 @@ CMakeLists.txt.user
 *.orig
 *~*
 
+# build dir
 /build
+
+# ctags
+tags
