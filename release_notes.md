@@ -7,10 +7,14 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on `master` branch, but has not yet been released.
 
+
+## v2.3.0 (2025-08-01)
+`ExplicitInit` addition.
+
   * `ExplicitInit<T>` helper for forcing field initialization upon construction.
 
 
-## v2.2.0 (2025-08-24)
+## v2.2.1 (2025-07-29)
 bugfix in interrupting epoll.
 
   * `Epoll::interrupt()` now correctly handles full-of-interruptions case
