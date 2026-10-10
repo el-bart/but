@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(But)
+# force-rebuild: 1
 
 include(cmake/flags.cmake)
 include(cmake/sources.cmake)
