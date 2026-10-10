@@ -22,6 +22,8 @@ struct FakeSink final: public Sink
     return nlohmann::json::parse( logs_.at(index) );
   }
 
+  auto size() const { return logs_.size(); }
+
   unsigned reloads_{0};
   unsigned flushes_{0};
   std::vector<std::string> logs_;
