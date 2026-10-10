@@ -7,6 +7,11 @@ short summary of each release, with version and release date.
 work in progress.
 this work is available on `master` branch, but has not yet been released.
 
+  * helpers for simplifying creation of logger for typical use cases:
+    * `Log::DefaultLogger` - generic class; can be created with any Sink
+    * `Log::makeDefaultLogger` - helper removing Sink boilerplate
+    * `Log::makeDefaultConsoleLogger` - helper making logger that prints to a console
+
 
 ## v2.3.0 (2025-08-01)
 `ExplicitInit` addition.
