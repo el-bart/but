@@ -4,13 +4,15 @@
 #include <But/Log/Destination/FakeSink.ut.hpp>
 
 using But::Log::DefaultLogger;
+using But::Log::makeDefaultLogger;
+using But::Log::makeDefaultConsoleLogger;
 using But::Log::Destination::FakeSink;
 using But::Log::Field::tag;
 
 namespace
 {
 
-SCENARIO("DefaultLogger testing")
+SCENARIO("DefaultLogger's functional tests")
 {
   auto const sink = But::makeSharedNN<FakeSink>();
   DefaultLogger logger{sink};
@@ -106,7 +108,25 @@ SCENARIO("DefaultLogger testing")
       }
     }
   }
+}
 
+
+TEST_CASE("making DefaultLogger with helpers")
+{
+  {
+    auto logger = makeDefaultLogger<FakeSink>();
+    logger.info("test");
+  }
+
+  {
+    auto logger = makeDefaultConsoleLogger();
+    logger.reload();
+  }
+
+  {
+    auto logger = makeDefaultConsoleLogger(false);
+    logger.reload();
+  }
 }
 
 }
