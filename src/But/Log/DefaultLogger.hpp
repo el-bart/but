@@ -1,4 +1,3 @@
-// TODO: work in progress
 #pragma once
 #include <But/Log/Logger.hpp>
 #include <But/Log/Destination/Console.hpp>
